@@ -1,9 +1,8 @@
 
 *{box-sizing:border-box;margin:0;padding:0}
 body{background:#0a0a0b;color:#e4e4e7;font-family:Inter,system-ui,sans-serif;line-height:1.7}
-a{color:#a1a1aa;text-decoration:none}
-a:hover{color:#fff}
-header{position:sticky;top:0;z-index:20;background:rgba(10,10,11,0.9);backdrop-filter:blur(12px);border-bottom:1px solid #232326;padding:12px 16px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap}
+a{color:#a1a1aa;text-decoration:none}a:hover{color:#fff}
+header{position:sticky;top:0;z-index:20;background:rgba(10,10,11,0.92);backdrop-filter:blur(12px);border-bottom:1px solid #232326;padding:12px 16px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap}
 .logo{display:flex;align-items:center;gap:10px}
 .logo-icon{width:32px;height:32px;background:#fff;color:#000;border-radius:50%;display:grid;place-items:center;font-weight:800;font-size:13px}
 .nav{display:flex;gap:8px;flex-wrap:wrap}
@@ -26,5 +25,16 @@ img{max-width:100%;border-radius:12px;border:1px solid #232326}
 footer{text-align:center;padding:24px;font-size:11px;color:#52525b;border-top:1px solid #232326;margin-top:24px}
 .btn{display:inline-block;padding:10px 18px;border-radius:9999px;background:#fff;color:#000;font-weight:600;font-size:13px}
 .btn-ghost{background:#141417;color:#e4e4e7;border:1px solid #232326}
-ul{padding-left:20px}
-li{margin:6px 0;font-size:14px;color:#d4d4d8}
+ul{padding-left:20px}li{margin:6px 0;font-size:14px;color:#d4d4d8}
+.chart-wrap{height:380px}
+.metric{background:#0a0a0b;border:1px solid #232326;border-radius:12px;padding:10px}
+.metric .label{font-size:10px;color:#71717a}
+.metric .val{font-family:monospace;font-size:13px;margin-top:2px}
+.leg{margin-top:8px;background:#0a0a0b;border:1px solid #232326;border-radius:12px;padding:10px;display:grid;grid-template-columns:70px 70px 1fr 1fr 50px;gap:6px;align-items:end}
+.leg label{font-size:10px;color:#71717a;display:flex;flex-direction:column;gap:4px}
+.leg select,.leg input{width:100%;background:#141417;border:1px solid #232326;border-radius:8px;padding:6px;color:#e4e4e7;font-size:12px}
+.leg .x{height:28px;border-radius:8px;background:#232326;border:1px solid #3f3f46;color:#a1a1aa;cursor:pointer}
+.templates{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+.templates button{background:#0a0a0b;border:1px solid #232326;padding:6px 10px;border-radius:9999px;font-size:11px;color:#a1a1aa;cursor:pointer}
+.templates button:hover{border-color:#52525b;color:#fff}
+input[type=range]{width:100%;accent-color:#22c55e}
