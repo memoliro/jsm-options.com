@@ -1,1 +1,10 @@
-<?xml version="1.0"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>https://jsm-options.com/</loc></url><url><loc>https://jsm-options.com/level1/</loc></url><url><loc>https://jsm-options.com/level2/</loc></url><url><loc>https://jsm-options.com/builder/</loc></url></urlset>
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://jsm-options.com/</loc><lastmod>2026-09-09</lastmod><changefreq>weekly</changefreq><priority>1.0</priority></url>
+  <url><loc>https://jsm-options.com/level1/</loc><lastmod>2026-09-09</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://jsm-options.com/level2/</loc><lastmod>2026-09-09</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://jsm-options.com/builder/</loc><lastmod>2026-09-09</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://jsm-options.com/about.html</loc><lastmod>2026-09-09</lastmod><priority>0.5</priority></url>
+  <url><loc>https://jsm-options.com/disclaimer.html</loc><lastmod>2026-09-09</lastmod><priority>0.3</priority></url>
+  <url><loc>https://jsm-options.com/privacy.html</loc><lastmod>2026-09-09</lastmod><priority>0.3</priority></url>
+</urlset>
