@@ -1,62 +1,124 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width,initial-scale=1">
-        <title>JSM Options — For All Ages</title>
-        <link rel="stylesheet" href="/assets/style.css">
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-BDL003RCN6"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>JSM Options — Learn Options by Building Them | Beginner to Iron Condor</title>
+  <meta name="description" content="Learn options trading by building trades. From what is a Call option (sneaker store analogy) to Bull Spreads and Iron Condors. Interactive P/L builder, 100% client-side, no login. Beginner-friendly explanations anyone can understand.">
+  <link rel="canonical" href="https://jsm-options.com/">
+  <meta name="robots" content="index, follow">
+  <link rel="icon" href="/favicon.ico">
+  
+  <!-- Open Graph -->
+  <meta property="og:title" content="JSM Options — Learn Options by Building Them">
+  <meta property="og:description" content="5 levels, everyday analogies, interactive P/L builder like optioncreator.com but simpler.">
+  <meta property="og:url" content="https://jsm-options.com/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="JSM Options">
+  
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="JSM Options — Learn Options by Building Them">
+  <meta name="twitter:description" content="Interactive builder + beginner-friendly lessons from Call to Iron Condor.">
 
-  gtag('config', 'G-BDL003RCN6');
-</script>
+  <link rel="stylesheet" href="/assets/style.css">
+
+  <!-- Google tag (gtag.js) - Unified ID -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-BDL003RCN6"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-BDL003RCN6');
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "JSM Options",
+    "url": "https://jsm-options.com",
+    "logo": "https://jsm-options.com/assets/logo.png",
+    "description": "Beginner-friendly options education with interactive builder."
+  }
+  </script>
 </head>
 <body>
-    <header>
-        <div class="logo">
-            <div class="logo-icon">JSM</div>
-            <div>
-                <div style="font-weight:700">JSM Options</div>
-                <div style="font-size:11px;color:#71717a">jsm-options.com • For All Ages</div>
-            </div>
-        </div>
-                <nav class="nav"><a href="/index.html" class="active">Home</a>
-                    <a href="/level1/index.html" class="">L1 Basics</a>
-                    <a href="/level2/index.html" class="">L2 Trades</a>
-                    <a href="/builder/index.html" class="">Builder</a>
-                </nav>
-    </header>
-                <div class="wrap">
-                    <div class="hero"><span class="badge">Traditional HTML • No build needed • For All Ages</span>
-                        <h1>Learn Options by Building Them.<br>Simple enough for anyone.</h1>
-                        <p>5 levels, from "what's a Call?" to Iron Condor. We explain with everyday analogies — sneaker store, house reservation, concert tickets — so it clicks for all ages.</p>
-                        <div style="margin-top:16px;display:flex;gap:8px">
-                            <a class="btn" href="/level1/index.html">Start Level 1 — Free</a>
-                            <a class="btn btn-ghost" href="/builder/index.html">Open Builder</a></div></div>
-                            <div class="grid2">
-                                <div class="card">
-                                    <div class="small">Level 1</div>
-                                    <h3>What is an Option?</h3>
-                                    <p>Pay $5 to reserve $100 sneakers. That's a Call. Full article with visuals for all ages.</p>
-                                    <a href="/level1/index.html">Read →</a></div>
-                                    <div class="card">
-                                        <div class="small">Level 2</div>
-                                        <h3>Your First Trades</h3>
-                                        <p>Long Call, Long Put, Covered Call — why $300 can control $10,000 of stock.</p>
-                                        <a href="/level2/index.html">Read →</a></div>
-                                        <div class="card">
-                                            <div class="small">Level 3</div>
-                                        <h3>Spreads — Limit Risk</h3>
-                                        <p>Why pros never buy naked. Bull spreads, Iron Condor — the tent.</p>
-                                        <a href="/builder/index.html">Open Builder →</a></div>
-                                        <div class="card"><div class="small">Tool</div>
-                                        <h3>Builder — like optioncreator.com</h3>
-                                        <p>Manual premiums, delayed data, 100% client-side. Red = loss, Green = profit.</p>
-                                        <a href="/builder/index.html">Build now →</a></div></div></div>
-                                        <footer>Educational purposes only — NOT financial advice. jsm-options.com • For All Ages</footer>
+<header>
+  <!-- FIXED: Logo + site name now clickable to home -->
+  <a href="/" class="logo-link" aria-label="JSM Options - Go to homepage">
+    <div class="logo-icon">JSM</div>
+    <div>
+      <div class="logo-text-title">JSM Options</div>
+      <div class="logo-text-sub">
+        <a href="/" title="Go to jsm-options.com homepage">jsm-options.com</a> • Beginner-friendly
+      </div>
+    </div>
+  </a>
+
+  <nav class="nav" aria-label="Main navigation">
+    <a href="/" class="active">Home</a>
+    <a href="/level1/index.html">L1 Basics</a>
+    <a href="/level2/index.html">L2 Trades</a>
+    <a href="/builder/index.html">Builder</a>
+  </nav>
+</header>
+
+<div class="wrap">
+  <div class="hero">
+    <span class="badge">Traditional HTML • No build needed • No login</span>
+    <h1>Learn Options by Building Them.<br>Simple enough for everyone.</h1>
+    <p>5 levels, from "what's a Call?" to Iron Condor. We explain with everyday analogies — sneaker store reservation, house deposit, concert tickets — so it clicks instantly. Plus an interactive P/L builder inspired by optioncreator.com.</p>
+    <div class="btn-row">
+      <a class="btn" href="/level1/index.html">Start Level 1 — Free</a>
+      <a class="btn btn-ghost" href="/builder/index.html">Open Builder</a>
+    </div>
+  </div>
+
+  <div class="grid2">
+    <div class="card">
+      <div class="small">Level 1 • Free</div>
+      <h3>What is an Option?</h3>
+      <p>Pay $5 to reserve $100 sneakers. That's a Call. Full article with visuals explained for beginners.</p>
+      <a href="/level1/index.html">Read Level 1 →</a>
+    </div>
+    <div class="card">
+      <div class="small">Level 2 • Free</div>
+      <h3>Your First Trades</h3>
+      <p>Long Call, Long Put, Covered Call — why $300 can control $10,000 of stock and what the risk really is.</p>
+      <a href="/level2/index.html">Read Level 2 →</a>
+    </div>
+    <div class="card">
+      <div class="small">Level 3 • Spreads</div>
+      <h3>Spreads — Limit Risk</h3>
+      <p>Why pros never buy naked. Bull Call Spread, Bear Put Spread, Iron Condor — the tent analogy.</p>
+      <a href="/builder/index.html">Try in Builder →</a>
+    </div>
+    <div class="card">
+      <div class="small">Tool • Client-side</div>
+      <h3>Builder — like optioncreator.com</h3>
+      <p>Manual premiums, delayed data, 100% client-side. Red = loss, Green = profit. No API keys, no tracking.</p>
+      <a href="/builder/index.html">Build now →</a>
+    </div>
+  </div>
+
+  <div class="disclaimer">
+    <strong>Educational purposes only.</strong> Options trading involves substantial risk and is not suitable for all investors. Nothing on <a href="https://jsm-options.com" style="text-decoration:underline; color:inherit">jsm-options.com</a> is financial advice. Please read our <a href="/disclaimer.html" style="text-decoration:underline; color:inherit">full risk disclaimer</a>.
+  </div>
+</div>
+
+<footer>
+  <div>
+    © 2026 <a href="https://jsm-options.com" title="JSM Options Homepage">JSM Options</a> — <a href="/">jsm-options.com</a> • Beginner-friendly education
+  </div>
+  <div class="footer-links">
+    <a href="/about.html">About</a>
+    <a href="/level1/index.html">Learn</a>
+    <a href="/builder/index.html">Builder</a>
+    <a href="/privacy.html">Privacy</a>
+    <a href="/disclaimer.html">Risk Disclaimer</a>
+    <a href="/contact.html">Contact</a>
+  </div>
+</footer>
 </body>
 </html>
