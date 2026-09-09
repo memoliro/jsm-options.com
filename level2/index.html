@@ -1,33 +1,84 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width,initial-scale=1">
-        <title>Level 2 — First Trades</title>
-        <link rel="stylesheet" href="../assets/style.css">
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-BDL003RCN6"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-BDL003RCN6');
-</script>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Level 2: Your First Trades | JSM Options</title>
+  <meta name="description" content="Long Call, Long Put, Covered Call explained with real numbers. Level 2.">
+  <link rel="canonical" href="https://jsm-options.com/level2/">
+  <link rel="stylesheet" href="/assets/style.css">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-BDL003RCN6"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-BDL003RCN6');</script>
 </head>
 <body>
-    <header>
-        <div class="logo">
-            <div class="logo-icon">JSM</div>
-            <div>
-                <div style="font-weight:700">JSM Options</div>
-                <div style="font-size:11px;color:#71717a">jsm-options.com • For All Ages</div></div></div>
-                <nav class="nav"><a href="../index.html" class="">Home</a>
-                    <a href="../level1/index.html" class="">L1 Basics</a>
-                    <a href="../level2/index.html" class="active">L2 Trades</a>
-                    <a href="../builder/index.html" class="">Builder</a>
-                </nav>
-            </header>
-            <div class="wrap">
-                <div class="card"><span class="badge">Level 2 • For All Ages</span>
-                    <h1>Your First 3 Trades</h1><h2>1. Long Call — "I think it goes up"</h2><p>Stock $100, buy $100 Call for $3. Max loss <span style="color:#ef4444">$3 </span>. Max gain unlimited. Breakeven $103.</p><h2>2. Long Put — "I think it drops"</h2><p>Stock $100, buy $100 Put for $3. If stock to $80, sell at $100, profit $17.</p><h2>3. Bull Call Spread</h2><p>Long $95 Call $6 + Short $110 Call $2 = Net $4. Cheaper, limited risk. Loss below $99, profit between $99-$110.</p><a class="btn" href="../builder/index.html">Open Builder — see red/green</a></div></div><footer>jsm-options.com</footer></body></html>
+<header>
+  <a href="/" class="logo-link" aria-label="JSM Options Home">
+    <div class="logo">
+      <div class="logo-icon">JSM</div>
+      <div>
+        <div style="font-weight:700">JSM Options</div>
+        <div style="font-size:11px;color:#71717a"><a href="/">jsm-options.com</a> • Beginner-friendly</div>
+      </div>
+    </div>
+  </a>
+  <nav class="nav">
+    <a href="/">Home</a>
+    <a href="/level1/index.html">L1 Basics</a>
+    <a href="/level2/index.html" class="active">L2 Trades</a>
+    <a href="/builder/index.html">Builder</a>
+  </nav>
+</header>
+
+<div class="wrap">
+  <div class="hero">
+    <span class="badge">Level 2 • Your First Trades</span>
+    <h1>Long Call, Long Put, Covered Call — With Real Numbers.</h1>
+    <p>Level 1 gave you the idea. Now let's trade: why $300 can control $10,000 of stock, and where the risk really hides.</p>
+  </div>
+
+  <div class="grid2">
+    <div class="card">
+      <div class="small">Bullish • Unlimited upside</div>
+      <h3>Long Call</h3>
+      <p>You pay premium, you profit if stock goes up beyond Strike + Premium.</p>
+      <div class="analogy">Stock $100, Buy Call Strike $105 for $3. At $110 expiry: profit = $110-$105-$3 = $2 × 100 = $200.</div>
+      <p>Risk: limited to $300 premium. Reward: unlimited.</p>
+      <a href="/builder/index.html" class="btn btn-ghost" style="margin-top:8px;display:inline-block">Try in Builder →</a>
+    </div>
+    <div class="card">
+      <div class="small">Bearish • Profits when falls</div>
+      <h3>Long Put</h3>
+      <p>Right to SELL at strike. You profit when stock crashes.</p>
+      <div class="analogy">Stock $100, Buy Put Strike $95 for $2.50. Stock falls to $80: profit = $95-$80-$2.50 = $12.50 × 100 = $1250.</div>
+      <p>Used as insurance or directional bet.</p>
+      <a href="/builder/index.html" class="btn btn-ghost" style="margin-top:8px;display:inline-block">Try in Builder →</a>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="small">Income • Own 100 shares</div>
+    <h3>Covered Call — The Rent Strategy</h3>
+    <p>You own 100 shares of AAPL at $100. You sell a Call at $110 for $2. You keep $200 rent. If AAPL stays below $110, you keep rent + shares. If it goes to $120, you must sell at $110 — you miss extra upside but you still profited.</p>
+    <ul>
+      <li>Best when you think stock will stay flat or go up a little</li>
+      <li>Risk: if stock crashes, you still own it — you lose on shares</li>
+    </ul>
+    <div style="margin-top:12px;display:flex;gap:10px">
+      <a class="btn" href="/builder/index.html">Build Covered Call →</a>
+      <a class="btn btn-ghost" href="/level1/index.html">← Back to L1</a>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Quick Math: Why Options Are ×100</h2>
+    <p>1 contract = 100 shares. Premium quoted per share, but you pay ×100. So $3 premium = $300 debit. P/L chart uses ×100 — Green = profit, Red = loss, just like in Builder.</p>
+    <span class="badge">Next: Spreads — why pros never buy naked</span>
+  </div>
+</div>
+
+<footer>
+  <div>© 2026 <a href="https://jsm-options.com">JSM Options</a> — <a href="/">jsm-options.com</a></div>
+  <div class="footer-links"><a href="/">Home</a><a href="/level1/index.html">L1</a><a href="/builder/index.html">Builder</a><a href="/disclaimer.html">Disclaimer</a></div>
+</footer>
+</body>
+</html>
