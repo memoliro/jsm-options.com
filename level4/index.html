@@ -9,10 +9,22 @@
   <link rel="stylesheet" href="/assets/style.css">
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-BDL003RCN6"></script>
   <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-BDL003RCN6');</script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
   <style>
-    .theta-box{background:var(--input);border:1px solid var(--border);border-radius:12px;padding:12px;margin:12px 0}
-    .theta-box canvas{max-height:260px}
+    .theta-box{
+      background:var(--input);
+      border:1px solid var(--border);
+      border-radius:12px;
+      padding:16px 14px 12px;
+      margin:12px 0;
+    }
+    .theta-box svg{width:100%;height:auto;display:block}
+    .theta-caption{
+      font-size:.8rem;
+      color:var(--muted);
+      text-align:center;
+      margin-top:10px;
+      line-height:1.4;
+    }
   </style>
 </head>
 <body>
@@ -57,9 +69,49 @@
 
   <div class="card">
     <h2>Theta decay — sample shape</h2>
-    <p>Illustrative curve: time value often wastes faster as expiry approaches (all else equal). Long options usually <span class="loss">pay</span> theta; short premium often <span class="profit">collects</span> it — with risk attached.</p>
+    <p>Typical teaching picture: with other factors fixed, <b>time value</b> often falls faster in the last weeks before expiry than early in the life of the option. Long options usually <span class="loss">pay</span> theta; short premium often <span class="profit">collects</span> it — with risk attached.</p>
     <div class="theta-box">
-      <canvas id="thetaChart" height="220"></canvas>
+      <svg viewBox="0 0 640 280" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Illustrative theta decay: time value falls faster as expiry approaches">
+        <defs>
+          <linearGradient id="tvFill" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#3b82f6" stop-opacity="0.35"/>
+            <stop offset="100%" stop-color="#3b82f6" stop-opacity="0.02"/>
+          </linearGradient>
+        </defs>
+        <!-- plot area -->
+        <rect x="56" y="24" width="520" height="200" fill="#0f1419" stroke="#2d3a4f" rx="6"/>
+        <!-- grid lines -->
+        <g stroke="#2d3a4f" stroke-width="1">
+          <line x1="56" y1="74" x2="576" y2="74"/>
+          <line x1="56" y1="124" x2="576" y2="124"/>
+          <line x1="56" y1="174" x2="576" y2="174"/>
+          <line x1="186" y1="24" x2="186" y2="224"/>
+          <line x1="316" y1="24" x2="316" y2="224"/>
+          <line x1="446" y1="24" x2="446" y2="224"/>
+        </g>
+        <!-- area under curve: high at left (90 DTE), steep drop near right (0 DTE) -->
+        <path d="M56,48 C120,50 180,55 250,70 C320,88 380,115 440,155 C500,200 540,215 576,220 L576,224 L56,224 Z"
+              fill="url(#tvFill)"/>
+        <path d="M56,48 C120,50 180,55 250,70 C320,88 380,115 440,155 C500,200 540,215 576,220"
+              fill="none" stroke="#3b82f6" stroke-width="2.5" stroke-linecap="round"/>
+        <!-- axis labels -->
+        <g fill="#8b9bb4" font-family="Segoe UI, system-ui, sans-serif" font-size="12">
+          <text x="56" y="248">90 DTE</text>
+          <text x="186" y="248" text-anchor="middle">60</text>
+          <text x="316" y="248" text-anchor="middle">30</text>
+          <text x="446" y="248" text-anchor="middle">15</text>
+          <text x="576" y="248" text-anchor="end">0 (expiry)</text>
+          <text x="28" y="124" text-anchor="middle" transform="rotate(-90 28 124)">Time value →</text>
+          <text x="56" y="40" fill="#93c5fd" font-size="11">More time value</text>
+          <text x="500" y="210" fill="#93c5fd" font-size="11">Little left</text>
+        </g>
+        <!-- annotation -->
+        <g fill="#eab308" font-family="Segoe UI, system-ui, sans-serif" font-size="11">
+          <text x="400" y="100">Decay often accelerates</text>
+          <text x="400" y="114">near expiry →</text>
+        </g>
+      </svg>
+      <p class="theta-caption">Static illustration only — not a live pricing model. Actual theta depends on strike, IV, and moneyness.</p>
     </div>
     <p style="font-size:.85rem;color:var(--muted)">Sample only — real theta depends on strike, IV, rates, and moneyness. Use the Builder’s Days Remaining slider on a live template to see <em>your</em> structure decay.</p>
   </div>
@@ -141,62 +193,5 @@
   </div>
 </footer>
 
-<script>
-(function(){
-  var ctx = document.getElementById('thetaChart');
-  if (!ctx || typeof Chart === 'undefined') return;
-  // Illustrative remaining time value vs DTE (not a specific contract)
-  var labels = [];
-  var data = [];
-  for (var d = 90; d >= 0; d -= 1) {
-    labels.push(d);
-    // convex-ish decay toward 0
-    var t = d / 90;
-    data.push(100 * (Math.exp(1.2 * t) - 1) / (Math.exp(1.2) - 1));
-  }
-  new Chart(ctx, {
-    type: 'line',
-    data: {
-      labels: labels,
-      datasets: [{
-        label: 'Illustrative time value',
-        data: data,
-        borderColor: 'rgba(59,130,246,0.95)',
-        backgroundColor: 'rgba(59,130,246,0.12)',
-        fill: true,
-        pointRadius: 0,
-        borderWidth: 2,
-        tension: 0.25
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: true,
-      plugins: {
-        legend: { display: false },
-        tooltip: {
-          callbacks: {
-            title: function(items){ return items[0].label + ' DTE'; },
-            label: function(c){ return 'Relative time value ~ ' + c.parsed.y.toFixed(0); }
-          }
-        }
-      },
-      scales: {
-        x: {
-          reverse: true,
-          title: { display: true, text: 'Days to expiry →', color: '#8b9bb4' },
-          ticks: { color: '#8b9bb4', maxTicksLimit: 10 },
-          grid: { color: 'rgba(45,58,79,0.5)' }
-        },
-        y: {
-          title: { display: true, text: 'Relative time value', color: '#8b9bb4' },
-          ticks: { color: '#8b9bb4' },
-          grid: { color: 'rgba(45,58,79,0.5)' }
-        }
-      }
-    }
-  });
-})();
-</script>
 </body>
 </html>
