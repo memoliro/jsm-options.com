@@ -3,8 +3,8 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width,initial-scale=1">
-        <title>JSM Options — Beginner-friendly</title>
-        <link rel="stylesheet" href="/assets/style.css">
+        <title>Level 1 — What is an Option? Beginner-friendly</title>
+        <link rel="stylesheet" href="../assets/style.css">
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-BDL003RCN6"></script>
 <script>
@@ -21,42 +21,62 @@
             <div class="logo-icon">JSM</div>
             <div>
                 <div style="font-weight:700">JSM Options</div>
-                <div style="font-size:11px;color:#71717a">jsm-options.com • Beginner-friendly</div>
+                <div style="font-size:11px;color:#71717a">jsm-options.com • Beginner-friendly </div>
             </div>
         </div>
-                <nav class="nav"><a href="/index.html" class="active">Home</a>
-                    <a href="/level1/index.html" class="">L1 Basics</a>
+                <nav class="nav">
+                    <a href="/index.html" class="">Home</a>
+                    <a href="/level1/index.html" class="active">L1 Basics</a>
                     <a href="/level2/index.html" class="">L2 Trades</a>
                     <a href="/builder/index.html" class="">Builder</a>
                 </nav>
     </header>
-                <div class="wrap">
-                    <div class="hero"><span class="badge">Traditional HTML • No build needed • Beginner-friendly</span>
-                        <h1>Learn Options by Building Them.<br>Simple enough for anyone.</h1>
-                        <p>5 levels, from "what's a Call?" to Iron Condor. We explain with everyday analogies — sneaker store, house reservation, concert tickets — so it clicks Beginner-friendly.</p>
-                        <div style="margin-top:16px;display:flex;gap:8px">
-                            <a class="btn btn-ghost" href="/level1/index.html">Start Level 1 </a>
-                            <a class="btn btn-ghost" href="/builder/index.html">Open Builder</a></div></div>
-                            <div class="grid2">
-                                <div class="card">
-                                    <div class="small">Level 1</div>
-                                    <h3>What is an Option?</h3>
-                                    <p>Pay $5 to reserve $100 sneakers. That's a Call. Full article with visuals Beginner-friendly.</p>
-                                    <a href="/level1/index.html">Read →</a></div>
-                                    <div class="card">
-                                        <div class="small">Level 2</div>
-                                        <h3>Your First Trades</h3>
-                                        <p>Long Call, Long Put, Covered Call — why $300 can control $10,000 of stock.</p>
-                                        <a href="/level2/index.html">Read →</a></div>
-                                        <div class="card">
-                                            <div class="small">Level 3</div>
-                                        <h3>Spreads — Limit Risk</h3>
-                                        <p>Why pros never buy naked. Bull spreads, Iron Condor — the tent.</p>
-                                        <a href="/builder/index.html">Open Builder →</a></div>
-                                        <div class="card"><div class="small">Tool</div>
-                                        <h3>Builder — like optioncreator.com</h3>
-                                        <p>Manual premiums, delayed data, 100% client-side. Red = loss, Green = profit.</p>
-                                        <a href="/builder/index.html">Build now →</a></div></div></div>
-                                        <footer>Educational purposes only — NOT financial advice. jsm-options.com • Beginner-friendly</footer>
-</body>
-</html>
+            <div class="wrap">
+<div class="card">
+    <span class="badge">Level 1 • Beginner-friendly • No jargon</span>
+    <h1>What is an Option? It's just a reservation ticket.</h1>
+    <p>If you've ever paid to <b>reserve</b> something — sneakers, a PS5, concert ticket, or a house — you already understand options. Let's make it simple Beginner-friendly.</p>
+    <img src="/images/sneaker_store_reservation.webp" alt="Sneaker reservation"></div>
+
+<div class="card">
+    <h2>Story 1: The $100 Sneakers</h2>
+    <p>You see limited sneakers for <span class="term">$100</span> at the store. You don't have $100 today, but you have $5. You ask: "Can I pay $5 now to reserve the right to buy them at $100 any time in the next 30 days?"</p>
+    <p>The store says yes. That $5 is called <span class="term">Premium</span>. The $100 is <span class="term">Strike</span>. The 30 days is <span class="term">Expiry</span>. The sneakers are <span class="term">Underlying</span>.</p>
+    <div class="analogy"><b>What happens?</b><ul>
+        <li>If sneakers go to $150 — you still buy at $100. Profit $50 - $5 = <b style="color:#86efac">$45</b>.</li>
+        <li>If they drop to $70 — you walk away. Loss only <b style="color:#ef4444">$5</b>.</li></ul>
+        <p>That contract for $5 is a <b>Call Option</b>. <span class="term">CALL = right to BUY</span>.</p></div>
+        <img src="/images/options_trading_terms_infographic.webp" alt="5 terms">
+    </div>
+
+<div class="card">
+    <h2>Story 2: The House — CALL vs PUT</h2>
+    <img src="/images/call_vs_put_house_poster.webp" alt="Call vs Put"><p><b>CALL:</b> Pay small fee now to lock right to <b>BUY</b> later at today's price. Good if you think price will GO UP.</p>
+    <p><b>PUT:</b> You own a house worth $200k. Pay fee to lock right to <b>SELL</b> at $200k later. If market crashes to $150k, you still sell at $200k. Good if you think price will GO DOWN.</p>
+    <div class="analogy">
+        <b>Key:</b> It's a RIGHT, not obligation. You can walk away. Max loss = premium paid.</div>
+    </div>
+
+<div class="card"><h2>Story 3: Concert Tickets</h2>
+    <p>Taylor Swift tickets $200 today, concert in 30 days. You pay $20 to reserve right to buy at $200. That's a Call with 30-day expiry.</p>
+    <p>If resale goes to $400, you buy at $200, sell at $400 = +$180. If resale drops to $100, you let it expire. Loss <span style="color:#ef4444">$20 </span>.</p>
+    <p><span class="term">Expiry</span> = date your ticket dies. After expiry, worth $0.</p>
+</div>
+
+<div class="card"><h2>The 5 Words You Must Know</h2><ul>
+    <li><span class="term">Underlying</span>: The real thing — Apple stock, Bitcoin, or those sneakers.</li>
+    <li><span class="term">Strike</span>: Agreed price — "I can buy at $100 no matter what."</li>
+    <li><span class="term">Premium</span>: What you pay now — $3, $5. Max loss if trade fails.</li>
+    <li><span class="term">Expiry / DTE</span>: Deadline — how long reservation lasts.</li>
+    <li><span class="term">CALL vs PUT</span>: Call = right to BUY (bullish), Put = right to SELL (bearish).</li></ul>
+    <p><span class="term">Long = Buy</span>, <span class="term">Short = Sell</span>. "Long Call" = you bought a Call.</p>
+</div>
+
+<div class="card"><h2>How You Make Money — Payoff Picture</h2>
+    <img src="/images/call_option_payoff_infographic.webp" alt="Payoff"><p><b>Read it:</b> Flat line at <span style="color:#ef4444">-$3 </span> = loss if below $100. At $100 Strike, it rises. At $103 (Strike+Premium) you break even. Above $103 — profit, unlimited.</p><div class="analogy"><b>Beginner-friendly formula:</b> Breakeven = Strike + Premium. $100 + $3 = $103 must be crossed to profit.</div></div>
+
+<div class="card" style="text-align:center"><h3>Ready for Level 2?</h3><p>Now you know CALL vs PUT, Strike, Premium, Expiry. Next: first real trades.</p>
+    <a class="btn btn-ghost" href="/level2/index.html">Go to Level 2 →</a> 
+    <a class="btn btn-ghost" href="/builder/index.html">Or jump to Builder</a></div>
+</div>
+<footer>jsm-options.com • Level 1 • Beginner-friendly • Educational only</footer></body></html>
