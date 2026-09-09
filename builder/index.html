@@ -258,6 +258,37 @@
       font-size: 0.72rem;
       color: var(--muted);
     }
+    .greeks-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      margin-top: 10px;
+    }
+    @media (max-width: 600px) {
+      .greeks-grid { grid-template-columns: 1fr 1fr; }
+    }
+    .greek-card {
+      background: #0f172a;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 8px 10px;
+    }
+    .greek-card .g-name {
+      font-size: 0.72rem;
+      color: #93c5fd;
+      font-weight: 600;
+    }
+    .greek-card .g-val {
+      font-size: 1.05rem;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+      margin: 2px 0;
+    }
+    .greek-card .g-impact {
+      font-size: 0.68rem;
+      color: var(--muted);
+      line-height: 1.35;
+    }
   </style>
 </head>
 <body>
@@ -390,8 +421,31 @@
           </div>
         </div>
       </div>
-      <div class="edu-tip" id="eduTip">
-        Long Call loaded by default. Edit any field — graph updates live. Use Strategy Template for multi-leg setups.
+      <h2 style="margin-top:14px;margin-bottom:6px;">Option Greeks <span style="font-size:0.72rem;color:var(--muted);font-weight:500;">(position total · ×100)</span></h2>
+      <div class="greeks-grid">
+        <div class="greek-card">
+          <div class="g-name">Δ Delta</div>
+          <div class="g-val" id="gDelta">—</div>
+          <div class="g-impact" id="gDeltaImpact">Price sensitivity: how much P/L changes if the stock moves $1.</div>
+        </div>
+        <div class="greek-card">
+          <div class="g-name">Γ Gamma</div>
+          <div class="g-val" id="gGamma">—</div>
+          <div class="g-impact" id="gGammaImpact">Convexity: how fast Delta changes when the stock moves.</div>
+        </div>
+        <div class="greek-card">
+          <div class="g-name">Θ Theta</div>
+          <div class="g-val" id="gTheta">—</div>
+          <div class="g-impact" id="gThetaImpact">Time decay: expected P/L change per day if nothing else moves.</div>
+        </div>
+        <div class="greek-card">
+          <div class="g-name">ν Vega</div>
+          <div class="g-val" id="gVega">—</div>
+          <div class="g-impact" id="gVegaImpact">Volatility sensitivity: P/L change if IV rises by 1 percentage point.</div>
+        </div>
+      </div>
+      <div class="edu-tip" id="eduTip" style="margin-top:10px;">
+        Long Call loaded by default. Edit any field — graph and Greeks update live. Use Strategy Template for multi-leg setups.
       </div>
     </div>
   </div>
@@ -430,6 +484,48 @@
         return S * Math.exp(-q * T) * normCDF(d1) - K * Math.exp(-r * T) * normCDF(d2);
       }
       return K * Math.exp(-r * T) * normCDF(-d2) - S * Math.exp(-q * T) * normCDF(-d1);
+    }
+
+    // Finite-difference Greeks (position-level, already × MULTIPLIER via signedQty)
+    function positionGreeks() {
+      const p = getParams();
+      const S = p.S;
+      const daysLeft = p.daysLeft;
+      const iv = p.iv;
+      const r = p.r;
+      const q = p.q;
+      const dS = Math.max(0.5, S * 0.005);
+      const dVol = 0.01; // 1 vol point
+      const dT = 1 / 365; // 1 day
+
+      function val(Ss, days, vol) {
+        let total = 0;
+        for (let i = 0; i < legs.length; i++) {
+          const leg = legs[i];
+          let vps;
+          if (leg.type === 'stock') {
+            vps = Ss;
+          } else {
+            const T = Math.max(0, Math.min(leg.dte, days)) / 365;
+            vps = blackScholes(Ss, leg.strike, T, r, q, vol, leg.type);
+          }
+          total += signedQty(leg) * vps * MULTIPLIER;
+        }
+        return total;
+      }
+
+      const v0 = val(S, daysLeft, iv);
+      const vUp = val(S + dS, daysLeft, iv);
+      const vDn = val(S - dS, daysLeft, iv);
+      const vVol = val(S, daysLeft, iv + dVol);
+      const vTime = daysLeft > 0 ? val(S, Math.max(0, daysLeft - 1), iv) : v0;
+
+      const delta = (vUp - vDn) / (2 * dS);
+      const gamma = (vUp - 2 * v0 + vDn) / (dS * dS);
+      const theta = vTime - v0; // P/L change for 1 day passing
+      const vega = vVol - v0;   // P/L change for +1% IV
+
+      return { delta: delta, gamma: gamma, theta: theta, vega: vega };
     }
 
     function defaultLongCall() {
@@ -864,7 +960,49 @@
       document.getElementById('daysLeftLabel').textContent = daysLeft;
 
       updateChart();
+      updateGreeksUI();
       updateEduTip();
+    }
+
+    function updateGreeksUI() {
+      if (!legs.length) {
+        document.getElementById('gDelta').textContent = '—';
+        document.getElementById('gGamma').textContent = '—';
+        document.getElementById('gTheta').textContent = '—';
+        document.getElementById('gVega').textContent = '—';
+        return;
+      }
+      const g = positionGreeks();
+      const fmt = function(x, d) {
+        const n = (d === undefined) ? 2 : d;
+        const s = x >= 0 ? '+' : '';
+        return s + x.toFixed(n);
+      };
+      document.getElementById('gDelta').textContent = fmt(g.delta, 1);
+      document.getElementById('gGamma').textContent = fmt(g.gamma, 2);
+      document.getElementById('gTheta').textContent = fmt(g.theta, 1);
+      document.getElementById('gVega').textContent = fmt(g.vega, 1);
+
+      // Impact blurbs (plain English)
+      const d = g.delta;
+      const th = g.theta;
+      const vg = g.vega;
+      document.getElementById('gDeltaImpact').textContent =
+        d > 5 ? 'Bullish bias: position gains if stock rises ~$' + Math.abs(d).toFixed(0) + ' per $1 up.'
+        : d < -5 ? 'Bearish bias: position gains if stock falls ~$' + Math.abs(d).toFixed(0) + ' per $1 down.'
+        : 'Near delta-neutral: small stock moves have limited directional impact.';
+      document.getElementById('gGammaImpact').textContent =
+        Math.abs(g.gamma) > 1
+          ? 'High gamma: Delta will shift quickly as the stock moves — P/L can accelerate.'
+          : 'Low gamma: Delta is relatively stable for small price moves.';
+      document.getElementById('gThetaImpact').textContent =
+        th < -5 ? 'Time works against you: about $' + Math.abs(th).toFixed(0) + ' expected decay per day.'
+        : th > 5 ? 'Time works for you: about $' + Math.abs(th).toFixed(0) + ' expected gain per day from decay.'
+        : 'Little daily time decay at current settings.';
+      document.getElementById('gVegaImpact').textContent =
+        vg > 5 ? 'Long volatility: +1% IV adds ~$' + Math.abs(vg).toFixed(0) + ' to position value.'
+        : vg < -5 ? 'Short volatility: +1% IV costs ~$' + Math.abs(vg).toFixed(0) + '; you benefit if IV falls.'
+        : 'Low vega: IV changes have limited effect right now.';
     }
 
     function onDaysChange() {
