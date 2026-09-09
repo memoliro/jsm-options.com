@@ -1,18 +1,19 @@
-Traditional HTML version like optioncreator.com
-No build needed.
-Upload all files to Cloudflare Pages with Build command empty, Output directory empty or /.
+JSM Options — traditional static site (Cloudflare Pages friendly)
+No build step. Upload the jsm-options.com folder (or its contents) to Pages.
 
-Fixed 2026-09-09:
-- Logo now links to / (homepage) - wrapped in <a href="/" class="logo-link">
-- jsm-options.com text links to homepage
-- Added /assets/style.css (was missing)
-- Unified GA ID to G-BDL003RCN6
-- Added SEO: description, canonical, OG, JSON-LD
-- Added /about.html, /privacy.html, /disclaimer.html, /contact.html for AdSense E-E-A-T
-- Added /level1/, /level2/, /builder/ placeholders to avoid 404s
-- Updated sitemap.xml with lastmod and all pages
-- Footer now has clickable jsm-options.com link
+Structure:
+  /                 Home (3 levels + builder)
+  /level1/          Basics + images
+  /level2/          First trades + Greeks intro
+  /level3/          Verticals + iron condor → Builder deep links
+  /builder/         Interactive simulator (?template=iron_condor etc.)
+  /images/          Lesson webp assets
+  /assets/style.css Shared theme (matches Builder)
+  /about /contact /disclaimer /privacy
 
-Deploy: drag-drop entire folder to Cloudflare Pages.
-GA ID G-BDL003RCN6 already embedded.
-Ads.txt pub-4747106371991816 at root.
+GA: G-BDL003RCN6
+ads.txt at root
+
+Builder query templates:
+  long_call, long_put, bull_call_spread, bear_put_spread, iron_condor,
+  long_straddle, short_straddle, iron_butterfly, calendar_call, ...

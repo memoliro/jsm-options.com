@@ -4,85 +4,89 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>JSM Options — Learn Options by Building Them</title>
-  <meta name="description" content="Beginner-friendly options education. Learn calls, puts, spreads, and build strategies in a free interactive simulator.">
+  <meta name="description" content="Beginner-friendly options education: calls, puts, spreads, iron condors, plus a free interactive strategy builder.">
   <link rel="canonical" href="https://jsm-options.com/">
   <link rel="stylesheet" href="/assets/style.css">
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-BDL003RCN6"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-BDL003RCN6');
-  </script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-BDL003RCN6');</script>
 </head>
 <body>
-  <header>
-    <a href="/" class="logo-link" aria-label="JSM Options Home">
-      <div class="logo">
-        <div class="logo-icon">JSM</div>
-        <div>
-          <div style="font-weight:700">JSM Options</div>
-          <div style="font-size:11px;color:var(--muted)">jsm-options.com · Beginner-friendly</div>
-        </div>
-      </div>
-    </a>
-    <nav class="nav">
-      <a href="/" class="active">Home</a>
-      <a href="/level1/index.html">L1 Basics</a>
-      <a href="/level2/index.html">L2 Trades</a>
-      <a href="/builder/index.html">Builder</a>
-    </nav>
-  </header>
-
-  <div class="wrap">
-    <div class="hero">
-      <span class="badge">Free · Client-side · Educational</span>
-      <h1>Learn Options by Building Them.<br>Simple enough for anyone.</h1>
-      <p>From “what’s a Call?” to Iron Condor. Everyday analogies — sneakers, house reservation, concert tickets — then practice in the live Builder (green = profit, red = loss).</p>
-      <div style="margin-top:16px;display:flex;gap:10px;flex-wrap:wrap">
-        <a class="btn" href="/level1/index.html">Start Level 1</a>
-        <a class="btn btn-secondary" href="/builder/index.html">Open Builder</a>
+<header>
+  <a href="/" class="logo-link" aria-label="Home">
+    <div class="logo">
+      <div class="logo-icon">JSM</div>
+      <div>
+        <div style="font-weight:700">JSM Options</div>
+        <div style="font-size:11px;color:var(--muted)">jsm-options.com · Educational</div>
       </div>
     </div>
+  </a>
+  <nav class="nav">
+    <a href="/" class="active">Home</a>
+    <a href="/level1/index.html">L1 Basics</a>
+    <a href="/level2/index.html">L2 Trades</a>
+    <a href="/level3/index.html">L3 Spreads</a>
+    <a href="/builder/index.html">Builder</a>
+  </nav>
+</header>
 
-    <div class="grid2">
-      <div class="card">
-        <div class="small">Level 1</div>
-        <h3>What is an Option?</h3>
-        <p>Pay $5 to reserve $100 sneakers. That’s a Call. Premium, strike, expiry — no jargon overload.</p>
-        <a href="/level1/index.html">Read Level 1 →</a>
-      </div>
-      <div class="card">
-        <div class="small">Level 2</div>
-        <h3>Your First Trades</h3>
-        <p>Long Call, Long Put, Covered Call — why $300 can control $10,000 of stock, with real numbers.</p>
-        <a href="/level2/index.html">Read Level 2 →</a>
-      </div>
-      <div class="card">
-        <div class="small">Next up</div>
-        <h3>Spreads &amp; defined risk</h3>
-        <p>Why many traders avoid naked short options. Bull spreads, iron condors — limit max loss.</p>
-        <a href="/builder/index.html">Explore in Builder →</a>
-      </div>
-      <div class="card">
-        <div class="small">Tool</div>
-        <h3>Strategy Builder</h3>
-        <p>Multi-leg payoff graphs, theta decay, Greeks, templates. 100% in your browser. Red = loss, green = profit.</p>
-        <a href="/builder/index.html">Build now →</a>
-      </div>
+<div class="wrap">
+  <div class="hero">
+    <span class="badge">Free · Client-side builder · Not financial advice</span>
+    <h1>Learn options by building them.</h1>
+    <p>Three clear levels — basics, first trades, defined-risk spreads — then practice in a live payoff simulator. Green = profit, red = loss. One contract = 100 shares.</p>
+    <div style="margin-top:16px;display:flex;gap:10px;flex-wrap:wrap">
+      <a class="btn" href="/level1/index.html">Start Level 1</a>
+      <a class="btn btn-secondary" href="/builder/index.html">Open Builder</a>
     </div>
   </div>
 
-  <footer>
-    <div>Educational purposes only — not financial advice.</div>
-    <div class="footer-links">
-      <a href="/">Home</a>
-      <a href="/level1/index.html">Level 1</a>
-      <a href="/level2/index.html">Level 2</a>
-      <a href="/builder/index.html">Builder</a>
-      <a href="/privacy/index.html">Privacy</a>
+  <div class="grid2">
+    <div class="card">
+      <div class="small">Level 1</div>
+      <h3>What is an option?</h3>
+      <p>Calls and puts as reservation tickets — sneakers, house, concert. Premium, strike, expiry.</p>
+      <a href="/level1/index.html">Read Level 1 →</a>
     </div>
-    <div style="margin-top:8px">© 2026 JSM Options · jsm-options.com</div>
-  </footer>
+    <div class="card">
+      <div class="small">Level 2</div>
+      <h3>Your first trades</h3>
+      <p>Long call, long put, covered call with real numbers. Why premiums are ×100. Intro to Greeks.</p>
+      <a href="/level2/index.html">Read Level 2 →</a>
+    </div>
+    <div class="card">
+      <div class="small">Level 3</div>
+      <h3>Spreads &amp; iron condor</h3>
+      <p>Bull/bear verticals and the iron condor — defined risk, wired straight into the Builder.</p>
+      <a href="/level3/index.html">Read Level 3 →</a>
+    </div>
+    <div class="card">
+      <div class="small">Tool</div>
+      <h3>Strategy Builder</h3>
+      <p>Multi-leg graphs, theta decay, Greeks, templates. Runs in your browser. Illustrative premiums — edit to match a real chain.</p>
+      <a href="/builder/index.html">Build now →</a>
+    </div>
+  </div>
+
+  <div class="warn">
+    <strong>Risk warning:</strong> Options can expire worthless. You can lose 100% of premium paid on long options, and much more on some short strategies. This site is for education only — not trading advice.
+  </div>
+</div>
+
+<footer>
+  <div>Educational purposes only — not financial advice.</div>
+  <div class="footer-links">
+    <a href="/">Home</a>
+    <a href="/level1/index.html">L1</a>
+    <a href="/level2/index.html">L2</a>
+    <a href="/level3/index.html">L3</a>
+    <a href="/builder/index.html">Builder</a>
+    <a href="/disclaimer/index.html">Disclaimer</a>
+    <a href="/contact/index.html">Contact</a>
+    <a href="/privacy/index.html">Privacy</a>
+    <a href="/about/index.html">About</a>
+  </div>
+  <div style="margin-top:8px">© 2026 JSM Options · jsm-options.com</div>
+</footer>
 </body>
 </html>

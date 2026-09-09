@@ -314,11 +314,12 @@
         </a>
             </div>
         </div>
-                <nav class="nav"><a href="/" class="">Home</a>
-                    <a href="/level1/index.html" class="">L1 Basics</a>
-                    <a href="/level2/index.html" class="">L2 Trades</a>
+                <nav class="nav">
+                    <a href="/">Home</a>
+                    <a href="/level1/index.html">L1 Basics</a>
+                    <a href="/level2/index.html">L2 Trades</a>
+                    <a href="/level3/index.html">L3 Spreads</a>
                     <a href="/builder/index.html" class="active">Builder</a>
-                    
                 </nav>
     </header>
   <h1>Options Strategy Builder & Simulator</h1>
@@ -327,7 +328,7 @@
   <div class="card" style="margin-bottom:12px;">
     <div class="top-bar">
       <div class="field wide">
-        <label>Strategy Template</label>
+        <label>Strategy Template <span style="font-weight:400;color:var(--muted)">(illustrative premiums — edit to match a chain)</span></label>
         <select id="strategyTemplate" onchange="applyTemplate()">
           <option value="">— Select a template —</option>
           <optgroup label="Bullish">
@@ -1108,6 +1109,25 @@
     updateSpotSliderRange();
     renderLegs();
     recalc();
+  
+    // Deep-link templates from lessons: ?template=bull_call_spread
+    document.addEventListener('DOMContentLoaded', function() {
+      try {
+        var params = new URLSearchParams(window.location.search);
+        var key = params.get('template');
+        if (!key) return;
+        var sel = document.getElementById('strategyTemplate');
+        if (!sel) return;
+        for (var i = 0; i < sel.options.length; i++) {
+          if (sel.options[i].value === key) {
+            sel.value = key;
+            applyTemplate();
+            break;
+          }
+        }
+      } catch (err) {}
+    });
+
   </script>
 </body>
 </html>
