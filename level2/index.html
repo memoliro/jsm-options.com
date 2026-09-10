@@ -248,7 +248,7 @@
   </style>
 </head>
 <body>
-<header class="site-header"><div class="logo"><div class="logo-icon">JSM</div><div><div style="font-weight:700">JSM Options</div><div class="brand-sub">jsm-options.com · Educational</div></div></div><div class="header-right"><nav class="nav" aria-label="Primary navigation"><a href="/">Home</a><a href="/level1/index.html">Basics</a><a href="/level2/index.html" class="active">Fundamentals</a><a href="/level3/index.html">Spreads</a><a href="/level4/index.html">Advanced</a><a href="/strategies/index.html">Strategies</a><a href="/builder/index.html">Builder</a></nav><button type="button" class="theme-toggle" id="themeToggle" aria-label="Toggle color theme"><span class="theme-icon">☼</span><span class="theme-label">Theme</span></button></div></header>
+<header class="site-header"><div class="site-header-inner"><div class="logo"><div class="logo-icon">JSM</div><div><div style="font-weight:700">JSM Options</div><div class="brand-sub">jsm-options.com · Educational</div></div></div><div class="header-right"><nav class="nav" aria-label="Primary navigation"><a href="/">Home</a><a href="/level1/index.html">Basics</a><a href="/level2/index.html" class="active">Fundamentals</a><a href="/level3/index.html">Spreads</a><a href="/level4/index.html">Advanced</a><a href="/strategies/index.html">Strategies</a><a href="/builder/index.html">Builder</a></nav><button type="button" class="theme-toggle" id="themeToggle" aria-label="Toggle color theme"><span id="themeIcon" class="theme-icon">☼</span><span id="themeLabel" class="theme-label">Dark</span></button></div></div></header>
 
 <div class="wrap">
   <div class="hero">
@@ -497,41 +497,23 @@
   </div>
 </footer>
 
+
+
 <script>
-  (function () {
-    const root = document.documentElement;
-    const toggle = document.getElementById('themeToggle');
-    const icon = document.getElementById('themeIcon');
-    const label = document.getElementById('themeLabel');
-
-    function applyTheme(theme) {
-      root.setAttribute('data-theme', theme);
-      if (theme === 'light') {
-        icon.textContent = '🌙';
-        label.textContent = 'Dark';
-      } else {
-        icon.textContent = '☀️';
-        label.textContent = 'Light';
-      }
-      try { localStorage.setItem('jsm-theme', theme); } catch (e) {}
-    }
-
-    // Prefer saved theme, else system preference, else dark (site default)
-    let saved = null;
-    try { saved = localStorage.getItem('jsm-theme'); } catch (e) {}
-    if (saved === 'light' || saved === 'dark') {
-      applyTheme(saved);
-    } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
-      applyTheme('light');
-    } else {
-      applyTheme('dark');
-    }
-
-    toggle.addEventListener('click', function () {
-      const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-      applyTheme(next);
-    });
-  })();
+(function(){
+  const root=document.documentElement, toggle=document.getElementById('themeToggle'), icon=document.getElementById('themeIcon'), label=document.getElementById('themeLabel');
+  function applyTheme(theme){
+    root.setAttribute('data-theme',theme);
+    if(icon) icon.textContent=theme==='dark'?'🌙':'☀️';
+    if(label) label.textContent=theme==='dark'?'Dark':'Light';
+    if(toggle) toggle.setAttribute('aria-label',theme==='dark'?'Switch to light theme':'Switch to dark theme');
+    try{localStorage.setItem('jsm-theme',theme)}catch(e){}
+  }
+  let saved=null; try{saved=localStorage.getItem('jsm-theme')}catch(e){}
+  const initial=(saved==='light'||saved==='dark')?saved:((window.matchMedia&&window.matchMedia('(prefers-color-scheme: light)').matches)?'light':'dark');
+  applyTheme(initial);
+  if(toggle) toggle.addEventListener('click',function(){applyTheme(root.getAttribute('data-theme')==='dark'?'light':'dark')});
+})();
 </script>
 </body>
 </html>

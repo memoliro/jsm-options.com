@@ -10,7 +10,7 @@
   <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-BDL003RCN6');</script>
 </head>
 <body>
-<header class="site-header"><div class="logo"><div class="logo-icon">JSM</div><div><div style="font-weight:700">JSM Options</div><div class="brand-sub">jsm-options.com · Educational</div></div></div><div class="header-right"><nav class="nav" aria-label="Primary navigation"><a href="/">Home</a><a href="/level1/index.html">Basics</a><a href="/level2/index.html">Fundamentals</a><a href="/level3/index.html">Spreads</a><a href="/level4/index.html">Advanced</a><a href="/strategies/index.html">Strategies</a><a href="/builder/index.html">Builder</a></nav><button type="button" class="theme-toggle" id="themeToggle" aria-label="Toggle color theme"><span class="theme-icon">☼</span><span class="theme-label">Theme</span></button></div></header>
+<header class="site-header"><div class="site-header-inner"><div class="logo"><div class="logo-icon">JSM</div><div><div style="font-weight:700">JSM Options</div><div class="brand-sub">jsm-options.com · Educational</div></div></div><div class="header-right"><nav class="nav" aria-label="Primary navigation"><a href="/">Home</a><a href="/level1/index.html">Basics</a><a href="/level2/index.html">Fundamentals</a><a href="/level3/index.html">Spreads</a><a href="/level4/index.html">Advanced</a><a href="/strategies/index.html">Strategies</a><a href="/builder/index.html">Builder</a></nav><button type="button" class="theme-toggle" id="themeToggle" aria-label="Toggle color theme"><span id="themeIcon" class="theme-icon">☼</span><span id="themeLabel" class="theme-label">Dark</span></button></div></div></header>
 <div class="wrap">
   <div class="card">
     <h1>About JSM Options</h1>
@@ -23,13 +23,21 @@
 <footer>
   <div class="footer-links"><a href="/">Home</a><a href="/disclaimer/index.html">Disclaimer</a><a href="/privacy/index.html">Privacy</a></div>
 </footer>
+
 <script>
 (function(){
-  const root=document.documentElement,toggle=document.getElementById('themeToggle'),icon=document.getElementById('themeIcon'),label=document.getElementById('themeLabel');
-  function applyTheme(theme){root.setAttribute('data-theme',theme);if(icon)icon.textContent=theme==='dark'?'☀️':'🌙';if(label)label.textContent=theme==='dark'?'Light':'Dark';if(toggle)toggle.setAttribute('aria-label','Switch to '+(theme==='dark'?'light':'dark')+' theme');try{localStorage.setItem('jsm-theme',theme)}catch(e){}}
-  let saved=null;try{saved=localStorage.getItem('jsm-theme')}catch(e){}
-  applyTheme(saved==='light'||saved==='dark'?saved:(window.matchMedia&&window.matchMedia('(prefers-color-scheme: light)').matches?'light':'dark'));
-  if(toggle)toggle.addEventListener('click',function(){applyTheme(root.getAttribute('data-theme')==='dark'?'light':'dark')});
+  const root=document.documentElement, toggle=document.getElementById('themeToggle'), icon=document.getElementById('themeIcon'), label=document.getElementById('themeLabel');
+  function applyTheme(theme){
+    root.setAttribute('data-theme',theme);
+    if(icon) icon.textContent=theme==='dark'?'🌙':'☀️';
+    if(label) label.textContent=theme==='dark'?'Dark':'Light';
+    if(toggle) toggle.setAttribute('aria-label',theme==='dark'?'Switch to light theme':'Switch to dark theme');
+    try{localStorage.setItem('jsm-theme',theme)}catch(e){}
+  }
+  let saved=null; try{saved=localStorage.getItem('jsm-theme')}catch(e){}
+  const initial=(saved==='light'||saved==='dark')?saved:((window.matchMedia&&window.matchMedia('(prefers-color-scheme: light)').matches)?'light':'dark');
+  applyTheme(initial);
+  if(toggle) toggle.addEventListener('click',function(){applyTheme(root.getAttribute('data-theme')==='dark'?'light':'dark')});
 })();
 </script>
 </body>

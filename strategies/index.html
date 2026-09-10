@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Options Strategies — JSM Options</title>
@@ -14,7 +14,7 @@
 </style>
 </head>
 <body>
-<header class="site-header"><div class="logo"><div class="logo-icon">JSM</div><div><div style="font-weight:700">JSM Options</div><div class="brand-sub">jsm-options.com · Educational</div></div></div><div class="header-right"><nav class="nav" aria-label="Primary navigation"><a href="../index.html">Home</a><a href="../level1/index.html">Basics</a><a href="../level2/index.html">Fundamentals</a><a href="../level3/index.html">Spreads</a><a href="../level4/index.html">Advanced</a><a href="index.html" class="active">Strategies</a><a href="../builder/index.html">Builder</a></nav><button type="button" class="theme-toggle" id="themeToggle" aria-label="Toggle color theme"><span class="theme-icon">☼</span><span class="theme-label">Theme</span></button></div></header>
+<header class="site-header"><div class="site-header-inner"><div class="logo"><div class="logo-icon">JSM</div><div><div style="font-weight:700">JSM Options</div><div class="brand-sub">jsm-options.com · Educational</div></div></div><div class="header-right"><nav class="nav" aria-label="Primary navigation"><a href="/">Home</a><a href="/level1/index.html">Basics</a><a href="/level2/index.html">Fundamentals</a><a href="/level3/index.html">Spreads</a><a href="/level4/index.html">Advanced</a><a href="/strategies/index.html" class="active">Strategies</a><a href="/builder/index.html">Builder</a></nav><button type="button" class="theme-toggle" id="themeToggle" aria-label="Toggle color theme"><span id="themeIcon" class="theme-icon">☼</span><span id="themeLabel" class="theme-label">Dark</span></button></div></div></header>
 <main class="wrap wide">
 <section class="hero"><span class="badge">Strategy Library • 26 common strategies</span><h1>Options Strategies, Explained Simply</h1><p>Use this library to connect a market outlook with a strategy. Each card gives you the basic idea, the option legs involved, the general risk profile and what happens to the position at expiration.</p><p class="mini-note">This page is for education, not a recommendation to trade. Real-world results before expiration are affected by time decay, implied volatility, interest rates, assignment and other factors.</p></section>
 <div class="card">
@@ -23,10 +23,10 @@
 <div class="mini-note"><span id="count">26</span> strategies shown</div>
 </div>
 <div id="grid" class="strategy-grid"></div><div id="empty" class="empty">No strategies match your search. Try another term or choose “All”.</div>
-<section class="card" style="margin-top:18px"><h2 style="margin-top:0">How to use this library</h2><div class="grid3"><div><h3>1. Start with outlook</h3><p>Decide whether you expect the underlying to rise, fall, stay in a range, or make a large move.</p></div><div><h3>2. Check risk</h3><p>Look for defined versus potentially large or unlimited risk before studying the mechanics.</p></div><div><h3>3. Test the payoff</h3><p>Open the <a href="../builder/index.html" style="color:var(--text);text-decoration:underline">Strategy Builder</a> and experiment with strikes, premiums and expiration prices.</p></div></div></section>
+<section class="card" style="margin-top:18px"><h2 style="margin-top:0">How to use this library</h2><div class="grid3"><div><h3>1. Start with outlook</h3><p>Decide whether you expect the underlying to rise, fall, stay in a range, or make a large move.</p></div><div><h3>2. Check risk</h3><p>Look for defined versus potentially large or unlimited risk before studying the mechanics.</p></div><div><h3>3. Test the payoff</h3><p>Open the <a href="/builder/index.html" style="color:var(--text);text-decoration:underline">Strategy Builder</a> and experiment with strikes, premiums and expiration prices.</p></div></div></section>
 </main><footer>Educational only — not financial advice. JSM Options • <a href="../privacy/index.html">Privacy</a></footer>
 <script>
-(function(){const key="jsm-theme",root=document.documentElement,btn=document.getElementById("themeToggle");function apply(t){root.setAttribute("data-theme",t);if(btn)btn.setAttribute("aria-pressed",t==="light"?"true":"false");}const saved=localStorage.getItem(key);apply(saved||"dark");if(btn)btn.addEventListener("click",()=>{const next=root.getAttribute("data-theme")==="light"?"dark":"light";apply(next);localStorage.setItem(key,next)});})();
+(function(){const key="jsm-theme",root=document.documentElement,btn=document.getElementById("themeToggle"),icon=document.getElementById("themeIcon"),label=document.getElementById("themeLabel");function apply(t){root.setAttribute("data-theme",t);if(icon)icon.textContent=t==="dark"?"🌙":"☀️";if(label)label.textContent=t==="dark"?"Dark":"Light";if(btn)btn.setAttribute("aria-pressed",t==="light"?"true":"false");if(btn)btn.setAttribute("aria-label",t==="dark"?"Switch to light theme":"Switch to dark theme");}const saved=localStorage.getItem(key);apply(saved||"dark");if(btn)btn.addEventListener("click",()=>{const next=root.getAttribute("data-theme")==="light"?"dark":"light";apply(next);localStorage.setItem(key,next)});})();
 </script>
 <script>
 const strategies=[
@@ -109,4 +109,5 @@ function payoffChart(s){
 function render(){const q=search.value.trim().toLowerCase();const rows=strategies.filter(s=>(active==='all'||s.cat.includes(active))&&(!q||(s.name+' '+s.tag+' '+s.type+' '+s.legs+' '+s.desc).toLowerCase().includes(q)));count.textContent=rows.length;grid.innerHTML=rows.map(s=>`<article class="strategy-card"><div class="strategy-head"><div><h2>${s.name}</h2><span class="pill ${s.cat.includes('bullish')?'bullish':s.cat.includes('bearish')?'bearish':s.cat.includes('volatile')?'vol':s.cat.includes('hedging')?'hedge':'neutral'}">${s.tag}</span></div><span class="pill">${s.type}</span></div><div class="legs"><b>Structure:</b> ${s.legs}</div><p>${s.desc}</p>${payoffChart(s)}<div class="stats"><div class="stat"><span>Max profit</span><strong>${s.profit}</strong></div><div class="stat"><span>Max loss</span><strong>${s.loss}</strong></div><div class="stat"><span>Time decay</span><strong>${s.decay}</strong></div></div></article>`).join('');empty.style.display=rows.length?'none':'block'}
 document.querySelectorAll('.filter').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.filter').forEach(x=>x.classList.remove('active'));b.classList.add('active');active=b.dataset.filter;render()}));search.addEventListener('input',render);render();
 </script>
+
 </body></html>
