@@ -1,82 +1,110 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width,initial-scale=1">
-        <title>Level 1 — What is an Option? Beginner-friendly</title>
-        <link rel="stylesheet" href="../assets/style.css">
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-BDL003RCN6"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-BDL003RCN6');
-</script>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Level 1 — What is an Option? | JSM Options</title>
+  <meta name="description" content="What is an option? Learn calls and puts with sneakers, houses, and concert tickets.">
+  <link rel="canonical" href="https://jsm-options.com/level1/">
+  <link rel="stylesheet" href="/assets/style.css">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-BDL003RCN6"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-BDL003RCN6');</script>
 </head>
 <body>
-    <header>
-        <div class="logo">
-            <div class="logo-icon">JSM</div>
-            <div>
-                <div style="font-weight:700">JSM Options</div>
-                <div style="font-size:11px;color:#71717a">jsm-options.com • Beginner-friendly </div>
-            </div>
+<header class="site-header">
+  <div class="site-header-inner">
+    <a href="/" class="logo-link" aria-label="Home">
+      <div class="logo">
+        <div class="logo-icon">JSM</div>
+        <div>
+          <div style="font-weight:700">JSM Options</div>
+          <div style="font-size:11px;color:var(--muted)">Level 1 · Basics</div>
         </div>
-                <nav class="nav">
-                    <a href="/index.html" class="">Home</a>
-                    <a href="/level1/index.html" class="active">L1 Basics</a>
-                    <a href="/level2/index.html" class="">L2 Trades</a>
-                    <a href="/builder/index.html" class="">Builder</a>
-                </nav>
-    </header>
-            <div class="wrap">
-<div class="card">
-    <span class="badge">Level 1 • Beginner-friendly • No jargon</span>
-    <h1>What is an Option? It's just a reservation ticket.</h1>
-    <p>If you've ever paid to <b>reserve</b> something — sneakers, a PS5, concert ticket, or a house — you already understand options. Let's make it simple Beginner-friendly.</p>
-    <img src="/images/sneaker_store_reservation.webp" alt="Sneaker reservation"></div>
+      </div>
+    </a>
+    <nav class="nav">
+      <a href="/" >Home</a>
+      <a href="/level1/index.html" class="active">L1 Basics</a>
+      <a href="/level2/index.html" >L2 Trades</a>
+      <a href="/level3/index.html" >L3 Spreads</a>
+      <a href="/level4/index.html" >L4 Advanced</a>
+      <a href="/builder/index.html" >Builder</a>
+    </nav>
+  </div>
+</header>
 
-<div class="card">
-    <h2>Story 1: The $100 Sneakers</h2>
-    <p>You see limited sneakers for <span class="term">$100</span> at the store. You don't have $100 today, but you have $5. You ask: "Can I pay $5 now to reserve the right to buy them at $100 any time in the next 30 days?"</p>
-    <p>The store says yes. That $5 is called <span class="term">Premium</span>. The $100 is <span class="term">Strike</span>. The 30 days is <span class="term">Expiry</span>. The sneakers are <span class="term">Underlying</span>.</p>
-    <div class="analogy"><b>What happens?</b><ul>
-        <li>If sneakers go to $150 — you still buy at $100. Profit $50 - $5 = <b style="color:#86efac">$45</b>.</li>
-        <li>If they drop to $70 — you walk away. Loss only <b style="color:#ef4444">$5</b>.</li></ul>
-        <p>That contract for $5 is a <b>Call Option</b>. <span class="term">CALL = right to BUY</span>.</p></div>
-        <img src="/images/options_trading_terms_infographic.webp" alt="5 terms">
-    </div>
+<div class="wrap">
+  <div class="card">
+    <span class="badge">Level 1 · No jargon overload</span>
+    <h1>What is an option? It’s a reservation ticket.</h1>
+    <p>If you’ve paid to <b>reserve</b> sneakers, a console, concert tickets, or a house, you already get the idea.</p>
+    <img src="/images/sneaker_store_reservation.webp" alt="Sneaker store reservation analogy for a call option" width="900" height="500" loading="eager">
+  </div>
 
-<div class="card">
-    <h2>Story 2: The House — CALL vs PUT</h2>
-    <img src="/images/call_vs_put_house_poster.webp" alt="Call vs Put"><p><b>CALL:</b> Pay small fee now to lock right to <b>BUY</b> later at today's price. Good if you think price will GO UP.</p>
-    <p><b>PUT:</b> You own a house worth $200k. Pay fee to lock right to <b>SELL</b> at $200k later. If market crashes to $150k, you still sell at $200k. Good if you think price will GO DOWN.</p>
+  <div class="card">
+    <h2>Story 1: The $100 sneakers</h2>
+    <p>Limited sneakers cost <span class="term">$100</span>. You only have $5 today. You pay $5 to reserve the right to buy at $100 within 30 days.</p>
+    <p>That $5 is <span class="term">Premium</span>. $100 is <span class="term">Strike</span>. 30 days is <span class="term">Expiry</span>. The sneakers are the <span class="term">Underlying</span>.</p>
     <div class="analogy">
-        <b>Key:</b> It's a RIGHT, not obligation. You can walk away. Max loss = premium paid.</div>
+      <b>Outcomes</b>
+      <ul>
+        <li>Sneakers go to $150 → you still buy at $100. Gain about <span class="profit">$45</span> after the $5 fee.</li>
+        <li>They fall to $70 → you walk away. Loss only <span class="loss">$5</span>.</li>
+      </ul>
+      <p>That contract is a <b>Call</b>. <span class="term">CALL = right to BUY</span>.</p>
     </div>
+    <img src="/images/options_trading_terms_infographic.webp" alt="Options terms: underlying, strike, premium, expiry, call vs put" width="900" height="500" loading="lazy">
+  </div>
 
-<div class="card"><h2>Story 3: Concert Tickets</h2>
-    <p>Taylor Swift tickets $200 today, concert in 30 days. You pay $20 to reserve right to buy at $200. That's a Call with 30-day expiry.</p>
-    <p>If resale goes to $400, you buy at $200, sell at $400 = +$180. If resale drops to $100, you let it expire. Loss <span style="color:#ef4444">$20 </span>.</p>
-    <p><span class="term">Expiry</span> = date your ticket dies. After expiry, worth $0.</p>
+  <div class="card">
+    <h2>Story 2: House — Call vs Put</h2>
+    <img src="/images/call_vs_put_house_poster.webp" alt="Call vs Put explained with a house" width="900" height="500" loading="lazy">
+    <p><b>Call:</b> fee now to lock the right to <b>buy</b> later at today’s price — useful if you expect price <b>up</b>.</p>
+    <p><b>Put:</b> fee to lock the right to <b>sell</b> at a set price — useful if you expect price <b>down</b> (or as insurance).</p>
+    <div class="analogy"><b>Key:</b> Buying an option is a <b>right</b>, not an obligation. You can walk away. Max loss on a long option = premium paid (before fees).</div>
+  </div>
+
+  <div class="card">
+    <h2>Story 3: Concert tickets</h2>
+    <p>Face value $200, show in 30 days. You pay $20 for the right to buy at $200. If resale hits $400, you can still buy at $200. If resale is $100, you let the right expire and lose the <span class="loss">$20</span>.</p>
+    <p><span class="term">Expiry</span> is the deadline. After that, only intrinsic value remains (often zero if out of the money).</p>
+  </div>
+
+  <div class="card">
+    <h2>Five words to keep</h2>
+    <ul>
+      <li><span class="term">Underlying</span> — the asset (stock, index, sneakers).</li>
+      <li><span class="term">Strike</span> — agreed buy/sell price.</li>
+      <li><span class="term">Premium</span> — price of the option contract (quoted per share).</li>
+      <li><span class="term">Expiry / DTE</span> — how long the right lasts.</li>
+      <li><span class="term">Call vs Put</span> — call = right to buy; put = right to sell.</li>
+    </ul>
+    <p><span class="term">Long = buy</span> the option. <span class="term">Short = sell</span> the option.</p>
+  </div>
+
+  <div class="card">
+    <h2>Payoff picture (long call)</h2>
+    <img src="/images/call_option_payoff_infographic.webp" alt="Long call payoff diagram" width="900" height="500" loading="lazy">
+    <p>Below the strike at expiry you typically lose the premium. Above the strike, value rises. Rough breakeven ≈ strike + premium paid.</p>
+    <div class="analogy"><b>Example:</b> $100 strike + $3 premium → about <b>$103</b> at expiry to break even (before commissions). One contract = 100 shares, so $3 ≈ <b>$300</b> cash.</div>
+    <div class="note">In the <a href="/builder/index.html?template=long_call">Builder</a>, solid line = P/L at expiry; dotted = with time left. Green = profit, red = loss.</div>
+  </div>
+
+  <div class="card" style="text-align:center">
+    <h3>Next</h3>
+    <p>Structures with real dollar examples, then defined-risk spreads.</p>
+    <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:12px">
+      <a class="btn" href="/level2/index.html">Level 2 →</a>
+      <a class="btn btn-secondary" href="/builder/index.html?template=long_call">Try Long Call in Builder</a>
+    </div>
+  </div>
 </div>
 
-<div class="card"><h2>The 5 Words You Must Know</h2><ul>
-    <li><span class="term">Underlying</span>: The real thing — Apple stock, Bitcoin, or those sneakers.</li>
-    <li><span class="term">Strike</span>: Agreed price — "I can buy at $100 no matter what."</li>
-    <li><span class="term">Premium</span>: What you pay now — $3, $5. Max loss if trade fails.</li>
-    <li><span class="term">Expiry / DTE</span>: Deadline — how long reservation lasts.</li>
-    <li><span class="term">CALL vs PUT</span>: Call = right to BUY (bullish), Put = right to SELL (bearish).</li></ul>
-    <p><span class="term">Long = Buy</span>, <span class="term">Short = Sell</span>. "Long Call" = you bought a Call.</p>
-</div>
-
-<div class="card"><h2>How You Make Money — Payoff Picture</h2>
-    <img src="/images/call_option_payoff_infographic.webp" alt="Payoff"><p><b>Read it:</b> Flat line at <span style="color:#ef4444">-$3 </span> = loss if below $100. At $100 Strike, it rises. At $103 (Strike+Premium) you break even. Above $103 — profit, unlimited.</p><div class="analogy"><b>Beginner-friendly formula:</b> Breakeven = Strike + Premium. $100 + $3 = $103 must be crossed to profit.</div></div>
-
-<div class="card" style="text-align:center"><h3>Ready for Level 2?</h3><p>Now you know CALL vs PUT, Strike, Premium, Expiry. Next: first real trades.</p>
-    <a class="btn btn-ghost" href="/level2/index.html">Go to Level 2 →</a> 
-    <a class="btn btn-ghost" href="/builder/index.html">Or jump to Builder</a></div>
-</div>
-<footer>jsm-options.com • Level 1 • Beginner-friendly • Educational only</footer></body></html>
+<footer>
+  <div>Educational only — not financial advice.</div>
+  <div class="footer-links">
+    <a href="/">Home</a><a href="/level2/index.html">L2</a><a href="/level3/index.html">L3</a><a href="/builder/index.html">Builder</a><a href="/disclaimer/index.html">Disclaimer</a>
+  </div>
+</footer>
+</body>
+</html>
