@@ -510,7 +510,7 @@
       </div>
       
       <div class="outcomes-panel" id="outcomesPanel">
-        <div class="otitle">Expiry outcome odds <span style="font-weight:500;color:var(--muted)">(model estimate · lognormal)</span></div>
+        <div class="otitle">Expiry P/L by price region <span style="font-weight:500;color:var(--muted)">(from your legs · ×100)</span></div>
         <div class="outcomes-grid" id="outcomesGrid">
           <div class="outcome-cell">
             <div class="olabel">Net debit / credit</div>
@@ -520,21 +520,21 @@
           <div class="outcome-cell">
             <div class="olabel" id="outLowLabel">Below lower strike</div>
             <div class="oval" id="outLow">—</div>
-            <div class="ohint" id="outLowHint">P(ST in this region)</div>
+            <div class="ohint" id="outLowHint">Expiry P/L in this region</div>
           </div>
           <div class="outcome-cell">
             <div class="olabel" id="outMidLabel">Near / between strikes</div>
             <div class="oval" id="outMid">—</div>
-            <div class="ohint" id="outMidHint">P(ST in this region)</div>
+            <div class="ohint" id="outMidHint">Expiry P/L in this region</div>
           </div>
           <div class="outcome-cell">
             <div class="olabel" id="outHighLabel">Above upper strike</div>
             <div class="oval" id="outHigh">—</div>
-            <div class="ohint" id="outHighHint">P(ST in this region)</div>
+            <div class="ohint" id="outHighHint">Expiry P/L in this region</div>
           </div>
         </div>
         <div class="outcomes-note" id="outcomesNote">
-          Probabilities assume geometric Brownian motion using current spot, IV, rate, and days remaining. Not a forecast. At 0 DTE, regions are certain given the current price.
+          Shows approximate at-expiry P/L if the stock finishes in each region (strategy-dependent). Includes opening debit/credit. Not a probability forecast.
         </div>
       </div>
 
@@ -1173,23 +1173,19 @@
     }
 
     function updateOutcomes() {
-      const grid = document.getElementById('outcomesGrid');
-      if (!grid || !legs.length) {
-        if (document.getElementById('outCost')) document.getElementById('outCost').textContent = '—';
-        return;
-      }
+      if (!document.getElementById('outCost') || !legs.length) return;
       const params = getParams();
-      const S = params.S;
-      const T = Math.max(0, params.daysLeft) / 365;
-      const r = params.r, q = params.q, sigma = params.iv;
       const cost = initialCost();
       const costEl = document.getElementById('outCost');
-      if (cost >= 0) {
+      if (cost > 0) {
         costEl.textContent = 'Debit $' + cost.toFixed(0);
         costEl.style.color = 'var(--red)';
-      } else {
+      } else if (cost < 0) {
         costEl.textContent = 'Credit $' + Math.abs(cost).toFixed(0);
         costEl.style.color = 'var(--green)';
+      } else {
+        costEl.textContent = '$0';
+        costEl.style.color = 'var(--text)';
       }
 
       const strikes = legs.filter(function(l) { return l.type !== 'stock'; })
@@ -1197,64 +1193,106 @@
         .filter(function(k, i, a) { return a.indexOf(k) === i; })
         .sort(function(a, b) { return a - b; });
 
-      let lowL, midL, highL, lowP, midP, highP, lowH, midH, highH;
+      // Sample expiry P/L deep below, mid, deep above
+      function fmtPL(v) {
+        const n = Math.round(v);
+        return (n >= 0 ? '+$' : '-$') + Math.abs(n);
+      }
+      function colorize(el, v) {
+        el.style.color = v >= 0 ? 'var(--green)' : 'var(--red)';
+      }
+
+      var lowL, midL, highL, lowV, midV, highV, lowH, midH, highH;
 
       if (strikes.length === 0) {
-        lowL = 'Price down (>5%)'; midL = 'Near spot (±5%)'; highL = 'Price up (>5%)';
-        const kLo = S * 0.95, kHi = S * 1.05;
-        lowP = probSTBelow(S, kLo, T, r, q, sigma);
-        highP = 1 - probSTBelow(S, kHi, T, r, q, sigma);
-        midP = Math.max(0, 1 - lowP - highP);
-        lowH = 'ST < $' + kLo.toFixed(1); midH = 'Between'; highH = 'ST > $' + kHi.toFixed(1);
+        // stock-only or empty strikes: use ±20% from spot
+        const S = params.S;
+        lowL = 'If price much lower';
+        midL = 'If price near current';
+        highL = 'If price much higher';
+        lowV = expiryPayoff(S * 0.7);
+        midV = expiryPayoff(S);
+        highV = expiryPayoff(S * 1.3);
+        lowH = 'e.g. ~$' + (S * 0.7).toFixed(0);
+        midH = '~$' + S.toFixed(0);
+        highH = 'e.g. ~$' + (S * 1.3).toFixed(0);
       } else if (strikes.length === 1) {
         const K = strikes[0];
-        const band = Math.max(1, K * 0.02);
-        lowL = 'Below strike $' + K;
-        midL = 'Close to strike (±2%)';
-        highL = 'Above strike $' + K;
-        lowP = probSTBelow(S, K - band, T, r, q, sigma);
-        const pHi = probSTBelow(S, K + band, T, r, q, sigma);
-        midP = Math.max(0, pHi - lowP);
-        highP = 1 - pHi;
-        lowH = 'ST < $' + (K - band).toFixed(1);
-        midH = '$' + (K - band).toFixed(1) + '–$' + (K + band).toFixed(1);
-        highH = 'ST > $' + (K + band).toFixed(1);
+        lowL = 'If finishes below $' + K;
+        midL = 'If finishes at $' + K;
+        highL = 'If finishes above $' + K;
+        // Deep OTM/ITM samples
+        lowV = expiryPayoff(K * 0.7);
+        midV = expiryPayoff(K);
+        highV = expiryPayoff(K * 1.3);
+        lowH = 'Typical max loss for long call / max gain zone for long put';
+        midH = 'At the strike (intrinsic ≈ 0)';
+        highH = 'Long call gains more as price rises; short call loses more';
       } else {
         const Klo = strikes[0];
         const Khi = strikes[strikes.length - 1];
-        lowL = 'Below $' + Klo;
-        midL = 'Between $' + Klo + '–$' + Khi;
-        highL = 'Above $' + Khi;
-        lowP = probSTBelow(S, Klo, T, r, q, sigma);
-        const pHi = probSTBelow(S, Khi, T, r, q, sigma);
-        midP = Math.max(0, pHi - lowP);
-        highP = 1 - pHi;
-        lowH = 'Often max loss for call credit / put debit wings';
-        midH = 'Body of spread / iron condor tent';
-        highH = 'Often max loss for put credit / call debit wings';
+        // Mid of interior (for iron condor / spreads = tent body)
+        const Kmid = (Klo + Khi) / 2;
+        lowL = 'If finishes below $' + Klo;
+        midL = 'If finishes between $' + Klo + '–$' + Khi;
+        highL = 'If finishes above $' + Khi;
+        lowV = expiryPayoff(Klo * 0.85);
+        midV = expiryPayoff(Kmid);
+        highV = expiryPayoff(Khi * 1.15);
+        lowH = 'P/L in the low-price region at expiry';
+        midH = 'P/L in the middle region (often best for short-premium tents)';
+        highH = 'P/L in the high-price region at expiry';
       }
 
-      function pct(x) { return (100 * x).toFixed(1) + '%'; }
+      // Refine mid for multi-strike: use average of a few interior points
+      if (strikes.length >= 2) {
+        const Klo = strikes[0];
+        const Khi = strikes[strikes.length - 1];
+        let sum = 0, n = 0;
+        for (let i = 0; i <= 4; i++) {
+          const x = Klo + (Khi - Klo) * (i / 4);
+          sum += expiryPayoff(x);
+          n++;
+        }
+        midV = sum / n;
+      }
+
       document.getElementById('outLowLabel').textContent = lowL;
       document.getElementById('outMidLabel').textContent = midL;
       document.getElementById('outHighLabel').textContent = highL;
-      document.getElementById('outLow').textContent = pct(lowP);
-      document.getElementById('outMid').textContent = pct(midP);
-      document.getElementById('outHigh').textContent = pct(highP);
+      const elL = document.getElementById('outLow');
+      const elM = document.getElementById('outMid');
+      const elH = document.getElementById('outHigh');
+      elL.textContent = fmtPL(lowV);
+      elM.textContent = fmtPL(midV);
+      elH.textContent = fmtPL(highV);
+      colorize(elL, lowV);
+      colorize(elM, midV);
+      colorize(elH, highV);
       document.getElementById('outLowHint').textContent = lowH;
       document.getElementById('outMidHint').textContent = midH;
       document.getElementById('outHighHint').textContent = highH;
 
+      // Note: describe slope behavior for wings when unlimited
       const note = document.getElementById('outcomesNote');
-      if (params.daysLeft <= 0) {
-        note.textContent = 'Days remaining = 0: probabilities collapse to 0% or 100% given the current underlying price. Net figure is your opening debit/credit (×100).';
-      } else {
-        note.textContent = 'Model odds to expiry using spot $' + S.toFixed(2) + ', IV ' +
-          (params.iv * 100).toFixed(0) + '%, ' + params.daysLeft + ' DTE. Opening cash: ' +
-          (cost >= 0 ? 'debit $' : 'credit $') + Math.abs(cost).toFixed(0) +
-          '. Educational only — not a forecast of real probabilities.';
+      const farLow = strikes.length ? expiryPayoff(strikes[0] * 0.5) : expiryPayoff(params.S * 0.5);
+      const farHigh = strikes.length ? expiryPayoff(strikes[strikes.length - 1] * 1.5) : expiryPayoff(params.S * 1.5);
+      let wing = '';
+      if (Math.abs(farHigh - highV) > 50) {
+        wing += farHigh > highV
+          ? ' Further upside can improve or worsen P/L (not flat).'
+          : ' Further upside stays near this region’s P/L.';
       }
+      if (Math.abs(farLow - lowV) > 50) {
+        wing += farLow < lowV
+          ? ' Further downside can worsen P/L.'
+          : ' Further downside stays near this region’s P/L.';
+      }
+      note.textContent = 'Expiry P/L by price region for your legs (includes the opening ' +
+        (cost >= 0 ? 'debit' : 'credit') + ' of $' + Math.abs(cost).toFixed(0) +
+        '). Values are at-expiry payoffs, not probabilities.' + wing;
     }
+
 
     function updateGreeksUI() {
       if (!legs.length) {
