@@ -53,7 +53,7 @@
 <div class="wrap">
   <div class="hero">
     <span class="badge">Level 4 · Longer horizons</span>
-    <h1>Calendars, credits, covered calls &amp; LEAPS</h1>
+    <h1>Cash-secured puts, calendars, credits, covered calls &amp; LEAPS</h1>
     <p>More structure, more time. Many discretionary traders prefer <b>45+ days to expiry</b> so theta is slower at entry and there is room to manage.</p>
   </div>
 
@@ -114,6 +114,33 @@
       <p class="theta-caption">Static illustration only — not a live pricing model. Actual theta depends on strike, IV, and moneyness.</p>
     </div>
     <p style="font-size:.85rem;color:var(--muted)">Sample only — real theta depends on strike, IV, rates, and moneyness. Use the Builder’s Days Remaining slider on a live template to see <em>your</em> structure decay.</p>
+  </div>
+
+
+  <div class="card">
+    <div class="small">Bullish-to-neutral · income · defined at strike</div>
+    <h2>Cash-secured put (CSP)</h2>
+    <p>You <b>sell a put</b> and keep enough cash to buy 100 shares at the strike if assigned. You collect a <b>credit</b> up front. You are modestly bullish to neutral: you want the stock to stay <b>above</b> the strike through expiry (put expires worthless) or you are willing to own shares at an effective price of roughly strike − premium.</p>
+    <ul>
+      <li><b>Max profit</b> = premium received (credit × 100) if the put expires OTM</li>
+      <li><b>Max loss</b> (if stock goes to zero) ≈ strike × 100 − premium received — still large; “secured” means cash is reserved, not that risk is small</li>
+      <li><b>Breakeven</b> ≈ strike − premium per share</li>
+      <li>Assignment → you buy shares at the strike; your cost basis is reduced by the premium kept</li>
+    </ul>
+    <div class="analogy">
+      <b>Example:</b> Stock $100. Sell the $95 put for $2.00 → <span class="profit">$200</span> credit. Set aside $9,500 cash.
+      If stock stays above $95, put expires; you keep $200. If assigned at $95, effective buy price ≈ $93. Risk remains if shares fall further.
+    </div>
+    <h3>Why prefer longer DTE (e.g. 45+)?</h3>
+    <ul>
+      <li><b>More premium per unit of risk</b> — very short puts often pay little unless the strike is aggressive</li>
+      <li><b>Room to manage</b> — roll out in time, adjust strike, or close early before high gamma near expiry</li>
+      <li><b>Slower early theta on long-dated</b> is less relevant for short puts than for long options; still, many income traders target ~30–45+ DTE so they are paid for time and can exit around 50–75% of max profit</li>
+      <li><b>Avoid “lottery” weeklies</b> until you understand assignment, gaps, and earnings — L4 encourages learning CSPs on longer-dated, liquid strikes first</li>
+    </ul>
+    <div class="note">In the Builder, choose <b>Bullish → Cash Secured Put</b> (or <code>?template=cash_secured_put</code>). Edit premium to match a real chain. Cash for securing the put is not modeled as a separate leg — treat strike × 100 as reserved buying power.</div>
+    <div class="warn"><strong>Risk:</strong> A CSP can lose far more than the credit if the stock collapses. Only use cash you can actually deploy to own the shares. Educational only — not advice.</div>
+    <a class="btn" href="/builder/index.html?template=cash_secured_put">Load Cash Secured Put in Builder →</a>
   </div>
 
   <div class="card">
