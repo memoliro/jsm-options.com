@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -309,54 +309,6 @@
 .builder-wrap{max-width:1280px;margin:0 auto;padding:12px 16px 24px;}
   
   </style>
-<script>
-(function(){
-  var root=document.documentElement, saved=null;
-  try{saved=localStorage.getItem('jsm-theme')}catch(e){}
-  var theme=saved==='light'||saved==='dark'?saved:'dark';
-  root.setAttribute('data-theme',theme);
-  window.jsmApplyTheme=function(t){
-    root.setAttribute('data-theme',t);
-    try{localStorage.setItem('jsm-theme',t)}catch(e){}
-    var b=document.getElementById('themeToggle'),i=document.getElementById('themeIcon'),l=document.getElementById('themeLabel');
-    if(i)i.textContent=t==='dark'?'☀️':'🌙';
-    if(l)l.textContent=t==='dark'?'Light':'Dark';
-    if(b)b.setAttribute('aria-label','Switch to '+(t==='dark'?'light':'dark')+' theme');
-  };
-  document.addEventListener('DOMContentLoaded',function(){
-    window.jsmApplyTheme(theme);
-    var b=document.getElementById('themeToggle');
-    if(b)b.addEventListener('click',function(){window.jsmApplyTheme(root.getAttribute('data-theme')==='dark'?'light':'dark')});
-  });
-})();
-</script>
-
-<style>
-[data-theme="light"]{--bg:#f4f6f9;--card:#fff;--border:#d8dee9;--text:#0f172a;--muted:#64748b;--accent:#2563eb;--green:#16a34a;--red:#dc2626;--yellow:#ca8a04;--input:#f1f5f9}
-[data-theme="light"] body{background:var(--bg)!important;color:var(--text)!important}
-[data-theme="light"] .site-header{background:rgba(255,255,255,.92)!important}
-</style>
-<script>
-(function(){
-  var root=document.documentElement, saved=null;
-  try{saved=localStorage.getItem('jsm-theme')}catch(e){}
-  var theme=saved==='light'||saved==='dark'?saved:'dark';
-  root.setAttribute('data-theme',theme);
-  window.jsmApplyTheme=function(t){
-    root.setAttribute('data-theme',t);
-    try{localStorage.setItem('jsm-theme',t)}catch(e){}
-    var b=document.getElementById('themeToggle'),i=document.getElementById('themeIcon'),l=document.getElementById('themeLabel');
-    if(i)i.textContent=t==='dark'?'☀️':'🌙';
-    if(l)l.textContent=t==='dark'?'Light':'Dark';
-    if(b)b.setAttribute('aria-label','Switch to '+(t==='dark'?'light':'dark')+' theme');
-  };
-  document.addEventListener('DOMContentLoaded',function(){
-    window.jsmApplyTheme(theme);
-    var b=document.getElementById('themeToggle');
-    if(b)b.addEventListener('click',function(){window.jsmApplyTheme(root.getAttribute('data-theme')==='dark'?'light':'dark')});
-  });
-})();
-</script>
 </head>
 <body>
     <header class="site-header">
@@ -372,14 +324,12 @@
       </a>
       <nav class="nav">
         <a href="/">Home</a>
-        <a href="/level1/index.html">L1 Basics</a>
-        <a href="/level2/index.html">L2 Trades</a>
-        <a href="/level3/index.html">L3 Spreads</a>
-        <a href="/level4/index.html">L4 Advanced</a>
+        <a href="/level1/index.html">Basics</a>
+        <a href="/level2/index.html">Trades</a>
+        <a href="/level3/index.html">Spreads</a>
+        <a href="/level4/index.html">Advanced</a>
         <a href="/builder/index.html" class="active">Builder</a>
-            <a href="/strategies/index.html">Strategies</a>
-      <button type="button" class="theme-toggle" id="themeToggle" aria-label="Toggle light/dark theme"><span class="icon" id="themeIcon">☀️</span><span id="themeLabel">Light</span></button>
-    </nav>
+      </nav>
     </div>
   </header>
   <div class="builder-wrap">
@@ -548,8 +498,8 @@
       <a href="/">jsm-options.com</a> • Educational prototype · European Black-Scholes · 1 contract = 100 shares · Not financial advice</div>
     <div class="footer-links">
       <a href="/">Home</a>
-      <a href="/level1/index.html">L1 Basics</a>
-      <a href="/level2/index.html">L2 Trades</a>
+      <a href="/level1/index.html">Basics</a>
+      <a href="/level2/index.html">Trades</a>
       <a href="/about.html">About</a>
       <a href="/disclaimer.html">Disclaimer</a>
       <a href="/privacy.html">Privacy</a>

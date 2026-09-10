@@ -9,27 +9,6 @@
   <link rel="stylesheet" href="/assets/style.css">
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-BDL003RCN6"></script>
   <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-BDL003RCN6');</script>
-<script>
-(function(){
-  var root=document.documentElement, saved=null;
-  try{saved=localStorage.getItem('jsm-theme')}catch(e){}
-  var theme=saved==='light'||saved==='dark'?saved:'dark';
-  root.setAttribute('data-theme',theme);
-  window.jsmApplyTheme=function(t){
-    root.setAttribute('data-theme',t);
-    try{localStorage.setItem('jsm-theme',t)}catch(e){}
-    var b=document.getElementById('themeToggle'),i=document.getElementById('themeIcon'),l=document.getElementById('themeLabel');
-    if(i)i.textContent=t==='dark'?'☀️':'🌙';
-    if(l)l.textContent=t==='dark'?'Light':'Dark';
-    if(b)b.setAttribute('aria-label','Switch to '+(t==='dark'?'light':'dark')+' theme');
-  };
-  document.addEventListener('DOMContentLoaded',function(){
-    window.jsmApplyTheme(theme);
-    var b=document.getElementById('themeToggle');
-    if(b)b.addEventListener('click',function(){window.jsmApplyTheme(root.getAttribute('data-theme')==='dark'?'light':'dark')});
-  });
-})();
-</script>
 </head>
 <body>
 <header class="site-header">
@@ -45,14 +24,16 @@
     </a>
     <nav class="nav">
       <a href="/" class="active">Home</a>
-      <a href="/level1/index.html" >L1 Basics</a>
-      <a href="/level2/index.html" >L2 Trades</a>
-      <a href="/level3/index.html" >L3 Spreads</a>
-      <a href="/level4/index.html" >L4 Advanced</a>
+      <a href="/level1/index.html" >Basics</a>
+      <a href="/level2/index.html" >Trades</a>
+      <a href="/level3/index.html" >Spreads</a>
+      <a href="/level4/index.html" >Advanced</a>
       <a href="/builder/index.html" >Builder</a>
-          <a href="/strategies/index.html">Strategies</a>
-      <button type="button" class="theme-toggle" id="themeToggle" aria-label="Toggle light/dark theme"><span class="icon" id="themeIcon">☀️</span><span id="themeLabel">Light</span></button>
     </nav>
+    <button type="button" class="theme-toggle" id="themeToggle" aria-label="Toggle light/dark theme">
+      <span class="icon" id="themeIcon">☀️</span>
+      <span id="themeLabel">Light</span>
+    </button>
   </div>
 </header>
 
@@ -60,37 +41,37 @@
   <div class="hero">
     <span class="badge">Free · Client-side builder · Not financial advice</span>
     <h1>Learn options by building them.</h1>
-    <p>Four levels — basics, first trades, spreads, and advanced (calendars, LEAPS, 45+ DTE) — then practice in the live Builder. Green = profit, red = loss. One contract = 100 shares.</p>
+    <p>Basics, first trades, spreads, and advanced (calendars, LEAPS, 45+ DTE) — then practice in the live Builder. Green = profit, red = loss. One contract = 100 shares.</p>
     <div style="margin-top:16px;display:flex;gap:10px;flex-wrap:wrap">
-      <a class="btn" href="/level1/index.html">Start Level 1</a>
+      <a class="btn" href="/level1/index.html">Start Basics</a>
       <a class="btn btn-secondary" href="/builder/index.html">Open Builder</a>
     </div>
   </div>
 
   <div class="grid2">
     <div class="card">
-      <div class="small">Level 1</div>
+      <div class="small">Basics</div>
       <h3>What is an option?</h3>
       <p>Calls and puts as reservation tickets — sneakers, house, concert. Premium, strike, expiry.</p>
-      <a href="/level1/index.html">Read Level 1 →</a>
+      <a href="/level1/index.html">Read Basics →</a>
     </div>
     <div class="card">
-      <div class="small">Level 2</div>
+      <div class="small">Trades</div>
       <h3>Your first trades</h3>
       <p>Long call, long put, covered call with real numbers. Why premiums are ×100. Intro to Greeks.</p>
-      <a href="/level2/index.html">Read Level 2 →</a>
+      <a href="/level2/index.html">Read Trades →</a>
     </div>
     <div class="card">
-      <div class="small">Level 3</div>
+      <div class="small">Spreads</div>
       <h3>Spreads &amp; iron condor</h3>
       <p>Bull/bear verticals and the iron condor — defined risk, wired straight into the Builder.</p>
-      <a href="/level3/index.html">Read Level 3 →</a>
+      <a href="/level3/index.html">Read Spreads →</a>
     </div>
     <div class="card">
-      <div class="small">Level 4</div>
+      <div class="small">Advanced</div>
       <h3>Advanced &amp; longer DTE</h3>
       <p>Cash-secured puts, calendars, covered calls, LEAPS, and why many traders prefer 45+ days to expiry.</p>
-      <a href="/level4/index.html">Read Level 4 →</a>
+      <a href="/level4/index.html">Read Advanced →</a>
     </div>
     <div class="card">
       <div class="small">Tool</div>
@@ -109,12 +90,11 @@
   <div>Educational purposes only — not financial advice.</div>
   <div class="footer-links">
     <a href="/">Home</a>
-    <a href="/level1/index.html">L1</a>
-    <a href="/level2/index.html">L2</a>
-    <a href="/level3/index.html">L3</a>
-    <a href="/level4/index.html">L4</a>
+    <a href="/level1/index.html">Basics</a>
+    <a href="/level2/index.html">Trades</a>
+    <a href="/level3/index.html">Spreads</a>
+    <a href="/level4/index.html">Advanced</a>
     <a href="/builder/index.html">Builder</a>
-    <a href="/strategies/index.html">Strategies</a>
     <a href="/disclaimer/index.html">Disclaimer</a>
     <a href="/contact/index.html">Contact</a>
     <a href="/privacy/index.html">Privacy</a>
@@ -122,5 +102,25 @@
   </div>
   <div style="margin-top:8px">© 2026 JSM Options · jsm-options.com</div>
 </footer>
+<script>
+(function(){
+  const root=document.documentElement;
+  const toggle=document.getElementById('themeToggle');
+  const icon=document.getElementById('themeIcon');
+  const label=document.getElementById('themeLabel');
+  function applyTheme(theme){
+    root.setAttribute('data-theme',theme);
+    if(icon) icon.textContent=theme==='dark'?'☀️':'🌙';
+    if(label) label.textContent=theme==='dark'?'Light':'Dark';
+    if(toggle) toggle.setAttribute('aria-label','Switch to '+(theme==='dark'?'light':'dark')+' theme');
+    try{localStorage.setItem('jsm-theme',theme)}catch(e){}
+  }
+  let saved=null;
+  try{saved=localStorage.getItem('jsm-theme')}catch(e){}
+  if(saved==='light'||saved==='dark') applyTheme(saved);
+  else applyTheme(window.matchMedia&&window.matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');
+  if(toggle) toggle.addEventListener('click',function(){applyTheme(root.getAttribute('data-theme')==='dark'?'light':'dark')});
+})();
+</script>
 </body>
 </html>
