@@ -3,17 +3,33 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Level 3: Spreads &amp; Iron Condor | JSM Options</title>
-  <meta name="description" content="Bull call spread, bear put spread, and iron condor with defined risk. Load each strategy in the free Builder.">
+  <title>Level 3: Spreads & Iron Condor | JSM Options</title>
+  <meta name="description" content="Bull call spread, bear put spread, iron condor with defined risk.">
+  <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://jsm-options.com/level3/">
+  <link rel="alternate" hreflang="en" href="https://jsm-options.com/level3/">
+  <link rel="alternate" hreflang="fr" href="https://jsm-options.com/fr/level3/">
+  <link rel="alternate" hreflang="tr" href="https://jsm-options.com/tr/level3/">
+  <link rel="alternate" hreflang="x-default" href="https://jsm-options.com/level3/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="JSM Options">
+  <meta property="og:title" content="Level 3: Spreads & Iron Condor | JSM Options">
+  <meta property="og:description" content="Bull call spread, bear put spread, iron condor with defined risk.">
+  <meta property="og:url" content="https://jsm-options.com/level3/">
+  <meta property="og:locale" content="en_US">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Level 3: Spreads & Iron Condor | JSM Options">
+  <meta name="twitter:description" content="Bull call spread, bear put spread, iron condor with defined risk.">
   <link rel="stylesheet" href="/assets/style.css">
+  <script src="/assets/site.js" defer></script>
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-BDL003RCN6"></script>
   <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-BDL003RCN6');</script>
+
 </head>
 <body>
 <header class="site-header">
   <div class="site-header-inner">
-    <a href="/" class="logo-link" aria-label="Home">
+    <a href="/" class="logo-link" aria-label="JSM Options">
       <div class="logo">
         <div class="logo-icon">JSM</div>
         <div>
@@ -30,86 +46,32 @@
       <a href="/level4/index.html">L4 Advanced</a>
       <a href="/builder/index.html">Builder</a>
     </nav>
+        <div class="header-tools">
+      <button type="button" class="theme-toggle" id="themeToggle" aria-label="Toggle color theme">Light</button>
+      <label class="visually-hidden" for="langSelect">Language</label>
+      <select id="langSelect" aria-label="Language">
+        <option value="en" selected>EN</option>
+        <option value="fr">FR</option>
+        <option value="tr">TR</option>
+      </select>
+    </div>
   </div>
 </header>
-
 <div class="wrap">
-  <div class="hero">
-    <span class="badge">Level 3 · Defined risk</span>
-    <h1>Vertical spreads &amp; the iron condor</h1>
-    <p>Buy one option, sell another — cut cost or define risk. Then combine both sides into a market-neutral iron condor.</p>
-  </div>
-
-  <div class="card">
-    <h2>Why spreads?</h2>
-    <p>A naked long call is simple but you pay full premium. A naked short call can have large risk. A <b>vertical spread</b> pairs a buy and a sell in the same expiry so max loss (and often max gain) are capped.</p>
-    <div class="note">Builder premiums in templates are <b>illustrative</b> — edit them to match a live option chain before you treat numbers as realistic.</div>
-  </div>
-
-  <div class="card">
-    <div class="small">Bullish · defined risk</div>
-    <h3>Bull call spread</h3>
-    <p>Buy a lower-strike call, sell a higher-strike call (same expiry). Net debit. You want the stock up, but you cap upside at the short strike.</p>
-    <div class="analogy">
-      Example shape: Buy $100 call, sell $110 call. Net debit might be ~$4 ($400). Max gain roughly width − debit ≈ $6 ($600) if stock ≥ $110 at expiry. Max loss = debit paid.
-    </div>
-    <div class="table-wrap">
-      <table>
-        <thead><tr><th>At expiry</th><th>Idea</th></tr></thead>
-        <tbody>
-          <tr><td>Well below $100</td><td>Both calls ~0 → lose net debit</td></tr>
-          <tr><td>Between strikes</td><td>Partial value on long call</td></tr>
-          <tr><td>At/above $110</td><td>Spread worth about $10 width → max profit region</td></tr>
-        </tbody>
-      </table>
-    </div>
-    <a class="btn" href="/builder/index.html?template=bull_call_spread">Load Bull Call Spread →</a>
-  </div>
-
-  <div class="card">
-    <div class="small">Bearish · defined risk</div>
-    <h3>Bear put spread</h3>
-    <p>Buy a higher-strike put, sell a lower-strike put. Net debit. You profit if the stock falls, with max gain capped at the short put strike.</p>
-    <div class="analogy">Buy $100 put, sell $90 put. Debit might be ~$4. Max value of spread = $10 width. Max loss = debit.</div>
-    <a class="btn" href="/builder/index.html?template=bear_put_spread">Load Bear Put Spread →</a>
-  </div>
-
-  <div class="card">
-    <div class="small">Neutral · time &amp; range</div>
-    <h3>Iron condor</h3>
-    <p>Sell an OTM put spread and an OTM call spread (same expiry). Net <b>credit</b>. You want the stock to stay between the short strikes until expiry so both sides decay.</p>
-    <ul>
-      <li><b>Max profit</b> ≈ net credit if price stays in the “tent”</li>
-      <li><b>Max loss</b> ≈ width of the tested wing − credit (still defined, not unlimited)</li>
-      <li>Risk rises if the stock trends hard or volatility explodes against you</li>
-    </ul>
-    <div class="analogy">Short put at $90 / long put at $80 + short call at $110 / long call at $120. Credit collected upfront; profit if price stays roughly $90–$110.</div>
-    <a class="btn" href="/builder/index.html?template=iron_condor">Load Iron Condor →</a>
-  </div>
-
-  <div class="card">
-    <h2>How to practice in the Builder</h2>
-    <ol style="padding-left:20px;color:#c8d0dc;font-size:.92rem">
-      <li style="margin:6px 0">Click a Load button above (or pick the template in the Builder dropdown).</li>
-      <li style="margin:6px 0">Edit strikes and premiums to match a real chain.</li>
-      <li style="margin:6px 0">Drag <b>Days Remaining</b> — dotted line moves toward the solid expiry line (theta).</li>
-      <li style="margin:6px 0">Read Net Debit/Credit, max profit/loss, and Greeks under the chart.</li>
-    </ol>
-  </div>
-
-  <div class="warn"><strong>Risk:</strong> Defined-risk is not “no risk.” You can still lose the full max loss, and early assignment, dividends, and liquidity matter in live markets. Education only.</div>
-
-  <div class="card" style="text-align:center">
-    <a class="btn" href="/builder/index.html">Open full Builder</a>
-    <a class="btn btn-secondary" href="/level2/index.html">← Level 2</a>
-  </div>
+<div class="hero"><span class="badge">Level 3</span><h1>Vertical spreads &amp; iron condor</h1>
+<p>Defined risk by buying one option and selling another.</p></div>
+<div class="card"><h3>Bull call spread</h3><p>Buy lower call, sell higher call. Net debit. Max loss ≈ debit; max gain ≈ width − debit.</p>
+<a class="btn" href="/builder/index.html?template=bull_call_spread">Load →</a></div>
+<div class="card"><h3>Bear put spread</h3><p>Buy higher put, sell lower put. Net debit.</p>
+<a class="btn" href="/builder/index.html?template=bear_put_spread">Load →</a></div>
+<div class="card"><h3>Iron condor</h3><p>Short OTM put spread + short OTM call spread. Net credit; profit if price stays in the middle.</p>
+<a class="btn" href="/builder/index.html?template=iron_condor">Load →</a></div>
+<a class="btn btn-secondary" href="/level4/index.html">Level 4 →</a>
 </div>
-
 <footer>
-  <div>Educational only — not financial advice.</div>
-  <div class="footer-links">
-    <a href="/">Home</a><a href="/builder/index.html">Builder</a><a href="/disclaimer/index.html">Disclaimer</a><a href="/contact/index.html">Contact</a>
-  </div>
+  <div>Educational purposes only — not financial advice.</div>
+  <div class="footer-links"><a href="/">Home</a> <a href="/level1/index.html">L1</a> <a href="/level2/index.html">L2</a> <a href="/level3/index.html">L3</a> <a href="/level4/index.html">L4</a> <a href="/builder/index.html">Builder</a> <a href="/disclaimer/index.html">Disclaimer</a> <a href="/contact/index.html">Contact</a> <a href="/privacy/index.html">Privacy</a> <a href="/about/index.html">About</a></div>
+  <div style="margin-top:8px">© 2026 JSM Options · jsm-options.com</div>
 </footer>
 </body>
 </html>

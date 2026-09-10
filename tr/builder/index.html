@@ -1,18 +1,18 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="tr">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Options Strategy Builder & Simulator | JSM Options</title>
-  <meta name="description" content="Free interactive options strategy builder: multi-leg payoff graphs, theta, Greeks, templates. Educational only.">
-  <link rel="canonical" href="https://jsm-options.com/builder/">
-  <link rel="alternate" hreflang="en" href="https://jsm-options.com/builder/">
+  <title>Opsiyon strateji oluşturucu | JSM Options</title>
+  <meta name="description" content="Etkileşimli opsiyon strateji simülatörü (eğitim): multi-leg payoff graphs, theta, Greeks, templates. Educational only.">
+  <link rel="canonical" href="https://jsm-options.com/tr/builder/">
+  <link rel="alternate" hreflang="en" href="https://jsm-options.com/tr/builder/">
   <link rel="alternate" hreflang="fr" href="https://jsm-options.com/fr/builder/">
   <link rel="alternate" hreflang="tr" href="https://jsm-options.com/tr/builder/">
-  <link rel="alternate" hreflang="x-default" href="https://jsm-options.com/builder/">
+  <link rel="alternate" hreflang="x-default" href="https://jsm-options.com/tr/builder/">
   <meta property="og:title" content="Options Strategy Builder | JSM Options">
   <meta property="og:description" content="Interactive multi-leg options payoff simulator. Educational only.">
-  <meta property="og:url" content="https://jsm-options.com/builder/">
+  <meta property="og:url" content="https://jsm-options.com/tr/builder/">
   <link rel="stylesheet" href="/assets/style.css">
   <script src="/assets/site.js" defer></script>
 <!-- Google tag (gtag.js) -->
@@ -334,54 +334,54 @@
 <body>
     <header class="site-header">
   <div class="site-header-inner">
-    <a href="/" class="logo-link" aria-label="JSM Options">
+    <a href="/tr/" class="logo-link" aria-label="JSM Options">
       <div class="logo">
         <div class="logo-icon">JSM</div>
         <div>
           <div style="font-weight:700">JSM Options</div>
-          <div style="font-size:11px;color:var(--muted)">Strategy Builder</div>
+          <div style="font-size:11px;color:var(--muted)">Strateji Builder</div>
         </div>
       </div>
     </a>
     <nav class="nav">
-      <a href="/">Home</a>
-      <a href="/level1/index.html">L1 Basics</a>
-      <a href="/level2/index.html">L2 Trades</a>
-      <a href="/level3/index.html">L3 Spreads</a>
-      <a href="/level4/index.html">L4 Advanced</a>
-      <a href="/builder/index.html" class="active">Builder</a>
+      <a href="/tr/">Ana Sayfa</a>
+      <a href="/tr/level1/index.html">S1 Temel</a>
+      <a href="/tr/level2/index.html">S2 İşlemler</a>
+      <a href="/tr/level3/index.html">S3 Spread</a>
+      <a href="/tr/level4/index.html">S4 İleri</a>
+      <a href="/tr/builder/index.html" class="active">Builder</a>
     </nav>
         <div class="header-tools">
       <button type="button" class="theme-toggle" id="themeToggle" aria-label="Toggle color theme">Light</button>
       <label class="visually-hidden" for="langSelect">Language</label>
       <select id="langSelect" aria-label="Language">
-        <option value="en" selected>EN</option>
+        <option value="en">EN</option>
         <option value="fr">FR</option>
-        <option value="tr">TR</option>
+        <option value="tr" selected>TR</option>
       </select>
     </div>
   </div>
 </header>
   <div class="builder-wrap">
-  <h1>Options Strategy Builder & Simulator</h1>
-  <p class="subtitle">Fully interactive · ×100 contract multiplier · Green = profit · Red = loss</p>
+  <h1>Opsiyon Strateji Oluşturucu</h1>
+  <p class="subtitle">Tam etkileşimli · ×100 kontrat çarpanı · Yeşil = kâr · Kırmızı = zarar</p>
 
   <div class="card" style="margin-bottom:12px;">
     <div class="top-bar">
       <div class="field wide">
-        <label>Strategy Template <span style="font-weight:400;color:var(--muted)">(illustrative premiums — edit to match a chain)</span></label>
+        <label>Strateji şablonu <span style="font-weight:400;color:var(--muted)">(örnek primler — zincire göre düzenleyin)</span></label>
         <select id="strategyTemplate" onchange="applyTemplate()">
-          <option value="">— Select a template —</option>
-          <optgroup label="Bullish">
+          <option value="">— Şablon seçin —</option>
+          <optgroup label="Yükseliş">
             <option value="long_call">Long Call</option>
-            <option value="cash_secured_put">Cash Secured Put</option>
+            <option value="cash_secured_put">Nakit teminatlı put</option>
             <option value="bull_call_spread">Bull Call Spread</option>
             <option value="long_straddle">Long Straddle</option>
             <option value="long_strangle">Long Strangle</option>
             <option value="long_call_butterfly">Long Call Butterfly</option>
             <option value="call_condor">Call Condor</option>
           </optgroup>
-          <optgroup label="Bearish">
+          <optgroup label="Düşüş">
             <option value="long_put">Long Put</option>
             <option value="bear_put_spread">Bear Put Spread</option>
             <option value="long_straddle_bear">Long Straddle</option>
@@ -389,7 +389,7 @@
             <option value="long_put_butterfly">Long Put Butterfly</option>
             <option value="put_condor">Put Condor</option>
           </optgroup>
-          <optgroup label="Neutral / Time-decay">
+          <optgroup label="Nötr / Zaman aşımı">
             <option value="short_straddle">Short Straddle</option>
             <option value="short_strangle">Short Strangle</option>
             <option value="iron_condor">Iron Condor</option>
@@ -418,9 +418,9 @@
   </div>
 
   <div class="main-grid">
-    <!-- Current Legs — above graph -->
+    <!-- Mevcut bacaklar — above graph -->
     <div class="card">
-      <h2>Current Legs</h2>
+      <h2>Mevcut bacaklar</h2>
       <div class="legs-header">
         <span>Side</span>
         <span>Type</span>
@@ -432,17 +432,17 @@
       </div>
       <div id="legsList"></div>
       <div class="btn-row">
-        <button class="btn-primary btn-sm" onclick="addEmptyLeg()">+ Add Leg</button>
-        <button class="btn-secondary btn-sm" onclick="clearLegs()">Clear All</button>
+        <button class="btn-primary btn-sm" onclick="addEmptyLeg()">+ Bacak ekle</button>
+        <button class="btn-secondary btn-sm" onclick="clearLegs()">Temizle</button>
       </div>
       <p style="font-size:0.7rem;color:var(--muted);margin-top:8px;">
         Debit = positive (you pay) · Credit = negative (you receive) · All × 100
       </p>
     </div>
 
-    <!-- Payoff Graph -->
+    <!-- Payoff grafiği -->
     <div class="card">
-      <h2>Payoff Graph</h2>
+      <h2>Payoff grafiği</h2>
       <div id="chartContainer">
         <canvas id="payoffChart"></canvas>
       </div>
@@ -455,17 +455,17 @@
       <div class="controls-compact">
         <div>
           <div class="slider-group">
-            <label>Days Remaining <strong id="daysLeftLabel">90</strong></label>
+            <label>Kalan gün <strong id="daysLeftLabel">90</strong></label>
             <input type="range" id="daysLeft" min="0" max="90" value="90" oninput="onDaysChange()" />
           </div>
           <div class="slider-group" style="margin-top:6px;">
-            <label>Underlying <strong id="spotLabel">$100.00</strong></label>
+            <label>Dayanak <strong id="spotLabel">$100.00</strong></label>
             <input type="range" id="spotSlider" min="40" max="180" step="0.5" value="100" oninput="onSpotSlide()" />
           </div>
           <div class="btn-row">
             <button class="btn-play btn-sm" onclick="animateTheta()">▶ Theta</button>
-            <button class="btn-secondary btn-sm" onclick="resetTime()">Reset Time</button>
-            <button class="btn-secondary btn-sm" onclick="randomWalk()">Random Walk</button>
+            <button class="btn-secondary btn-sm" onclick="resetTime()">Zamanı sıfırla</button>
+            <button class="btn-secondary btn-sm" onclick="randomWalk()">Rastgele yürüyüş</button>
           </div>
         </div>
         <div>
@@ -475,26 +475,26 @@
           </div>
           <div class="metrics">
             <div class="metric">
-              <div class="label">Net Debit/Credit</div>
+              <div class="label">Net borç/alacak</div>
               <div class="val" id="netPremium">$0</div>
             </div>
             <div class="metric">
-              <div class="label">Max Profit</div>
+              <div class="label">Maks. kâr</div>
               <div class="val" id="maxProfit">—</div>
             </div>
             <div class="metric">
-              <div class="label">Max Loss</div>
+              <div class="label">Maks. zarar</div>
               <div class="val" id="maxLoss">—</div>
             </div>
             <div class="metric">
-              <div class="label">Breakeven(s)</div>
+              <div class="label">Başabaş(s)</div>
               <div class="val" id="breakevens">—</div>
             </div>
           </div>
         </div>
       </div>
 
-      <h2 style="margin-top:14px;margin-bottom:6px;">Option Greeks <span style="font-size:0.72rem;color:var(--muted);font-weight:500;">(position total · ×100)</span></h2>
+      <h2 style="margin-top:14px;margin-bottom:6px;">Opsiyon Greek’leri <span style="font-size:0.72rem;color:var(--muted);font-weight:500;">(position total · ×100)</span></h2>
       <div class="greeks-grid">
         <div class="greek-card">
           <div class="g-name">Δ Delta</div>
@@ -518,7 +518,7 @@
         </div>
       </div>
       <div class="edu-tip" id="eduTip" style="margin-top:10px;">
-        Long Call loaded by default. Edit any field — graph and Greeks update live. Use Strategy Template for multi-leg setups.
+        Long Call loaded by default. Edit any field — graph and Greeks update live. Use Strateji şablonu for multi-leg setups.
       </div>
     </div>
   </div>
@@ -1028,7 +1028,7 @@
           scales: {
             x: {
               type: 'linear',
-              title: { display: true, text: 'Underlying ($)', color: '#94a3b8' },
+              title: { display: true, text: 'Dayanak ($)', color: '#94a3b8' },
               ticks: { color: '#94a3b8', callback: function(v) { return '$' + v.toFixed(0); } },
               grid: { color: 'rgba(45,58,79,0.55)' }
             },
@@ -1136,8 +1136,8 @@
       const th = g.theta;
       const vg = g.vega;
       document.getElementById('gDeltaImpact').textContent =
-        d > 5 ? 'Bullish bias: position gains if stock rises ~$' + Math.abs(d).toFixed(0) + ' per $1 up.'
-        : d < -5 ? 'Bearish bias: position gains if stock falls ~$' + Math.abs(d).toFixed(0) + ' per $1 down.'
+        d > 5 ? 'Yükseliş bias: position gains if stock rises ~$' + Math.abs(d).toFixed(0) + ' per $1 up.'
+        : d < -5 ? 'Düşüş bias: position gains if stock falls ~$' + Math.abs(d).toFixed(0) + ' per $1 down.'
         : 'Near delta-neutral: small stock moves have limited directional impact.';
       document.getElementById('gGammaImpact').textContent =
         Math.abs(g.gamma) > 1
@@ -1202,13 +1202,13 @@
       const hasLong = legs.some(function(l) { return l.side === 'buy'; });
       const hasShort = legs.some(function(l) { return l.side === 'sell'; });
       if (legs.length === 1 && hasLong) {
-        tip.innerHTML = '<strong>Long option:</strong> You pay a Debit. Solid = expiry payoff. Dotted includes time value. Drag Days Remaining to watch theta decay.';
+        tip.innerHTML = '<strong>Long option:</strong> You pay a Debit. Solid = expiry payoff. Dotted includes time value. Drag Kalan gün to watch theta decay.';
       } else if (legs.length === 1 && hasShort) {
         tip.innerHTML = '<strong>Short option:</strong> You receive a Credit. Theta works in your favor if the stock stays near the strike.';
       } else if (hasLong && hasShort) {
-        tip.innerHTML = '<strong>Multi-leg:</strong> Net Debit/Credit shown above. Edit any leg field live — graph updates instantly. Use Strategy Template for common setups.';
+        tip.innerHTML = '<strong>Multi-leg:</strong> Net borç/alacak shown above. Edit any leg field live — graph updates instantly. Use Strateji şablonu for common setups.';
       } else {
-        tip.innerHTML = 'Edit legs or pick a Strategy Template. Graph is live.';
+        tip.innerHTML = 'Edit legs or pick a Strateji şablonu. Graph is live.';
       }
     }
 

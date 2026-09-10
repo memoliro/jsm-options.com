@@ -3,34 +3,33 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Level 4: Advanced Strategies &amp; Longer DTE | JSM Options</title>
-  <meta name="description" content="Calendar spreads, debit and credit spreads, covered calls, LEAPS, and why 45+ DTE matters. Practice in the free Builder.">
+  <title>Level 4: Advanced & Longer DTE | JSM Options</title>
+  <meta name="description" content="Cash-secured puts, calendars, covered calls, LEAPS, 45+ DTE.">
+  <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://jsm-options.com/level4/">
+  <link rel="alternate" hreflang="en" href="https://jsm-options.com/level4/">
+  <link rel="alternate" hreflang="fr" href="https://jsm-options.com/fr/level4/">
+  <link rel="alternate" hreflang="tr" href="https://jsm-options.com/tr/level4/">
+  <link rel="alternate" hreflang="x-default" href="https://jsm-options.com/level4/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="JSM Options">
+  <meta property="og:title" content="Level 4: Advanced & Longer DTE | JSM Options">
+  <meta property="og:description" content="Cash-secured puts, calendars, covered calls, LEAPS, 45+ DTE.">
+  <meta property="og:url" content="https://jsm-options.com/level4/">
+  <meta property="og:locale" content="en_US">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Level 4: Advanced & Longer DTE | JSM Options">
+  <meta name="twitter:description" content="Cash-secured puts, calendars, covered calls, LEAPS, 45+ DTE.">
   <link rel="stylesheet" href="/assets/style.css">
+  <script src="/assets/site.js" defer></script>
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-BDL003RCN6"></script>
   <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-BDL003RCN6');</script>
-  <style>
-    .theta-box{
-      background:var(--input);
-      border:1px solid var(--border);
-      border-radius:12px;
-      padding:16px 14px 12px;
-      margin:12px 0;
-    }
-    .theta-box svg{width:100%;height:auto;display:block}
-    .theta-caption{
-      font-size:.8rem;
-      color:var(--muted);
-      text-align:center;
-      margin-top:10px;
-      line-height:1.4;
-    }
-  </style>
+
 </head>
 <body>
 <header class="site-header">
   <div class="site-header-inner">
-    <a href="/" class="logo-link" aria-label="Home">
+    <a href="/" class="logo-link" aria-label="JSM Options">
       <div class="logo">
         <div class="logo-icon">JSM</div>
         <div>
@@ -47,178 +46,33 @@
       <a href="/level4/index.html" class="active">L4 Advanced</a>
       <a href="/builder/index.html">Builder</a>
     </nav>
+        <div class="header-tools">
+      <button type="button" class="theme-toggle" id="themeToggle" aria-label="Toggle color theme">Light</button>
+      <label class="visually-hidden" for="langSelect">Language</label>
+      <select id="langSelect" aria-label="Language">
+        <option value="en" selected>EN</option>
+        <option value="fr">FR</option>
+        <option value="tr">TR</option>
+      </select>
+    </div>
   </div>
 </header>
-
 <div class="wrap">
-  <div class="hero">
-    <span class="badge">Level 4 · Longer horizons</span>
-    <h1>Cash-secured puts, calendars, credits, covered calls &amp; LEAPS</h1>
-    <p>More structure, more time. Many discretionary traders prefer <b>45+ days to expiry</b> so theta is slower at entry and there is room to manage.</p>
-  </div>
-
-  <div class="card">
-    <h2>Why target 45+ DTE?</h2>
-    <ul>
-      <li><b>Slower early decay</b> — theta is often gentler far from expiry than in the final 2 weeks.</li>
-      <li><b>Room to adjust</b> — roll, close, or hedge before gamma spikes near expiration.</li>
-      <li><b>LEAPS</b> (long-dated options, often 1+ year) behave more like leveraged stock views with time still embedded.</li>
-    </ul>
-    <div class="note">This is a common teaching guideline, not a rule. Weekly options and 0-DTE products exist and behave very differently (high gamma, fast theta).</div>
-  </div>
-
-  <div class="card">
-    <h2>Theta decay — sample shape</h2>
-    <p>Typical teaching picture: with other factors fixed, <b>time value</b> often falls faster in the last weeks before expiry than early in the life of the option. Long options usually <span class="loss">pay</span> theta; short premium often <span class="profit">collects</span> it — with risk attached.</p>
-    <div class="theta-box">
-      <svg viewBox="0 0 640 280" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Illustrative theta decay: time value falls faster as expiry approaches">
-        <defs>
-          <linearGradient id="tvFill" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stop-color="#3b82f6" stop-opacity="0.35"/>
-            <stop offset="100%" stop-color="#3b82f6" stop-opacity="0.02"/>
-          </linearGradient>
-        </defs>
-        <!-- plot area -->
-        <rect x="56" y="24" width="520" height="200" fill="#0f1419" stroke="#2d3a4f" rx="6"/>
-        <!-- grid lines -->
-        <g stroke="#2d3a4f" stroke-width="1">
-          <line x1="56" y1="74" x2="576" y2="74"/>
-          <line x1="56" y1="124" x2="576" y2="124"/>
-          <line x1="56" y1="174" x2="576" y2="174"/>
-          <line x1="186" y1="24" x2="186" y2="224"/>
-          <line x1="316" y1="24" x2="316" y2="224"/>
-          <line x1="446" y1="24" x2="446" y2="224"/>
-        </g>
-        <!-- area under curve: high at left (90 DTE), steep drop near right (0 DTE) -->
-        <path d="M56,48 C120,50 180,55 250,70 C320,88 380,115 440,155 C500,200 540,215 576,220 L576,224 L56,224 Z"
-              fill="url(#tvFill)"/>
-        <path d="M56,48 C120,50 180,55 250,70 C320,88 380,115 440,155 C500,200 540,215 576,220"
-              fill="none" stroke="#3b82f6" stroke-width="2.5" stroke-linecap="round"/>
-        <!-- axis labels -->
-        <g fill="#8b9bb4" font-family="Segoe UI, system-ui, sans-serif" font-size="12">
-          <text x="56" y="248">90 DTE</text>
-          <text x="186" y="248" text-anchor="middle">60</text>
-          <text x="316" y="248" text-anchor="middle">30</text>
-          <text x="446" y="248" text-anchor="middle">15</text>
-          <text x="576" y="248" text-anchor="end">0 (expiry)</text>
-          <text x="28" y="124" text-anchor="middle" transform="rotate(-90 28 124)">Time value →</text>
-          <text x="56" y="40" fill="#93c5fd" font-size="11">More time value</text>
-          <text x="500" y="210" fill="#93c5fd" font-size="11">Little left</text>
-        </g>
-        <!-- annotation -->
-        <g fill="#eab308" font-family="Segoe UI, system-ui, sans-serif" font-size="11">
-          <text x="400" y="100">Decay often accelerates</text>
-          <text x="400" y="114">near expiry →</text>
-        </g>
-      </svg>
-      <p class="theta-caption">Static illustration only — not a live pricing model. Actual theta depends on strike, IV, and moneyness.</p>
-    </div>
-    <p style="font-size:.85rem;color:var(--muted)">Sample only — real theta depends on strike, IV, rates, and moneyness. Use the Builder’s Days Remaining slider on a live template to see <em>your</em> structure decay.</p>
-  </div>
-
-
-  <div class="card">
-    <div class="small">Bullish-to-neutral · income · defined at strike</div>
-    <h2>Cash-secured put (CSP)</h2>
-    <p>You <b>sell a put</b> and keep enough cash to buy 100 shares at the strike if assigned. You collect a <b>credit</b> up front. You are modestly bullish to neutral: you want the stock to stay <b>above</b> the strike through expiry (put expires worthless) or you are willing to own shares at an effective price of roughly strike − premium.</p>
-    <ul>
-      <li><b>Max profit</b> = premium received (credit × 100) if the put expires OTM</li>
-      <li><b>Max loss</b> (if stock goes to zero) ≈ strike × 100 − premium received — still large; “secured” means cash is reserved, not that risk is small</li>
-      <li><b>Breakeven</b> ≈ strike − premium per share</li>
-      <li>Assignment → you buy shares at the strike; your cost basis is reduced by the premium kept</li>
-    </ul>
-    <div class="analogy">
-      <b>Example:</b> Stock $100. Sell the $95 put for $2.00 → <span class="profit">$200</span> credit. Set aside $9,500 cash.
-      If stock stays above $95, put expires; you keep $200. If assigned at $95, effective buy price ≈ $93. Risk remains if shares fall further.
-    </div>
-    <h3>Why prefer longer DTE (e.g. 45+)?</h3>
-    <ul>
-      <li><b>More premium per unit of risk</b> — very short puts often pay little unless the strike is aggressive</li>
-      <li><b>Room to manage</b> — roll out in time, adjust strike, or close early before high gamma near expiry</li>
-      <li><b>Slower early theta on long-dated</b> is less relevant for short puts than for long options; still, many income traders target ~30–45+ DTE so they are paid for time and can exit around 50–75% of max profit</li>
-      <li><b>Avoid “lottery” weeklies</b> until you understand assignment, gaps, and earnings — L4 encourages learning CSPs on longer-dated, liquid strikes first</li>
-    </ul>
-    <div class="note">In the Builder, choose <b>Bullish → Cash Secured Put</b> (or <code>?template=cash_secured_put</code>). Edit premium to match a real chain. Cash for securing the put is not modeled as a separate leg — treat strike × 100 as reserved buying power.</div>
-    <div class="warn"><strong>Risk:</strong> A CSP can lose far more than the credit if the stock collapses. Only use cash you can actually deploy to own the shares. Educational only — not advice.</div>
-    <a class="btn" href="/builder/index.html?template=cash_secured_put">Load Cash Secured Put in Builder →</a>
-  </div>
-
-  <div class="card">
-    <div class="small">Debit vs credit</div>
-    <h2>Debit spreads vs credit spreads</h2>
-    <div class="grid2">
-      <div>
-        <h3>Debit spread</h3>
-        <p>You <b>pay</b> net premium (e.g. bull call, bear put). Max loss ≈ debit. Max gain ≈ width − debit.</p>
-        <a class="btn" href="/builder/index.html?template=bull_call_spread">Bull call (debit) →</a>
-        <a class="btn btn-secondary" style="margin-top:8px" href="/builder/index.html?template=bear_put_spread">Bear put (debit) →</a>
-      </div>
-      <div>
-        <h3>Credit spread</h3>
-        <p>You <b>receive</b> net premium (e.g. bull put, bear call). Max gain ≈ credit. Max loss ≈ width − credit.</p>
-        <div class="analogy">Example idea: sell $95 put / buy $90 put for a credit — defined risk if the stock stays above the short strike.</div>
-        <p style="font-size:.88rem;color:var(--muted)">Build manually in the Builder: Sell higher put + Buy lower put (same expiry), or use iron condor wings.</p>
-      </div>
-    </div>
-  </div>
-
-  <div class="card">
-    <div class="small">Time spread</div>
-    <h2>Calendar spread (horizontal)</h2>
-    <p>Same strike, <b>different expiries</b>: typically sell a nearer-term option and buy a longer-dated one (net debit). You want the front month to decay faster while the back month keeps value — often best when price stays near the strike and IV doesn’t crush the long leg unfairly.</p>
-    <div class="analogy">Sell 30-DTE $100 call, buy 90-DTE $100 call. Watch the Builder with mixed DTEs and advance “Days Remaining.”</div>
-    <a class="btn" href="/builder/index.html?template=calendar_call">Load Calendar (Call) →</a>
-  </div>
-
-  <div class="card">
-    <div class="small">Stock + short call</div>
-    <h2>Covered call (income overlay)</h2>
-    <p>Own 100 shares, sell 1 call against them. You collect premium (“rent”) and cap upside above the short strike. Downside on the shares remains — the premium only cushions losses slightly.</p>
-    <ul>
-      <li>Often used when neutral-to-mildly bullish on a stock you already hold</li>
-      <li>Prefer liquid strikes and enough DTE that you are paid for the risk (many use ~30–45 DTE as a teaching range)</li>
-    </ul>
-    <div class="note">In the Builder, add a <b>Stock</b> leg (Buy) plus a <b>Sell Call</b>. Template premiums are illustrative.</div>
-  </div>
-
-  <div class="card">
-    <div class="small">Long-dated</div>
-    <h2>LEAPS strategies</h2>
-    <p><b>LEAPS</b> are long-term equity anticipation securities — options with expirations often a year or more out. Traders use them to:</p>
-    <ul>
-      <li>Express a multi-month/year directional view with less capital than 100 shares (still can lose 100% of premium)</li>
-      <li>Sell shorter calls against a LEAPS long call (a <b>diagonal</b> / poor-man’s covered call style idea)</li>
-    </ul>
-    <div class="analogy">Buy a 12–18 month call (LEAPS) as a surrogate for stock; optionally sell nearer calls against it to reduce cost basis — manage early assignment and dividend risk carefully in live markets.</div>
-    <p>In the Builder: set DTE to 365+, pick a call, and experiment. For a diagonal, use two call legs with different DTEs (similar to calendar, different strikes optional).</p>
-    <a class="btn" href="/builder/index.html?template=long_call">Start from Long Call →</a>
-  </div>
-
-  <div class="card">
-    <h2>Iron condor &amp; defined risk (recap)</h2>
-    <p>Still the workhorse neutral defined-risk structure from Level 3. Longer DTE entries (e.g. 45) are often taught so you can take profits or adjust before the high-gamma zone.</p>
-    <a class="btn" href="/builder/index.html?template=iron_condor">Load Iron Condor →</a>
-  </div>
-
-  <div class="warn">
-    <strong>Risk:</strong> Longer DTE is not “safer.” You can still lose the full debit, or the max loss on a credit structure. LEAPS can lose most of their value if the thesis is wrong or IV collapses. Education only — not advice.
-  </div>
-
-  <div class="card" style="text-align:center">
-    <a class="btn" href="/builder/index.html">Open Builder</a>
-    <a class="btn btn-secondary" href="/level3/index.html">← Level 3</a>
-  </div>
+<div class="hero"><span class="badge">Level 4</span><h1>Cash-secured puts, calendars, LEAPS</h1>
+<p>Longer horizons (often <b>45+ DTE</b>) for management room and more meaningful premium on short puts.</p></div>
+<div class="card"><h2>Cash-secured put (CSP)</h2>
+<p>Sell a put and keep cash to buy 100 shares at the strike if assigned. Max profit = credit; large downside if stock collapses.</p>
+<p><b>Why longer DTE?</b> Better premium vs risk, time to roll or close before expiry gamma spikes. Prefer liquid strikes.</p>
+<a class="btn" href="/builder/index.html?template=cash_secured_put">Load CSP →</a></div>
+<div class="card"><h2>Calendar, covered call, LEAPS</h2>
+<p>Same-strike different expiries; stock + short call; long-dated calls as multi-month views.</p>
+<a class="btn" href="/builder/index.html?template=calendar_call">Calendar →</a>
+<a class="btn btn-secondary" href="/builder/index.html">Open Builder</a></div>
 </div>
-
 <footer>
-  <div>Educational only — not financial advice.</div>
-  <div class="footer-links">
-    <a href="/">Home</a>
-    <a href="/level3/index.html">L3</a>
-    <a href="/builder/index.html">Builder</a>
-    <a href="/disclaimer/index.html">Disclaimer</a>
-  </div>
+  <div>Educational purposes only — not financial advice.</div>
+  <div class="footer-links"><a href="/">Home</a> <a href="/level1/index.html">L1</a> <a href="/level2/index.html">L2</a> <a href="/level3/index.html">L3</a> <a href="/level4/index.html">L4</a> <a href="/builder/index.html">Builder</a> <a href="/disclaimer/index.html">Disclaimer</a> <a href="/contact/index.html">Contact</a> <a href="/privacy/index.html">Privacy</a> <a href="/about/index.html">About</a></div>
+  <div style="margin-top:8px">© 2026 JSM Options · jsm-options.com</div>
 </footer>
-
 </body>
 </html>

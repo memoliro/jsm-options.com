@@ -4,16 +4,44 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>JSM Options — Learn Options by Building Them</title>
-  <meta name="description" content="Beginner-friendly options education: calls, puts, spreads, iron condors, plus a free interactive strategy builder.">
+  <meta name="description" content="Free beginner-friendly options education: calls, puts, spreads, iron condors, cash-secured puts, plus an interactive strategy builder.">
+  <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://jsm-options.com/">
+  <link rel="alternate" hreflang="en" href="https://jsm-options.com/">
+  <link rel="alternate" hreflang="fr" href="https://jsm-options.com/fr/">
+  <link rel="alternate" hreflang="tr" href="https://jsm-options.com/tr/">
+  <link rel="alternate" hreflang="x-default" href="https://jsm-options.com/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="JSM Options">
+  <meta property="og:title" content="JSM Options — Learn Options by Building Them">
+  <meta property="og:description" content="Free beginner-friendly options education: calls, puts, spreads, iron condors, cash-secured puts, plus an interactive strategy builder.">
+  <meta property="og:url" content="https://jsm-options.com/">
+  <meta property="og:locale" content="en_US">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="JSM Options — Learn Options by Building Them">
+  <meta name="twitter:description" content="Free beginner-friendly options education: calls, puts, spreads, iron condors, cash-secured puts, plus an interactive strategy builder.">
   <link rel="stylesheet" href="/assets/style.css">
+  <script src="/assets/site.js" defer></script>
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-BDL003RCN6"></script>
   <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-BDL003RCN6');</script>
+
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "JSM Options",
+    "url": "https://jsm-options.com/",
+    "description": "Beginner-friendly options education and interactive strategy builder",
+    "inLanguage": ["en", "fr", "tr"],
+    "publisher": {"@type": "Organization", "name": "JSM Options", "url": "https://jsm-options.com/"}
+  }
+  </script>
 </head>
 <body>
 <header class="site-header">
   <div class="site-header-inner">
-    <a href="/" class="logo-link" aria-label="Home">
+    <a href="/" class="logo-link" aria-label="JSM Options">
       <div class="logo">
         <div class="logo-icon">JSM</div>
         <div>
@@ -24,12 +52,21 @@
     </a>
     <nav class="nav">
       <a href="/" class="active">Home</a>
-      <a href="/level1/index.html" >L1 Basics</a>
-      <a href="/level2/index.html" >L2 Trades</a>
-      <a href="/level3/index.html" >L3 Spreads</a>
-      <a href="/level4/index.html" >L4 Advanced</a>
-      <a href="/builder/index.html" >Builder</a>
+      <a href="/level1/index.html">L1 Basics</a>
+      <a href="/level2/index.html">L2 Trades</a>
+      <a href="/level3/index.html">L3 Spreads</a>
+      <a href="/level4/index.html">L4 Advanced</a>
+      <a href="/builder/index.html">Builder</a>
     </nav>
+        <div class="header-tools">
+      <button type="button" class="theme-toggle" id="themeToggle" aria-label="Toggle color theme">Light</button>
+      <label class="visually-hidden" for="langSelect">Language</label>
+      <select id="langSelect" aria-label="Language">
+        <option value="en" selected>EN</option>
+        <option value="fr">FR</option>
+        <option value="tr">TR</option>
+      </select>
+    </div>
   </div>
 </header>
 
@@ -37,65 +74,24 @@
   <div class="hero">
     <span class="badge">Free · Client-side builder · Not financial advice</span>
     <h1>Learn options by building them.</h1>
-    <p>Four levels — basics, first trades, spreads, and advanced (calendars, LEAPS, 45+ DTE) — then practice in the live Builder. Green = profit, red = loss. One contract = 100 shares.</p>
+    <p>Four levels — basics, first trades, spreads, and advanced (cash-secured puts, calendars, LEAPS, 45+ DTE) — then practice in the live Builder. Green = profit, red = loss. One contract = 100 shares.</p>
     <div style="margin-top:16px;display:flex;gap:10px;flex-wrap:wrap">
       <a class="btn" href="/level1/index.html">Start Level 1</a>
       <a class="btn btn-secondary" href="/builder/index.html">Open Builder</a>
     </div>
   </div>
-
   <div class="grid2">
-    <div class="card">
-      <div class="small">Level 1</div>
-      <h3>What is an option?</h3>
-      <p>Calls and puts as reservation tickets — sneakers, house, concert. Premium, strike, expiry.</p>
-      <a href="/level1/index.html">Read Level 1 →</a>
-    </div>
-    <div class="card">
-      <div class="small">Level 2</div>
-      <h3>Your first trades</h3>
-      <p>Long call, long put, covered call with real numbers. Why premiums are ×100. Intro to Greeks.</p>
-      <a href="/level2/index.html">Read Level 2 →</a>
-    </div>
-    <div class="card">
-      <div class="small">Level 3</div>
-      <h3>Spreads &amp; iron condor</h3>
-      <p>Bull/bear verticals and the iron condor — defined risk, wired straight into the Builder.</p>
-      <a href="/level3/index.html">Read Level 3 →</a>
-    </div>
-    <div class="card">
-      <div class="small">Level 4</div>
-      <h3>Advanced &amp; longer DTE</h3>
-      <p>Cash-secured puts, calendars, covered calls, LEAPS, and why many traders prefer 45+ days to expiry.</p>
-      <a href="/level4/index.html">Read Level 4 →</a>
-    </div>
-    <div class="card">
-      <div class="small">Tool</div>
-      <h3>Strategy Builder</h3>
-      <p>Multi-leg graphs, theta decay, Greeks, templates. Runs in your browser. Illustrative premiums — edit to match a real chain.</p>
-      <a href="/builder/index.html">Build now →</a>
-    </div>
+    <div class="card"><div class="small">Level 1</div><h3>What is an option?</h3><p>Calls and puts as reservation tickets — sneakers, house, concert. Premium, strike, expiry.</p><a href="/level1/index.html">Read Level 1 →</a></div>
+    <div class="card"><div class="small">Level 2</div><h3>Your first trades</h3><p>Long call, long put, covered call with real numbers. Why premiums are ×100. Intro to Greeks.</p><a href="/level2/index.html">Read Level 2 →</a></div>
+    <div class="card"><div class="small">Level 3</div><h3>Spreads &amp; iron condor</h3><p>Bull/bear verticals and the iron condor — defined risk, wired into the Builder.</p><a href="/level3/index.html">Read Level 3 →</a></div>
+    <div class="card"><div class="small">Level 4</div><h3>Advanced &amp; longer DTE</h3><p>Cash-secured puts, calendars, covered calls, LEAPS, and why many traders prefer 45+ days to expiry.</p><a href="/level4/index.html">Read Level 4 →</a></div>
+    <div class="card"><div class="small">Tool</div><h3>Strategy Builder</h3><p>Multi-leg graphs, theta decay, Greeks, templates. Runs in your browser. Illustrative premiums — edit to match a chain.</p><a href="/builder/index.html">Build now →</a></div>
   </div>
-
-  <div class="warn">
-    <strong>Risk warning:</strong> Options can expire worthless. You can lose 100% of premium paid on long options, and much more on some short strategies. This site is for education only — not trading advice.
-  </div>
+  <div class="warn"><strong>Risk warning:</strong> Options can expire worthless. You can lose 100% of premium paid on long options, and much more on some short strategies. This site is for education only — not trading advice.</div>
 </div>
-
 <footer>
   <div>Educational purposes only — not financial advice.</div>
-  <div class="footer-links">
-    <a href="/">Home</a>
-    <a href="/level1/index.html">L1</a>
-    <a href="/level2/index.html">L2</a>
-    <a href="/level3/index.html">L3</a>
-    <a href="/level4/index.html">L4</a>
-    <a href="/builder/index.html">Builder</a>
-    <a href="/disclaimer/index.html">Disclaimer</a>
-    <a href="/contact/index.html">Contact</a>
-    <a href="/privacy/index.html">Privacy</a>
-    <a href="/about/index.html">About</a>
-  </div>
+  <div class="footer-links"><a href="/">Home</a> <a href="/level1/index.html">L1</a> <a href="/level2/index.html">L2</a> <a href="/level3/index.html">L3</a> <a href="/level4/index.html">L4</a> <a href="/builder/index.html">Builder</a> <a href="/disclaimer/index.html">Disclaimer</a> <a href="/contact/index.html">Contact</a> <a href="/privacy/index.html">Privacy</a> <a href="/about/index.html">About</a></div>
   <div style="margin-top:8px">© 2026 JSM Options · jsm-options.com</div>
 </footer>
 </body>
