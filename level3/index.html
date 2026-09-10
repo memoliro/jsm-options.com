@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html data-theme="dark" lang="en">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Level 3: Spreads &amp; Iron Condor | JSM Options</title>
+  <title>Level 3: Spreads & Iron Condor | JSM Options</title>
   <meta name="description" content="Bull call spread, bear put spread, and iron condor with defined risk. Load each strategy in the free Builder.">
   <link rel="canonical" href="https://jsm-options.com/level3/">
   <link rel="stylesheet" href="/assets/style.css">
@@ -29,10 +29,6 @@
       <a href="/level3/index.html" class="active">L3 Spreads</a>
       <a href="/level4/index.html">L4 Advanced</a>
       <a href="/builder/index.html">Builder</a>
-          <button type="button" class="theme-toggle" data-theme-toggle aria-label="Toggle light/dark theme">
-        <span class="icon" data-theme-icon>☀️</span>
-        <span data-theme-label>Light</span>
-      </button>
     </nav>
   </div>
 </header>
@@ -40,34 +36,159 @@
 <div class="wrap">
   <div class="hero">
     <span class="badge">Level 3 · Defined risk</span>
-    <h1>Vertical spreads &amp; the iron condor</h1>
+    <h1>Vertical spreads & the iron condor</h1>
     <p>Buy one option, sell another — cut cost or define risk. Then combine both sides into a market-neutral iron condor.</p>
   </div>
 
   <div class="card">
     <h2>Why spreads?</h2>
     <p>A naked long call is simple but you pay full premium. A naked short call can have large risk. A <b>vertical spread</b> pairs a buy and a sell in the same expiry so max loss (and often max gain) are capped.</p>
-    <div class="note">Builder premiums in templates are <b>illustrative</b> — edit them to match a live option chain before you treat numbers as realistic.</div>
+    <div class="note">Builder premiums in templates are <b>illustrative</b> — edit them to match a live option chain before you treat numbers as realistic. One contract = 100 shares. $1 = $100 cash.</div>
   </div>
 
+  <!-- EXPANDED BULL CALL SPREAD - ABSOLUTE BEGINNER -->
   <div class="card">
-    <div class="small">Bullish · defined risk</div>
-    <h3>Bull call spread</h3>
-    <p>Buy a lower-strike call, sell a higher-strike call (same expiry). Net debit. You want the stock up, but you cap upside at the short strike.</p>
+    <div class="small">Bullish · defined risk · 2nd strategy after long call</div>
+    <h3>Bull call spread — the cheaper way to be bullish</h3>
+    <p>This is usually the <b>second strategy traders learn</b> right after the long call. Why? A long call teaches you how brutal time decay (theta) can be. A bull call spread fixes part of that problem by selling a further out-of-the-money call against your long call.</p>
+    <p>You still get leverage, but you pay less upfront and you worry less about theta. The tradeoff: your upside is capped at the short strike.</p>
+
     <div class="analogy">
-      Example shape: Buy $100 call, sell $110 call. Net debit might be ~$4 ($400). Max gain roughly width − debit ≈ $6 ($600) if stock ≥ $110 at expiry. Max loss = debit paid.
+      <b>Think of it like this:</b> Stock at $100. You buy a $100 call for $6.50 and sell a $110 call for $2.50 in the same expiry. You paid $4.00 net ($400). If stock goes to $110+, spread is worth $10 width ($1000). Your profit = $10 - $4 = $6 ($600). If stock stays below $100, both expire worthless, you lose $4 ($400) only.
     </div>
+
+    <h2 style="margin-top:28px;">How it's built</h2>
+    <ul>
+      <li><b>Buy 1 call</b> — closer to the money (lower strike)</li>
+      <li><b>Sell 1 call</b> — further out of the money (higher strike)</li>
+      <li>Both are <b>calls</b>, same expiration, same underlying</li>
+      <li>Enter as one trade. You can leg in separately but that adds risk — you could get stuck with one side moving against you.</li>
+    </ul>
+    <div class="note">Also called: <b>call debit spread, vertical spread, long call spread</b> — same trade.</div>
+
+    <h2>Payoff — where you win, lose, and break even</h2>
+    <p>The short call is further OTM. It gives you credit that offsets your long call cost and reduces theta, but it also caps upside.</p>
+    
     <div class="table-wrap">
       <table>
-        <thead><tr><th>At expiry</th><th>Idea</th></tr></thead>
+        <thead><tr><th>Zone</th><th>Formula</th><th>Example 100/110</th></tr></thead>
         <tbody>
-          <tr><td>Well below $100</td><td>Both calls ~0 → lose net debit</td></tr>
-          <tr><td>Between strikes</td><td>Partial value on long call</td></tr>
-          <tr><td>At/above $110</td><td>Spread worth about $10 width → max profit region</td></tr>
+          <tr><td><b>Max Profit</b></td><td>Spread Width - Net Debit</td><td>10 - 4 = $6 ($600). Hit when stock ≥ $110. Above $110, every $ you gain on long call you lose on short call.</td></tr>
+          <tr><td><b>Max Loss</b></td><td>Net Debit Paid</td><td>$4 ($400). Happens if stock ≤ $100 at expiry — both calls expire worthless.</td></tr>
+          <tr><td><b>Breakeven</b></td><td>Long Strike + Net Debit</td><td>100 + 4 = $104. Stock must close above $104 to profit. At exactly $104, flat. Watch for exercise/assignment risk at breakeven.</td></tr>
         </tbody>
       </table>
     </div>
-    <a class="btn" href="/builder/index.html?template=bull_call_spread">Load Bull Call Spread →</a>
+
+    <div class="analogy">
+      <b>Absolute beginner check:</b> You risk $400 to make $600. Breakeven $104. Below $100 = lose $400. Between $100-$110 = partial profit. At/above $110 = max profit $600. Doesn't matter if stock goes to $200 — profit capped at $600.
+    </div>
+
+    <h2>Real example: XLF (Financial ETF)</h2>
+    <p>We think XLF goes up moderately in next 45 days. XLF trading $47.82, target $51. Broad ETF, decent bid/ask, many strikes.</p>
+    <ul>
+      <li><b>XLF Price:</b> $47.82</li>
+      <li><b>Expiry:</b> 45 days</li>
+      <li><b>Buy 48 Call @ $1.69</b></li>
+      <li><b>Sell 51 Call @ $0.38</b></li>
+      <li><b>Net Debit:</b> $1.31 ($131) — also max loss</li>
+      <li><b>Breakeven:</b> $48 + $1.31 = $49.31</li>
+      <li><b>Max Profit:</b> $3.00 width - $1.31 = $1.69 ($169) if XLF ≥ $51</li>
+    </ul>
+    <div class="note">We assume fills at mid-price (midpoint bid/ask). Always use limit orders, start at mid.</div>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Outcome</th><th>What happens</th></tr></thead>
+        <tbody>
+          <tr><td><b>Positive — XLF to $53 at expiry</b></td><td>Both calls ITM with 100% intrinsic. Long 48 call worth $5.00 ($53-$48), short 51 call worth $2.00 ($53-$51). Spread value = $3.00. Profit = $3.00 - $1.31 = $1.69 ($169). Note: short call likely assigned before expiry when deep ITM near expiry — that's okay, you exercise long call to cover.</td></tr>
+          <tr><td><b>Negative — XLF to $44</b></td><td>Both calls OTM → $0. Spread value $0. You lose $1.31 ($131). This trade actually hit ~80% max profit mid-way — should have closed early. Time is risk. Don't be greedy.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2>3 major risks (plus theta)</h2>
+    <ul>
+      <li><b>1. Early assignment risk:</b> Short call can be assigned when ITM, risk rises near expiry. Fix: just exercise your long call — offsets short stock, closes position. Usually happens when short call has no extrinsic value left, meaning you're at max profit anyway.</li>
+      <li><b>2. IV Crush:</b> Long options like high IV. If IV drops sharply after you enter (common after earnings, Fed meetings, jobs reports), both legs lose value, but long call loses more. Spread shrinks, you can lose even if direction right.</li>
+      <li><b>3. Liquidity risk:</b> Thin stocks/ETFs = wide bid/ask spreads, low open interest, low volume. Hard to get filled at decent price, especially when volatility jumps.</li>
+      <li><b>4. Time decay — less bad than long call:</b> You're net long premium, so theta works slightly against you. Stock must move quick enough. But decay is less severe than single long call because short call loses value in your favor. Long call decays even if stock flat; short call helps offset. Far OTM long calls decay fastest early.</li>
+    </ul>
+
+    <h2>Implied Volatility — when to use it</h2>
+    <p>Bull call spread is <b>net debit</b>, benefits from <b>rising IV</b>. If IV rises after entry, both legs gain, long usually gains more. If IV drops, both lose, long takes bigger hit. Spread shrinks.</p>
+    <div class="analogy">Best when IV is <b>steady or rising</b> after entry. Dangerous before known event (earnings) — IV crush can wreck trade if move not fast/strong. Pro tip: Enter when IV low but expected to rise. Target: long call IV 30-50%, short call IV 20-40%.</div>
+
+    <h2>How to pick strikes — beginner rules</h2>
+    <p>You can tailor spread to how bullish you are:</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Outlook</th><th>Example (Stock $500)</th><th>Tradeoff</th></tr></thead>
+        <tbody>
+          <tr><td><b>Slightly bullish</b></td><td>Buy $500 call, sell $503 call ($3 width)</td><td>Low cost, lower max profit, higher probability max profit</td></tr>
+          <tr><td><b>Moderately bullish</b></td><td>Buy $500 call, sell $510 call ($10 width)</td><td>Balanced cost and reward — most beginners start here</td></tr>
+          <tr><td><b>Aggressively bullish</b></td><td>Buy $500 call, sell $520 call ($20 width)</td><td>High cost, big profit potential, lower prob success</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <ul>
+      <li><b>Narrow spread:</b> cheaper, lower max profit, higher chance of hitting max.</li>
+      <li><b>Wide spread:</b> more expensive, higher max profit, lower chance.</li>
+      <li>Don't go too narrow like 100/101 for $0.40 — high prob but tiny payoff, commissions eat it.</li>
+    </ul>
+    <div class="note"><b>Beginner sweet spot:</b> I like long call ~3-5% OTM, short leg ~7% OTM. Balances affordability with decent probability.</div>
+
+    <h2>How to pick expiration</h2>
+    <p>You're net long options, time not on your side. Theta eats long option daily.</p>
+    <ul>
+      <li><b>1-2 months until expiration</b> is great entry for vertical spreads. Longer than that, you overpay for long option.</li>
+      <li>Gives time to adjust/exit if wrong. With 4 DTE, no time to roll.</li>
+      <li><b>Take profit early:</b> If you lock 80% of max profit with ~2 weeks left, close it. Risk/reward not worth holding. <i>Bears make money, bulls make money, but pigs get slaughtered.</i></li>
+    </ul>
+
+    <h2>Delta selection — beginner guide</h2>
+    <p>Delta = how much option price moves per $1 stock move, and rough probability ITM.</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Leg</th><th>Target Delta</th><th>Why</th></tr></thead>
+        <tbody>
+          <tr><td>Long Call</td><td>0.50 - 0.60</td><td>Higher probability, decent stock sensitivity</td></tr>
+          <tr><td>Short Call</td><td>0.20 - 0.35</td><td>Less likely to finish ITM, caps upside but cheaper</td></tr>
+          <tr><td>Delta Spread</td><td>0.30 - 0.40</td><td>Wide enough to profit, narrow enough realistic</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2>How to manage — not set and forget</h2>
+    <ul>
+      <li><b>Take profits before expiry:</b> If at/near max profit, close early. If you hold, long call ITM may be auto-exercised → you buy 100 shares at strike. If short call OTM, you're left long stock you didn't want. If both ITM, exercised + assigned = extra fees vs just closing spread.</li>
+      <li><b>Roll short leg up</b> to higher strike to increase max profit (if stock strong).</li>
+      <li><b>Roll long leg</b> closer to money to regain delta if stock pulls back.</li>
+      <li><b>Roll both legs</b> up/down together to reposition (4-way vertical).</li>
+      <li><b>Roll expiration</b> out later if need more time — roll <b>both legs same time</b> as 4-way. Don't roll one leg only, you get exposed.</li>
+    </ul>
+    <div class="note">Watch commissions. Rolling, especially 4-way trades, gets expensive. Factor fees into P/L.</div>
+
+    <h2>Greeks — what matters for bull call spread</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Greek</th><th>Effect</th><th>Beginner meaning</th></tr></thead>
+        <tbody>
+          <tr><td><b>Delta</b></td><td>Positive</td><td>Long call adds positive delta, short offsets some. Net delta rises as stock rises. You make money when stock up.</td></tr>
+          <tr><td><b>Gamma</b></td><td>Slightly Positive</td><td>Long adds gamma, short subtracts. Net gamma lower than single long call — less sensitive to sharp moves, smoother P/L.</td></tr>
+          <tr><td><b>Theta</b></td><td>Slightly Negative</td><td>Long loses value daily, short gains. Not fully offset — time decay slightly against you.</td></tr>
+          <tr><td><b>Vega</b></td><td>Neutral to Slightly Positive</td><td>Long benefits from IV rise, short hurt. Net vega low — volatility changes minimal impact. Best in low IV rising to high.</td></tr>
+          <tr><td><b>Rho</b></td><td>Neutral</td><td>Long benefits from rising rates, short hurt. Mostly offset. Minimal, especially short-dated.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="analogy">
+      <b>Absolute beginner summary:</b> Buy lower call, sell higher call, same expiry, pay debit. Max profit = width - debit (capped), max loss = debit (defined), breakeven = long strike + debit. Cheaper than long call, less theta pain, but upside capped. Use 1-2 months expiry, take 80% profit early, watch assignment and IV crush.
+    </div>
+
+    <a class="btn" href="/builder/index.html?template=bull_call_spread">Load Bull Call Spread in Builder →</a>
+    <a class="btn btn-secondary" href="/level2/index.html">Need basics? ← Level 2 Long Call</a>
   </div>
 
   <div class="card">
@@ -115,6 +236,5 @@
     <a href="/">Home</a><a href="/builder/index.html">Builder</a><a href="/disclaimer/index.html">Disclaimer</a><a href="/contact/index.html">Contact</a>
   </div>
 </footer>
-  <script src="/assets/theme.js"></script>
 </body>
 </html>
