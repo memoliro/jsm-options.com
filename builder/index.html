@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html data-theme="dark" lang="en">
+<html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -16,23 +16,26 @@
 </script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
   <style>
-    /* Builder-specific layout — colors come from /assets/style.css theme vars */
+    :root {
+      --bg: #0f1419;
+      --card: #1a2332;
+      --border: #2d3a4f;
+      --text: #e7ecf3;
+      --muted: #8b9bb4;
+      --accent: #3b82f6;
+      --green: #22c55e;
+      --red: #ef4444;
+      --yellow: #eab308;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
       background: var(--bg);
       color: var(--text);
       line-height: 1.45;
-      /* full width; content constrained by .builder-wrap */
-      padding: 0;
-      max-width: none;
-      margin: 0;
-      min-height: 100vh;
-    }
-    .builder-wrap {
-      width: 100%;
+      padding: 12px;
       max-width: 1280px;
       margin: 0 auto;
-      padding: 12px 16px 24px;
     }
     h1 {
       font-size: clamp(1.25rem, 3vw, 1.55rem);
@@ -68,7 +71,7 @@
     .card h2 {
       font-size: 0.92rem;
       margin-bottom: 10px;
-      color: var(--link);
+      color: #93c5fd;
       display: flex;
       align-items: center;
       gap: 8px;
@@ -84,7 +87,7 @@
     input, select {
       width: 100%;
       padding: 7px 8px;
-      background: var(--input);
+      background: #0f172a;
       border: 1px solid var(--border);
       border-radius: 6px;
       color: var(--text);
@@ -146,7 +149,7 @@
       font-size: 0.78rem;
     }
     .leg-row {
-      background: var(--input);
+      background: #0f172a;
       border: 1px solid var(--border);
       border-radius: 7px;
       padding: 5px 5px;
@@ -175,7 +178,7 @@
     #chartContainer {
       position: relative;
       height: min(380px, 52vh);
-      background: var(--input);
+      background: #0f172a;
       border-radius: 8px;
       padding: 6px;
     }
@@ -215,7 +218,7 @@
       text-align: center;
       padding: 8px 10px;
       border-radius: 8px;
-      background: var(--input);
+      background: #0f172a;
       border: 1px solid var(--border);
     }
     .pl-value {
@@ -235,7 +238,7 @@
       .metrics { grid-template-columns: 1fr 1fr; }
     }
     .metric {
-      background: var(--input);
+      background: #0f172a;
       border-radius: 7px;
       padding: 6px;
       text-align: center;
@@ -245,12 +248,12 @@
     .metric .val { font-size: 0.82rem; font-weight: 600; }
 
     .edu-tip {
-      background: var(--note-bg);
-      border-left: 3px solid var(--accent);
+      background: #1e3a5f;
+      border-left: 3px solid #3b82f6;
       padding: 8px 10px;
       border-radius: 0 7px 7px 0;
       font-size: 0.78rem;
-      color: var(--note-text);
+      color: #bfdbfe;
       margin-top: 8px;
     }
     .btn-row {
@@ -275,14 +278,14 @@
       .greeks-grid { grid-template-columns: 1fr 1fr; }
     }
     .greek-card {
-      background: var(--input);
+      background: #0f172a;
       border: 1px solid var(--border);
       border-radius: 8px;
       padding: 8px 10px;
     }
     .greek-card .g-name {
       font-size: 0.72rem;
-      color: var(--link);
+      color: #93c5fd;
       font-weight: 600;
     }
     .greek-card .g-val {
@@ -297,21 +300,63 @@
       line-height: 1.35;
     }
   
-    /* Header uses shared theme vars from style.css — no hard-coded dark colors */
-    .site-header {
-      position: sticky; top: 0; z-index: 30;
-      background: var(--header-bg);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--border);
-      width: 100%;
-    }
-    .edu-tip {
-      background: var(--note-bg);
-      border-left: 3px solid var(--accent);
-      color: var(--note-text);
-    }
+    .site-header{position:sticky;top:0;z-index:30;background:rgba(15,20,25,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border,#2d3a4f);width:100%;}
+    .site-header-inner{max-width:1280px;margin:0 auto;padding:12px 16px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;}
+    .site-header .nav a{padding:6px 11px;border-radius:9999px;border:1px solid var(--border,#2d3a4f);background:var(--card,#1a2332);font-size:12px;color:var(--muted,#8b9bb4);text-decoration:none;}
+    .site-header .nav a.active{background:var(--accent,#3b82f6);color:#fff;border-color:var(--accent,#3b82f6);}
+    .site-header .logo{display:flex;align-items:center;gap:10px;}
+    .site-header .logo-icon{width:32px;height:32px;background:linear-gradient(135deg,#3b82f6,#34d399);color:#fff;border-radius:50%;display:grid;place-items:center;font-weight:800;font-size:12px;}
+.builder-wrap{max-width:1280px;margin:0 auto;padding:12px 16px 24px;}
   
   </style>
+<script>
+(function(){
+  var root=document.documentElement, saved=null;
+  try{saved=localStorage.getItem('jsm-theme')}catch(e){}
+  var theme=saved==='light'||saved==='dark'?saved:'dark';
+  root.setAttribute('data-theme',theme);
+  window.jsmApplyTheme=function(t){
+    root.setAttribute('data-theme',t);
+    try{localStorage.setItem('jsm-theme',t)}catch(e){}
+    var b=document.getElementById('themeToggle'),i=document.getElementById('themeIcon'),l=document.getElementById('themeLabel');
+    if(i)i.textContent=t==='dark'?'☀️':'🌙';
+    if(l)l.textContent=t==='dark'?'Light':'Dark';
+    if(b)b.setAttribute('aria-label','Switch to '+(t==='dark'?'light':'dark')+' theme');
+  };
+  document.addEventListener('DOMContentLoaded',function(){
+    window.jsmApplyTheme(theme);
+    var b=document.getElementById('themeToggle');
+    if(b)b.addEventListener('click',function(){window.jsmApplyTheme(root.getAttribute('data-theme')==='dark'?'light':'dark')});
+  });
+})();
+</script>
+
+<style>
+[data-theme="light"]{--bg:#f4f6f9;--card:#fff;--border:#d8dee9;--text:#0f172a;--muted:#64748b;--accent:#2563eb;--green:#16a34a;--red:#dc2626;--yellow:#ca8a04;--input:#f1f5f9}
+[data-theme="light"] body{background:var(--bg)!important;color:var(--text)!important}
+[data-theme="light"] .site-header{background:rgba(255,255,255,.92)!important}
+</style>
+<script>
+(function(){
+  var root=document.documentElement, saved=null;
+  try{saved=localStorage.getItem('jsm-theme')}catch(e){}
+  var theme=saved==='light'||saved==='dark'?saved:'dark';
+  root.setAttribute('data-theme',theme);
+  window.jsmApplyTheme=function(t){
+    root.setAttribute('data-theme',t);
+    try{localStorage.setItem('jsm-theme',t)}catch(e){}
+    var b=document.getElementById('themeToggle'),i=document.getElementById('themeIcon'),l=document.getElementById('themeLabel');
+    if(i)i.textContent=t==='dark'?'☀️':'🌙';
+    if(l)l.textContent=t==='dark'?'Light':'Dark';
+    if(b)b.setAttribute('aria-label','Switch to '+(t==='dark'?'light':'dark')+' theme');
+  };
+  document.addEventListener('DOMContentLoaded',function(){
+    window.jsmApplyTheme(theme);
+    var b=document.getElementById('themeToggle');
+    if(b)b.addEventListener('click',function(){window.jsmApplyTheme(root.getAttribute('data-theme')==='dark'?'light':'dark')});
+  });
+})();
+</script>
 </head>
 <body>
     <header class="site-header">
@@ -332,10 +377,8 @@
         <a href="/level3/index.html">L3 Spreads</a>
         <a href="/level4/index.html">L4 Advanced</a>
         <a href="/builder/index.html" class="active">Builder</a>
-            <button type="button" class="theme-toggle" data-theme-toggle aria-label="Toggle light/dark theme">
-        <span class="icon" data-theme-icon>☀️</span>
-        <span data-theme-label>Light</span>
-      </button>
+            <a href="/strategies/index.html">Strategies</a>
+      <button type="button" class="theme-toggle" id="themeToggle" aria-label="Toggle light/dark theme"><span class="icon" id="themeIcon">☀️</span><span id="themeLabel">Light</span></button>
     </nav>
     </div>
   </header>
@@ -1223,6 +1266,5 @@
 
 </script>
   </div>
-  <script src="/assets/theme.js"></script>
 </body>
 </html>

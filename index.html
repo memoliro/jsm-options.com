@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -9,6 +9,27 @@
   <link rel="stylesheet" href="/assets/style.css">
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-BDL003RCN6"></script>
   <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-BDL003RCN6');</script>
+<script>
+(function(){
+  var root=document.documentElement, saved=null;
+  try{saved=localStorage.getItem('jsm-theme')}catch(e){}
+  var theme=saved==='light'||saved==='dark'?saved:'dark';
+  root.setAttribute('data-theme',theme);
+  window.jsmApplyTheme=function(t){
+    root.setAttribute('data-theme',t);
+    try{localStorage.setItem('jsm-theme',t)}catch(e){}
+    var b=document.getElementById('themeToggle'),i=document.getElementById('themeIcon'),l=document.getElementById('themeLabel');
+    if(i)i.textContent=t==='dark'?'☀️':'🌙';
+    if(l)l.textContent=t==='dark'?'Light':'Dark';
+    if(b)b.setAttribute('aria-label','Switch to '+(t==='dark'?'light':'dark')+' theme');
+  };
+  document.addEventListener('DOMContentLoaded',function(){
+    window.jsmApplyTheme(theme);
+    var b=document.getElementById('themeToggle');
+    if(b)b.addEventListener('click',function(){window.jsmApplyTheme(root.getAttribute('data-theme')==='dark'?'light':'dark')});
+  });
+})();
+</script>
 </head>
 <body>
 <header class="site-header">
@@ -29,6 +50,8 @@
       <a href="/level3/index.html" >L3 Spreads</a>
       <a href="/level4/index.html" >L4 Advanced</a>
       <a href="/builder/index.html" >Builder</a>
+          <a href="/strategies/index.html">Strategies</a>
+      <button type="button" class="theme-toggle" id="themeToggle" aria-label="Toggle light/dark theme"><span class="icon" id="themeIcon">☀️</span><span id="themeLabel">Light</span></button>
     </nav>
   </div>
 </header>
@@ -91,6 +114,7 @@
     <a href="/level3/index.html">L3</a>
     <a href="/level4/index.html">L4</a>
     <a href="/builder/index.html">Builder</a>
+    <a href="/strategies/index.html">Strategies</a>
     <a href="/disclaimer/index.html">Disclaimer</a>
     <a href="/contact/index.html">Contact</a>
     <a href="/privacy/index.html">Privacy</a>

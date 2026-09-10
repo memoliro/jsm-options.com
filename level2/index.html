@@ -4,12 +4,249 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Level 2: Your First Trades | JSM Options</title>
-  <link rel="stylesheet" href="/assets/style.css">
   <meta name="description" content="Long Call, Long Put, Covered Call with real numbers, payoff diagrams, moneyness, Greeks in plain English, and beginner FAQ.">
   <link rel="canonical" href="https://jsm-options.com/level2/">
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-BDL003RCN6"></script>
   <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-BDL003RCN6');</script>
-  </head>
+  <style>
+    /* ========== Theme variables (match jsm-options.com dark + light mode) ========== */
+    :root, [data-theme="dark"] {
+      --bg: #0f1419;
+      --card: #1a2332;
+      --border: #2d3a4f;
+      --text: #e7ecf3;
+      --muted: #8b9bb4;
+      --accent: #3b82f6;
+      --green: #22c55e;
+      --red: #ef4444;
+      --yellow: #eab308;
+      --input: #0f172a;
+      --header-bg: rgba(15,20,25,.92);
+      --hero-from: #1a2332;
+      --hero-to: #0f1419;
+      --link: #93c5fd;
+      --p: #c8d0dc;
+      --term-bg: #243044;
+      --warn-bg: rgba(239,68,68,.08);
+      --warn-border: rgba(239,68,68,.35);
+      --warn-text: #fecaca;
+      --note-bg: rgba(59,130,246,.08);
+      --note-border: rgba(59,130,246,.35);
+      --note-text: #bfdbfe;
+      --btn-secondary: #334155;
+      --btn-secondary-hover: #475569;
+      --table-th: #93c5fd;
+      --faq-summary: #e7ecf3;
+      --img-border: #2d3a4f;
+    }
+    [data-theme="light"] {
+      --bg: #f4f6f9;
+      --card: #ffffff;
+      --border: #d8dee9;
+      --text: #0f172a;
+      --muted: #64748b;
+      --accent: #2563eb;
+      --green: #16a34a;
+      --red: #dc2626;
+      --yellow: #ca8a04;
+      --input: #f1f5f9;
+      --header-bg: rgba(255,255,255,.92);
+      --hero-from: #ffffff;
+      --hero-to: #f1f5f9;
+      --link: #1d4ed8;
+      --p: #334155;
+      --term-bg: #e2e8f0;
+      --warn-bg: rgba(220,38,38,.06);
+      --warn-border: rgba(220,38,38,.25);
+      --warn-text: #991b1b;
+      --note-bg: rgba(37,99,235,.06);
+      --note-border: rgba(37,99,235,.25);
+      --note-text: #1e3a8a;
+      --btn-secondary: #e2e8f0;
+      --btn-secondary-hover: #cbd5e1;
+      --table-th: #1e40af;
+      --faq-summary: #0f172a;
+      --img-border: #cbd5e1;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      line-height: 1.6;
+      transition: background .2s, color .2s;
+    }
+    a { color: var(--link); text-decoration: none; }
+    a:hover { color: var(--accent); }
+
+    /* Header */
+    .site-header {
+      position: sticky; top: 0; z-index: 20;
+      background: var(--header-bg);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .site-header-inner {
+      max-width: 1100px; margin: 0 auto; padding: 12px 16px;
+      display: flex; justify-content: space-between; align-items: center;
+      flex-wrap: wrap; gap: 10px;
+    }
+    .logo { display: flex; align-items: center; gap: 10px; }
+    .logo-link { color: inherit; text-decoration: none; }
+    .logo-icon {
+      width: 32px; height: 32px;
+      background: linear-gradient(135deg, #3b82f6, #34d399);
+      color: #fff; border-radius: 50%;
+      display: grid; place-items: center;
+      font-weight: 800; font-size: 12px;
+    }
+    .nav { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+    .nav a {
+      padding: 6px 11px; border-radius: 9999px;
+      border: 1px solid var(--border); background: var(--card);
+      font-size: 12px; color: var(--muted);
+    }
+    .nav a:hover { color: var(--text); border-color: var(--accent); }
+    .nav a.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+    /* Theme toggle */
+    .theme-toggle {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 6px 12px; border-radius: 9999px;
+      border: 1px solid var(--border); background: var(--card);
+      font-size: 12px; color: var(--muted); cursor: pointer;
+      user-select: none;
+    }
+    .theme-toggle:hover { color: var(--text); border-color: var(--accent); }
+    .theme-toggle .icon { font-size: 14px; line-height: 1; }
+
+    .wrap { max-width: 1100px; margin: 0 auto; padding: 24px 16px; }
+    .card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 12px; padding: 20px; margin-bottom: 16px;
+    }
+    .hero {
+      background: linear-gradient(135deg, var(--hero-from), var(--hero-to));
+      border: 1px solid var(--border); border-radius: 16px;
+      padding: 28px 24px; margin-bottom: 20px;
+    }
+    h1 {
+      font-size: clamp(1.45rem, 3.5vw, 2rem); line-height: 1.25; margin-bottom: 12px;
+      background: linear-gradient(90deg, #60a5fa, #34d399);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text; color: #60a5fa;
+    }
+    h2 { font-size: 1.2rem; margin: 16px 0 10px; color: var(--link); }
+    h3 { font-size: 1.05rem; margin: 12px 0 8px; color: var(--text); }
+    p { font-size: .95rem; color: var(--p); margin: 10px 0; }
+    .small { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; }
+    .badge {
+      display: inline-flex; padding: 4px 10px; border-radius: 9999px;
+      background: var(--input); border: 1px solid var(--border);
+      font-size: 11px; color: var(--muted); margin-bottom: 8px;
+    }
+    .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    @media (max-width: 800px) { .grid2 { grid-template-columns: 1fr; } }
+
+    img {
+      max-width: 100%; border-radius: 10px;
+      border: 1px solid var(--img-border); margin: 12px 0;
+      display: block;
+    }
+    .diagram-wrap {
+      background: var(--input); border: 1px solid var(--border);
+      border-radius: 12px; padding: 12px; margin: 14px 0;
+      text-align: center;
+    }
+    .diagram-caption {
+      font-size: 12px; color: var(--muted); margin-top: 8px;
+    }
+
+    .analogy {
+      background: var(--input); border: 1px dashed var(--border);
+      border-radius: 10px; padding: 14px; margin: 14px 0;
+      color: var(--p); font-size: .9rem;
+    }
+    .term {
+      display: inline-block; padding: 2px 8px; border-radius: 6px;
+      background: var(--term-bg); color: var(--text);
+      font-family: ui-monospace, monospace; font-size: 12px;
+    }
+
+    footer {
+      text-align: center; padding: 24px 16px; font-size: 12px;
+      color: var(--muted); border-top: 1px solid var(--border); margin-top: 24px;
+    }
+    footer a { color: var(--muted); }
+    footer a:hover { color: var(--text); }
+    .footer-links { margin-top: 8px; display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+
+    .btn, .btn-ghost {
+      display: inline-block; background: var(--accent); color: #fff !important;
+      border: 1px solid var(--accent); border-radius: 8px;
+      padding: 8px 14px; font-weight: 600; font-size: .88rem;
+    }
+    .btn:hover, .btn-ghost:hover { background: #2563eb; border-color: #2563eb; }
+    .btn-secondary {
+      background: var(--btn-secondary); border-color: var(--btn-secondary);
+      color: var(--text) !important;
+    }
+    .btn-secondary:hover {
+      background: var(--btn-secondary-hover); border-color: var(--btn-secondary-hover);
+      color: var(--text) !important;
+    }
+
+    ul { padding-left: 20px; }
+    li { margin: 6px 0; font-size: .92rem; color: var(--p); }
+    .profit { color: var(--green); font-weight: 600; }
+    .loss { color: var(--red); font-weight: 600; }
+
+    .table-wrap { overflow-x: auto; margin: 12px 0; }
+    table { width: 100%; border-collapse: collapse; font-size: .88rem; }
+    th, td { border: 1px solid var(--border); padding: 8px 10px; text-align: left; }
+    th { background: var(--input); color: var(--table-th); font-weight: 600; }
+    td { color: var(--p); }
+
+    .warn {
+      background: var(--warn-bg); border: 1px solid var(--warn-border);
+      border-radius: 10px; padding: 12px 14px; margin: 12px 0;
+      font-size: .88rem; color: var(--warn-text);
+    }
+    .note {
+      background: var(--note-bg); border: 1px solid var(--note-border);
+      border-radius: 10px; padding: 12px 14px; margin: 12px 0;
+      font-size: .88rem; color: var(--note-text);
+    }
+
+    /* FAQ accordion */
+    .faq details {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 10px; margin-bottom: 10px; overflow: hidden;
+    }
+    .faq summary {
+      padding: 14px 16px; cursor: pointer; font-weight: 600;
+      color: var(--faq-summary); list-style: none;
+      display: flex; justify-content: space-between; align-items: center;
+      gap: 12px;
+    }
+    .faq summary::-webkit-details-marker { display: none; }
+    .faq summary::after {
+      content: '+'; font-size: 1.2rem; color: var(--muted); flex-shrink: 0;
+    }
+    .faq details[open] summary::after { content: '−'; }
+    .faq .faq-body {
+      padding: 0 16px 16px; color: var(--p); font-size: .92rem;
+      border-top: 1px solid var(--border);
+    }
+    .faq .faq-body p { margin-top: 10px; }
+
+    .section-label {
+      font-size: 11px; text-transform: uppercase; letter-spacing: .08em;
+      color: var(--muted); margin-bottom: 4px;
+    }
+  </style>
+</head>
 <body>
 <header class="site-header">
   <div class="site-header-inner">
@@ -29,11 +266,12 @@
       <a href="/level3/index.html">L3 Spreads</a>
       <a href="/level4/index.html">L4 Advanced</a>
       <a href="/builder/index.html">Builder</a>
-<button type="button" class="theme-toggle" data-theme-toggle aria-label="Toggle light/dark theme">
-        <span class="icon" data-theme-icon>☀️</span>
-        <span data-theme-label>Light</span>
+      <button type="button" class="theme-toggle" id="themeToggle" aria-label="Toggle light/dark theme">
+        <span class="icon" id="themeIcon">☀️</span>
+        <span id="themeLabel">Light</span>
       </button>
-    </nav>
+      <a href="/strategies/index.html">Strategies</a>
+</nav>
   </div>
 </header>
 
@@ -139,7 +377,7 @@
     <div class="warn"><strong>Beginner warning:</strong> You need the stock to move in your direction <em>and</em> in enough size and soon enough. Being “right but late” often loses money with long options.</div>
   </div>
 
-  <!-- LONG PUT (short card) + COVERED CALL -->
+  <!-- LONG PUT -->
   <div class="grid2">
     <div class="card">
       <div class="small">Bearish · Defined risk</div>
@@ -180,124 +418,6 @@
     </div>
   </div>
 
-  <!-- ========== DETAILED LONG PUT (after covered call outcomes) ========== -->
-  <div class="card">
-    <div class="small">Bearish · Defined risk · Deep dive</div>
-    <h2>Long Put — insurance that pays when stocks fall</h2>
-    <p>A <strong>long put</strong> is the bearish twin of a long call. You pay a premium for the <em>right (not obligation)</em> to sell 100 shares at a fixed strike before expiration. Think of it as buying insurance on a stock you expect to drop.</p>
-    <div class="analogy">
-      <strong>Simple numbers (same style as the call example):</strong> Stock $100. Buy the $95 put for $2.50 → $250 debit.<br>
-      At expiration if stock is $80: intrinsic = $15 → profit = ($15 − $2.50) × 100 = <span class="profit">+$1,250</span>.<br>
-      If stock stays at or above $95: option expires worthless → max loss = <span class="loss">$250</span>.
-    </div>
-    <a class="btn" href="/builder/index.html?template=long_put">Load Long Put in Builder →</a>
-  </div>
-
-  <div class="card">
-    <h2>Long Put: Payoff Diagram and Calculations</h2>
-    <p>Opposite shape of a long call. Flat loss when the stock is above the strike; then profit rises as the stock falls. Break-even is <strong>Strike − Premium</strong> (not strike + premium).</p>
-
-    <div class="diagram-wrap">
-      <img src="/images/long-put-outcomes.jpg" alt="Long Put Option Outcomes diagram: profit rises as stock falls below break-even, flat max loss above the strike" width="800" height="auto">
-      <div class="diagram-caption">Break-even = Strike − Premium paid. Above the strike you lose the premium; below break-even profit grows as the stock falls (capped if stock goes to zero).</div>
-    </div>
-
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th>At expiration</th>
-            <th>What happens</th>
-            <th>Rough P/L (1 contract)</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>Stock well above strike</td>
-            <td>Put expires worthless</td>
-            <td class="loss">− full premium</td>
-          </tr>
-          <tr>
-            <td>Exactly at strike</td>
-            <td>No intrinsic value</td>
-            <td class="loss">− full premium</td>
-          </tr>
-          <tr>
-            <td>Strike − premium (break-even)</td>
-            <td>Intrinsic equals what you paid</td>
-            <td>$0</td>
-          </tr>
-          <tr>
-            <td>Well below break-even</td>
-            <td>Intrinsic &gt; premium</td>
-            <td class="profit">Profit rises $100 for every $1 the stock falls</td>
-          </tr>
-          <tr>
-            <td>Stock near $0</td>
-            <td>Maximum intrinsic</td>
-            <td class="profit">Max ≈ (Strike − Premium) × 100</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-    <div class="note"><strong>Unlike calls:</strong> put max profit is capped (stock cannot go below zero). Max loss is still only the premium — defined risk.</div>
-  </div>
-
-  <div class="card">
-    <h2>Put Options and Moneyness — opposite of calls</h2>
-    <p>For puts, “in the money” means the strike is <strong>higher</strong> than the stock (you can sell above the market). That confuses many beginners because it is the reverse of calls.</p>
-
-    <div class="diagram-wrap">
-      <img src="/images/long-put-moneyness.jpg" alt="Long Put Option Moneyness: OTM when stock is above strike, ATM near strike, ITM when stock is below strike" width="800" height="auto">
-      <div class="diagram-caption">For puts: left of strike on a falling chart is often where puts become valuable. OTM = strike below stock; ATM ≈ equal; ITM = strike above stock.</div>
-    </div>
-
-    <ul>
-      <li><strong>Out-of-the-money (OTM)</strong> — Strike &lt; stock. No intrinsic value yet. Cheapest, needs a bigger drop to profit.</li>
-      <li><strong>At-the-money (ATM)</strong> — Strike ≈ stock. Balanced cost and sensitivity. Delta near −0.50.</li>
-      <li><strong>In-the-money (ITM)</strong> — Strike &gt; stock. Already has intrinsic value. Higher cost, higher probability, behaves more like short stock.</li>
-    </ul>
-    <div class="note">Example with stock at $100: a $90 put is OTM; a $100 put is ATM; a $110 put is ITM (you could sell at $110 while the market is $100).</div>
-  </div>
-
-  <div class="card">
-    <h2>Long Call vs Long Put — mirror images</h2>
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr><th>Feature</th><th>Long Call</th><th>Long Put</th></tr>
-        </thead>
-        <tbody>
-          <tr><td>Right to</td><td>Buy at strike</td><td>Sell at strike</td></tr>
-          <tr><td>Outlook</td><td class="profit">Bullish</td><td class="loss">Bearish</td></tr>
-          <tr><td>Profit when</td><td>Stock &gt; break-even</td><td>Stock &lt; break-even</td></tr>
-          <tr><td>Break-even</td><td>Strike + Premium</td><td>Strike − Premium</td></tr>
-          <tr><td>Max loss</td><td>Premium paid</td><td>Premium paid</td></tr>
-          <tr><td>Max profit</td><td>Theoretically unlimited</td><td>Strike − Premium (if stock → $0)</td></tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-
-  <div class="card">
-    <h2>Time decay still hurts long puts</h2>
-    <p>Long puts also have negative theta. Even if the stock falls a little, the put can still lose value if time decay (and possible volatility crush) is stronger. Near expiration, decay accelerates — especially on OTM puts.</p>
-    <div class="analogy">
-      <strong>SPY-style illustration:</strong> Buy a short-dated OTM put. A few days later the stock is only slightly lower, but the put price has dropped because less time remains for a big move. Being “a little right on direction” is often not enough.
-    </div>
-    <div class="warn"><strong>Beginner warning:</strong> You need the stock to move in your direction <em>and</em> far enough, soon enough. Timing matters as much as direction.</div>
-  </div>
-
-  <div class="card">
-    <h2>When a long put can make sense</h2>
-    <ul>
-      <li>You are strongly bearish but want defined risk (no unlimited loss like shorting stock).</li>
-      <li>You want leverage — control downside exposure for a fraction of short-sale margin.</li>
-      <li>You own shares and want temporary insurance (protective put).</li>
-      <li>You expect volatility to rise (long puts benefit when IV expands).</li>
-    </ul>
-  </div>
-
   <!-- Why ×100 -->
   <div class="card">
     <h2>Why everything is ×100</h2>
@@ -309,111 +429,74 @@
     <h2>Greeks in plain English</h2>
     <p>The Builder shows live Greeks. Here’s what they mean for a <b>position</b> (not just one option):</p>
     <ul>
-      <li><span class="term">Delta (Δ)</span> — approx. dollar change if the stock moves $1. Positive ≈ bullish; negative ≈ bearish. A long put with delta −0.40 behaves roughly like being short 40 shares.</li>
-      <li><span class="term">Gamma (Γ)</span> — how fast delta changes. Highest near the money and near expiration. Positive gamma on long puts means gains can accelerate as the stock falls.</li>
+      <li><span class="term">Delta (Δ)</span> — approx. dollar change if the stock moves $1. Positive ≈ bullish bias; negative ≈ bearish. A long call delta of 0.40 behaves roughly like owning 40 shares.</li>
+      <li><span class="term">Gamma (Γ)</span> — how fast delta changes. Highest near the money and near expiration. High gamma means P/L can accelerate quickly.</li>
       <li><span class="term">Theta (Θ)</span> — expected dollar change per day from time alone. Long options usually show negative theta (decay hurts you). Short premium often shows positive theta.</li>
       <li><span class="term">Vega (ν)</span> — dollar change if implied volatility rises 1 percentage point. Long options usually like higher IV; short options usually don’t.</li>
     </ul>
     <div class="note">Open any template in the Builder and move price, days remaining, or IV — watch delta / theta / vega update in real time.</div>
   </div>
 
-  <div class="warn"><strong>Common beginner mistakes:</strong> treating the premium quote as total cash (forgetting ×100); buying short-dated OTM puts and getting crushed by theta; thinking “stock went down a little so my put should profit” (you still need to clear break-even); selling naked calls without understanding theoretically unlimited risk.</div>
+  <div class="warn"><strong>Common beginner mistakes:</strong> treating the premium quote as total cash (forgetting ×100); thinking a long option can only go to zero “slowly”; selling naked calls without understanding theoretically unlimited risk; ignoring that time decay works against long options every single day.</div>
 
-  <!-- Combined FAQ -->
+  <!-- FAQ -->
   <div class="card faq">
-    <h2>Beginner FAQ — Calls, Puts &amp; Covered Calls</h2>
+    <h2>Beginner FAQ</h2>
     <p style="margin-bottom:14px">Click any question to open the answer.</p>
 
     <details>
       <summary>What is the most I can lose on a long call or long put?</summary>
       <div class="faq-body">
-        <p>Only the premium you paid (plus commissions). That is defined risk. The broker does not ask for more money if the stock moves against you.</p>
+        <p>The premium you paid (plus commissions). That is the defined maximum loss. Once the option is bought, the broker does not ask for more money even if the stock moves against you.</p>
       </div>
     </details>
 
     <details>
-      <summary>What is a long put in super simple terms?</summary>
+      <summary>Why does my call lose value even when the stock goes up a little?</summary>
       <div class="faq-body">
-        <p>You pay a fee for a “sell coupon” at a fixed strike. If the stock falls far enough below that strike, the coupon becomes valuable. Example: pay $250 for the right to sell 100 shares at $95. If the stock is $70, intrinsic is $25 × 100 = $2,500 before cost. If the stock stays above $95, the coupon expires and you lose only the $250.</p>
+        <p>Two common reasons: (1) time decay (theta) — the option loses a little value every day; (2) implied volatility fell (vega). A small stock rise may not be enough to overcome both effects, especially near expiration or after a big event.</p>
       </div>
     </details>
 
     <details>
-      <summary>What is break-even for a long call vs a long put?</summary>
+      <summary>What does “break-even” mean for a long call?</summary>
       <div class="faq-body">
-        <p><strong>Long call:</strong> Strike + Premium (stock must finish above this).<br>
-        <strong>Long put:</strong> Strike − Premium (stock must finish below this).<br>
-        Before expiration the option still has time value, so the live market price can differ from pure intrinsic value.</p>
+        <p>At expiration, break-even is simply Strike + Premium paid. The stock must be above that price for you to have a profit. Before expiration the option still has time value, so the actual market price can be higher than intrinsic value.</p>
       </div>
     </details>
 
     <details>
-      <summary>What is max profit on a long put?</summary>
+      <summary>Should I buy ITM, ATM, or OTM calls?</summary>
       <div class="faq-body">
-        <p>Roughly (Strike − Premium) × 100 per contract, if the stock goes to zero. Unlike a long call (theoretically unlimited upside), put profit is capped because a stock cannot trade below $0.</p>
-      </div>
-    </details>
-
-    <details>
-      <summary>Why is put moneyness the opposite of call moneyness?</summary>
-      <div class="faq-body">
-        <p>A put is the right to <em>sell</em> at the strike. That right is valuable when the strike is above the stock (ITM). A call is the right to <em>buy</em> at the strike, so it is valuable when the strike is below the stock. Same three labels (ITM / ATM / OTM), flipped relative to the stock.</p>
-      </div>
-    </details>
-
-    <details>
-      <summary>Why does my option lose value even when the stock moves a little my way?</summary>
-      <div class="faq-body">
-        <p>Two common reasons: (1) time decay (theta) — long options lose a little value every day if nothing else changes; (2) implied volatility fell (vega). A small favorable stock move may not overcome both effects, especially near expiration.</p>
-      </div>
-    </details>
-
-    <details>
-      <summary>Should I buy ITM, ATM, or OTM options?</summary>
-      <div class="faq-body">
-        <p>ITM costs more, higher probability, more stock-like. OTM is cheaper but needs a bigger move. ATM sits in the middle and is most sensitive to big moves and to time decay. Many beginners start slightly OTM or ATM for lower cost, then learn how probability and delta change.</p>
-      </div>
-    </details>
-
-    <details>
-      <summary>When would I use a long put instead of shorting the stock?</summary>
-      <div class="faq-body">
-        <p>When you want bearish exposure with a hard maximum loss and no margin call if the stock rallies. Shorting 100 shares at $100 is about $10,000 of exposure with theoretically unlimited risk. Buying a put for a few hundred dollars caps the loss at the premium.</p>
+        <p>There is no single best answer. ITM costs more but has higher probability and behaves more like stock. OTM is cheaper but needs a bigger move. ATM sits in the middle and is most sensitive to both big moves and time decay. Many beginners start with slightly OTM or ATM for lower cost, then learn how probability and delta change.</p>
       </div>
     </details>
 
     <details>
       <summary>How is a covered call different from a long call?</summary>
       <div class="faq-body">
-        <p>A long call is a pure bullish bet with defined risk (premium only). A covered call requires that you already own 100 shares; you sell a call against those shares to collect premium. You keep the premium if the stock stays below the strike, but upside is capped and you still take the full downside of the shares if the stock falls.</p>
+        <p>A long call is a pure bullish bet with defined risk (premium only). A covered call requires that you already own 100 shares; you sell a call against those shares to collect premium. You keep the premium if the stock stays below the strike, but your upside is capped and you still take the full downside of the shares if the stock falls.</p>
       </div>
     </details>
 
     <details>
       <summary>Do I have to hold until expiration?</summary>
       <div class="faq-body">
-        <p>No. You can sell the option any time before expiration (while the market is open and there is a buyer). Many traders close early to lock a profit or cut a loss before theta accelerates.</p>
+        <p>No. You can sell the option any time before expiration (as long as the market is open and there is a buyer). Many traders close early to lock in a profit or to cut a loss before theta accelerates.</p>
       </div>
     </details>
 
     <details>
-      <summary>What does “one contract = 100 shares” mean for my money?</summary>
+      <summary>What does “one contract = 100 shares” really mean for my money?</summary>
       <div class="faq-body">
-        <p>If an option is quoted at $2.50, one contract costs $2.50 × 100 = $250 (plus fees). Later at $4.00 the position is worth $400. Always think in total dollars, not only the per-share quote.</p>
-      </div>
-    </details>
-
-    <details>
-      <summary>Do I need to own the stock to buy a put?</summary>
-      <div class="faq-body">
-        <p>No. A standalone long put is a pure bearish bet. If you already own 100 shares and buy a put, that is a protective put (insurance). Owning shares is not required to buy puts.</p>
+        <p>If an option is quoted at $2.50, one contract costs $2.50 × 100 = $250 (plus fees). If the option later trades at $4.00, the position is worth $400. The P/L is calculated on that 100-share multiplier. Always check the total debit/credit, not just the per-share quote.</p>
       </div>
     </details>
 
     <details>
       <summary>Is this financial advice?</summary>
       <div class="faq-body">
-        <p>No. Everything on this site is educational only. Options involve substantial risk of loss and are not suitable for every investor. Do your own research and consider a qualified advisor before trading real money.</p>
+        <p>No. Everything on this site is educational only. Options involve substantial risk of loss and are not suitable for every investor. Always do your own research and consider speaking with a qualified advisor before trading real money.</p>
       </div>
     </details>
   </div>
@@ -435,10 +518,46 @@
     <a href="/level1/index.html">L1</a>
     <a href="/level3/index.html">L3</a>
     <a href="/builder/index.html">Builder</a>
+    <a href="/strategies/index.html">Strategies</a>
     <a href="/disclaimer/index.html">Disclaimer</a>
   </div>
 </footer>
 
-  <script src="/assets/theme.js"></script>
+<script>
+  (function () {
+    const root = document.documentElement;
+    const toggle = document.getElementById('themeToggle');
+    const icon = document.getElementById('themeIcon');
+    const label = document.getElementById('themeLabel');
+
+    function applyTheme(theme) {
+      root.setAttribute('data-theme', theme);
+      if (theme === 'light') {
+        icon.textContent = '🌙';
+        label.textContent = 'Dark';
+      } else {
+        icon.textContent = '☀️';
+        label.textContent = 'Light';
+      }
+      try { localStorage.setItem('jsm-theme', theme); } catch (e) {}
+    }
+
+    // Prefer saved theme, else system preference, else dark (site default)
+    let saved = null;
+    try { saved = localStorage.getItem('jsm-theme'); } catch (e) {}
+    if (saved === 'light' || saved === 'dark') {
+      applyTheme(saved);
+    } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
+      applyTheme('light');
+    } else {
+      applyTheme('dark');
+    }
+
+    toggle.addEventListener('click', function () {
+      const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      applyTheme(next);
+    });
+  })();
+</script>
 </body>
 </html>
