@@ -680,6 +680,7 @@
       const t = templates[key];
       if (!t) return;
       legs = t.map(leg => ({ ...leg, id: nextId++ }));
+      if (chart) { try { chart.destroy(); } catch (e) {} chart = null; }
       syncDTESlider();
       updateSpotSliderRange();
       renderLegs();
@@ -864,13 +865,24 @@
       const base = strikes.length ? strikes : [S];
       const lo = Math.min(S * 0.65, Math.min.apply(null, base) * 0.65);
       const hi = Math.max(S * 1.45, Math.max.apply(null, base) * 1.45);
-      const steps = 120;
-      const labels = [], expiry = [], theoretical = [];
+      const priceSet = {};
+      const steps = 160;
       for (let i = 0; i <= steps; i++) {
         const price = lo + (hi - lo) * (i / steps);
-        labels.push(price);
-        expiry.push(expiryPayoff(price));
-        theoretical.push(plAt(price, daysLeft));
+        priceSet[price.toFixed(6)] = price;
+      }
+      for (let s = 0; s < base.length; s++) {
+        const k = base[s];
+        priceSet[k.toFixed(6)] = k;
+        priceSet[(k - 0.01).toFixed(6)] = Math.max(0.01, k - 0.01);
+        priceSet[(k + 0.01).toFixed(6)] = k + 0.01;
+      }
+      const labels = Object.keys(priceSet).map(Number).sort(function(a, b) { return a - b; });
+      const expiry = [];
+      const theoretical = [];
+      for (let i = 0; i < labels.length; i++) {
+        expiry.push(expiryPayoff(labels[i]));
+        theoretical.push(plAt(labels[i], daysLeft));
       }
       return { labels: labels, expiry: expiry, theoretical: theoretical };
     }
@@ -900,7 +912,7 @@
               borderColor: gS,
               borderWidth: 2.5,
               pointRadius: 0,
-              tension: 0.04,
+              tension: 0,
               fill: false,
               segment: { borderColor: function(ctx) { return segmentColor(ctx, gS, rS); } }
             },
@@ -911,7 +923,7 @@
               borderWidth: 2,
               borderDash: [6, 4],
               pointRadius: 0,
-              tension: 0.04,
+              tension: 0,
               fill: false,
               segment: { borderColor: function(ctx) { return segmentColor(ctx, gD, rD); } }
             }
@@ -1113,32 +1125,39 @@
       }
     }
 
-    legs = defaultLongCall();
-    document.getElementById('spotSlider').value = 100;
-    syncDTESlider();
-    updateSpotSliderRange();
-    renderLegs();
-    recalc();
-  
-    // Deep-link templates from lessons: ?template=bull_call_spread
-    document.addEventListener('DOMContentLoaded', function() {
+    // Boot once: honor ?template= on every load/refresh
+    (function bootBuilder() {
+      var templateKey = null;
       try {
-        var params = new URLSearchParams(window.location.search);
-        var key = params.get('template');
-        if (!key) return;
+        templateKey = new URLSearchParams(window.location.search).get('template');
+      } catch (e) {}
+      var spotEl = document.getElementById('spotSlider');
+      if (spotEl) spotEl.value = 100;
+      if (templateKey) {
         var sel = document.getElementById('strategyTemplate');
-        if (!sel) return;
-        for (var i = 0; i < sel.options.length; i++) {
-          if (sel.options[i].value === key) {
-            sel.value = key;
-            applyTemplate();
-            break;
+        var found = false;
+        if (sel) {
+          for (var i = 0; i < sel.options.length; i++) {
+            if (sel.options[i].value === templateKey) {
+              sel.value = templateKey;
+              found = true;
+              break;
+            }
           }
         }
-      } catch (err) {}
-    });
+        if (found && typeof applyTemplate === 'function') {
+          applyTemplate();
+          return;
+        }
+      }
+      legs = defaultLongCall();
+      syncDTESlider();
+      updateSpotSliderRange();
+      renderLegs();
+      recalc();
+    })();
 
-  </script>
+</script>
   </div>
 </body>
 </html>

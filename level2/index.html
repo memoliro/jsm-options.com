@@ -2,9 +2,9 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Level 2: Your First Trades | JSM Options</title>
-  <meta name="description" content="Long Call, Long Put, Covered Call explained with real numbers. Level 2.">
+  <meta name="description" content="Long Call, Long Put, Covered Call with real numbers, plus Greeks in plain English.">
   <link rel="canonical" href="https://jsm-options.com/level2/">
   <link rel="stylesheet" href="/assets/style.css">
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-BDL003RCN6"></script>
@@ -18,75 +18,98 @@
         <div class="logo-icon">JSM</div>
         <div>
           <div style="font-weight:700">JSM Options</div>
-          <div style="font-size:11px;color:var(--muted)">Level 3 · Spreads</div>
+          <div style="font-size:11px;color:var(--muted)">Level 2 · First trades</div>
         </div>
       </div>
     </a>
     <nav class="nav">
-      <a href="/">Home</a>
-      <a href="/level1/index.html">L1 Basics</a>
+      <a href="/" >Home</a>
+      <a href="/level1/index.html" >L1 Basics</a>
       <a href="/level2/index.html" class="active">L2 Trades</a>
-      <a href="/level3/index.html">L3 Spreads</a>
-      <a href="/level4/index.html">L4 Advanced</a>
-      <a href="/builder/index.html">Builder</a>
+      <a href="/level3/index.html" >L3 Spreads</a>
+      <a href="/level4/index.html" >L4 Advanced</a>
+      <a href="/builder/index.html" >Builder</a>
     </nav>
   </div>
 </header>
 
 <div class="wrap">
   <div class="hero">
-    <span class="badge">Level 2 • Your First Trades</span>
-    <h1>Long Call, Long Put, Covered Call — With Real Numbers.</h1>
-    <p>Level 1 gave you the idea. Now let's trade: why $300 can control $10,000 of stock, and where the risk really hides.</p>
+    <span class="badge">Level 2</span>
+    <h1>Long Call, Long Put, Covered Call — with real numbers</h1>
+    <p>Why a few hundred dollars of premium can control $10,000 of stock exposure — and where the risk still sits.</p>
   </div>
 
   <div class="grid2">
     <div class="card">
-      <div class="small">Bullish • Unlimited upside</div>
+      <div class="small">Bullish</div>
       <h3>Long Call</h3>
-      <p>You pay premium, you profit if stock goes up beyond Strike + Premium.</p>
-      <div class="analogy">Ex: Stock current price is $100. Buy 1 Call option contract of Strike $105 for $3 (contract price) that expires in 30 days. Stock rises, closes at $110 at the end of Expiry day: Profit/ Loss = $110 (closing price)-$105 (strike price)-$3 (premium paid) = $2 × 100 = $200.</div>
-      <p>Risk: limited to $300 premium (if stock closing price is lower than $105(strike price) then contract expires worthless. Loss = $300). Reward: unlimited (if stock price go to the Moon).</p>
-      <a href="/builder/index.html" class="btn btn-ghost" style="margin-top:8px;display:inline-block">Try in Builder →</a>
+      <p>Pay premium; need the stock above roughly strike + premium by expiry to profit.</p>
+      <div class="analogy">Stock $100. Buy $105 call for $3 → $300 debit. At $110 expiry: ($5 − $3) × 100 = <span class="profit">+$200</span>. Max loss: <span class="loss">$300</span>.</div>
+      <a class="btn" href="/builder/index.html?template=long_call">Load in Builder →</a>
     </div>
     <div class="card">
-      <div class="small">Bearish • Profits when falls</div>
+      <div class="small">Bearish</div>
       <h3>Long Put</h3>
-      <p>Right to SELL at strike. You profit when stock crashes.</p>
-      <div class="analogy">Ex: Stock current price is $100. Buy 1 Put option contract of Strike $95 for $2.50 (contract price) that expires in 30 days. Stock falls, closes at $80 at the end of Expiry day: Profit/ Loss = $95 (strike price)-$80 (closing price)-$2.50 (premium paid) = $12.50 × 100 = $1250. If you don't have 100 shares, just sell the Put option contract before market close</div>
-      <p>Used as insurance or directional bet. Risk: Share price do not drop below $95, your put contract = $0 at market close on Expiry date</p>
-      <a href="/builder/index.html" class="btn btn-ghost" style="margin-top:8px;display:inline-block">Try in Builder →</a>
+      <p>Right to sell at the strike. Profits when price falls enough to cover premium.</p>
+      <div class="analogy">Stock $100. Buy $95 put for $2.50 → $250 debit. At $80: ($15 − $2.50) × 100 = <span class="profit">+$1,250</span>.</div>
+      <a class="btn" href="/builder/index.html?template=long_put">Load in Builder →</a>
     </div>
   </div>
 
   <div class="card">
-    <div class="small">Income • Own 100 shares</div>
-    <h3>Covered Call — The Rent Strategy</h3>
-    <p>You own 100 shares of AAPL at $100. You sell a Call at $110 for $2 (that means you agree to Sell your 100 shares at $110 any time untill Expiry date). You keep $200 rent for your promis to sell. If AAPL stays below $110, you keep rent + shares. If it goes to $120, you must sell at $110 — you miss extra upside but you still profited.</p>
+    <div class="small">Income · own 100 shares</div>
+    <h3>Covered call — collecting “rent”</h3>
+    <p>Own 100 shares at $100. Sell a $110 call for $2 → <span class="profit">$200</span> credit. If shares stay under $110, you keep premium + shares. If they rally past $110, shares may be called away at $110 — upside is capped; downside on the stock remains.</p>
     <ul>
-      <li>Best when you think stock will stay flat or go up a little</li>
-      <li>Risk: if stock crashes, you still own it — you lose on shares</li>
+      <li>Often used when you expect flat to mildly up price action</li>
+      <li>Does <b>not</b> eliminate loss if the stock crashes</li>
     </ul>
-    <div style="margin-top:12px;display:flex;gap:10px">
-      <a class="btn btn-ghost" href="/builder/index.html">Build Covered Call →</a>
-      <a class="btn btn-ghost" href="/level1/index.html">← Back to L1</a>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Stock at expiry</th><th>Call result</th><th>Rough outcome (ex-shares P/L)</th></tr></thead>
+        <tbody>
+          <tr><td>$90</td><td>Expires</td><td>Keep $200 premium; still hold shares (down on stock)</td></tr>
+          <tr><td>$105</td><td>Expires</td><td>Keep $200 premium + shares</td></tr>
+          <tr><td>$120</td><td>Likely assigned</td><td>Sell shares at $110; keep $200 premium; miss further upside</td></tr>
+        </tbody>
+      </table>
     </div>
   </div>
 
   <div class="card">
-    <h2>Quick Math: Why Options Are ×100</h2>
-    <p>1 contract = 100 shares. Premium quoted per share, but you pay ×100. So $3 premium = $300 debit. P/L chart uses ×100 — Green = profit, Red = loss, just like in Builder.</p>
-    <span class="badge">Next: Spreads — why pros never buy naked</span>
+    <h2>Why everything is ×100</h2>
+    <p>One equity option contract usually multiplies by <b>100 shares</b>. A $3 quote is about <b>$300</b> cash. The Builder always uses this multiplier so P/L matches brokerage-style dollars.</p>
+  </div>
+
+  <div class="card">
+    <h2>Greeks in plain English</h2>
+    <p>The Builder shows live Greeks. Here’s what they mean for a <b>position</b>:</p>
+    <ul>
+      <li><span class="term">Delta (Δ)</span> — approx. $ change if the stock moves $1. Positive ≈ bullish bias; negative ≈ bearish.</li>
+      <li><span class="term">Gamma (Γ)</span> — how fast delta changes. High gamma near the money near expiry = P/L can accelerate.</li>
+      <li><span class="term">Theta (Θ)</span> — expected $ change per day from time alone. Long options often show negative theta (decay hurts); short premium often positive.</li>
+      <li><span class="term">Vega (ν)</span> — $ change if implied volatility rises 1 point. Long options usually like higher IV; short options usually don’t.</li>
+    </ul>
+    <div class="note">Open any template in the Builder and move price, days remaining, or IV — watch delta/theta/vega update.</div>
+  </div>
+
+  <div class="warn"><strong>Common mistakes:</strong> treating premium quotes as total cash (forget ×100); ignoring that long options can go to zero; selling naked calls without understanding theoretically unlimited risk.</div>
+
+  <div class="card" style="text-align:center">
+    <h3>Next: defined risk</h3>
+    <p>Vertical spreads and iron condors — why many traders prefer a known max loss.</p>
+    <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:12px">
+      <a class="btn" href="/level3/index.html">Level 3 →</a>
+      <a class="btn btn-secondary" href="/builder/index.html">Open Builder</a>
+    </div>
   </div>
 </div>
 
 <footer>
-  <div>© 2026 <a href="https://jsm-options.com">JSM Options</a> — <a href="/">jsm-options.com</a></div>
+  <div>Educational only — not financial advice.</div>
   <div class="footer-links">
-    <a href="/">Home</a>
-    <a href="/level1/index.html">• Level 1 </a>
-    <a href="/builder/index.html">• Builder </a>
-    <a href="/disclaimer.html">• Disclaimer</a>
+    <a href="/">Home</a><a href="/level1/index.html">L1</a><a href="/level3/index.html">L3</a><a href="/builder/index.html">Builder</a><a href="/disclaimer/index.html">Disclaimer</a>
   </div>
 </footer>
 </body>
