@@ -1,64 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-        xmlns:xhtml="http://www.w3.org/1999/xhtml">
-  <url><loc>https://jsm-options.com/</loc><xhtml:link rel="alternate" hreflang="en" href="https://jsm-options.com/"/>
-    <xhtml:link rel="alternate" hreflang="fr" href="https://jsm-options.com/fr/"/>
-    <xhtml:link rel="alternate" hreflang="tr" href="https://jsm-options.com/tr/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://jsm-options.com/"/><lastmod>2026-09-10</lastmod></url>
-  <url><loc>https://jsm-options.com/fr/</loc><lastmod>2026-09-10</lastmod></url>
-  <url><loc>https://jsm-options.com/tr/</loc><lastmod>2026-09-10</lastmod></url>
-  <url><loc>https://jsm-options.com/level1/</loc><xhtml:link rel="alternate" hreflang="en" href="https://jsm-options.com/level1/"/>
-    <xhtml:link rel="alternate" hreflang="fr" href="https://jsm-options.com/fr/level1/"/>
-    <xhtml:link rel="alternate" hreflang="tr" href="https://jsm-options.com/tr/level1/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://jsm-options.com/level1/"/><lastmod>2026-09-10</lastmod></url>
-  <url><loc>https://jsm-options.com/fr/level1/</loc><lastmod>2026-09-10</lastmod></url>
-  <url><loc>https://jsm-options.com/tr/level1/</loc><lastmod>2026-09-10</lastmod></url>
-  <url><loc>https://jsm-options.com/level2/</loc><xhtml:link rel="alternate" hreflang="en" href="https://jsm-options.com/level2/"/>
-    <xhtml:link rel="alternate" hreflang="fr" href="https://jsm-options.com/fr/level2/"/>
-    <xhtml:link rel="alternate" hreflang="tr" href="https://jsm-options.com/tr/level2/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://jsm-options.com/level2/"/><lastmod>2026-09-10</lastmod></url>
-  <url><loc>https://jsm-options.com/fr/level2/</loc><lastmod>2026-09-10</lastmod></url>
-  <url><loc>https://jsm-options.com/tr/level2/</loc><lastmod>2026-09-10</lastmod></url>
-  <url><loc>https://jsm-options.com/level3/</loc><xhtml:link rel="alternate" hreflang="en" href="https://jsm-options.com/level3/"/>
-    <xhtml:link rel="alternate" hreflang="fr" href="https://jsm-options.com/fr/level3/"/>
-    <xhtml:link rel="alternate" hreflang="tr" href="https://jsm-options.com/tr/level3/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://jsm-options.com/level3/"/><lastmod>2026-09-10</lastmod></url>
-  <url><loc>https://jsm-options.com/fr/level3/</loc><lastmod>2026-09-10</lastmod></url>
-  <url><loc>https://jsm-options.com/tr/level3/</loc><lastmod>2026-09-10</lastmod></url>
-  <url><loc>https://jsm-options.com/level4/</loc><xhtml:link rel="alternate" hreflang="en" href="https://jsm-options.com/level4/"/>
-    <xhtml:link rel="alternate" hreflang="fr" href="https://jsm-options.com/fr/level4/"/>
-    <xhtml:link rel="alternate" hreflang="tr" href="https://jsm-options.com/tr/level4/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://jsm-options.com/level4/"/><lastmod>2026-09-10</lastmod></url>
-  <url><loc>https://jsm-options.com/fr/level4/</loc><lastmod>2026-09-10</lastmod></url>
-  <url><loc>https://jsm-options.com/tr/level4/</loc><lastmod>2026-09-10</lastmod></url>
-  <url><loc>https://jsm-options.com/builder/</loc><xhtml:link rel="alternate" hreflang="en" href="https://jsm-options.com/builder/"/>
-    <xhtml:link rel="alternate" hreflang="fr" href="https://jsm-options.com/fr/builder/"/>
-    <xhtml:link rel="alternate" hreflang="tr" href="https://jsm-options.com/tr/builder/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://jsm-options.com/builder/"/><lastmod>2026-09-10</lastmod></url>
-  <url><loc>https://jsm-options.com/fr/builder/</loc><lastmod>2026-09-10</lastmod></url>
-  <url><loc>https://jsm-options.com/tr/builder/</loc><lastmod>2026-09-10</lastmod></url>
-  <url><loc>https://jsm-options.com/about/</loc><xhtml:link rel="alternate" hreflang="en" href="https://jsm-options.com/about/"/>
-    <xhtml:link rel="alternate" hreflang="fr" href="https://jsm-options.com/fr/about/"/>
-    <xhtml:link rel="alternate" hreflang="tr" href="https://jsm-options.com/tr/about/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://jsm-options.com/about/"/><lastmod>2026-09-10</lastmod></url>
-  <url><loc>https://jsm-options.com/fr/about/</loc><lastmod>2026-09-10</lastmod></url>
-  <url><loc>https://jsm-options.com/tr/about/</loc><lastmod>2026-09-10</lastmod></url>
-  <url><loc>https://jsm-options.com/contact/</loc><xhtml:link rel="alternate" hreflang="en" href="https://jsm-options.com/contact/"/>
-    <xhtml:link rel="alternate" hreflang="fr" href="https://jsm-options.com/fr/contact/"/>
-    <xhtml:link rel="alternate" hreflang="tr" href="https://jsm-options.com/tr/contact/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://jsm-options.com/contact/"/><lastmod>2026-09-10</lastmod></url>
-  <url><loc>https://jsm-options.com/fr/contact/</loc><lastmod>2026-09-10</lastmod></url>
-  <url><loc>https://jsm-options.com/tr/contact/</loc><lastmod>2026-09-10</lastmod></url>
-  <url><loc>https://jsm-options.com/disclaimer/</loc><xhtml:link rel="alternate" hreflang="en" href="https://jsm-options.com/disclaimer/"/>
-    <xhtml:link rel="alternate" hreflang="fr" href="https://jsm-options.com/fr/disclaimer/"/>
-    <xhtml:link rel="alternate" hreflang="tr" href="https://jsm-options.com/tr/disclaimer/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://jsm-options.com/disclaimer/"/><lastmod>2026-09-10</lastmod></url>
-  <url><loc>https://jsm-options.com/fr/disclaimer/</loc><lastmod>2026-09-10</lastmod></url>
-  <url><loc>https://jsm-options.com/tr/disclaimer/</loc><lastmod>2026-09-10</lastmod></url>
-  <url><loc>https://jsm-options.com/privacy/</loc><xhtml:link rel="alternate" hreflang="en" href="https://jsm-options.com/privacy/"/>
-    <xhtml:link rel="alternate" hreflang="fr" href="https://jsm-options.com/fr/privacy/"/>
-    <xhtml:link rel="alternate" hreflang="tr" href="https://jsm-options.com/tr/privacy/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://jsm-options.com/privacy/"/><lastmod>2026-09-10</lastmod></url>
-  <url><loc>https://jsm-options.com/fr/privacy/</loc><lastmod>2026-09-10</lastmod></url>
-  <url><loc>https://jsm-options.com/tr/privacy/</loc><lastmod>2026-09-10</lastmod></url>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://jsm-options.com/</loc><lastmod>2026-09-09</lastmod></url>
+  <url><loc>https://jsm-options.com/level1/</loc><lastmod>2026-09-09</lastmod></url>
+  <url><loc>https://jsm-options.com/level2/</loc><lastmod>2026-09-09</lastmod></url>
+  <url><loc>https://jsm-options.com/level3/</loc><lastmod>2026-09-09</lastmod></url>
+  <url><loc>https://jsm-options.com/level4/</loc><lastmod>2026-09-09</lastmod></url>
+  <url><loc>https://jsm-options.com/builder/</loc><lastmod>2026-09-09</lastmod></url>
+  <url><loc>https://jsm-options.com/about/</loc><lastmod>2026-09-09</lastmod></url>
+  <url><loc>https://jsm-options.com/contact/</loc><lastmod>2026-09-09</lastmod></url>
+  <url><loc>https://jsm-options.com/disclaimer/</loc><lastmod>2026-09-09</lastmod></url>
+  <url><loc>https://jsm-options.com/privacy/</loc><lastmod>2026-09-09</lastmod></url>
 </urlset>

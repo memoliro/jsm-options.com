@@ -4,75 +4,113 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Level 2: Your First Trades | JSM Options</title>
-  <meta name="description" content="Long call, long put, covered call with real numbers and Greeks intro.">
-  <meta name="robots" content="index, follow">
+  <meta name="description" content="Long Call, Long Put, Covered Call with real numbers, plus Greeks in plain English.">
   <link rel="canonical" href="https://jsm-options.com/level2/">
-  <link rel="alternate" hreflang="en" href="https://jsm-options.com/level2/">
-  <link rel="alternate" hreflang="fr" href="https://jsm-options.com/fr/level2/">
-  <link rel="alternate" hreflang="tr" href="https://jsm-options.com/tr/level2/">
-  <link rel="alternate" hreflang="x-default" href="https://jsm-options.com/level2/">
-  <meta property="og:type" content="website">
-  <meta property="og:site_name" content="JSM Options">
-  <meta property="og:title" content="Level 2: Your First Trades | JSM Options">
-  <meta property="og:description" content="Long call, long put, covered call with real numbers and Greeks intro.">
-  <meta property="og:url" content="https://jsm-options.com/level2/">
-  <meta property="og:locale" content="en_US">
-  <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Level 2: Your First Trades | JSM Options">
-  <meta name="twitter:description" content="Long call, long put, covered call with real numbers and Greeks intro.">
   <link rel="stylesheet" href="/assets/style.css">
-  <script src="/assets/site.js" defer></script>
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-BDL003RCN6"></script>
   <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-BDL003RCN6');</script>
-
 </head>
 <body>
 <header class="site-header">
   <div class="site-header-inner">
-    <a href="/" class="logo-link" aria-label="JSM Options">
+    <a href="/" class="logo-link" aria-label="Home">
       <div class="logo">
         <div class="logo-icon">JSM</div>
         <div>
           <div style="font-weight:700">JSM Options</div>
-          <div style="font-size:11px;color:var(--muted)">Level 2 · Trades</div>
+          <div style="font-size:11px;color:var(--muted)">Level 2 · First trades</div>
         </div>
       </div>
     </a>
     <nav class="nav">
-      <a href="/">Home</a>
-      <a href="/level1/index.html">L1 Basics</a>
+      <a href="/" >Home</a>
+      <a href="/level1/index.html" >L1 Basics</a>
       <a href="/level2/index.html" class="active">L2 Trades</a>
-      <a href="/level3/index.html">L3 Spreads</a>
-      <a href="/level4/index.html">L4 Advanced</a>
-      <a href="/builder/index.html">Builder</a>
+      <a href="/level3/index.html" >L3 Spreads</a>
+      <a href="/level4/index.html" >L4 Advanced</a>
+      <a href="/builder/index.html" >Builder</a>
     </nav>
-        <div class="header-tools">
-      <button type="button" class="theme-toggle" id="themeToggle" aria-label="Toggle color theme">Light</button>
-      <label class="visually-hidden" for="langSelect">Language</label>
-      <select id="langSelect" aria-label="Language">
-        <option value="en" selected>EN</option>
-        <option value="fr">FR</option>
-        <option value="tr">TR</option>
-      </select>
-    </div>
   </div>
 </header>
+
 <div class="wrap">
-<div class="hero"><span class="badge">Level 2</span><h1>Long Call, Long Put, Covered Call</h1>
-<p>Why a few hundred dollars of premium can control $10,000 of stock exposure.</p></div>
-<div class="grid2">
-<div class="card"><h3>Long Call</h3><p>Pay premium; profit if stock rises above strike + premium.</p><a class="btn" href="/builder/index.html?template=long_call">Builder →</a></div>
-<div class="card"><h3>Long Put</h3><p>Profit if stock falls enough to cover premium.</p><a class="btn" href="/builder/index.html?template=long_put">Builder →</a></div>
+  <div class="hero">
+    <span class="badge">Level 2</span>
+    <h1>Long Call, Long Put, Covered Call — with real numbers</h1>
+    <p>Why a few hundred dollars of premium can control $10,000 of stock exposure — and where the risk still sits.</p>
+  </div>
+
+  <div class="grid2">
+    <div class="card">
+      <div class="small">Bullish</div>
+      <h3>Long Call</h3>
+      <p>Pay premium; need the stock above roughly strike + premium by expiry to profit.</p>
+      <div class="analogy">Stock $100. Buy $105 call for $3 → $300 debit. At $110 expiry: ($5 − $3) × 100 = <span class="profit">+$200</span>. Max loss: <span class="loss">$300</span>.</div>
+      <a class="btn" href="/builder/index.html?template=long_call">Load in Builder →</a>
+    </div>
+    <div class="card">
+      <div class="small">Bearish</div>
+      <h3>Long Put</h3>
+      <p>Right to sell at the strike. Profits when price falls enough to cover premium.</p>
+      <div class="analogy">Stock $100. Buy $95 put for $2.50 → $250 debit. At $80: ($15 − $2.50) × 100 = <span class="profit">+$1,250</span>.</div>
+      <a class="btn" href="/builder/index.html?template=long_put">Load in Builder →</a>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="small">Income · own 100 shares</div>
+    <h3>Covered call — collecting “rent”</h3>
+    <p>Own 100 shares at $100. Sell a $110 call for $2 → <span class="profit">$200</span> credit. If shares stay under $110, you keep premium + shares. If they rally past $110, shares may be called away at $110 — upside is capped; downside on the stock remains.</p>
+    <ul>
+      <li>Often used when you expect flat to mildly up price action</li>
+      <li>Does <b>not</b> eliminate loss if the stock crashes</li>
+    </ul>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Stock at expiry</th><th>Call result</th><th>Rough outcome (ex-shares P/L)</th></tr></thead>
+        <tbody>
+          <tr><td>$90</td><td>Expires</td><td>Keep $200 premium; still hold shares (down on stock)</td></tr>
+          <tr><td>$105</td><td>Expires</td><td>Keep $200 premium + shares</td></tr>
+          <tr><td>$120</td><td>Likely assigned</td><td>Sell shares at $110; keep $200 premium; miss further upside</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Why everything is ×100</h2>
+    <p>One equity option contract usually multiplies by <b>100 shares</b>. A $3 quote is about <b>$300</b> cash. The Builder always uses this multiplier so P/L matches brokerage-style dollars.</p>
+  </div>
+
+  <div class="card">
+    <h2>Greeks in plain English</h2>
+    <p>The Builder shows live Greeks. Here’s what they mean for a <b>position</b>:</p>
+    <ul>
+      <li><span class="term">Delta (Δ)</span> — approx. $ change if the stock moves $1. Positive ≈ bullish bias; negative ≈ bearish.</li>
+      <li><span class="term">Gamma (Γ)</span> — how fast delta changes. High gamma near the money near expiry = P/L can accelerate.</li>
+      <li><span class="term">Theta (Θ)</span> — expected $ change per day from time alone. Long options often show negative theta (decay hurts); short premium often positive.</li>
+      <li><span class="term">Vega (ν)</span> — $ change if implied volatility rises 1 point. Long options usually like higher IV; short options usually don’t.</li>
+    </ul>
+    <div class="note">Open any template in the Builder and move price, days remaining, or IV — watch delta/theta/vega update.</div>
+  </div>
+
+  <div class="warn"><strong>Common mistakes:</strong> treating premium quotes as total cash (forget ×100); ignoring that long options can go to zero; selling naked calls without understanding theoretically unlimited risk.</div>
+
+  <div class="card" style="text-align:center">
+    <h3>Next: defined risk</h3>
+    <p>Vertical spreads and iron condors — why many traders prefer a known max loss.</p>
+    <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:12px">
+      <a class="btn" href="/level3/index.html">Level 3 →</a>
+      <a class="btn btn-secondary" href="/builder/index.html">Open Builder</a>
+    </div>
+  </div>
 </div>
-<div class="card"><h3>Covered call</h3><p>Own 100 shares, sell a call to collect “rent.” Upside capped; downside on shares remains.</p></div>
-<div class="card"><h2>Greeks in plain English</h2>
-<ul><li><b>Delta</b> — P/L vs $1 stock move</li><li><b>Gamma</b> — how fast delta changes</li><li><b>Theta</b> — daily time decay</li><li><b>Vega</b> — sensitivity to IV</li></ul>
-<a class="btn" href="/level3/index.html">Level 3 →</a></div>
-</div>
+
 <footer>
-  <div>Educational purposes only — not financial advice.</div>
-  <div class="footer-links"><a href="/">Home</a> <a href="/level1/index.html">L1</a> <a href="/level2/index.html">L2</a> <a href="/level3/index.html">L3</a> <a href="/level4/index.html">L4</a> <a href="/builder/index.html">Builder</a> <a href="/disclaimer/index.html">Disclaimer</a> <a href="/contact/index.html">Contact</a> <a href="/privacy/index.html">Privacy</a> <a href="/about/index.html">About</a></div>
-  <div style="margin-top:8px">© 2026 JSM Options · jsm-options.com</div>
+  <div>Educational only — not financial advice.</div>
+  <div class="footer-links">
+    <a href="/">Home</a><a href="/level1/index.html">L1</a><a href="/level3/index.html">L3</a><a href="/builder/index.html">Builder</a><a href="/disclaimer/index.html">Disclaimer</a>
+  </div>
 </footer>
 </body>
 </html>

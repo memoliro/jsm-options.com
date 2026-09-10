@@ -3,18 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Options Strategy Builder & Simulator | JSM Options</title>
-  <meta name="description" content="Free interactive options strategy builder: multi-leg payoff graphs, theta, Greeks, templates. Educational only.">
-  <link rel="canonical" href="https://jsm-options.com/builder/">
-  <link rel="alternate" hreflang="en" href="https://jsm-options.com/builder/">
-  <link rel="alternate" hreflang="fr" href="https://jsm-options.com/fr/builder/">
-  <link rel="alternate" hreflang="tr" href="https://jsm-options.com/tr/builder/">
-  <link rel="alternate" hreflang="x-default" href="https://jsm-options.com/builder/">
-  <meta property="og:title" content="Options Strategy Builder | JSM Options">
-  <meta property="og:description" content="Interactive multi-leg options payoff simulator. Educational only.">
-  <meta property="og:url" content="https://jsm-options.com/builder/">
+  <title>Options Strategy Builder & Simulator – Educational</title>
   <link rel="stylesheet" href="/assets/style.css">
-  <script src="/assets/site.js" defer></script>
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-BDL003RCN6"></script>
 <script>
@@ -26,17 +16,6 @@
 </script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
   <style>
-    html[data-theme="light"] {
-      --bg: #f4f6f9; --card: #ffffff; --border: #d8dee8; --text: #0f172a;
-      --muted: #64748b; --accent: #2563eb; --green: #16a34a; --red: #dc2626; --yellow: #ca8a04;
-    }
-    html[data-theme="light"] .site-header { background: rgba(244,246,249,0.92); }
-    html[data-theme="light"] body { background: var(--bg); color: var(--text); }
-    .header-tools { display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
-    .header-tools select, .theme-toggle {
-      font-size:12px; padding:6px 10px; border-radius:9999px;
-      border:1px solid var(--border); background: var(--card); color: var(--text); cursor:pointer;
-    }
     :root {
       --bg: #0f1419;
       --card: #1a2332;
@@ -333,35 +312,26 @@
 </head>
 <body>
     <header class="site-header">
-  <div class="site-header-inner">
-    <a href="/" class="logo-link" aria-label="JSM Options">
-      <div class="logo">
-        <div class="logo-icon">JSM</div>
-        <div>
-          <div style="font-weight:700">JSM Options</div>
-          <div style="font-size:11px;color:var(--muted)">Strategy Builder</div>
+    <div class="site-header-inner">
+      <a href="/" class="logo-link" aria-label="JSM Options Home">
+        <div class="logo">
+          <div class="logo-icon">JSM</div>
+          <div>
+            <div style="font-weight:700;color:var(--text,#e7ecf3)">JSM Options</div>
+            <div style="font-size:11px;color:var(--muted,#8b9bb4)">Strategy Builder</div>
+          </div>
         </div>
-      </div>
-    </a>
-    <nav class="nav">
-      <a href="/">Home</a>
-      <a href="/level1/index.html">L1 Basics</a>
-      <a href="/level2/index.html">L2 Trades</a>
-      <a href="/level3/index.html">L3 Spreads</a>
-      <a href="/level4/index.html">L4 Advanced</a>
-      <a href="/builder/index.html" class="active">Builder</a>
-    </nav>
-        <div class="header-tools">
-      <button type="button" class="theme-toggle" id="themeToggle" aria-label="Toggle color theme">Light</button>
-      <label class="visually-hidden" for="langSelect">Language</label>
-      <select id="langSelect" aria-label="Language">
-        <option value="en" selected>EN</option>
-        <option value="fr">FR</option>
-        <option value="tr">TR</option>
-      </select>
+      </a>
+      <nav class="nav">
+        <a href="/">Home</a>
+        <a href="/level1/index.html">L1 Basics</a>
+        <a href="/level2/index.html">L2 Trades</a>
+        <a href="/level3/index.html">L3 Spreads</a>
+        <a href="/level4/index.html">L4 Advanced</a>
+        <a href="/builder/index.html" class="active">Builder</a>
+      </nav>
     </div>
-  </div>
-</header>
+  </header>
   <div class="builder-wrap">
   <h1>Options Strategy Builder & Simulator</h1>
   <p class="subtitle">Fully interactive · ×100 contract multiplier · Green = profit · Red = loss</p>

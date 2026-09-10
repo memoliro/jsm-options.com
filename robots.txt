@@ -1,4 +1,3 @@
 User-agent: *
 Allow: /
-
 Sitemap: https://jsm-options.com/sitemap.xml
