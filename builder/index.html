@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -308,7 +308,36 @@
     .site-header .logo-icon{width:32px;height:32px;background:linear-gradient(135deg,#3b82f6,#34d399);color:#fff;border-radius:50%;display:grid;place-items:center;font-weight:800;font-size:12px;}
 .builder-wrap{max-width:1280px;margin:0 auto;padding:12px 16px 24px;}
   
-  </style>
+  
+    /* ===== Shared JSM header + theme switcher ===== */
+    .site-header{position:sticky;top:0;z-index:30;background:var(--header-bg,rgba(15,20,25,.92));backdrop-filter:blur(12px);border-bottom:1px solid var(--border);width:100%;margin:0 -12px;padding:0 12px;}
+    .site-header-inner{max-width:1280px;margin:0 auto;padding:12px 16px;display:flex;justify-content:space-between;align-items:center;flex-wrap:nowrap;gap:12px;}
+    .header-right{display:flex;align-items:center;justify-content:flex-end;gap:8px;min-width:0;}
+    .site-header .nav{display:flex;gap:6px;flex-wrap:wrap;align-items:center;justify-content:flex-end;}
+    .site-header .nav a{padding:6px 11px;border-radius:9999px;border:1px solid var(--border);background:var(--card);font-size:12px;color:var(--muted);text-decoration:none;}
+    .site-header .nav a:hover{color:var(--text);border-color:var(--accent);}
+    .site-header .nav a.active{background:var(--accent);color:#fff;border-color:var(--accent);}
+    .theme-toggle{flex:0 0 auto;display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:6px 10px;min-height:30px;border:1px solid var(--border);border-radius:9999px;background:var(--card);color:var(--muted);font:600 12px/1 'Segoe UI',system-ui,-apple-system,sans-serif;cursor:pointer;white-space:nowrap;}
+    .theme-toggle:hover{color:var(--text);border-color:var(--accent);}
+    .theme-toggle .icon{font-size:13px;line-height:1;}
+    :root,[data-theme="dark"]{--header-bg:rgba(15,20,25,.92);}
+    [data-theme="light"]{
+      --bg:#f4f6f9;--card:#fff;--border:#d8dee9;--text:#0f172a;--muted:#64748b;--accent:#2563eb;--green:#16a34a;--red:#dc2626;--yellow:#ca8a04;--input:#f1f5f9;--header-bg:rgba(255,255,255,.92);
+    }
+    [data-theme="light"] body{background:var(--bg);color:var(--text);}
+    [data-theme="light"] input,[data-theme="light"] select{background:var(--input);color:var(--text);}
+    [data-theme="light"] .card{background:var(--card);border-color:var(--border);}
+    [data-theme="light"] .site-header{background:var(--header-bg);}
+    [data-theme="light"] .greek-card{background:#f8fafc;}
+    [data-theme="light"] .greek-card .g-name{color:#1d4ed8;}
+    [data-theme="light"] .btn-secondary{background:#e2e8f0;color:#334155;}
+    [data-theme="light"] .btn-danger{background:#fee2e2;color:#991b1b;}
+    [data-theme="light"] .site-header .nav a{background:#fff;color:#64748b;}
+    [data-theme="light"] .site-header .nav a.active{background:#2563eb;color:#fff;}
+    [data-theme="light"] .theme-toggle{background:#fff;color:#64748b;}
+    @media(max-width:900px){.site-header-inner{flex-wrap:wrap}.header-right{width:100%;justify-content:flex-end}.site-header .nav{justify-content:flex-end;}}
+    @media(max-width:600px){.header-right{flex-wrap:wrap}.site-header .nav{justify-content:flex-start}.theme-toggle{margin-left:auto;}}
+</style>
 </head>
 <body>
     <header class="site-header">
@@ -317,19 +346,25 @@
         <div class="logo">
           <div class="logo-icon">JSM</div>
           <div>
-            <div style="font-weight:700;color:var(--text,#e7ecf3)">JSM Options</div>
-            <div style="font-size:11px;color:var(--muted,#8b9bb4)">Strategy Builder</div>
+            <div style="font-weight:700;color:var(--text)">JSM Options</div>
+            <div style="font-size:11px;color:var(--muted)">Strategy Builder</div>
           </div>
         </div>
       </a>
-      <nav class="nav">
-        <a href="/">Home</a>
-        <a href="/level1/index.html">Basics</a>
-        <a href="/level2/index.html">Trades</a>
-        <a href="/level3/index.html">Spreads</a>
-        <a href="/level4/index.html">Advanced</a>
-        <a href="/builder/index.html" class="active">Builder</a>
-      </nav>
+      <div class="header-right">
+        <nav class="nav" aria-label="Primary navigation">
+          <a href="/">Home</a>
+          <a href="/level1/index.html">Basics</a>
+          <a href="/level2/index.html">Trades</a>
+          <a href="/level3/index.html">Spreads</a>
+          <a href="/level4/index.html">Advanced</a>
+          <a href="/builder/index.html" class="active">Builder</a>
+        </nav>
+        <button type="button" class="theme-toggle" id="themeToggle" aria-label="Toggle light/dark theme" title="Toggle theme">
+          <span class="icon" id="themeIcon">☀️</span>
+          <span id="themeLabel">Light</span>
+        </button>
+      </div>
     </div>
   </header>
   <div class="builder-wrap">
@@ -1183,6 +1218,29 @@
     }
 
     // Boot once: honor ?template= on every load/refresh
+    // Shared JSM theme preference
+    (function () {
+      const root = document.documentElement;
+      const toggle = document.getElementById('themeToggle');
+      const icon = document.getElementById('themeIcon');
+      const label = document.getElementById('themeLabel');
+      function applyTheme(theme) {
+        root.setAttribute('data-theme', theme);
+        if (icon) icon.textContent = theme === 'dark' ? '☀️' : '🌙';
+        if (label) label.textContent = theme === 'dark' ? 'Light' : 'Dark';
+        if (toggle) toggle.setAttribute('aria-label', 'Switch to ' + (theme === 'dark' ? 'light' : 'dark') + ' theme');
+        try { localStorage.setItem('jsm-theme', theme); } catch (e) {}
+      }
+      let saved = null;
+      try { saved = localStorage.getItem('jsm-theme'); } catch (e) {}
+      if (saved === 'light' || saved === 'dark') applyTheme(saved);
+      else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) applyTheme('light');
+      else applyTheme('dark');
+      if (toggle) toggle.addEventListener('click', function () {
+        applyTheme(root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+      });
+    })();
+
     (function bootBuilder() {
       var templateKey = null;
       try {
