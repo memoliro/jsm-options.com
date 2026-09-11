@@ -122,7 +122,21 @@ function payoffChart(s){
   const id='c'+Math.random().toString(36).slice(2,8);
   return `<div class="payoff" aria-label="Illustrative profit and loss chart for ${s.name}"><svg viewBox="0 0 ${W} ${H}" role="img"><line class="payoff-axis" x1="${pad.l}" y1="${H-pad.b}" x2="${W-pad.r}" y2="${H-pad.b}"/><line class="payoff-zero" x1="${pad.l}" y1="${zeroY}" x2="${W-pad.r}" y2="${zeroY}"/><line class="payoff-axis" x1="${x0}" y1="${pad.t}" x2="${x0}" y2="${H-pad.b}"/><path class="payoff-fill ${chartTone}" d="${area}"/><path class="payoff-line ${chartTone}" d="${path}"/><text class="payoff-label" x="${pad.l}" y="${H-5}">$60</text><text class="payoff-label" x="${x0-9}" y="${H-5}">$100</text><text class="payoff-label" x="${W-pad.r-20}" y="${H-5}">$140</text><text class="payoff-label" x="4" y="${zeroY+3}">$0</text></svg><div class="payoff-note">Illustrative P/L at expiration • underlying price</div></div>`;
 }
-function render(){const q=search.value.trim().toLowerCase();const rows=strategies.filter(s=>(active==='all'||s.cat.includes(active))&&(!q||(s.name+' '+s.tag+' '+s.type+' '+s.legs+' '+s.desc).toLowerCase().includes(q)));count.textContent=rows.length;grid.innerHTML=rows.map(s=>`<article class="strategy-card"><div class="strategy-head"><div><h2>${s.name}</h2><span class="pill ${s.cat.includes('bullish')?'bullish':s.cat.includes('bearish')?'bearish':s.cat.includes('volatile')?'vol':s.cat.includes('hedging')?'hedge':'neutral'}">${s.tag}</span></div><span class="pill">${s.type}</span></div><div class="legs"><b>Structure:</b> ${s.legs}</div><p>${s.desc}</p>${payoffChart(s)}<div class="stats"><div class="stat"><span>Max profit</span><strong>${s.profit}</strong></div><div class="stat"><span>Max loss</span><strong>${s.loss}</strong></div><div class="stat"><span>Time decay</span><strong>${s.decay}</strong></div></div></article>`).join('');empty.style.display=rows.length?'none':'block'}
+const builderTpl={
+  'Long Call':'long_call','Long Put':'long_put','Covered Call':'covered_call',
+  'Bull Call Spread':'bull_call_spread','Bear Put Spread':'bear_put_spread',
+  'Long Straddle':'long_straddle','Short Straddle':'short_straddle',
+  'Long Strangle':'long_strangle','Short Strangle':'short_strangle',
+  'Iron Butterfly':'iron_butterfly','Short Iron Condor':'iron_condor',
+  'Calendar Spread':'calendar_call','LEAPS Call':'long_call','LEAPS Put':'long_put',
+  'Butterfly':'long_call_butterfly','Cash Secured Put':'cash_secured_put'
+};
+function builderBtn(s){
+  const t=builderTpl[s.name];
+  if(t) return `<p style="margin-top:12px"><a class="btn" style="display:inline-block;font-size:12px;padding:7px 12px" href="/builder/?template=${t}">Try in Builder →</a></p>`;
+  return `<p style="margin-top:12px"><a class="btn btn-secondary" style="display:inline-block;font-size:12px;padding:7px 12px;background:#334155;border-color:#334155;color:var(--text)!important" href="/builder/">Open Builder →</a></p>`;
+}
+function render(){const q=search.value.trim().toLowerCase();const rows=strategies.filter(s=>(active==='all'||s.cat.includes(active))&&(!q||(s.name+' '+s.tag+' '+s.type+' '+s.legs+' '+s.desc).toLowerCase().includes(q)));count.textContent=rows.length;grid.innerHTML=rows.map(s=>`<article class="strategy-card"><div class="strategy-head"><div><h2>${s.name}</h2><span class="pill ${s.cat.includes('bullish')?'bullish':s.cat.includes('bearish')?'bearish':s.cat.includes('volatile')?'vol':s.cat.includes('hedging')?'hedge':'neutral'}">${s.tag}</span></div><span class="pill">${s.type}</span></div><div class="legs"><b>Structure:</b> ${s.legs}</div><p>${s.desc}</p>${payoffChart(s)}<div class="stats"><div class="stat"><span>Max profit</span><strong>${s.profit}</strong></div><div class="stat"><span>Max loss</span><strong>${s.loss}</strong></div><div class="stat"><span>Time decay</span><strong>${s.decay}</strong></div></div>${builderBtn(s)}</article>`).join('');empty.style.display=rows.length?'none':'block'}
 document.querySelectorAll('.filter').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.filter').forEach(x=>x.classList.remove('active'));b.classList.add('active');active=b.dataset.filter;render()}));search.addEventListener('input',render);render();
 </script>
 

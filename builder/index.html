@@ -724,7 +724,40 @@
       updateSpotSliderRange();
       renderLegs();
       recalc();
-      document.getElementById('strategyTemplate').value = '';
+      document.getElementById('strategyTemplate').value = key;
+      setTemplateTip(key);
+    }
+
+    // Lesson bridges for deep-linked templates
+    const TEMPLATE_LESSONS = {
+      long_call: { title: 'Long Call', href: '/level2/', label: 'Fundamentals' },
+      long_put: { title: 'Long Put', href: '/level2/', label: 'Fundamentals' },
+      covered_call: { title: 'Covered Call', href: '/level2/', label: 'Fundamentals' },
+      cash_secured_put: { title: 'Cash-Secured Put', href: '/level4/', label: 'Advanced' },
+      bull_call_spread: { title: 'Bull Call Spread', href: '/level3/', label: 'Spreads' },
+      bear_put_spread: { title: 'Bear Put Spread', href: '/level3/', label: 'Spreads' },
+      iron_condor: { title: 'Iron Condor', href: '/level3/', label: 'Spreads' },
+      iron_butterfly: { title: 'Iron Butterfly', href: '/strategies/', label: 'Strategies' },
+      long_straddle: { title: 'Long Straddle', href: '/strategies/', label: 'Strategies' },
+      short_straddle: { title: 'Short Straddle', href: '/strategies/', label: 'Strategies' },
+      long_strangle: { title: 'Long Strangle', href: '/strategies/', label: 'Strategies' },
+      short_strangle: { title: 'Short Strangle', href: '/strategies/', label: 'Strategies' },
+      calendar_call: { title: 'Calendar Spread (Call)', href: '/level4/', label: 'Advanced' },
+      long_call_butterfly: { title: 'Call Butterfly', href: '/strategies/', label: 'Strategies' },
+      call_condor: { title: 'Call Condor', href: '/strategies/', label: 'Strategies' },
+      long_put_butterfly: { title: 'Put Butterfly', href: '/strategies/', label: 'Strategies' },
+      put_condor: { title: 'Put Condor', href: '/strategies/', label: 'Strategies' }
+    };
+
+    function setTemplateTip(key) {
+      const tip = document.getElementById('eduTip');
+      if (!tip) return;
+      const meta = TEMPLATE_LESSONS[key];
+      if (meta) {
+        tip.innerHTML = 'You\'re looking at a <strong>' + meta.title + '</strong> — read the <a href="' + meta.href + '">' + meta.label + ' lesson</a>, or edit the legs below.';
+      } else {
+        tip.innerHTML = 'Template loaded. Edit any field — graph and Greeks update live.';
+      }
     }
 
     function signedQty(leg) {
@@ -1272,11 +1305,19 @@
 
     function updateEduTip() {
       const tip = document.getElementById('eduTip');
+      if (!tip) return;
+      // Keep template lesson bridge if a known template is selected
+      const sel = document.getElementById('strategyTemplate');
+      const key = sel && sel.value;
+      if (key && TEMPLATE_LESSONS[key]) {
+        setTemplateTip(key);
+        return;
+      }
       const hasLong = legs.some(function(l) { return l.side === 'buy'; });
       const hasShort = legs.some(function(l) { return l.side === 'sell'; });
       const hasStock = legs.some(function(l) { return l.type === 'stock'; });
       if (hasStock && hasShort) {
-        tip.innerHTML = '<strong>Stock + options:</strong> Stock Qty = number of shares, Cost = entry price. Option Qty = contracts (×100). For a Covered Call use 100 shares + 1 short call.';
+        tip.innerHTML = '<strong>Stock + options:</strong> Stock Qty = number of shares, Cost = entry price. Option Qty = contracts (×100). For a Covered Call use 100 shares + 1 short call. <a href="/level2/">Fundamentals lesson</a>';
       } else if (hasStock) {
         tip.innerHTML = '<strong>Stock leg:</strong> Qty = number of shares, Cost = entry price. Strike and DTE are ignored. Add a short call (Qty 1) for a Covered Call.';
       } else if (legs.length === 1 && hasLong) {
