@@ -139,21 +139,53 @@ function builderBtn(s){
 function render(){const q=search.value.trim().toLowerCase();const rows=strategies.filter(s=>(active==='all'||s.cat.includes(active))&&(!q||(s.name+' '+s.tag+' '+s.type+' '+s.legs+' '+s.desc).toLowerCase().includes(q)));count.textContent=rows.length;grid.innerHTML=rows.map(s=>`<article class="strategy-card"><div class="strategy-head"><div><h2>${s.name}</h2><span class="pill ${s.cat.includes('bullish')?'bullish':s.cat.includes('bearish')?'bearish':s.cat.includes('volatile')?'vol':s.cat.includes('hedging')?'hedge':'neutral'}">${s.tag}</span></div><span class="pill">${s.type}</span></div><div class="legs"><b>Structure:</b> ${s.legs}</div><p>${s.desc}</p>${payoffChart(s)}<div class="stats"><div class="stat"><span>Max profit</span><strong>${s.profit}</strong></div><div class="stat"><span>Max loss</span><strong>${s.loss}</strong></div><div class="stat"><span>Time decay</span><strong>${s.decay}</strong></div></div>${builderBtn(s)}</article>`).join('');empty.style.display=rows.length?'none':'block'}
 document.querySelectorAll('.filter').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.filter').forEach(x=>x.classList.remove('active'));b.classList.add('active');active=b.dataset.filter;render()}));search.addEventListener('input',render);render();
 </script>
-
-
 <script>
 (function(){
-  var btn=document.getElementById('navToggle');
-  var nav=document.querySelector('.site-header nav.nav, .site-header .nav');
-  if(!btn||!nav) return;
-  btn.addEventListener('click',function(e){
-    e.preventDefault();
-    e.stopPropagation();
-    var open=nav.classList.toggle('is-open');
-    btn.setAttribute('aria-expanded', open?'true':'false');
-    btn.setAttribute('aria-label', open?'Close menu':'Open menu');
+  function ready(fn){
+    if(document.readyState!=='loading') fn();
+    else document.addEventListener('DOMContentLoaded', fn);
+  }
+  ready(function(){
+    var btn=document.getElementById('navToggle');
+    var nav=document.querySelector('.site-header nav.nav, .site-header .nav');
+    if(!btn||!nav) return;
+    var lastToggle=0;
+
+    function setOpen(open){
+      if(open){
+        nav.classList.add('is-open');
+        btn.setAttribute('aria-expanded','true');
+        btn.setAttribute('aria-label','Close menu');
+      } else {
+        nav.classList.remove('is-open');
+        btn.setAttribute('aria-expanded','false');
+        btn.setAttribute('aria-label','Open menu');
+      }
+    }
+
+    function toggle(e){
+      var now=Date.now();
+      if(now-lastToggle<400) return; // ignore duplicate touch+click
+      lastToggle=now;
+      if(e){ e.preventDefault(); e.stopPropagation(); }
+      setOpen(!nav.classList.contains('is-open'));
+    }
+
+    btn.addEventListener('click', toggle, false);
+
+    nav.addEventListener('click', function(e){
+      if(e.target.closest('a')) setOpen(false);
+    }, false);
+
+    document.addEventListener('click', function(e){
+      if(!nav.classList.contains('is-open')) return;
+      if(btn.contains(e.target)||nav.contains(e.target)) return;
+      setOpen(false);
+    }, false);
   });
 })();
 </script>
+
+
 
 </body></html>
