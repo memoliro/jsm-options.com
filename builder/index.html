@@ -352,12 +352,24 @@
     [data-theme="light"] .site-header .nav a{background:#fff;color:#64748b;}
     [data-theme="light"] .site-header .nav a.active{background:#2563eb;color:#fff;}
     [data-theme="light"] .theme-toggle{background:#fff;color:#64748b;}
-    @media(max-width:900px){.site-header-inner{flex-wrap:wrap}.header-right{width:100%;justify-content:flex-end}.site-header .nav{justify-content:flex-end;}}
-    @media(max-width:600px){.header-right{flex-wrap:wrap}.site-header .nav{justify-content:flex-start}.theme-toggle{margin-left:auto;}}
+    .nav-toggle{display:none;flex:0 0 auto;width:40px;height:36px;padding:0;border:1px solid var(--border);border-radius:10px;background:var(--card);color:var(--text);cursor:pointer;align-items:center;justify-content:center;flex-direction:column;gap:5px}
+    .nav-toggle span{display:block;width:18px;height:2px;border-radius:1px;background:currentColor;transition:transform .2s,opacity .2s}
+    .nav-toggle[aria-expanded="true"] span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+    .nav-toggle[aria-expanded="true"] span:nth-child(2){opacity:0}
+    .nav-toggle[aria-expanded="true"] span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+    @media(max-width:900px){
+      .site-header-inner{flex-wrap:wrap}
+      .header-right{gap:8px;justify-content:flex-end}
+      .nav-toggle{display:inline-flex}
+      .site-header .nav{display:none;width:100%;flex:1 0 100%;order:3;flex-direction:column;align-items:stretch;gap:6px;padding:10px 0 4px;border-top:1px solid var(--border);margin-top:4px}
+      .site-header .nav.is-open{display:flex}
+      .site-header .nav a{width:100%;text-align:left;padding:10px 12px;font-size:14px;border-radius:10px}
+    }
+    @media(max-width:600px){.site-header .brand-sub{display:none}.theme-toggle .theme-label,#themeLabel{display:none}}
 </style>
 </head>
 <body>
-    <header class="site-header"><div class="site-header-inner"><a class="logo logo-link" href="/" aria-label="JSM Options Home"><div class="logo-icon">JSM</div><div><div style="font-weight:700">JSM Options</div><div class="brand-sub">jsm-options.com · Educational</div></div></a><div class="header-right"><nav class="nav" aria-label="Primary navigation"><a href="/">Home</a><a href="/level1/">Basics</a><a href="/level2/">Fundamentals</a><a href="/level3/">Spreads</a><a href="/level4/">Advanced</a><a href="/strategies/">Strategies</a><a href="/builder/" class="active">Builder</a></nav><button type="button" class="theme-toggle" id="themeToggle" aria-label="Toggle color theme"><span id="themeIcon" class="theme-icon">☼</span><span id="themeLabel" class="theme-label">Dark</span></button></div></div></header>
+    <header class="site-header"><div class="site-header-inner"><a class="logo logo-link" href="/" aria-label="JSM Options Home"><div class="logo-icon">JSM</div><div><div style="font-weight:700">JSM Options</div><div class="brand-sub">jsm-options.com · Educational</div></div></a><div class="header-right"><nav class="nav" aria-label="Primary navigation"><a href="/">Home</a><a href="/level1/">Basics</a><a href="/level2/">Fundamentals</a><a href="/level3/">Spreads</a><a href="/level4/">Advanced</a><a href="/strategies/">Strategies</a><a href="/builder/" class="active">Builder</a></nav><button type="button" class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button><button type="button" class="theme-toggle" id="themeToggle" aria-label="Toggle color theme"><span id="themeIcon" class="theme-icon">☼</span><span id="themeLabel" class="theme-label">Dark</span></button></div></div></header>
   <div class="builder-wrap">
   <h1>Options Strategy Builder & Simulator</h1>
   <p class="subtitle">Fully interactive · ×100 contract multiplier · Green = profit · Red = loss</p>
