@@ -460,20 +460,67 @@
   </div>
 
   <div class="card">
+    <h2>Covered Call — collecting “rent” (deep dive)</h2>
+    <p>A covered call is one of the most popular income strategies for investors who already own stock. You own (or buy) 100 shares and sell one call option against those shares. The call is “covered” because you already hold the shares you might have to deliver if the option is exercised.</p>
+    <p>Think of it like collecting rent on a house you own: you receive cash (the option premium) for giving someone else the right to buy your shares at a set price (the strike) by a set date. You keep that cash no matter what happens next.</p>
+
+    <div class="analogy">
+      <strong>Simple picture:</strong> You own 100 shares of XYZ at $100. You sell a $110 call that expires in about 30–45 days and collect $2 per share ($200 total). That $200 is yours to keep. In return, you agree that if XYZ is above $110 at expiration, you will sell your shares at $110.
+    </div>
+
+    <h3>When traders use it</h3>
+    <ul>
+      <li>You are neutral to mildly bullish — you expect the stock to stay roughly flat or rise only a little.</li>
+      <li>You already like the stock and plan to hold it, but want extra income while you wait.</li>
+      <li>You have a target selling price in mind and are happy to sell at that higher strike if the stock gets there.</li>
+      <li>You want a small buffer against modest declines (the premium lowers your effective cost basis).</li>
+    </ul>
+
+    <h3>Key numbers (using the example)</h3>
+    <ul>
+      <li><strong>Premium collected:</strong> $2 × 100 = <span class="profit">$200</span> cash right away.</li>
+      <li><strong>Breakeven:</strong> Stock cost − premium = $100 − $2 = <strong>$98</strong>. The stock can fall $2 before you start losing money relative to just holding the shares.</li>
+      <li><strong>Maximum profit:</strong> (Strike − stock cost) + premium = ($110 − $100) + $2 = <strong>$12 per share ($1,200)</strong>. This is locked in once the stock is at or above the strike at expiration.</li>
+      <li><strong>Maximum loss:</strong> Theoretically stock cost − premium = $98 per share if the stock goes to zero. The premium only cushions a small drop; it does <em>not</em> protect against a big crash.</li>
+    </ul>
+
+    <div class="diagram-wrap">
+      <img src="/images/covered-call-payoff.png" alt="Covered Call payoff diagram at expiration showing max profit, breakeven and downside risk" width="800" height="auto" loading="lazy">
+      <div class="diagram-caption">Green line = Covered Call P/L at expiration. Blue dashed line = holding the stock alone (unlimited upside). Notice how the covered call flattens once the stock rises above the $110 strike — that is the “capped upside” trade-off.</div>
+    </div>
+
     <h3>Covered call outcomes (example)</h3>
     <p>Own 100 shares at $100. Sell a $110 call for $2 → <span class="profit">$200</span> credit.</p>
     <div class="table-wrap">
       <table>
         <thead>
-          <tr><th>Stock at expiry</th><th>Call result</th><th>Rough outcome (ex-shares P/L)</th></tr>
+          <tr><th>Stock at expiry</th><th>Call result</th><th>What you keep / sell</th><th>Approx. P/L vs. $100 cost</th></tr>
         </thead>
         <tbody>
-          <tr><td>$90</td><td>Expires</td><td>Keep $200 premium; still hold shares (down on stock)</td></tr>
-          <tr><td>$105</td><td>Expires</td><td>Keep $200 premium + shares</td></tr>
-          <tr><td>$120</td><td>Likely assigned</td><td>Sell shares at $110; keep $200 premium; miss further upside</td></tr>
+          <tr><td>$90</td><td>Expires worthless</td><td>Keep shares + $200 premium</td><td>Stock −$10 + premium $2 = <span class="loss">−$8</span>/share</td></tr>
+          <tr><td>$98</td><td>Expires worthless</td><td>Keep shares + $200 premium</td><td>Breakeven (stock −$2 + premium $2)</td></tr>
+          <tr><td>$105</td><td>Expires worthless</td><td>Keep shares + $200 premium</td><td>Stock +$5 + premium $2 = <span class="profit">+$7</span>/share</td></tr>
+          <tr><td>$110</td><td>At the money / may be assigned</td><td>Sell at $110 or keep + premium</td><td>Max profit zone starts → <span class="profit">+$12</span>/share</td></tr>
+          <tr><td>$120</td><td>Likely assigned</td><td>Shares called away at $110; keep $200 premium</td><td>Capped at <span class="profit">+$12</span>/share (you miss the extra $10)</td></tr>
         </tbody>
       </table>
     </div>
+
+    <h3>The two main trade-offs</h3>
+    <ul>
+      <li><strong>You give up big upside.</strong> If the stock rockets past the strike, your profit is capped. The call buyer gets the shares at the strike; you keep only the premium plus the gain up to the strike.</li>
+      <li><strong>Downside is still mostly yours.</strong> A $2 premium does not protect against a 20% or 30% drop. Covered calls are income strategies, not hedges. For real downside protection you would need something like a protective put or a collar.</li>
+    </ul>
+
+    <div class="note">
+      <strong>Beginner tip:</strong> Many investors sell slightly out-of-the-money calls (strike a bit above the current price) so the stock still has room to rise before assignment is likely. They often choose expirations 30–45 days out to balance premium size and time decay. After expiration (or after closing early) they can sell another call if they still own the shares — that is how the “rent” can become recurring income.
+    </div>
+
+    <div class="warn">
+      <strong>Important:</strong> Covered calls do not remove the risk of owning the stock. If the shares fall sharply, the small premium you collected will only offset a tiny part of the loss. Also, once the shares are called away you no longer own them — you cannot sell another call until you buy them back (or buy a different stock).
+    </div>
+
+    <p style="margin-top:16px"><a class="btn" href="/builder/index.html">Open the Builder to experiment →</a></p>
   </div>
 
   <!-- Why ×100 -->
