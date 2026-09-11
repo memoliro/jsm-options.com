@@ -2,6 +2,11 @@
 <html lang="en" data-theme="dark">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+
 <title>26 Options Trading Strategies Explained (Bullish, Bearish &amp; Neutral)</title>
 <meta name="description" content="Browse 26 common options strategies with plain-English explanations, market outlook, risk profile, and payoff sketches. Covered call, iron condor, straddle, and more. Educational only.">
 <link rel="canonical" href="https://jsm-options.com/strategies/">
@@ -10,10 +15,12 @@
 <meta property="og:title" content="26 Options Trading Strategies Explained (Bullish, Bearish &amp; Neutral)">
 <meta property="og:description" content="Browse 26 common options strategies with plain-English explanations, market outlook, risk profile, and payoff sketches.">
 <meta property="og:url" content="https://jsm-options.com/strategies/">
+  <meta property="og:image" content="https://jsm-options.com/images/og-default.png">
+  <meta name="twitter:image" content="https://jsm-options.com/images/og-default.png">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="26 Options Trading Strategies Explained">
 <meta name="twitter:description" content="Covered call, iron condor, straddle, verticals, and more — plain-English strategy library for learners.">
-<link rel="stylesheet" href="../assets/style.css">
+<link rel="stylesheet" href="/assets/style.css">
 <style>
 .strategy-toolbar{display:grid;grid-template-columns:1.4fr 1fr;gap:10px;margin:18px 0}.filters{display:flex;gap:7px;flex-wrap:wrap}.filter{padding:8px 12px;border:1px solid var(--border);background:var(--input);color:var(--muted);border-radius:999px;cursor:pointer;font-size:12px}.filter.active{background:#fff;color:#000;border-color:var(--text)}.strategy-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.strategy-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:18px;display:flex;flex-direction:column;min-height:290px;transition:.15s transform,.15s border-color}.strategy-card:hover{transform:translateY(-2px);border-color:#52525b}.strategy-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.strategy-head h2{font-size:20px;margin:0 0 5px}.pill{display:inline-flex;align-items:center;border:1px solid var(--border);border-radius:999px;padding:4px 8px;font-size:10px;color:var(--muted);white-space:nowrap}.pill.bullish{color:#86efac}.pill.bearish{color:#fca5a5}.pill.neutral{color:#d4d4d8}.pill.vol{color:#93c5fd}.pill.hedge{color:#fde68a}.strategy-card p{font-size:13px;color:var(--muted)}.legs{font-size:12px;color:var(--muted);margin:7px 0}.legs b{color:var(--text)}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:auto;padding-top:12px}.stat{background:var(--input);border:1px solid var(--border);border-radius:10px;padding:9px}.stat span{display:block;font-size:9px;color:var(--dim);text-transform:uppercase;letter-spacing:.05em}.stat strong{display:block;font-size:11px;margin-top:3px}.risk{font-size:11px;color:var(--muted);margin-top:9px}.risk strong{color:var(--text)}.empty{display:none;padding:25px;text-align:center;color:var(--muted);border:1px dashed var(--border);border-radius:14px}.mini-note{font-size:12px;color:var(--dim)}
 
@@ -23,7 +30,7 @@
 </style>
 </head>
 <body>
-<header class="site-header"><div class="site-header-inner"><a class="logo logo-link" href="/" aria-label="JSM Options Home"><div class="logo-icon">JSM</div><div><div style="font-weight:700">JSM Options</div><div class="brand-sub">jsm-options.com · Educational</div></div></a><div class="header-right"><nav class="nav" aria-label="Primary navigation"><a href="/">Home</a><a href="/level1/index.html">Basics</a><a href="/level2/index.html">Fundamentals</a><a href="/level3/index.html">Spreads</a><a href="/level4/index.html">Advanced</a><a href="/strategies/index.html" class="active">Strategies</a><a href="/builder/index.html">Builder</a></nav><button type="button" class="theme-toggle" id="themeToggle" aria-label="Toggle color theme"><span id="themeIcon" class="theme-icon">☼</span><span id="themeLabel" class="theme-label">Dark</span></button></div></div></header>
+<header class="site-header"><div class="site-header-inner"><a class="logo logo-link" href="/" aria-label="JSM Options Home"><div class="logo-icon">JSM</div><div><div style="font-weight:700">JSM Options</div><div class="brand-sub">jsm-options.com · Educational</div></div></a><div class="header-right"><nav class="nav" aria-label="Primary navigation"><a href="/">Home</a><a href="/level1/">Basics</a><a href="/level2/">Fundamentals</a><a href="/level3/">Spreads</a><a href="/level4/">Advanced</a><a href="/strategies/" class="active">Strategies</a><a href="/builder/">Builder</a></nav><button type="button" class="theme-toggle" id="themeToggle" aria-label="Toggle color theme"><span id="themeIcon" class="theme-icon">☼</span><span id="themeLabel" class="theme-label">Dark</span></button></div></div></header>
 <main class="wrap wide">
 <section class="hero"><span class="badge">Strategy Library • 26 common strategies</span><h1>Options Strategies, Explained Simply</h1><p>Use this library to connect a market outlook with a strategy. Each card gives you the basic idea, the option legs involved, the general risk profile and what happens to the position at expiration.</p><p class="mini-note">This page is for education, not a recommendation to trade. Real-world results before expiration are affected by time decay, implied volatility, interest rates, assignment and other factors.</p></section>
 <div class="card">
@@ -32,8 +39,8 @@
 <div class="mini-note"><span id="count">26</span> strategies shown</div>
 </div>
 <div id="grid" class="strategy-grid"></div><div id="empty" class="empty">No strategies match your search. Try another term or choose “All”.</div>
-<section class="card" style="margin-top:18px"><h2 style="margin-top:0">How to use this library</h2><div class="grid3"><div><h3>1. Start with outlook</h3><p>Decide whether you expect the underlying to rise, fall, stay in a range, or make a large move.</p></div><div><h3>2. Check risk</h3><p>Look for defined versus potentially large or unlimited risk before studying the mechanics.</p></div><div><h3>3. Test the payoff</h3><p>Open the <a href="/builder/index.html" style="color:var(--text);text-decoration:underline">Strategy Builder</a> and experiment with strikes, premiums and expiration prices.</p></div></div></section>
-</main><footer>Educational only — not financial advice. JSM Options • <a href="../privacy/index.html">Privacy</a></footer>
+<section class="card" style="margin-top:18px"><h2 style="margin-top:0">How to use this library</h2><div class="grid3"><div><h3>1. Start with outlook</h3><p>Decide whether you expect the underlying to rise, fall, stay in a range, or make a large move.</p></div><div><h3>2. Check risk</h3><p>Look for defined versus potentially large or unlimited risk before studying the mechanics.</p></div><div><h3>3. Test the payoff</h3><p>Open the <a href="/builder/" style="color:var(--text);text-decoration:underline">Strategy Builder</a> and experiment with strikes, premiums and expiration prices.</p></div></div></section>
+</main><footer>Educational only — not financial advice. JSM Options • <a href="/privacy/">Privacy</a></footer>
 <script>
 (function(){const key="jsm-theme",root=document.documentElement,btn=document.getElementById("themeToggle"),icon=document.getElementById("themeIcon"),label=document.getElementById("themeLabel");function apply(t){root.setAttribute("data-theme",t);if(icon)icon.textContent=t==="dark"?"🌙":"☀️";if(label)label.textContent=t==="dark"?"Dark":"Light";if(btn)btn.setAttribute("aria-pressed",t==="light"?"true":"false");if(btn)btn.setAttribute("aria-label",t==="dark"?"Switch to light theme":"Switch to dark theme");}const saved=localStorage.getItem(key);apply(saved||"dark");if(btn)btn.addEventListener("click",()=>{const next=root.getAttribute("data-theme")==="light"?"dark":"light";apply(next);localStorage.setItem(key,next)});})();
 </script>

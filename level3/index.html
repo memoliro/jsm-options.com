@@ -3,6 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+
   <title>Bull Call Spread, Bear Put Spread &amp; Iron Condor Explained</title>
   <meta name="description" content="Learn vertical spreads and the iron condor: defined-risk setups, payoff examples, and when traders use them. Practice each strategy in the free options builder.">
   <link rel="canonical" href="https://jsm-options.com/level3/">
@@ -11,6 +16,8 @@
   <meta property="og:title" content="Bull Call Spread, Bear Put Spread &amp; Iron Condor Explained">
   <meta property="og:description" content="Defined-risk vertical spreads and iron condor with payoff examples. Practice each strategy in the free options builder.">
   <meta property="og:url" content="https://jsm-options.com/level3/">
+  <meta property="og:image" content="https://jsm-options.com/images/og-default.png">
+  <meta name="twitter:image" content="https://jsm-options.com/images/og-default.png">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Bull Call Spread, Bear Put Spread &amp; Iron Condor Explained">
   <meta name="twitter:description" content="Defined-risk vertical spreads and iron condor with payoff examples. Free options education.">
@@ -19,7 +26,7 @@
   <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-BDL003RCN6');</script>
 </head>
 <body>
-<header class="site-header"><div class="site-header-inner"><a class="logo logo-link" href="/" aria-label="JSM Options Home"><div class="logo-icon">JSM</div><div><div style="font-weight:700">JSM Options</div><div class="brand-sub">jsm-options.com · Educational</div></div></a><div class="header-right"><nav class="nav" aria-label="Primary navigation"><a href="/">Home</a><a href="/level1/index.html">Basics</a><a href="/level2/index.html">Fundamentals</a><a href="/level3/index.html" class="active">Spreads</a><a href="/level4/index.html">Advanced</a><a href="/strategies/index.html">Strategies</a><a href="/builder/index.html">Builder</a></nav><button type="button" class="theme-toggle" id="themeToggle" aria-label="Toggle color theme"><span id="themeIcon" class="theme-icon">☼</span><span id="themeLabel" class="theme-label">Dark</span></button></div></div></header>
+<header class="site-header"><div class="site-header-inner"><a class="logo logo-link" href="/" aria-label="JSM Options Home"><div class="logo-icon">JSM</div><div><div style="font-weight:700">JSM Options</div><div class="brand-sub">jsm-options.com · Educational</div></div></a><div class="header-right"><nav class="nav" aria-label="Primary navigation"><a href="/">Home</a><a href="/level1/">Basics</a><a href="/level2/">Fundamentals</a><a href="/level3/" class="active">Spreads</a><a href="/level4/">Advanced</a><a href="/strategies/">Strategies</a><a href="/builder/">Builder</a></nav><button type="button" class="theme-toggle" id="themeToggle" aria-label="Toggle color theme"><span id="themeIcon" class="theme-icon">☼</span><span id="themeLabel" class="theme-label">Dark</span></button></div></div></header>
 
 <div class="wrap">
   <div class="hero">
@@ -184,8 +191,8 @@
       <b>Absolute beginner summary:</b> Buy lower call, sell higher call, same expiry, pay debit. Max profit = width - debit (capped), max loss = debit (defined), breakeven = long strike + debit. Cheaper than long call, less theta pain, but upside capped. Use 1-2 months expiry, take 80% profit early, watch assignment and IV crush.
     </div>
 
-    <a class="btn" href="/builder/index.html?template=bull_call_spread">Load Bull Call Spread in Builder →</a>
-    <a class="btn btn-secondary" href="/level2/index.html">Need basics? ← Fundamentals Long Call</a>
+    <a class="btn" href="/builder/?template=bull_call_spread">Load Bull Call Spread in Builder →</a>
+    <a class="btn btn-secondary" href="/level2/">Need basics? ← Fundamentals Long Call</a>
   </div>
 
   <div class="card">
@@ -193,7 +200,7 @@
     <h3>Bear put spread</h3>
     <p>Buy a higher-strike put, sell a lower-strike put. Net debit. You profit if the stock falls, with max gain capped at the short put strike.</p>
     <div class="analogy">Buy $100 put, sell $90 put. Debit might be ~$4. Max value of spread = $10 width. Max loss = debit.</div>
-    <a class="btn" href="/builder/index.html?template=bear_put_spread">Load Bear Put Spread →</a>
+    <a class="btn" href="/builder/?template=bear_put_spread">Load Bear Put Spread →</a>
   </div>
 
   <div class="card">
@@ -206,7 +213,7 @@
       <li>Risk rises if the stock trends hard or volatility explodes against you</li>
     </ul>
     <div class="analogy">Short put at $90 / long put at $80 + short call at $110 / long call at $120. Credit collected upfront; profit if price stays roughly $90–$110.</div>
-    <a class="btn" href="/builder/index.html?template=iron_condor">Load Iron Condor →</a>
+    <a class="btn" href="/builder/?template=iron_condor">Load Iron Condor →</a>
   </div>
 
   <div class="card">
@@ -222,15 +229,15 @@
   <div class="warn"><strong>Risk:</strong> Defined-risk is not “no risk.” You can still lose the full max loss, and early assignment, dividends, and liquidity matter in live markets. Education only.</div>
 
   <div class="card" style="text-align:center">
-    <a class="btn" href="/builder/index.html">Open full Builder</a>
-    <a class="btn btn-secondary" href="/level2/index.html">← Fundamentals</a>
+    <a class="btn" href="/builder/">Open full Builder</a>
+    <a class="btn btn-secondary" href="/level2/">← Fundamentals</a>
   </div>
 </div>
 
 <footer>
   <div>Educational only — not financial advice.</div>
   <div class="footer-links">
-    <a href="/">Home</a><a href="/strategies/index.html">Strategies</a><a href="/builder/index.html">Builder</a><a href="/disclaimer/index.html">Disclaimer</a><a href="/contact/index.html">Contact</a>
+    <a href="/">Home</a><a href="/strategies/">Strategies</a><a href="/builder/">Builder</a><a href="/disclaimer/">Disclaimer</a><a href="/contact/">Contact</a>
   </div>
 </footer>
 

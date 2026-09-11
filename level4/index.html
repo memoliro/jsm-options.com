@@ -3,6 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+
   <title>Calendar Spreads, LEAPS &amp; Cash-Secured Puts Explained</title>
   <meta name="description" content="Advanced options strategies for learners ready for more: calendar spreads, credit spreads, cash-secured puts, covered calls, and LEAPS. Why 45+ DTE matters. Free lessons.">
   <link rel="canonical" href="https://jsm-options.com/level4/">
@@ -11,6 +16,8 @@
   <meta property="og:title" content="Calendar Spreads, LEAPS &amp; Cash-Secured Puts Explained">
   <meta property="og:description" content="Calendar spreads, credit spreads, cash-secured puts, covered calls, and LEAPS. Why 45+ DTE matters. Free advanced options lessons.">
   <meta property="og:url" content="https://jsm-options.com/level4/">
+  <meta property="og:image" content="https://jsm-options.com/images/og-default.png">
+  <meta name="twitter:image" content="https://jsm-options.com/images/og-default.png">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Calendar Spreads, LEAPS &amp; Cash-Secured Puts Explained">
   <meta name="twitter:description" content="Calendar spreads, credit spreads, cash-secured puts, covered calls, and LEAPS explained for intermediate learners.">
@@ -36,7 +43,7 @@
   </style>
 </head>
 <body>
-<header class="site-header"><div class="site-header-inner"><a class="logo logo-link" href="/" aria-label="JSM Options Home"><div class="logo-icon">JSM</div><div><div style="font-weight:700">JSM Options</div><div class="brand-sub">jsm-options.com · Educational</div></div></a><div class="header-right"><nav class="nav" aria-label="Primary navigation"><a href="/">Home</a><a href="/level1/index.html">Basics</a><a href="/level2/index.html">Fundamentals</a><a href="/level3/index.html">Spreads</a><a href="/level4/index.html" class="active">Advanced</a><a href="/strategies/index.html">Strategies</a><a href="/builder/index.html">Builder</a></nav><button type="button" class="theme-toggle" id="themeToggle" aria-label="Toggle color theme"><span id="themeIcon" class="theme-icon">☼</span><span id="themeLabel" class="theme-label">Dark</span></button></div></div></header>
+<header class="site-header"><div class="site-header-inner"><a class="logo logo-link" href="/" aria-label="JSM Options Home"><div class="logo-icon">JSM</div><div><div style="font-weight:700">JSM Options</div><div class="brand-sub">jsm-options.com · Educational</div></div></a><div class="header-right"><nav class="nav" aria-label="Primary navigation"><a href="/">Home</a><a href="/level1/">Basics</a><a href="/level2/">Fundamentals</a><a href="/level3/">Spreads</a><a href="/level4/" class="active">Advanced</a><a href="/strategies/">Strategies</a><a href="/builder/">Builder</a></nav><button type="button" class="theme-toggle" id="themeToggle" aria-label="Toggle color theme"><span id="themeIcon" class="theme-icon">☼</span><span id="themeLabel" class="theme-label">Dark</span></button></div></div></header>
 
 <div class="wrap">
   <div class="hero">
@@ -128,7 +135,7 @@
     </ul>
     <div class="note">In the Builder, choose <b>Bullish → Cash Secured Put</b> (or <code>?template=cash_secured_put</code>). Edit premium to match a real chain. Cash for securing the put is not modeled as a separate leg — treat strike × 100 as reserved buying power.</div>
     <div class="warn"><strong>Risk:</strong> A CSP can lose far more than the credit if the stock collapses. Only use cash you can actually deploy to own the shares. Educational only — not advice.</div>
-    <a class="btn" href="/builder/index.html?template=cash_secured_put">Load Cash Secured Put in Builder →</a>
+    <a class="btn" href="/builder/?template=cash_secured_put">Load Cash Secured Put in Builder →</a>
   </div>
 
   <div class="card">
@@ -138,8 +145,8 @@
       <div>
         <h3>Debit spread</h3>
         <p>You <b>pay</b> net premium (e.g. bull call, bear put). Max loss ≈ debit. Max gain ≈ width − debit.</p>
-        <a class="btn" href="/builder/index.html?template=bull_call_spread">Bull call (debit) →</a>
-        <a class="btn btn-secondary" style="margin-top:8px" href="/builder/index.html?template=bear_put_spread">Bear put (debit) →</a>
+        <a class="btn" href="/builder/?template=bull_call_spread">Bull call (debit) →</a>
+        <a class="btn btn-secondary" style="margin-top:8px" href="/builder/?template=bear_put_spread">Bear put (debit) →</a>
       </div>
       <div>
         <h3>Credit spread</h3>
@@ -155,7 +162,7 @@
     <h2>Calendar spread (horizontal)</h2>
     <p>Same strike, <b>different expiries</b>: typically sell a nearer-term option and buy a longer-dated one (net debit). You want the front month to decay faster while the back month keeps value — often best when price stays near the strike and IV doesn’t crush the long leg unfairly.</p>
     <div class="analogy">Sell 30-DTE $100 call, buy 90-DTE $100 call. Watch the Builder with mixed DTEs and advance “Days Remaining.”</div>
-    <a class="btn" href="/builder/index.html?template=calendar_call">Load Calendar (Call) →</a>
+    <a class="btn" href="/builder/?template=calendar_call">Load Calendar (Call) →</a>
   </div>
 
   <div class="card">
@@ -179,13 +186,13 @@
     </ul>
     <div class="analogy">Buy a 12–18 month call (LEAPS) as a surrogate for stock; optionally sell nearer calls against it to reduce cost basis — manage early assignment and dividend risk carefully in live markets.</div>
     <p>In the Builder: set DTE to 365+, pick a call, and experiment. For a diagonal, use two call legs with different DTEs (similar to calendar, different strikes optional).</p>
-    <a class="btn" href="/builder/index.html?template=long_call">Start from Long Call →</a>
+    <a class="btn" href="/builder/?template=long_call">Start from Long Call →</a>
   </div>
 
   <div class="card">
     <h2>Iron condor &amp; defined risk (recap)</h2>
     <p>Still the workhorse neutral defined-risk structure from Spreads. Longer DTE entries (e.g. 45) are often taught so you can take profits or adjust before the high-gamma zone.</p>
-    <a class="btn" href="/builder/index.html?template=iron_condor">Load Iron Condor →</a>
+    <a class="btn" href="/builder/?template=iron_condor">Load Iron Condor →</a>
   </div>
 
   <div class="warn">
@@ -193,8 +200,8 @@
   </div>
 
   <div class="card" style="text-align:center">
-    <a class="btn" href="/builder/index.html">Open Builder</a>
-    <a class="btn btn-secondary" href="/level3/index.html">← Spreads</a>
+    <a class="btn" href="/builder/">Open Builder</a>
+    <a class="btn btn-secondary" href="/level3/">← Spreads</a>
   </div>
 </div>
 
@@ -202,9 +209,9 @@
   <div>Educational only — not financial advice.</div>
   <div class="footer-links">
     <a href="/">Home</a>
-    <a href="/level3/index.html">Spreads</a>
-    <a href="/strategies/index.html">Strategies</a><a href="/builder/index.html">Builder</a>
-    <a href="/disclaimer/index.html">Disclaimer</a>
+    <a href="/level3/">Spreads</a>
+    <a href="/strategies/">Strategies</a><a href="/builder/">Builder</a>
+    <a href="/disclaimer/">Disclaimer</a>
   </div>
 </footer>
 
