@@ -23,6 +23,94 @@
   <meta name="twitter:description" content="Real-number examples, payoff diagrams, and Greeks in plain English for long call, long put, and covered call.">
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-BDL003RCN6"></script>
   <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-BDL003RCN6');</script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What is the most I can lose on a long call or long put?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The premium you paid (plus commissions). That is the defined maximum loss. Once the option is bought, the broker does not ask for more money even if the stock moves against you."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Why does my call lose value even when the stock goes up a little?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Two common reasons: (1) time decay (theta) — the option loses a little value every day; (2) implied volatility fell (vega). A small stock rise may not be enough to overcome both effects, especially near expiration or after a big event."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What does break-even mean for a long call?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "At expiration, break-even is simply Strike + Premium paid. The stock must be above that price for you to have a profit. Before expiration the option still has time value, so the actual market price can be higher than intrinsic value."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Should I buy ITM, ATM, or OTM calls?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "There is no single best answer. ITM costs more but has higher probability and behaves more like stock. OTM is cheaper but needs a bigger move. ATM sits in the middle and is most sensitive to both big moves and time decay. Many beginners start with slightly OTM or ATM for lower cost, then learn how probability and delta change."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How is a covered call different from a long call?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "A long call is a pure bullish bet with defined risk (premium only). A covered call requires that you already own 100 shares; you sell a call against those shares to collect premium. You keep the premium if the stock stays below the strike, but your upside is capped and you still take the full downside of the shares if the stock falls."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Do I have to hold until expiration?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No. You can sell the option any time before expiration (as long as the market is open and there is a buyer). Many traders close early to lock in a profit or to cut a loss before theta accelerates."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What does one contract = 100 shares really mean for my money?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "If an option is quoted at $2.50, one contract costs $2.50 × 100 = $250 (plus fees). If the option later trades at $4.00, the position is worth $400. The P/L is calculated on that 100-share multiplier. Always check the total debit/credit, not just the per-share quote."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Is options trading a way to get rich quickly?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No. That expectation is one of the fastest ways beginners lose money. Options can amplify both gains and losses. Sustainable learning looks more like: small position sizes, defined risk where possible, and improving decision quality over months and years — not doubling an account in a week."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What does less is more mean for beginners?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Trade fewer contracts, fewer strategies, and fewer simultaneous ideas. One well-understood long call or covered call is more educational than five overlapping positions you cannot explain. Smaller size also keeps emotions quieter so you can learn from the outcome instead of chasing a recovery."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Is this financial advice?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No. Everything on this site is educational only. Options involve substantial risk of loss and are not suitable for every investor. Always do your own research and consider speaking with a qualified advisor before trading real money."
+        }
+      }
+    ]
+  }
+  </script>
   <style>
     /* ========== Theme variables (match jsm-options.com dark + light mode) ========== */
     :root, [data-theme="dark"] {
@@ -282,6 +370,10 @@
     <span class="badge">Fundamentals</span>
     <h1>Long Call, Long Put, Covered Call — with real numbers</h1>
     <p>Why a few hundred dollars of premium can control $10,000 of stock exposure — and where the risk still sits. Written for absolute beginners.</p>
+  </div>
+
+  <div class="note" role="note">
+    <strong>Mindset before the mechanics:</strong> Options trading is <em>not</em> a get-rich-quick path. Most people who stay in the game treat it as a long-term skill: small size, clear rules, and patience. <strong>Less is more</strong> — fewer contracts, defined risk, and understanding one strategy deeply beats chasing every new idea. Premium can go to zero. Time works against long options every day. Learn first, size small, and never risk money you cannot afford to lose.
   </div>
 
   <!-- ========== LONG CALL ========== -->
@@ -610,6 +702,20 @@
       <summary>What does “one contract = 100 shares” really mean for my money?</summary>
       <div class="faq-body">
         <p>If an option is quoted at $2.50, one contract costs $2.50 × 100 = $250 (plus fees). If the option later trades at $4.00, the position is worth $400. The P/L is calculated on that 100-share multiplier. Always check the total debit/credit, not just the per-share quote.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary>Is options trading a way to get rich quickly?</summary>
+      <div class="faq-body">
+        <p>No. That expectation is one of the fastest ways beginners lose money. Options can amplify both gains and losses. Sustainable learning looks more like: small position sizes, defined risk where possible, and improving decision quality over months and years — not doubling an account in a week.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary>What does “less is more” mean for beginners?</summary>
+      <div class="faq-body">
+        <p>Trade fewer contracts, fewer strategies, and fewer simultaneous ideas. One well-understood long call or covered call is more educational than five overlapping positions you cannot explain. Smaller size also keeps emotions quieter so you can learn from the outcome instead of chasing a recovery.</p>
       </div>
     </details>
 
