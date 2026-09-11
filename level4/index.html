@@ -178,6 +178,67 @@
   </div>
 
   <div class="card">
+    <div class="small">Income cycle · CSP + covered call</div>
+    <h2>The Wheel strategy</h2>
+    <p>The <b>Wheel</b> is not a single option leg — it is a <b>loop</b> that connects cash-secured puts and covered calls. You collect premium while waiting to own shares you are willing to hold, then collect more premium while you own them, until the shares are called away — then you start over.</p>
+
+    <div class="wheel-visual" role="img" aria-label="Wheel strategy cycle: sell cash-secured put until assigned, sell covered call until shares are called away, then restart with CSP">
+      <svg viewBox="0 0 640 420" width="100%" height="auto" xmlns="http://www.w3.org/2000/svg">
+        <!-- cycle ring -->
+        <circle cx="320" cy="210" r="150" fill="none" stroke="#2d3a4f" stroke-width="3" stroke-dasharray="8 6"/>
+        <!-- arrows on ring (approximate) -->
+        <path d="M320 60 A150 150 0 0 1 455 140" fill="none" stroke="#3b82f6" stroke-width="3"/>
+        <polygon points="455,140 442,128 440,145" fill="#3b82f6"/>
+        <path d="M470 210 A150 150 0 0 1 380 340" fill="none" stroke="#22c55e" stroke-width="3"/>
+        <polygon points="380,340 392,328 398,345" fill="#22c55e"/>
+        <path d="M260 350 A150 150 0 0 1 170 180" fill="none" stroke="#eab308" stroke-width="3"/>
+        <polygon points="170,180 178,194 162,192" fill="#eab308"/>
+
+        <!-- center -->
+        <circle cx="320" cy="210" r="48" fill="#1a2332" stroke="#3b82f6" stroke-width="2"/>
+        <text x="320" y="205" text-anchor="middle" fill="#e7ecf3" font-size="15" font-weight="700" font-family="system-ui,sans-serif">WHEEL</text>
+        <text x="320" y="224" text-anchor="middle" fill="#8b9bb4" font-size="11" font-family="system-ui,sans-serif">cycle</text>
+
+        <!-- Step 1 box top -->
+        <rect x="210" y="8" width="220" height="72" rx="12" fill="#1a2332" stroke="#3b82f6" stroke-width="1.5"/>
+        <text x="320" y="32" text-anchor="middle" fill="#60a5fa" font-size="12" font-weight="700" font-family="system-ui,sans-serif">1 · SELL CSP</text>
+        <text x="320" y="50" text-anchor="middle" fill="#c8d0dc" font-size="11" font-family="system-ui,sans-serif">Cash-secured put · collect credit</text>
+        <text x="320" y="66" text-anchor="middle" fill="#8b9bb4" font-size="10" font-family="system-ui,sans-serif">Repeat until assigned (own 100 shares)</text>
+
+        <!-- Step 2 box right -->
+        <rect x="430" y="168" width="200" height="84" rx="12" fill="#1a2332" stroke="#22c55e" stroke-width="1.5"/>
+        <text x="530" y="194" text-anchor="middle" fill="#4ade80" font-size="12" font-weight="700" font-family="system-ui,sans-serif">2 · SELL COVERED CALL</text>
+        <text x="530" y="212" text-anchor="middle" fill="#c8d0dc" font-size="11" font-family="system-ui,sans-serif">You own the stock</text>
+        <text x="530" y="228" text-anchor="middle" fill="#c8d0dc" font-size="11" font-family="system-ui,sans-serif">Sell call against shares</text>
+        <text x="530" y="244" text-anchor="middle" fill="#8b9bb4" font-size="10" font-family="system-ui,sans-serif">Repeat until called away</text>
+
+        <!-- Step 3 box bottom-left -->
+        <rect x="20" y="300" width="230" height="84" rx="12" fill="#1a2332" stroke="#eab308" stroke-width="1.5"/>
+        <text x="135" y="326" text-anchor="middle" fill="#facc15" font-size="12" font-weight="700" font-family="system-ui,sans-serif">3 · RESTART</text>
+        <text x="135" y="344" text-anchor="middle" fill="#c8d0dc" font-size="11" font-family="system-ui,sans-serif">Shares called away → cash again</text>
+        <text x="135" y="360" text-anchor="middle" fill="#c8d0dc" font-size="11" font-family="system-ui,sans-serif">Back to step 1: sell CSP</text>
+        <text x="135" y="376" text-anchor="middle" fill="#8b9bb4" font-size="10" font-family="system-ui,sans-serif">Same stock or a new one</text>
+      </svg>
+    </div>
+
+    <ol style="margin:14px 0 10px;padding-left:20px">
+      <li style="margin:10px 0"><strong>Sell a cash-secured put</strong> on a stock you are willing to own. If it expires OTM, keep the premium and sell another put. If assigned, you buy 100 shares at the strike (cost basis ≈ strike − premiums kept).</li>
+      <li style="margin:10px 0"><strong>Sell a covered call</strong> against those shares. If the call expires OTM, keep the premium and sell another call. If assigned, the shares are called away at the call strike.</li>
+      <li style="margin:10px 0"><strong>Restart</strong> — with cash again, return to step 1 and sell a new CSP (same name or another underlier you accept owning).</li>
+    </ol>
+
+    <div class="analogy">
+      <b>Why people study it:</b> each step is a structure you already know (CSP + covered call). The “wheel” is the sequence: income while waiting for shares → income while holding shares → shares leave → income again.
+    </div>
+    <div class="warn"><strong>Risk stays real:</strong> a falling stock still hurts (as the put seller / share owner). A strong rally can call shares away and cap upside. Premium does not make assignment “free.” Educational only — not a recommendation to run the wheel.</div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px">
+      <a class="btn" href="/builder/?template=cash_secured_put">CSP in Builder →</a>
+      <a class="btn btn-secondary" href="/builder/?template=covered_call">Covered Call in Builder →</a>
+      <a class="btn btn-secondary" href="/level2/">Covered Call lesson</a>
+    </div>
+  </div>
+
+  <div class="card">
     <div class="small">Debit vs credit</div>
     <h2>Debit spreads vs credit spreads</h2>
     <div class="grid2">
