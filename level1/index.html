@@ -9,7 +9,7 @@
   <link rel="manifest" href="/site.webmanifest">
 
   <title>What Is an Option? Calls &amp; Puts Explained for Beginners</title>
-  <meta name="description" content="What is a stock option? Learn calls and puts with simple analogies (sneakers, houses, tickets), key terms, and a basic long-call payoff picture. Free beginner lesson.">
+  <meta name="description" content="What is a stock option? Learn calls and puts with simple analogies, key terms, the ×100 multiplier, intrinsic vs time value, moneyness, and a long-call payoff picture. Free beginner lesson.">
   <link rel="canonical" href="https://jsm-options.com/level1/">
   <meta property="og:type" content="article">
   <meta property="og:site_name" content="JSM Options">
@@ -32,19 +32,23 @@
   <div class="card">
     <span class="badge">Basics · No jargon overload</span>
     <h1>What is an option? It’s a reservation ticket.</h1>
-    <p>If you’ve paid to <b>reserve</b> sneakers, a console, concert tickets, or a house, you already get the idea.</p>
+    <p>If you’ve paid to <b>reserve</b> sneakers, a console, concert tickets, or a house, you already get the idea. A stock option is the same kind of contract — a paid right, with a deadline, on an underlying asset.</p>
     <img src="/images/sneaker_store_reservation.webp" alt="Sneaker store reservation analogy for a call option" width="900" height="500" loading="eager">
   </div>
 
+  <div class="note" role="note">
+    <strong>Mindset:</strong> Options are not a get-rich-quick path. Treat this as a skill you build slowly. <strong>Less is more</strong> — learn the vocabulary and one simple long option before you size up or sell options. Never risk money you cannot afford to lose.
+  </div>
+
   <div class="card">
-    <h2>Story 1: The $100 sneakers</h2>
-    <p>Limited sneakers cost <span class="term">$100</span>. You only have $5 today. You pay $5 to reserve the right to buy at $100 within 30 days.</p>
-    <p>That $5 is <span class="term">Premium</span>. $100 is <span class="term">Strike</span>. 30 days is <span class="term">Expiry</span>. The sneakers are the <span class="term">Underlying</span>.</p>
+    <h2>Story 1: The $100 sneakers (a Call)</h2>
+    <p>Limited sneakers cost <span class="term">$100</span>. You only have $5 today. You pay $5 to reserve the <em>right</em> to buy at $100 within 30 days.</p>
+    <p>That $5 is the <span class="term">Premium</span>. $100 is the <span class="term">Strike</span>. 30 days is the <span class="term">Expiry</span>. The sneakers are the <span class="term">Underlying</span>.</p>
     <div class="analogy">
       <b>Outcomes</b>
       <ul>
-        <li>Sneakers go to $150 → you still buy at $100. Gain about <span class="profit">$45</span> after the $5 fee.</li>
-        <li>They fall to $70 → you walk away. Loss only <span class="loss">$5</span>.</li>
+        <li>Sneakers go to $150 → you still buy at $100. Economic gain about <span class="profit">$45</span> after the $5 fee ($50 intrinsic − $5 premium).</li>
+        <li>They fall to $70 → you walk away. Loss only the <span class="loss">$5</span> premium.</li>
       </ul>
       <p>That contract is a <b>Call</b>. <span class="term">CALL = right to BUY</span>.</p>
     </div>
@@ -54,40 +58,130 @@
   <div class="card">
     <h2>Story 2: House — Call vs Put</h2>
     <img src="/images/call_vs_put_house_poster.webp" alt="Call vs Put explained with a house" width="900" height="500" loading="lazy">
-    <p><b>Call:</b> fee now to lock the right to <b>buy</b> later at today’s price — useful if you expect price <b>up</b>.</p>
-    <p><b>Put:</b> fee to lock the right to <b>sell</b> at a set price — useful if you expect price <b>down</b> (or as insurance).</p>
-    <div class="analogy"><b>Key:</b> Buying an option is a <b>right</b>, not an obligation. You can walk away. Max loss on a long option = premium paid (before fees).</div>
+    <p><b>Call:</b> you pay a fee now to lock the right to <b>buy</b> later at a set price — useful if you expect the price to go <b>up</b>.</p>
+    <p><b>Put:</b> you pay a fee to lock the right to <b>sell</b> at a set price — useful if you expect the price to go <b>down</b>, or as insurance on something you already own.</p>
+    <div class="analogy">
+      <b>Key idea:</b> Buying an option is a <b>right</b>, not an obligation. You can walk away. On a long (bought) option, maximum loss is the premium you paid (plus fees) — you cannot lose more than that on the option itself.
+    </div>
   </div>
 
   <div class="card">
-    <h2>Story 3: Concert tickets</h2>
-    <p>Face value $200, show in 30 days. You pay $20 for the right to buy at $200. If resale hits $400, you can still buy at $200. If resale is $100, you let the right expire and lose the <span class="loss">$20</span>.</p>
-    <p><span class="term">Expiry</span> is the deadline. After that, only intrinsic value remains (often zero if out of the money).</p>
+    <h2>Story 3: Concert tickets (time runs out)</h2>
+    <p>Face value $200, show in 30 days. You pay $20 for the right to buy at $200. If resale hits $400, that right is valuable. If resale is $100, you let it expire and lose only the <span class="loss">$20</span>.</p>
+    <p><span class="term">Expiry</span> is the hard deadline. After expiration, an option that finishes out of the money is typically worth zero. Time is not free — every day that passes can reduce the “extra” value of the option beyond pure intrinsic value.</p>
   </div>
 
   <div class="card">
-    <h2>Five words to keep</h2>
+    <h2>Five core words</h2>
     <ul>
-      <li><span class="term">Underlying</span> — the asset (stock, index, sneakers).</li>
-      <li><span class="term">Strike</span> — agreed buy/sell price.</li>
-      <li><span class="term">Premium</span> — price of the option contract (quoted per share).</li>
-      <li><span class="term">Expiry / DTE</span> — how long the right lasts.</li>
+      <li><span class="term">Underlying</span> — the asset the option is written on (stock, ETF, index… or sneakers in the story).</li>
+      <li><span class="term">Strike</span> — the agreed buy (call) or sell (put) price.</li>
+      <li><span class="term">Premium</span> — the price of the option, quoted <em>per share</em>.</li>
+      <li><span class="term">Expiry / DTE</span> — when the right ends; DTE = days to expiration.</li>
       <li><span class="term">Call vs Put</span> — call = right to buy; put = right to sell.</li>
     </ul>
-    <p><span class="term">Long = buy</span> the option. <span class="term">Short = sell</span> the option.</p>
+    <p><span class="term">Long</span> = you <b>buy</b> the option. <span class="term">Short</span> = you <b>sell</b> (write) the option. This page focuses on long options — the side with defined risk equal to the premium.</p>
+  </div>
+
+  <div class="card">
+    <h2>Why everything is ×100</h2>
+    <p>One standard U.S. equity option contract usually covers <b>100 shares</b>. Brokers quote premiums per share, so you must multiply by 100 to get real cash.</p>
+    <div class="analogy">
+      Premium quoted at <b>$3.00</b> → one contract costs about <b>$300</b> (plus commissions).<br>
+      If that option later trades at $5.00, the position is worth about <b>$500</b>. Your P/L is on the full ×100 amount — not the $3 or $5 alone.
+    </div>
+    <div class="warn"><strong>Beginner trap:</strong> reading a $2.50 quote as “$2.50 total.” It is $250 per contract. Always check the total debit or credit before you click buy or sell.</div>
+  </div>
+
+  <div class="card">
+    <h2>Intrinsic value vs time value (simple)</h2>
+    <p>An option’s premium has two mental pieces:</p>
+    <ul>
+      <li><strong>Intrinsic value</strong> — what the option is worth if exercised <em>right now</em>. For a call: max(stock − strike, 0). For a put: max(strike − stock, 0).</li>
+      <li><strong>Time value (extrinsic)</strong> — the rest of the premium. It reflects time left, expected movement, and supply/demand. Time value tends to melt toward zero as expiration approaches (all else equal).</li>
+    </ul>
+    <div class="analogy">
+      Stock $108, call strike $100, premium $10.<br>
+      Intrinsic = $8. Time value ≈ $2.<br>
+      If the stock is still $108 at expiration, that call is worth about $8 — the $2 of time value is gone.
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>In, at, or out of the money</h2>
+    <p><span class="term">Moneyness</span> is shorthand for where the stock sits relative to the strike:</p>
+    <ul>
+      <li><strong>ITM (in the money)</strong> — call: stock above strike. Put: stock below strike. Already has intrinsic value.</li>
+      <li><strong>ATM (at the money)</strong> — stock near the strike. Mostly time value.</li>
+      <li><strong>OTM (out of the money)</strong> — call: stock below strike. Put: stock above strike. No intrinsic value; needs a move to become valuable at expiration.</li>
+    </ul>
+    <p>OTM options are cheaper and need a bigger move. ITM options cost more and behave more like owning (or shorting) the stock. Neither is “always better” — they are different tools.</p>
   </div>
 
   <div class="card">
     <h2>Payoff picture (long call)</h2>
-    <img src="/images/call_option_payoff_infographic.webp" alt="Long call payoff diagram" width="900" height="500" loading="lazy">
-    <p>Below the strike at expiry you typically lose the premium. Above the strike, value rises. Rough breakeven ≈ strike + premium paid.</p>
-    <div class="analogy"><b>Example:</b> $100 strike + $3 premium → about <b>$103</b> at expiry to break even (before commissions). One contract = 100 shares, so $3 ≈ <b>$300</b> cash.</div>
-    <div class="note">In the <a href="/builder/?template=long_call">Builder</a>, solid line = P/L at expiry; dotted = with time left. Green = profit, red = loss.</div>
+    <img src="/images/call_option_payoff_infographic.webp" alt="Long call payoff diagram showing loss limited to premium and profit rising above strike" width="900" height="500" loading="lazy">
+    <p>At expiration, below the strike you typically lose the premium paid. Above the strike, value rises roughly dollar-for-dollar with the stock. Rough break-even ≈ <b>strike + premium paid</b>.</p>
+    <div class="analogy">
+      <b>Example:</b> $100 strike + $3 premium → about <b>$103</b> at expiry to break even (before commissions).<br>
+      One contract = 100 shares, so $3 ≈ <b>$300</b> cash at risk.
+    </div>
+    <div class="note">In the <a href="/builder/?template=long_call">Builder</a>, the solid line is P/L at expiry; the dotted line includes time value before expiry. Green = profit, red = loss.</div>
   </div>
 
+  <div class="card">
+    <h2>Long put in one minute</h2>
+    <p>A <b>long put</b> is the bearish twin of the long call: you pay a premium for the right to <b>sell</b> 100 shares at the strike. You profit if the stock falls enough to cover the premium. Maximum loss is still only the premium paid.</p>
+    <div class="analogy">
+      Stock $100. Buy $95 put for $2.50 → $250 debit.<br>
+      At expiration if stock is $80: intrinsic = $15 → profit ≈ ($15 − $2.50) × 100 = <span class="profit">+$1,250</span>.<br>
+      If stock stays above $95: put expires worthless → loss = <span class="loss">$250</span>.
+    </div>
+    <p>Break-even at expiration for a long put ≈ <b>strike − premium paid</b>.</p>
+  </div>
+
+  <div class="card">
+    <h2>What “assignment” means (quick)</h2>
+    <p>If you <b>sell</b> (short) an option, the buyer may exercise. Then you can be <span class="term">assigned</span>: forced to buy or sell the shares at the strike. That is why short calls without owning the shares (naked calls) can be very risky.</p>
+    <p>This Basics page stays on the <b>long</b> side — you own the right. Selling options comes later, with clearer rules and risk limits (for example, a covered call against shares you already own).</p>
+  </div>
+
+  <div class="card">
+    <h2>Why options exist at all</h2>
+    <p>In real markets, options are used to:</p>
+    <ul>
+      <li><strong>Speculate</strong> with defined risk (long call/put) or defined risk spreads later.</li>
+      <li><strong>Hedge</strong> — e.g. a put as insurance on shares you own.</li>
+      <li><strong>Generate income</strong> — e.g. selling a call against stock you own (covered call), which you will meet in Fundamentals.</li>
+    </ul>
+    <p>None of those uses require gambling your whole account. Size small while you learn.</p>
+  </div>
+
+  <div class="card">
+    <h2>Beginner FAQ</h2>
+    <p style="margin-bottom:12px;color:var(--muted);font-size:.92rem">Short answers to the questions most people ask first.</p>
+
+    <p><strong>Is an option the same as owning the stock?</strong><br>
+    No. A long call gives exposure that can <em>behave</em> a bit like stock if it is deep in the money, but you do not receive dividends the same way, rights expire, and small moves plus time decay can still produce a loss.</p>
+
+    <p style="margin-top:14px"><strong>Can I lose more than I paid for a long call or long put?</strong><br>
+    On the option itself, no — maximum loss is the premium (plus fees). That is why many beginners start with long options: the worst case is known upfront.</p>
+
+    <p style="margin-top:14px"><strong>Why did my call drop when the stock barely moved?</strong><br>
+    Time decay and/or a drop in implied volatility can outweigh a small favorable stock move. The stock has to move <em>enough</em>, and often <em>soon enough</em>, for a long option to show a profit.</p>
+
+    <p style="margin-top:14px"><strong>Do I have to wait until expiration?</strong><br>
+    No. You can sell the option in the market any time before expiration (when the market is open and there is a buyer). Many people close early to lock a gain or cut a loss.</p>
+
+    <p style="margin-top:14px"><strong>Is this a way to get rich quickly?</strong><br>
+    No. Options amplify outcomes in both directions. Sustainable progress looks like small size, one idea at a time, and learning from each trade — not all-in bets.</p>
+  </div>
+
+  <div class="warn"><strong>Common beginner mistakes:</strong> treating the premium quote as total cash (forgetting ×100); buying far out-of-the-money options and hoping for a miracle move; ignoring expiration; selling naked calls before understanding assignment risk; sizing so large that one loss ends the experiment.</div>
+
   <div class="card" style="text-align:center">
-    <h3>Next</h3>
-    <p>Structures with real dollar examples, then defined-risk spreads.</p>
+    <h3>Next: real-number fundamentals</h3>
+    <p>Long call, long put, and covered call with full examples, payoff tables, and Greeks in plain English.</p>
     <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:12px">
       <a class="btn" href="/level2/">Fundamentals →</a>
       <a class="btn btn-secondary" href="/builder/?template=long_call">Try Long Call in Builder</a>
