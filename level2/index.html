@@ -90,9 +90,12 @@
     .site-header-inner {
       max-width: 1100px; margin: 0 auto; padding: 12px 16px;
       display: flex; justify-content: space-between; align-items: center;
-      flex-wrap: wrap; gap: 10px;
+      flex-wrap: nowrap; gap: 18px;
     }
     .logo { display: flex; align-items: center; gap: 10px; }
+    .logo-link { color: inherit; text-decoration: none; flex: 0 0 auto; }
+    .logo-link:hover { color: inherit; }
+    .header-right { display: flex; align-items: center; justify-content: flex-end; gap: 10px; flex: 1 1 auto; min-width: 0; flex-wrap: nowrap; }
     .logo-link { color: inherit; text-decoration: none; }
     .logo-icon {
       width: 32px; height: 32px;
@@ -101,17 +104,19 @@
       display: grid; place-items: center;
       font-weight: 800; font-size: 12px;
     }
-    .nav { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+    .nav { display: flex; gap: 6px; flex-wrap: nowrap; align-items: center; min-width: 0; overflow-x: auto; scrollbar-width: none; }
+    .nav::-webkit-scrollbar { display: none; }
     .nav a {
       padding: 6px 11px; border-radius: 9999px;
       border: 1px solid var(--border); background: var(--card);
-      font-size: 12px; color: var(--muted);
+      font-size: 12px; color: var(--muted); white-space: nowrap; flex: 0 0 auto;
     }
     .nav a:hover { color: var(--text); border-color: var(--accent); }
     .nav a.active { background: var(--accent); color: #fff; border-color: var(--accent); }
 
     /* Theme toggle */
     .theme-toggle {
+      flex: 0 0 auto;
       display: inline-flex; align-items: center; gap: 6px;
       padding: 6px 12px; border-radius: 9999px;
       border: 1px solid var(--border); background: var(--card);
@@ -147,6 +152,13 @@
       font-size: 11px; color: var(--muted); margin-bottom: 8px;
     }
     .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    @media (max-width: 900px) {
+      .site-header-inner { gap: 10px; }
+      .header-right { gap: 8px; }
+      .nav { gap: 4px; }
+      .nav a { padding: 5px 8px; font-size: 11px; }
+      .theme-toggle { min-width: 68px; padding: 5px 9px; }
+    }
     @media (max-width: 800px) { .grid2 { grid-template-columns: 1fr; } }
 
     img {
@@ -248,7 +260,7 @@
   </style>
 </head>
 <body>
-<header class="site-header"><div class="site-header-inner"><div class="logo"><div class="logo-icon">JSM</div><div><div style="font-weight:700">JSM Options</div><div class="brand-sub">jsm-options.com · Educational</div></div></div><div class="header-right"><nav class="nav" aria-label="Primary navigation"><a href="/">Home</a><a href="/level1/index.html">Basics</a><a href="/level2/index.html" class="active">Fundamentals</a><a href="/level3/index.html">Spreads</a><a href="/level4/index.html">Advanced</a><a href="/strategies/index.html">Strategies</a><a href="/builder/index.html">Builder</a></nav><button type="button" class="theme-toggle" id="themeToggle" aria-label="Toggle color theme"><span id="themeIcon" class="theme-icon">☼</span><span id="themeLabel" class="theme-label">Dark</span></button></div></div></header>
+<header class="site-header"><div class="site-header-inner"><a class="logo logo-link" href="/" aria-label="JSM Options Home"><div class="logo-icon">JSM</div><div><div style="font-weight:700">JSM Options</div><div class="brand-sub">jsm-options.com · Educational</div></div></a><div class="header-right"><nav class="nav" aria-label="Primary navigation"><a href="/">Home</a><a href="/level1/index.html">Basics</a><a href="/level2/index.html" class="active">Fundamentals</a><a href="/level3/index.html">Spreads</a><a href="/level4/index.html">Advanced</a><a href="/strategies/index.html">Strategies</a><a href="/builder/index.html">Builder</a></nav><button type="button" class="theme-toggle" id="themeToggle" aria-label="Toggle color theme"><span id="themeIcon" class="theme-icon">☼</span><span id="themeLabel" class="theme-label">Dark</span></button></div></div></header>
 
 <div class="wrap">
   <div class="hero">
