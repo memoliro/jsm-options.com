@@ -48,5 +48,21 @@
   if(toggle) toggle.addEventListener('click',function(){applyTheme(root.getAttribute('data-theme')==='dark'?'light':'dark')});
 })();
 </script>
+
+<script>
+(function(){
+  var btn=document.getElementById('navToggle');
+  var nav=document.querySelector('.site-header nav.nav, .site-header .nav');
+  if(!btn||!nav) return;
+  btn.addEventListener('click',function(e){
+    e.preventDefault();
+    e.stopPropagation();
+    var open=nav.classList.toggle('is-open');
+    btn.setAttribute('aria-expanded', open?'true':'false');
+    btn.setAttribute('aria-label', open?'Close menu':'Open menu');
+  });
+})();
+</script>
+
 </body>
 </html>

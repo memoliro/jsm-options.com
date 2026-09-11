@@ -140,4 +140,20 @@ function render(){const q=search.value.trim().toLowerCase();const rows=strategie
 document.querySelectorAll('.filter').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.filter').forEach(x=>x.classList.remove('active'));b.classList.add('active');active=b.dataset.filter;render()}));search.addEventListener('input',render);render();
 </script>
 
+
+<script>
+(function(){
+  var btn=document.getElementById('navToggle');
+  var nav=document.querySelector('.site-header nav.nav, .site-header .nav');
+  if(!btn||!nav) return;
+  btn.addEventListener('click',function(e){
+    e.preventDefault();
+    e.stopPropagation();
+    var open=nav.classList.toggle('is-open');
+    btn.setAttribute('aria-expanded', open?'true':'false');
+    btn.setAttribute('aria-label', open?'Close menu':'Open menu');
+  });
+})();
+</script>
+
 </body></html>

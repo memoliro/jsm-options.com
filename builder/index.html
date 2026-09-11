@@ -362,7 +362,7 @@
       .header-right{gap:8px;justify-content:flex-end}
       .nav-toggle{display:inline-flex}
       .site-header .nav{display:none;width:100%;flex:1 0 100%;order:3;flex-direction:column;align-items:stretch;gap:6px;padding:10px 0 4px;border-top:1px solid var(--border);margin-top:4px}
-      .site-header .nav.is-open{display:flex}
+      .site-header .nav.is-open{display:flex!important}
       .site-header .nav a{width:100%;text-align:left;padding:10px 12px;font-size:14px;border-radius:10px}
     }
     @media(max-width:600px){.site-header .brand-sub{display:none}.theme-toggle .theme-label,#themeLabel{display:none}}
@@ -1400,6 +1400,22 @@
 
 </script>
   </div>
+
+
+<script>
+(function(){
+  var btn=document.getElementById('navToggle');
+  var nav=document.querySelector('.site-header nav.nav, .site-header .nav');
+  if(!btn||!nav) return;
+  btn.addEventListener('click',function(e){
+    e.preventDefault();
+    e.stopPropagation();
+    var open=nav.classList.toggle('is-open');
+    btn.setAttribute('aria-expanded', open?'true':'false');
+    btn.setAttribute('aria-label', open?'Close menu':'Open menu');
+  });
+})();
+</script>
 
 </body>
 </html>

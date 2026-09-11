@@ -248,7 +248,7 @@ html[data-theme="light"] .note{color:#1e40af;background:rgba(37,99,235,.06)}
     border-top:1px solid var(--border);
     margin-top:4px;
   }
-  .site-header .nav.is-open{display:flex}
+  .site-header .nav.is-open{display:flex!important}
   .site-header .nav a{
     width:100%;
     text-align:left;
