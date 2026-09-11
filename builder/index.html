@@ -749,7 +749,9 @@
       recalc();
     }
 
-    function updateLegField(id, field, value) {
+    // liveTyping = true → update model + graph only (keep focus in the input)
+    // liveTyping = false → also re-render leg rows (cash labels, disabled fields, etc.)
+    function updateLegField(id, field, value, liveTyping) {
       const leg = legs.find(l => l.id === id);
       if (!leg) return;
       if (field === 'side' || field === 'type') {
@@ -775,8 +777,33 @@
       }
       if (field === 'dte' || field === 'type') syncDTESlider();
       if (field === 'strike' || field === 'type') updateSpotSliderRange();
-      renderLegs();
+      // Re-render only when structure changes or on blur — never on every keystroke
+      if (!liveTyping) {
+        renderLegs();
+      } else {
+        // Still refresh the cash label under this leg without touching the inputs
+        updateLegCashLabel(id);
+      }
       recalc();
+    }
+
+    function updateLegCashLabel(id) {
+      const leg = legs.find(l => l.id === id);
+      if (!leg) return;
+      const rows = document.querySelectorAll('#legsList .leg-row');
+      const cashLines = document.querySelectorAll('#legsList .cash-line');
+      // legs and cash-lines are interleaved 1:1 in the same order as the legs array
+      const idx = legs.findIndex(l => l.id === id);
+      if (idx < 0 || !cashLines[idx]) return;
+      const isStock = leg.type === 'stock';
+      const cash = legCash(leg);
+      const cashCls = cash >= 0 ? 'cash-debit' : 'cash-credit';
+      const cashTxt = (cash >= 0 ? '+' : '') + cash.toFixed(0);
+      const cashLabel = isStock
+        ? (leg.side === 'buy' ? 'Stock cost ' : 'Stock credit ') + cashTxt + ' (qty×100)'
+        : (cash >= 0 ? 'Debit' : 'Credit') + ' ' + cashTxt + ' (×100)';
+      cashLines[idx].className = 'cash-line ' + cashCls;
+      cashLines[idx].textContent = cashLabel;
     }
 
     function syncDTESlider() {
@@ -812,36 +839,42 @@
           : debitCredit + ' ' + cashTxt + ' (×100)';
 
         // Strike & DTE disabled for stock; premium becomes Cost/Share
+        // oninput → liveTyping=true (update graph, keep focus)
+        // onchange → liveTyping=false (re-render cash labels / structure)
         const strikeInput = isStock
           ? '<input type="text" value="—" disabled title="Not used for stock" style="opacity:0.45;cursor:not-allowed;" />'
           : '<input type="number" value="' + l.strike + '" step="0.5" min="0.5" ' +
-              'onchange="updateLegField(' + l.id + ',\'strike\',this.value)" ' +
-              'oninput="updateLegField(' + l.id + ',\'strike\',this.value)" />';
+              'onchange="updateLegField(' + l.id + ',\'strike\',this.value,false)" ' +
+              'oninput="updateLegField(' + l.id + ',\'strike\',this.value,true)" />';
         const dteInput = isStock
           ? '<input type="text" value="—" disabled title="Not used for stock" style="opacity:0.45;cursor:not-allowed;" />'
           : '<input type="number" value="' + l.dte + '" min="1" max="730" ' +
-              'onchange="updateLegField(' + l.id + ',\'dte\',this.value)" />';
+              'onchange="updateLegField(' + l.id + ',\'dte\',this.value,false)" ' +
+              'oninput="updateLegField(' + l.id + ',\'dte\',this.value,true)" />';
         const premiumTitle = isStock ? 'Cost per share (entry price)' : 'Option premium per share';
         const premiumInput =
           '<input type="number" value="' + l.premium + '" step="0.05" min="0" title="' + premiumTitle + '" ' +
-            'onchange="updateLegField(' + l.id + ',\'premium\',this.value)" ' +
-            'oninput="updateLegField(' + l.id + ',\'premium\',this.value)" />';
+            'onchange="updateLegField(' + l.id + ',\'premium\',this.value,false)" ' +
+            'oninput="updateLegField(' + l.id + ',\'premium\',this.value,true)" />';
+        const qtyInput =
+          '<input type="number" value="' + l.qty + '" min="1" step="1" ' +
+            'onchange="updateLegField(' + l.id + ',\'qty\',this.value,false)" ' +
+            'oninput="updateLegField(' + l.id + ',\'qty\',this.value,true)" />';
 
         return (
           '<div class="leg-row ' + rowCls + '">' +
-            '<select onchange="updateLegField(' + l.id + ',\'side\',this.value)">' +
+            '<select onchange="updateLegField(' + l.id + ',\'side\',this.value,false)">' +
               '<option value="buy"' + sideBuy + '>Buy</option>' +
               '<option value="sell"' + sideSell + '>Sell</option>' +
             '</select>' +
-            '<select onchange="updateLegField(' + l.id + ',\'type\',this.value)">' +
+            '<select onchange="updateLegField(' + l.id + ',\'type\',this.value,false)">' +
               '<option value="call"' + typeCall + '>Call</option>' +
               '<option value="put"' + typePut + '>Put</option>' +
               '<option value="stock"' + typeStock + '>Stock</option>' +
             '</select>' +
             strikeInput +
             dteInput +
-            '<input type="number" value="' + l.qty + '" min="1" step="1" ' +
-              'onchange="updateLegField(' + l.id + ',\'qty\',this.value)" />' +
+            qtyInput +
             premiumInput +
             '<div class="remove-cell">' +
               '<button class="btn-danger" onclick="removeLeg(' + l.id + ')" title="Remove">✕</button>' +
