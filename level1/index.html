@@ -94,16 +94,84 @@
   </div>
 
   <div class="card">
-    <h2>Intrinsic value vs time value (simple)</h2>
-    <p>An option’s premium has two mental pieces:</p>
+    <h2>Intrinsic value vs extrinsic (time) value</h2>
+    <p>Every option premium is made of two parts. Understanding them explains why a call can lose money even when the stock drifts up a little.</p>
+
+    <p><strong>Intrinsic value</strong> — what the option is worth if you exercised it <em>right now</em> (the “built-in” part).</p>
     <ul>
-      <li><strong>Intrinsic value</strong> — what the option is worth if exercised <em>right now</em>. For a call: max(stock − strike, 0). For a put: max(strike − stock, 0).</li>
-      <li><strong>Time value (extrinsic)</strong> — the rest of the premium. It reflects time left, expected movement, and supply/demand. Time value tends to melt toward zero as expiration approaches (all else equal).</li>
+      <li><b>Call:</b> max(stock price − strike, 0)</li>
+      <li><b>Put:</b> max(strike − stock price, 0)</li>
+    </ul>
+    <p>If that number is zero, the option has <em>no</em> intrinsic value (it is out of the money or at the money).</p>
+
+    <p><strong>Extrinsic value</strong> (also called <strong>time value</strong>) — everything else in the premium:</p>
+    <div class="analogy" style="margin-top:8px">
+      <b>Premium = Intrinsic + Extrinsic</b><br>
+      Extrinsic is the “hope and time” part: days left until expiration, how much the market expects the stock to move, and supply/demand for that option.
+    </div>
+
+    <h3 style="margin-top:18px;font-size:1.05rem">Worked example (call)</h3>
+    <p>Stock is <b>$108</b>. You look at the <b>$100</b> call. It is quoted at <b>$10</b>.</p>
+    <ul>
+      <li>Intrinsic = $108 − $100 = <b>$8</b></li>
+      <li>Extrinsic (time value) = $10 − $8 = <b>$2</b></li>
+    </ul>
+    <p>You are paying $8 for value that already exists, plus $2 for the chance the stock moves more (and for the time left on the clock).</p>
+
+    <h3 style="margin-top:18px;font-size:1.05rem">Same idea for a put</h3>
+    <p>Stock is <b>$92</b>. The <b>$100</b> put is quoted at <b>$11</b>.</p>
+    <ul>
+      <li>Intrinsic = $100 − $92 = <b>$8</b></li>
+      <li>Extrinsic = $11 − $8 = <b>$3</b></li>
+    </ul>
+
+    <h3 style="margin-top:18px;font-size:1.05rem">What happens as expiration approaches?</h3>
+    <p>Extrinsic value tends to <b>melt away</b> toward zero as the deadline nears (all else equal). That melting is <span class="term">time decay</span>. At expiration:</p>
+    <ul>
+      <li>An option is worth only its intrinsic value (or zero if still out of the money).</li>
+      <li>Any extrinsic you paid is gone unless the stock moved enough to make up for it.</li>
     </ul>
     <div class="analogy">
-      Stock $108, call strike $100, premium $10.<br>
-      Intrinsic = $8. Time value ≈ $2.<br>
-      If the stock is still $108 at expiration, that call is worth about $8 — the $2 of time value is gone.
+      <b>If the stock is still $108 at expiration:</b> the $100 call is worth about <b>$8</b> (intrinsic only). The $2 of time value has decayed to zero.<br>
+      <b>If the stock is $100 or below at expiration:</b> the call is typically worth <b>$0</b> — all $10 of premium is lost.
+    </div>
+
+    <div style="margin-top:14px;overflow-x:auto">
+      <table style="width:100%;border-collapse:collapse;font-size:.88rem">
+        <thead>
+          <tr>
+            <th style="border:1px solid var(--border);padding:8px;text-align:left;background:var(--input)">Situation (call, strike $100)</th>
+            <th style="border:1px solid var(--border);padding:8px;text-align:left;background:var(--input)">Intrinsic</th>
+            <th style="border:1px solid var(--border);padding:8px;text-align:left;background:var(--input)">Extrinsic</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="border:1px solid var(--border);padding:8px">Stock $108, premium $10, 30 days left</td>
+            <td style="border:1px solid var(--border);padding:8px">$8</td>
+            <td style="border:1px solid var(--border);padding:8px">$2</td>
+          </tr>
+          <tr>
+            <td style="border:1px solid var(--border);padding:8px">Stock $108, same call, 1 day left</td>
+            <td style="border:1px solid var(--border);padding:8px">$8</td>
+            <td style="border:1px solid var(--border);padding:8px">Often near $0–$0.50</td>
+          </tr>
+          <tr>
+            <td style="border:1px solid var(--border);padding:8px">Stock $95, premium $2, 30 days left</td>
+            <td style="border:1px solid var(--border);padding:8px">$0 (OTM)</td>
+            <td style="border:1px solid var(--border);padding:8px">$2 (all time value)</td>
+          </tr>
+          <tr>
+            <td style="border:1px solid var(--border);padding:8px">Stock $95 at expiration</td>
+            <td style="border:1px solid var(--border);padding:8px">$0</td>
+            <td style="border:1px solid var(--border);padding:8px">$0</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="note" style="margin-top:14px">
+      <strong>Why this matters:</strong> When you <b>buy</b> an option, time decay works <em>against</em> you — extrinsic tends to shrink each day. When you <b>sell</b> (write) an option, that same decay can work <em>in your favor</em> (you will see this with covered calls on the <a href="/level2/">Fundamentals</a> page). Volatility changes can also raise or lower extrinsic value quickly, even if the stock price barely moves.
     </div>
   </div>
 
@@ -168,7 +236,10 @@
     On the option itself, no — maximum loss is the premium (plus fees). That is why many beginners start with long options: the worst case is known upfront.</p>
 
     <p style="margin-top:14px"><strong>Why did my call drop when the stock barely moved?</strong><br>
-    Time decay and/or a drop in implied volatility can outweigh a small favorable stock move. The stock has to move <em>enough</em>, and often <em>soon enough</em>, for a long option to show a profit.</p>
+    You likely paid some <b>extrinsic (time) value</b>. Each day that value can shrink (time decay), and implied volatility can fall too. A small favorable stock move may not be enough to offset both. The stock has to move <em>enough</em>, and often <em>soon enough</em>.</p>
+
+    <p style="margin-top:14px"><strong>What is the difference between intrinsic and extrinsic value?</strong><br>
+    <b>Intrinsic</b> is the value if exercised right now (for a call: stock minus strike, if positive). <b>Extrinsic</b> (time value) is the rest of the premium — time left and expected movement. At expiration, extrinsic goes to zero; only intrinsic remains.</p>
 
     <p style="margin-top:14px"><strong>Do I have to wait until expiration?</strong><br>
     No. You can sell the option in the market any time before expiration (when the market is open and there is a buyer). Many people close early to lock a gain or cut a loss.</p>

@@ -636,6 +636,25 @@
     <p>One standard equity option contract multiplies by <b>100 shares</b>. A $3 quote is about <b>$300</b> cash. The Builder always uses this multiplier so P/L matches what you see at a brokerage.</p>
   </div>
 
+  <!-- Intrinsic / extrinsic / time value -->
+  <div class="card">
+    <h2>Intrinsic, extrinsic, and time decay</h2>
+    <p>Review from <a href="/level1/">Basics</a>: the option’s market price (premium) always splits into two parts.</p>
+    <div class="analogy">
+      <b>Premium = Intrinsic value + Extrinsic value (time value)</b>
+    </div>
+    <ul>
+      <li><strong>Intrinsic</strong> — value if exercised right now. Call: max(stock − strike, 0). Put: max(strike − stock, 0). This is the “real” part.</li>
+      <li><strong>Extrinsic (time value)</strong> — the rest. It prices remaining time, expected movement, and demand for that option. It is not free; it usually shrinks as expiration approaches.</li>
+    </ul>
+    <p><strong>Numeric check:</strong> Stock $105, $100 call trading at $7.50 → intrinsic $5, extrinsic $2.50. At expiration with the stock still at $105, that call is worth about $5 — the $2.50 of time value is gone.</p>
+    <p><span class="term">Time decay (theta)</span> is that daily erosion of extrinsic value. For a <b>long</b> call or put, theta is usually a headwind: the clock works against you. For a <b>short</b> premium position (for example the short call in a covered call), that same decay can work in your favor if the stock stays well behaved.</p>
+    <div class="note">
+      In the <a href="/builder/">Builder</a>, drag <b>Days Remaining</b> downward and watch the theoretical P/L curve change. That is time value disappearing in real time. Also try raising or lowering IV — extrinsic can jump even when the stock price is flat.
+    </div>
+    <div class="warn"><strong>Practical takeaway:</strong> A stock move in your direction is not enough by itself. The move often needs to be large enough (and soon enough) to overcome the extrinsic you paid. That is why “stock went up a bit but my call is red” is so common for beginners.</div>
+  </div>
+
   <!-- Greeks -->
   <div class="card">
     <h2>Greeks in plain English</h2>
@@ -643,8 +662,8 @@
     <ul>
       <li><span class="term">Delta (Δ)</span> — approx. dollar change if the stock moves $1. Positive ≈ bullish bias; negative ≈ bearish. A long call delta of 0.40 behaves roughly like owning 40 shares.</li>
       <li><span class="term">Gamma (Γ)</span> — how fast delta changes. Highest near the money and near expiration. High gamma means P/L can accelerate quickly.</li>
-      <li><span class="term">Theta (Θ)</span> — expected dollar change per day from time alone. Long options usually show negative theta (decay hurts you). Short premium often shows positive theta.</li>
-      <li><span class="term">Vega (ν)</span> — dollar change if implied volatility rises 1 percentage point. Long options usually like higher IV; short options usually don’t.</li>
+      <li><span class="term">Theta (Θ)</span> — expected dollar change per day from time alone (mostly extrinsic melting). Long options usually show negative theta (decay hurts you). Short premium often shows positive theta.</li>
+      <li><span class="term">Vega (ν)</span> — dollar change if implied volatility rises 1 percentage point. Higher IV usually lifts extrinsic value; long options usually like that, short options usually don’t.</li>
     </ul>
     <div class="note">Open any template in the Builder and move price, days remaining, or IV — watch delta / theta / vega update in real time.</div>
   </div>
