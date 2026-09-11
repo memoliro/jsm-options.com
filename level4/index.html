@@ -21,7 +21,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Calendar Spreads, LEAPS &amp; Cash-Secured Puts Explained">
   <meta name="twitter:description" content="Calendar spreads, credit spreads, cash-secured puts, covered calls, and LEAPS explained for intermediate learners.">
-  <link rel="stylesheet" href="/assets/style.css">
+  <link rel="stylesheet" href="/assets/style.css?v=20260912">
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-BDL003RCN6"></script>
   <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-BDL003RCN6');</script>
   <style>
@@ -41,9 +41,47 @@
       line-height:1.4;
     }
   </style>
+
+<style id="jsm-mobile-nav">
+.nav-toggle{display:none;flex:0 0 auto;width:44px;height:44px;min-width:44px;min-height:44px;padding:0;border:1px solid var(--border,#2d3a4f);border-radius:10px;background:var(--card,#1a2332);color:var(--text,#e7ecf3);cursor:pointer;align-items:center;justify-content:center;flex-direction:column;gap:5px;-webkit-tap-highlight-color:transparent;touch-action:manipulation;position:relative;z-index:40}
+.nav-toggle span{display:block;width:18px;height:2px;border-radius:1px;background:currentColor}
+.nav-toggle[aria-expanded="true"] span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.nav-toggle[aria-expanded="true"] span:nth-child(2){opacity:0}
+.nav-toggle[aria-expanded="true"] span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+@media (max-width:900px){
+  .nav-toggle{display:inline-flex!important}
+  .site-header{z-index:100!important}
+  .site-header .nav{
+    display:none!important;
+    position:fixed!important;
+    top:56px!important;left:0!important;right:0!important;
+    width:100%!important;
+    max-height:calc(100vh - 56px)!important;
+    overflow-y:auto!important;
+    -webkit-overflow-scrolling:touch;
+    flex-direction:column!important;
+    align-items:stretch!important;
+    gap:6px!important;
+    padding:12px 16px 20px!important;
+    margin:0!important;
+    background:var(--bg,#0f1419)!important;
+    border-bottom:1px solid var(--border,#2d3a4f)!important;
+    box-shadow:0 12px 28px rgba(0,0,0,.35)!important;
+    z-index:999!important;
+  }
+  .site-header .nav.is-open{display:flex!important}
+  .site-header .nav a{
+    width:100%!important;text-align:left!important;
+    padding:14px!important;font-size:16px!important;
+    min-height:48px!important;display:flex!important;align-items:center!important;
+    border-radius:10px!important;box-sizing:border-box!important;
+  }
+}
+</style>
+
 </head>
 <body>
-<header class="site-header"><div class="site-header-inner"><a class="logo logo-link" href="/" aria-label="JSM Options Home"><div class="logo-icon">JSM</div><div><div style="font-weight:700">JSM Options</div><div class="brand-sub">jsm-options.com · Educational</div></div></a><div class="header-right"><nav class="nav" aria-label="Primary navigation"><a href="/">Home</a><a href="/level1/">Basics</a><a href="/level2/">Fundamentals</a><a href="/level3/">Spreads</a><a href="/level4/" class="active">Advanced</a><a href="/strategies/">Strategies</a><a href="/builder/">Builder</a></nav><button type="button" class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button><button type="button" class="theme-toggle" id="themeToggle" aria-label="Toggle color theme"><span id="themeIcon" class="theme-icon">☼</span><span id="themeLabel" class="theme-label">Dark</span></button></div></div></header>
+<header class="site-header"><div class="site-header-inner"><a class="logo logo-link" href="/" aria-label="JSM Options Home"><div class="logo-icon">JSM</div><div><div style="font-weight:700">JSM Options</div><div class="brand-sub">jsm-options.com · Educational</div></div></a><div class="header-right"><nav class="nav" aria-label="Primary navigation"><a href="/">Home</a><a href="/level1/">Basics</a><a href="/level2/">Fundamentals</a><a href="/level3/">Spreads</a><a href="/level4/" class="active">Advanced</a><a href="/strategies/">Strategies</a><a href="/builder/">Builder</a></nav><button type="button" class="nav-toggle" id="navToggle" onclick="(function(b){var n=document.querySelector('.site-header .nav');if(!n)return;var o=!n.classList.contains('is-open');n.classList.toggle('is-open',o);b.setAttribute('aria-expanded',o?'true':'false');b.setAttribute('aria-label',o?'Close menu':'Open menu');})(this);return false;" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button><button type="button" class="theme-toggle" id="themeToggle" aria-label="Toggle color theme"><span id="themeIcon" class="theme-icon">☼</span><span id="themeLabel" class="theme-label">Dark</span></button></div></div></header>
 
 <div class="wrap">
   <div class="hero">
