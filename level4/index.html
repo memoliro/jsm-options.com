@@ -271,15 +271,20 @@
       <svg viewBox="0 0 520 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Covered call payoff at expiry">
   <line x1="40" y1="150" x2="500" y2="150" stroke="#8b9bb4" stroke-width="1.5" opacity=".55"/>
   <line x1="40" y1="30" x2="40" y2="230" stroke="#8b9bb4" stroke-width="1" opacity=".3"/>
-  <polygon points="40.0,230.0 160.00,150.0 160.0,150 40.0,150" fill="#ef4444" opacity="0.28"/>
-  <polygon points="160.0,150.0 280.00,95.0 280.0,150 160.0,150" fill="#22c55e" opacity="0.28"/>
-<polygon points="280.0,95.0 500.00,95.0 500.0,150 280.0,150" fill="#22c55e" opacity="0.28"/>
-  <path d="M40.0 230.0 L160.0 150.0 L280.0 95.0 L500.0 95.0" fill="none" stroke="#e7ecf3" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
+  <!-- red below zero: left of BE -->
+  <polygon points="40,230 160,150 40,150" fill="#ef4444" opacity="0.3"/>
+  <!-- green above zero: BE to strike (diagonal) then flat max profit -->
+  <polygon points="160,150 280,95 280,150" fill="#22c55e" opacity="0.3"/>
+  <polygon points="280,95 500,95 500,150 280,150" fill="#22c55e" opacity="0.3"/>
+  <path d="M40 230 L160 150 L280 95 L500 95" fill="none" stroke="#e7ecf3" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
   <text x="14" y="36" fill="#8b9bb4" font-size="11" font-family="system-ui,sans-serif">P/L</text>
-  <text x="250" y="250" fill="#8b9bb4" font-size="11" font-family="system-ui,sans-serif" text-anchor="middle">Stock price at expiry →</text>
-<text x="360" y="82" fill="#86efac" font-size="12" font-family="system-ui,sans-serif" text-anchor="start">Capped profit</text><text x="55" y="220" fill="#fca5a5" font-size="12" font-family="system-ui,sans-serif" text-anchor="start">Stock downside</text></svg>
+  <text x="360" y="82" fill="#86efac" font-size="12" font-family="system-ui,sans-serif">Capped profit</text>
+  <text x="55" y="220" fill="#fca5a5" font-size="12" font-family="system-ui,sans-serif">Stock downside</text>
+  <text x="160" y="142" fill="#8b9bb4" font-size="11" font-family="system-ui,sans-serif" text-anchor="middle">BE</text>
+  <text x="280" y="250" fill="#8b9bb4" font-size="11" font-family="system-ui,sans-serif" text-anchor="middle">Stock price at expiry →</text>
+</svg>
       <div class="payoff-legend"><span class="lg">Green = profit</span><span class="lr">Red = loss</span></div>
-      <p class="payoff-caption">Covered call: rises with the stock to the short call strike, then flat max profit; losses if stock falls.</p>
+      <p class="payoff-caption">Covered call: line rises with the stock through breakeven to the short-call strike, then stays flat at max profit. Red = stock downside; green = profit zone.</p>
     </div>
     <a class="btn" href="/builder/?template=covered_call">Load Covered Call in Builder →</a>
   </div>
@@ -349,20 +354,22 @@
       <svg viewBox="0 0 520 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Calendar spread conceptual payoff near front expiry">
   <line x1="40" y1="150" x2="500" y2="150" stroke="#8b9bb4" stroke-width="1.5" opacity=".55"/>
   <line x1="40" y1="30" x2="40" y2="230" stroke="#8b9bb4" stroke-width="1" opacity=".3"/>
-  <polygon points="40.0,205.0 120.00,205.0 120.0,150 40.0,150" fill="#ef4444" opacity="0.28"/>
-<polygon points="120.0,205.0 200.00,160.0 200.0,150 120.0,150" fill="#ef4444" opacity="0.28"/>
-<polygon points="200.0,160.0 208.00,150.0 208.0,150 200.0,150" fill="#ef4444" opacity="0.28"/>
-<polygon points="312.0,150.0 320.00,160.0 320.0,150 312.0,150" fill="#ef4444" opacity="0.28"/>
-<polygon points="320.0,160.0 400.00,205.0 400.0,150 320.0,150" fill="#ef4444" opacity="0.28"/>
-<polygon points="400.0,205.0 500.00,205.0 500.0,150 400.0,150" fill="#ef4444" opacity="0.28"/>
-  <polygon points="208.0,150.0 260.00,85.0 260.0,150 208.0,150" fill="#22c55e" opacity="0.28"/>
-<polygon points="260.0,85.0 312.00,150.0 312.0,150 260.0,150" fill="#22c55e" opacity="0.28"/>
-  <path d="M40.0 205.0 L120.0 205.0 L200.0 160.0 L260.0 85.0 L320.0 160.0 L400.0 205.0 L500.0 205.0" fill="none" stroke="#e7ecf3" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
+  <!-- red left wing (below zero) -->
+  <polygon points="40,205 120,205 180,150 40,150" fill="#ef4444" opacity="0.3"/>
+  <!-- green center peak (above zero) -->
+  <polygon points="180,150 260,80 340,150" fill="#22c55e" opacity="0.3"/>
+  <!-- red right wing (below zero) -->
+  <polygon points="340,150 400,205 500,205 500,150" fill="#ef4444" opacity="0.3"/>
+  <!-- continuous tent line through zero crossings -->
+  <path d="M40 205 L120 205 L180 150 L260 80 L340 150 L400 205 L500 205" fill="none" stroke="#e7ecf3" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
   <text x="14" y="36" fill="#8b9bb4" font-size="11" font-family="system-ui,sans-serif">P/L</text>
-  <text x="250" y="250" fill="#8b9bb4" font-size="11" font-family="system-ui,sans-serif" text-anchor="middle">Stock price at expiry →</text>
-<text x="260" y="72" fill="#86efac" font-size="12" font-family="system-ui,sans-serif" text-anchor="middle">Peak near strike</text><text x="55" y="222" fill="#fca5a5" font-size="12" font-family="system-ui,sans-serif" text-anchor="start">Far move → loss</text><text x="400" y="222" fill="#fca5a5" font-size="12" font-family="system-ui,sans-serif" text-anchor="start">Far move → loss</text></svg>
+  <text x="260" y="68" fill="#86efac" font-size="12" font-family="system-ui,sans-serif" text-anchor="middle">Peak near strike</text>
+  <text x="70" y="222" fill="#fca5a5" font-size="11" font-family="system-ui,sans-serif">Far move → loss</text>
+  <text x="410" y="222" fill="#fca5a5" font-size="11" font-family="system-ui,sans-serif">Far move → loss</text>
+  <text x="260" y="250" fill="#8b9bb4" font-size="11" font-family="system-ui,sans-serif" text-anchor="middle">Stock price (at front expiry) →</text>
+</svg>
       <div class="payoff-legend"><span class="lg">Green = profit</span><span class="lr">Red = loss</span></div>
-      <p class="payoff-caption">Illustrative calendar shape near front expiry: best near the strike; large moves can lose the debit.</p>
+      <p class="payoff-caption">Calendar (illustrative near front expiry): continuous tent peaking near the strike. Green near the money; red when the stock moves far away. IV also matters in live markets.</p>
     </div>
     <a class="btn" href="/builder/?template=calendar_call">Load Calendar (Call) →</a>
   </div>
