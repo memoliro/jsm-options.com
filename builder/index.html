@@ -416,7 +416,7 @@
         <button class="btn-secondary btn-sm" onclick="clearLegs()">Clear All</button>
       </div>
       <p style="font-size:0.7rem;color:var(--muted);margin-top:8px;">
-        Debit = you pay · Credit = you receive · Qty 1 = 100 shares (or 1 contract) · For <strong>Stock</strong> legs: use Cost/Share (entry price); Strike &amp; DTE are ignored
+        Debit = you pay · Credit = you receive · <strong>Options:</strong> Qty = contracts (×100) · <strong>Stock:</strong> Qty = number of shares, Cost = entry price (Strike &amp; DTE ignored)
       </p>
     </div>
 
@@ -498,7 +498,7 @@
         </div>
       </div>
       <div class="edu-tip" id="eduTip" style="margin-top:10px;">
-        Long Call loaded by default. Edit any field — graph and Greeks update live. Use Type → Stock + Cost/Share for covered strategies, or pick Covered Call from templates.
+        Long Call loaded by default. Edit any field — graph and Greeks update live. For Covered Call: pick the template, or add Stock (Qty 100) + Sell Call (Qty 1).
       </div>
     </div>
   </div>
@@ -573,7 +573,7 @@
             const T = Math.max(0, Math.min(leg.dte, days)) / 365;
             vps = blackScholes(Ss, leg.strike, T, r, q, vol, leg.type);
           }
-          total += signedQty(leg) * vps * MULTIPLIER;
+          total += signedQty(leg) * vps * legShareMult(leg);
         }
         return total;
       }
@@ -618,7 +618,7 @@
           { side: 'buy', type: 'call', strike: K, dte: 90, qty: 1, premium: p }
         ],
         covered_call: [
-          { side: 'buy', type: 'stock', strike: 0, dte: 0, qty: 1, premium: +S.toFixed(2) },
+          { side: 'buy', type: 'stock', strike: 0, dte: 0, qty: 100, premium: +S.toFixed(2) },
           { side: 'sell', type: 'call', strike: K + 10, dte: 45, qty: 1, premium: +(p * 0.55).toFixed(2) }
         ],
         cash_secured_put: [
@@ -714,8 +714,13 @@
       return leg.side === 'buy' ? leg.qty : -leg.qty;
     }
 
+    // Options: Qty = contracts → ×100 shares. Stock: Qty = actual number of shares (no extra ×100).
+    function legShareMult(leg) {
+      return leg.type === 'stock' ? 1 : MULTIPLIER;
+    }
+
     function legCash(leg) {
-      return signedQty(leg) * leg.premium * MULTIPLIER;
+      return signedQty(leg) * leg.premium * legShareMult(leg);
     }
 
     function addEmptyLeg() {
@@ -756,19 +761,21 @@
       if (!leg) return;
       if (field === 'side' || field === 'type') {
         leg[field] = value;
-        // When switching to Stock: use current spot as cost basis; clear option-only fields
+        // When switching to Stock: use current spot as cost basis; Qty = shares (default 100)
         if (field === 'type' && value === 'stock') {
           const S = parseFloat(document.getElementById('spot').value) || 100;
           if (!leg.premium || leg.premium < 1) leg.premium = +S.toFixed(2);
           leg.strike = 0;
           leg.dte = 0;
+          if (!leg.qty || leg.qty < 10) leg.qty = 100; // typical 1 lot for covered strategies
         }
-        // When switching from Stock to option: give sensible defaults
+        // When switching from Stock to option: give sensible defaults (Qty becomes contracts)
         if (field === 'type' && value !== 'stock') {
           const S = parseFloat(document.getElementById('spot').value) || 100;
           if (!leg.strike || leg.strike < 1) leg.strike = Math.round(S);
           if (!leg.dte || leg.dte < 1) leg.dte = 45;
           if (!leg.premium || leg.premium > S * 0.5) leg.premium = +(S * 0.03).toFixed(2);
+          if (leg.qty >= 100) leg.qty = 1; // was share count → 1 contract
         }
       } else if (field === 'strike' || field === 'premium') {
         leg[field] = parseFloat(value) || 0;
@@ -800,7 +807,7 @@
       const cashCls = cash >= 0 ? 'cash-debit' : 'cash-credit';
       const cashTxt = (cash >= 0 ? '+' : '') + cash.toFixed(0);
       const cashLabel = isStock
-        ? (leg.side === 'buy' ? 'Stock cost ' : 'Stock credit ') + cashTxt + ' (qty×100)'
+        ? (leg.side === 'buy' ? 'Stock cost ' : 'Stock credit ') + cashTxt + ' (' + leg.qty + ' shares)'
         : (cash >= 0 ? 'Debit' : 'Credit') + ' ' + cashTxt + ' (×100)';
       cashLines[idx].className = 'cash-line ' + cashCls;
       cashLines[idx].textContent = cashLabel;
@@ -835,7 +842,7 @@
         const typeStock = isStock ? ' selected' : '';
         const debitCredit = cash >= 0 ? 'Debit' : 'Credit';
         const cashLabel = isStock
-          ? (l.side === 'buy' ? 'Stock cost ' : 'Stock credit ') + cashTxt + ' (qty×100)'
+          ? (l.side === 'buy' ? 'Stock cost ' : 'Stock credit ') + cashTxt + ' (' + l.qty + ' shares)'
           : debitCredit + ' ' + cashTxt + ' (×100)';
 
         // Strike & DTE disabled for stock; premium becomes Cost/Share
@@ -918,7 +925,7 @@
           const legT = useExpiryOnly ? 0 : Math.max(0, Math.min(leg.dte, daysLeft)) / 365;
           valPerShare = blackScholes(S, leg.strike, legT, params.r, params.q, params.iv, leg.type);
         }
-        total += signedQty(leg) * valPerShare * MULTIPLIER;
+        total += signedQty(leg) * valPerShare * legShareMult(leg);
       }
       return total;
     }
@@ -1252,9 +1259,9 @@
       const hasShort = legs.some(function(l) { return l.side === 'sell'; });
       const hasStock = legs.some(function(l) { return l.type === 'stock'; });
       if (hasStock && hasShort) {
-        tip.innerHTML = '<strong>Stock + options:</strong> Stock Cost/Share is your entry price. Qty 1 = 100 shares. Premium on the short call/put is income. Graph shows combined P/L (e.g. Covered Call).';
+        tip.innerHTML = '<strong>Stock + options:</strong> Stock Qty = number of shares, Cost = entry price. Option Qty = contracts (×100). For a Covered Call use 100 shares + 1 short call.';
       } else if (hasStock) {
-        tip.innerHTML = '<strong>Stock leg:</strong> Use Cost/Share as your entry price. Qty 1 = 100 shares. Strike and DTE are ignored. Add a short call for a Covered Call.';
+        tip.innerHTML = '<strong>Stock leg:</strong> Qty = number of shares, Cost = entry price. Strike and DTE are ignored. Add a short call (Qty 1) for a Covered Call.';
       } else if (legs.length === 1 && hasLong) {
         tip.innerHTML = '<strong>Long option:</strong> You pay a Debit. Solid = expiry payoff. Dotted includes time value. Drag Days Remaining to watch theta decay.';
       } else if (legs.length === 1 && hasShort) {
