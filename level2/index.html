@@ -364,6 +364,77 @@
     <div class="warn"><strong>Beginner warning:</strong> You need the stock to move in your direction <em>and</em> in enough size and soon enough. Being “right but late” often loses money with long options.</div>
   </div>
 
+  <!-- ========== LONG PUT DETAIL ========== -->
+  <div class="card">
+    <div class="small">Bearish position · Detailed walkthrough</div>
+    <h2>Long Put — how it really works</h2>
+    <p>A long put means you <strong>buy the right to sell</strong> shares at a specific strike price before or at expiration, depending on the contract. You normally buy a put when you believe the underlying will fall. Unlike shorting the stock, the maximum loss on the option itself is limited to the premium paid.</p>
+
+    <div class="metric-grid">
+      <div class="metric"><div class="label">Example stock</div><div class="val">$100</div></div>
+      <div class="metric"><div class="label">Put strike</div><div class="val">$95</div></div>
+      <div class="metric"><div class="label">Premium</div><div class="val loss">$2.50</div></div>
+      <div class="metric"><div class="label">Contract cost</div><div class="val loss">$250</div></div>
+    </div>
+
+    <div class="analogy">
+      <strong>Think of it like insurance on a falling stock price.</strong><br>
+      You pay $2.50 per share for the right to sell at $95. At expiration, the put's intrinsic value is <code>max($95 − stock price, 0)</code>. Your expiration P/L is that value minus the $2.50 premium.
+    </div>
+  </div>
+
+  <div class="grid2">
+    <div class="card">
+      <h3>Long Put expiration outcomes</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Stock at expiry</th><th>Put value</th><th>P/L per share</th><th>1 contract</th></tr></thead>
+          <tbody>
+            <tr><td>$110</td><td>$0</td><td class="loss">-$2.50</td><td class="loss">-$250</td></tr>
+            <tr><td>$95</td><td>$0</td><td class="loss">-$2.50</td><td class="loss">-$250</td></tr>
+            <tr><td>$92.50</td><td>$2.50</td><td>$0</td><td>$0</td></tr>
+            <tr><td>$80</td><td>$15</td><td class="profit">+$12.50</td><td class="profit">+$1,250</td></tr>
+            <tr><td>$50</td><td>$45</td><td class="profit">+$42.50</td><td class="profit">+$4,250</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="callout"><strong>Breakeven at expiration:</strong> $95 − $2.50 = <strong>$92.50</strong>.</div>
+    </div>
+
+    <div class="card">
+      <h3>What happens as the stock falls?</h3>
+      <img src="/images/long-put-outcomes.jpg" alt="Long put outcome examples as the stock price falls" loading="lazy">
+      <p class="diagram-caption">Below the strike, the put gains intrinsic value dollar-for-dollar as the stock falls. But remember: your premium must first be recovered.</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Put moneyness: ITM, ATM and OTM</h2>
+    <p>For a put, the relationship is the reverse of a call. A put is <strong>in the money (ITM)</strong> when the stock is below the strike, <strong>at the money (ATM)</strong> when the stock is around the strike, and <strong>out of the money (OTM)</strong> when the stock is above the strike.</p>
+    <div class="diagram">
+      <img src="/images/long-put-moneyness.jpg" alt="Long put moneyness showing in-the-money, at-the-money and out-of-the-money" width="800" height="auto" loading="lazy">
+      <div class="diagram-caption">For puts: lower stock price relative to the strike means more intrinsic value.</div>
+    </div>
+    <ul>
+      <li><strong>ITM put</strong> — stock is below the strike. The option already has intrinsic value.</li>
+      <li><strong>ATM put</strong> — stock is near the strike. It has little or no intrinsic value, so much of its price is time/extrinsic value.</li>
+      <li><strong>OTM put</strong> — stock is above the strike. It has no intrinsic value at that moment and needs a decline to become more valuable.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>When can a Long Put make sense?</h2>
+    <ul>
+      <li>You have a bearish view and expect a meaningful decline.</li>
+      <li>You want a defined maximum loss instead of taking potentially larger losses from short stock.</li>
+      <li>You want downside exposure with less upfront capital than buying 100 shares of stock.</li>
+      <li>You are using the put as a hedge against an existing stock position.</li>
+    </ul>
+    <h3 style="margin-top:20px">The big catch: timing matters</h3>
+    <p>Buying a put does not automatically make money just because the stock eventually falls. The stock needs to fall enough, and ideally soon enough, to overcome the premium paid and the effects of time decay. Implied volatility can also change the option's market value before expiration.</p>
+    <div class="warn"><strong>Beginner warning:</strong> “Bearish” is not the same as “profitable.” With a $95 put bought for $2.50, the stock needs to finish below <strong>$92.50</strong> at expiration for the position to have positive expiration P/L.</div>
+  </div>
+
   <!-- LONG PUT -->
   <div class="grid2">
     <div class="card">
