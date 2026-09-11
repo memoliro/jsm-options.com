@@ -353,6 +353,7 @@
           <option value="">— Select a template —</option>
           <optgroup label="Bullish">
             <option value="long_call">Long Call</option>
+            <option value="covered_call">Covered Call</option>
             <option value="cash_secured_put">Cash Secured Put</option>
             <option value="bull_call_spread">Bull Call Spread</option>
             <option value="long_straddle">Long Straddle</option>
@@ -406,7 +407,7 @@
         <span>Strike</span>
         <span>DTE</span>
         <span>Qty</span>
-        <span>Premium</span>
+        <span>Premium / Cost</span>
         <span></span>
       </div>
       <div id="legsList"></div>
@@ -415,7 +416,7 @@
         <button class="btn-secondary btn-sm" onclick="clearLegs()">Clear All</button>
       </div>
       <p style="font-size:0.7rem;color:var(--muted);margin-top:8px;">
-        Debit = positive (you pay) · Credit = negative (you receive) · All × 100
+        Debit = you pay · Credit = you receive · Qty 1 = 100 shares (or 1 contract) · For <strong>Stock</strong> legs: use Cost/Share (entry price); Strike &amp; DTE are ignored
       </p>
     </div>
 
@@ -497,7 +498,7 @@
         </div>
       </div>
       <div class="edu-tip" id="eduTip" style="margin-top:10px;">
-        Long Call loaded by default. Edit any field — graph and Greeks update live. Use Strategy Template for multi-leg setups.
+        Long Call loaded by default. Edit any field — graph and Greeks update live. Use Type → Stock + Cost/Share for covered strategies, or pick Covered Call from templates.
       </div>
     </div>
   </div>
@@ -615,6 +616,10 @@
       const templates = {
         long_call: [
           { side: 'buy', type: 'call', strike: K, dte: 90, qty: 1, premium: p }
+        ],
+        covered_call: [
+          { side: 'buy', type: 'stock', strike: 0, dte: 0, qty: 1, premium: +S.toFixed(2) },
+          { side: 'sell', type: 'call', strike: K + 10, dte: 45, qty: 1, premium: +(p * 0.55).toFixed(2) }
         ],
         cash_secured_put: [
           { side: 'sell', type: 'put', strike: K, dte: 90, qty: 1, premium: +(p * 0.9).toFixed(2) }
@@ -749,19 +754,35 @@
       if (!leg) return;
       if (field === 'side' || field === 'type') {
         leg[field] = value;
+        // When switching to Stock: use current spot as cost basis; clear option-only fields
+        if (field === 'type' && value === 'stock') {
+          const S = parseFloat(document.getElementById('spot').value) || 100;
+          if (!leg.premium || leg.premium < 1) leg.premium = +S.toFixed(2);
+          leg.strike = 0;
+          leg.dte = 0;
+        }
+        // When switching from Stock to option: give sensible defaults
+        if (field === 'type' && value !== 'stock') {
+          const S = parseFloat(document.getElementById('spot').value) || 100;
+          if (!leg.strike || leg.strike < 1) leg.strike = Math.round(S);
+          if (!leg.dte || leg.dte < 1) leg.dte = 45;
+          if (!leg.premium || leg.premium > S * 0.5) leg.premium = +(S * 0.03).toFixed(2);
+        }
       } else if (field === 'strike' || field === 'premium') {
         leg[field] = parseFloat(value) || 0;
       } else if (field === 'dte' || field === 'qty') {
         leg[field] = Math.max(1, parseInt(value, 10) || 1);
       }
-      if (field === 'dte') syncDTESlider();
-      if (field === 'strike') updateSpotSliderRange();
+      if (field === 'dte' || field === 'type') syncDTESlider();
+      if (field === 'strike' || field === 'type') updateSpotSliderRange();
       renderLegs();
       recalc();
     }
 
     function syncDTESlider() {
-      maxDTE = legs.length ? Math.max(...legs.map(l => l.dte)) : 90;
+      const optionDTEs = legs.filter(l => l.type !== 'stock').map(l => l.dte || 0);
+      maxDTE = optionDTEs.length ? Math.max(...optionDTEs) : 90;
+      if (maxDTE < 1) maxDTE = 90;
       const slider = document.getElementById('daysLeft');
       slider.max = maxDTE;
       if (parseInt(slider.value, 10) > maxDTE) slider.value = maxDTE;
@@ -775,6 +796,7 @@
         return;
       }
       container.innerHTML = legs.map(function(l) {
+        const isStock = l.type === 'stock';
         const cash = legCash(l);
         const cashCls = cash >= 0 ? 'cash-debit' : 'cash-credit';
         const cashTxt = (cash >= 0 ? '+' : '') + cash.toFixed(0);
@@ -783,8 +805,28 @@
         const sideSell = l.side === 'sell' ? ' selected' : '';
         const typeCall = l.type === 'call' ? ' selected' : '';
         const typePut = l.type === 'put' ? ' selected' : '';
-        const typeStock = l.type === 'stock' ? ' selected' : '';
+        const typeStock = isStock ? ' selected' : '';
         const debitCredit = cash >= 0 ? 'Debit' : 'Credit';
+        const cashLabel = isStock
+          ? (l.side === 'buy' ? 'Stock cost ' : 'Stock credit ') + cashTxt + ' (qty×100)'
+          : debitCredit + ' ' + cashTxt + ' (×100)';
+
+        // Strike & DTE disabled for stock; premium becomes Cost/Share
+        const strikeInput = isStock
+          ? '<input type="text" value="—" disabled title="Not used for stock" style="opacity:0.45;cursor:not-allowed;" />'
+          : '<input type="number" value="' + l.strike + '" step="0.5" min="0.5" ' +
+              'onchange="updateLegField(' + l.id + ',\'strike\',this.value)" ' +
+              'oninput="updateLegField(' + l.id + ',\'strike\',this.value)" />';
+        const dteInput = isStock
+          ? '<input type="text" value="—" disabled title="Not used for stock" style="opacity:0.45;cursor:not-allowed;" />'
+          : '<input type="number" value="' + l.dte + '" min="1" max="730" ' +
+              'onchange="updateLegField(' + l.id + ',\'dte\',this.value)" />';
+        const premiumTitle = isStock ? 'Cost per share (entry price)' : 'Option premium per share';
+        const premiumInput =
+          '<input type="number" value="' + l.premium + '" step="0.05" min="0" title="' + premiumTitle + '" ' +
+            'onchange="updateLegField(' + l.id + ',\'premium\',this.value)" ' +
+            'oninput="updateLegField(' + l.id + ',\'premium\',this.value)" />';
+
         return (
           '<div class="leg-row ' + rowCls + '">' +
             '<select onchange="updateLegField(' + l.id + ',\'side\',this.value)">' +
@@ -796,21 +838,16 @@
               '<option value="put"' + typePut + '>Put</option>' +
               '<option value="stock"' + typeStock + '>Stock</option>' +
             '</select>' +
-            '<input type="number" value="' + l.strike + '" step="0.5" min="0.5" ' +
-              'onchange="updateLegField(' + l.id + ',\'strike\',this.value)" ' +
-              'oninput="updateLegField(' + l.id + ',\'strike\',this.value)" />' +
-            '<input type="number" value="' + l.dte + '" min="1" max="730" ' +
-              'onchange="updateLegField(' + l.id + ',\'dte\',this.value)" />' +
+            strikeInput +
+            dteInput +
             '<input type="number" value="' + l.qty + '" min="1" step="1" ' +
               'onchange="updateLegField(' + l.id + ',\'qty\',this.value)" />' +
-            '<input type="number" value="' + l.premium + '" step="0.05" min="0" ' +
-              'onchange="updateLegField(' + l.id + ',\'premium\',this.value)" ' +
-              'oninput="updateLegField(' + l.id + ',\'premium\',this.value)" />' +
+            premiumInput +
             '<div class="remove-cell">' +
               '<button class="btn-danger" onclick="removeLeg(' + l.id + ')" title="Remove">✕</button>' +
             '</div>' +
           '</div>' +
-          '<div class="cash-line ' + cashCls + '">' + debitCredit + ' ' + cashTxt + ' (×100)</div>'
+          '<div class="cash-line ' + cashCls + '">' + cashLabel + '</div>'
         );
       }).join('');
     }
@@ -1180,7 +1217,12 @@
       const tip = document.getElementById('eduTip');
       const hasLong = legs.some(function(l) { return l.side === 'buy'; });
       const hasShort = legs.some(function(l) { return l.side === 'sell'; });
-      if (legs.length === 1 && hasLong) {
+      const hasStock = legs.some(function(l) { return l.type === 'stock'; });
+      if (hasStock && hasShort) {
+        tip.innerHTML = '<strong>Stock + options:</strong> Stock Cost/Share is your entry price. Qty 1 = 100 shares. Premium on the short call/put is income. Graph shows combined P/L (e.g. Covered Call).';
+      } else if (hasStock) {
+        tip.innerHTML = '<strong>Stock leg:</strong> Use Cost/Share as your entry price. Qty 1 = 100 shares. Strike and DTE are ignored. Add a short call for a Covered Call.';
+      } else if (legs.length === 1 && hasLong) {
         tip.innerHTML = '<strong>Long option:</strong> You pay a Debit. Solid = expiry payoff. Dotted includes time value. Drag Days Remaining to watch theta decay.';
       } else if (legs.length === 1 && hasShort) {
         tip.innerHTML = '<strong>Short option:</strong> You receive a Credit. Theta works in your favor if the stock stays near the strike.';
