@@ -284,3 +284,82 @@ html[data-theme="light"] .note{color:#1e40af;background:rgba(37,99,235,.06)}
   .site-header .theme-toggle{min-width:auto;padding:6px 10px}
   .site-header .theme-label{display:none}
 }
+
+
+/* Breadcrumbs */
+.breadcrumbs{font-size:13px;color:var(--muted,#8b9bb4);margin:12px 0 4px;line-height:1.5}
+.breadcrumbs a{color:var(--muted,#8b9bb4);text-decoration:none}
+.breadcrumbs a:hover{color:var(--accent,#3b82f6)}
+.breadcrumbs span{opacity:.7;margin:0 6px}
+.breadcrumbs [aria-current="page"]{color:var(--text,#e7ecf3);font-weight:600}
+
+/* Site footer */
+.site-footer,.wrap ~ footer,body > footer{
+  margin-top:40px;padding:28px 16px 36px;border-top:1px solid var(--border,#2d3a4f);
+  text-align:center;font-size:13px;color:var(--muted,#8b9bb4);
+}
+.site-footer .footer-note,footer .footer-note{margin-bottom:12px}
+.footer-links{display:flex;flex-wrap:wrap;gap:8px 14px;justify-content:center;align-items:center}
+.footer-links a{color:var(--muted,#8b9bb4);text-decoration:none;font-size:12px}
+.footer-links a:hover{color:var(--accent,#3b82f6)}
+
+.footer-tools{margin-top:12px;font-size:12px;color:var(--muted,#8b9bb4)}
+.footer-tools a{color:var(--muted,#8b9bb4);text-decoration:none}
+.footer-tools a:hover{color:var(--accent,#3b82f6)}
+
+/* Sticky lesson TOC */
+.lesson-toc{
+  position:sticky;top:64px;z-index:15;
+  margin:0 0 16px;padding:12px 14px;
+  border:1px solid var(--border);border-radius:12px;
+  background:var(--card);font-size:13px;
+}
+.lesson-toc strong{display:block;margin-bottom:8px;font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.lesson-toc-links{display:flex;flex-wrap:wrap;gap:6px 10px}
+.lesson-toc a{color:var(--muted);text-decoration:none;padding:4px 8px;border-radius:8px;border:1px solid transparent}
+.lesson-toc a:hover{color:var(--text);border-color:var(--border);background:var(--input)}
+@media(max-width:700px){.lesson-toc{position:static}}
+
+.practice-prompt{
+  margin:14px 0 0;padding:12px 14px;border-radius:10px;
+  border-left:3px solid var(--accent);
+  background:var(--input);font-size:13px;line-height:1.5;
+}
+.practice-prompt b{color:var(--accent)}
+.risk-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:12px}
+@media(max-width:800px){.risk-grid{grid-template-columns:1fr}}
+.risk-card{padding:14px;border:1px solid var(--border);border-radius:12px;background:var(--input)}
+.risk-card h3{margin:0 0 8px;font-size:15px}
+.risk-card p{margin:0;font-size:13px;color:var(--muted);line-height:1.5}
+
+.contact-form{margin:18px 0 8px;display:flex;flex-direction:column;gap:8px;max-width:560px}
+.contact-form label{font-size:13px;font-weight:700;color:var(--text)}
+.contact-form select,.contact-form textarea{
+  width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--border);
+  background:var(--input);color:var(--text);font:inherit
+}
+.contact-form textarea{min-height:160px;resize:vertical}
+.contact-form .hp-field{position:absolute;left:-9999px;height:0;width:0;opacity:0}
+.contact-status{min-height:1.2em;font-size:13px;color:var(--muted);margin:6px 0 0}
+
+.contact-panel{
+  margin:18px 0 22px;padding:20px 20px 16px;
+  border:1px solid var(--border);border-radius:16px;
+  background:var(--input);
+}
+.contact-form{display:flex;flex-direction:column;gap:8px;max-width:none}
+.contact-form label{font-size:14px;font-weight:700;color:var(--text);margin-top:6px}
+.contact-form select,.contact-form textarea{
+  width:100%;padding:12px 14px;border-radius:12px;border:1px solid var(--border);
+  background:var(--card);color:var(--text);font:inherit;box-sizing:border-box
+}
+.contact-form textarea{min-height:150px;resize:vertical;line-height:1.5}
+.contact-form .hp-field{position:absolute;left:-9999px;height:0;width:0;opacity:0}
+.char-meta{font-size:12px;color:var(--muted);margin-top:2px}
+.contact-send{
+  align-self:flex-start;margin-top:8px;padding:11px 20px;border-radius:12px;
+  background:#3b82f6!important;border-color:#3b82f6!important;color:#fff!important
+}
+.contact-status{min-height:1.2em;font-size:13px;color:var(--muted);margin:6px 0 0}
+.contact-fineprint{font-size:12px;color:var(--muted);line-height:1.5;margin:8px 0 0}
+.contact-fineprint a{color:#60a5fa}

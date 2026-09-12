@@ -8,8 +8,8 @@
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
   <link rel="manifest" href="/site.webmanifest">
 
-  <title>Calendar Spreads, LEAPS &amp; Cash-Secured Puts Explained</title>
-  <meta name="description" content="Advanced options strategies for learners ready for more: calendar spreads, credit spreads, cash-secured puts, covered calls, and LEAPS. Why 45+ DTE matters. Free lessons.">
+  <title>Wheel, Cash-Secured Puts, Covered Calls &amp; Advanced Options Strategies</title>
+  <meta name="description" content="Learn the Wheel, cash-secured puts, covered calls, credit spreads, calendars, LEAPS, and iron condors with beginner-friendly examples and red/green payoff charts. Free advanced lessons.">
   <link rel="canonical" href="https://jsm-options.com/level4/">
   <meta property="og:type" content="article">
   <meta property="og:site_name" content="JSM Options">
@@ -21,25 +21,31 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Calendar Spreads, LEAPS &amp; Cash-Secured Puts Explained">
   <meta name="twitter:description" content="Calendar spreads, credit spreads, cash-secured puts, covered calls, and LEAPS explained for intermediate learners.">
-  <link rel="stylesheet" href="/assets/style.css?v=20260912">
+  <link rel="stylesheet" href="/assets/style.css?v=20260914">
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-BDL003RCN6"></script>
   <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-BDL003RCN6');</script>
   <style>
-    .theta-box{
+    .theta-box, .payoff-box{
       background:var(--input);
       border:1px solid var(--border);
       border-radius:12px;
       padding:16px 14px 12px;
       margin:12px 0;
     }
-    .theta-box svg{width:100%;height:auto;display:block}
-    .theta-caption{
+    .theta-box svg, .payoff-box svg{width:100%;height:auto;display:block}
+    .theta-caption, .payoff-caption{
       font-size:.8rem;
       color:var(--muted);
       text-align:center;
       margin-top:10px;
       line-height:1.4;
     }
+    .payoff-legend{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;font-size:12px;margin-top:8px;color:var(--muted)}
+    .payoff-legend span::before{content:"";display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px;vertical-align:middle}
+    .payoff-legend .lg::before{background:#22c55e}
+    .payoff-legend .lr::before{background:#ef4444}
+    .step-list{margin:12px 0;padding-left:20px}
+    .step-list li{margin:8px 0;color:#c8d0dc}
   </style>
 
 <style id="jsm-mobile-nav">
@@ -85,6 +91,10 @@
 <header class="site-header"><div class="site-header-inner"><a class="logo logo-link" href="/" aria-label="JSM Options Home"><div class="logo-icon">JSM</div><div><div style="font-weight:700">JSM Options</div><div class="brand-sub">jsm-options.com · Educational</div></div></a><div class="header-right"><nav class="nav" aria-label="Primary navigation"><a href="/">Home</a><a href="/level1/">Basics</a><a href="/level2/">Fundamentals</a><a href="/level3/">Spreads</a><a href="/level4/" class="active">Advanced</a><a href="/strategies/">Strategies</a><a href="/builder/">Builder</a></nav><button type="button" class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button><button type="button" class="theme-toggle" id="themeToggle" aria-label="Toggle color theme"><span id="themeIcon" class="theme-icon">☼</span><span id="themeLabel" class="theme-label">Dark</span></button></div></div></header>
 
 <div class="wrap">
+<nav class="breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span aria-hidden="true">/</span><span aria-current="page">Advanced</span></nav>
+<nav class="lesson-toc" aria-label="On this page"><strong>On this page</strong><div class="lesson-toc-links"><a href="#dte">45+ DTE</a><a href="#csp">CSP</a><a href="#wheel">Wheel</a><a href="#covered-call">Covered call</a><a href="#spreads">Debit/credit</a><a href="#calendar">Calendar</a><a href="#leaps">LEAPS</a><a href="#iron-condor">Iron condor</a><a href="#risk-notes">Risk notes</a></div></nav>
+
+
   <div class="hero">
     <span class="badge">Advanced · Longer horizons</span>
     <h1>Cash-secured puts, calendars, credits, covered calls &amp; LEAPS</h1>
@@ -92,7 +102,7 @@
   </div>
 
   <div class="card">
-    <h2>Why target 45+ DTE?</h2>
+    <h2 id="dte">Why target 45+ DTE?</h2>
     <ul>
       <li><b>Slower early decay</b> — theta is often gentler far from expiry than in the final 2 weeks.</li>
       <li><b>Room to adjust</b> — roll, close, or hedge before gamma spikes near expiration.</li>
@@ -102,7 +112,7 @@
   </div>
 
   <div class="card">
-    <h2>Theta decay — sample shape</h2>
+    <h2 id="theta">Theta decay — sample shape</h2>
     <p>Typical teaching picture: with other factors fixed, <b>time value</b> often falls faster in the last weeks before expiry than early in the life of the option. Long options usually <span class="loss">pay</span> theta; short premium often <span class="profit">collects</span> it — with risk attached.</p>
     <div class="theta-box">
       <svg viewBox="0 0 640 280" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Illustrative theta decay: time value falls faster as expiry approaches">
@@ -151,86 +161,93 @@
   </div>
 
 
+  <div class="note" role="note">
+    <strong>Mindset:</strong> “Advanced” means <em>more structure</em>, not “guaranteed income.” Every strategy below can lose money. Prefer stocks you understand, size small, and use the Builder to see red vs green before risking cash. Educational only.
+  </div>
+
+  <!-- ========== CSP ========== -->
   <div class="card">
-    <div class="small">Bullish-to-neutral · income · defined at strike</div>
-    <h2>Cash-secured put (CSP)</h2>
-    <p>You <b>sell a put</b> and keep enough cash to buy 100 shares at the strike if assigned. You collect a <b>credit</b> up front. You are modestly bullish to neutral: you want the stock to stay <b>above</b> the strike through expiry (put expires worthless) or you are willing to own shares at an effective price of roughly strike − premium.</p>
+    <div class="small">Bullish-to-neutral · income</div>
+    <h2 id="csp">Cash-secured put (CSP)</h2>
+    <p>You <b>sell a put</b> and keep enough cash in the account to <b>buy 100 shares</b> at the strike if the buyer exercises. You receive a <b>credit</b> (premium) up front.</p>
+    <p><strong>In plain English:</strong> you are paid to stand ready to buy the stock at a lower price. If the stock stays above the strike, the put often expires worthless and you keep the credit. If the stock falls and you are assigned, you <b>buy the shares</b> at the strike (your broker uses the cash you set aside).</p>
     <ul>
-      <li><b>Max profit</b> = premium received (credit × 100) if the put expires OTM</li>
-      <li><b>Max loss</b> (if stock goes to zero) ≈ strike × 100 − premium received — still large; “secured” means cash is reserved, not that risk is small</li>
+      <li><b>Max profit</b> = premium received (×100 per contract) if the put expires out of the money</li>
       <li><b>Breakeven</b> ≈ strike − premium per share</li>
-      <li>Assignment → you buy shares at the strike; your cost basis is reduced by the premium kept</li>
+      <li><b>Max loss</b> (if stock → $0) ≈ (strike − premium) × 100 — still large. “Cash-secured” means cash is reserved, <em>not</em> that risk is small</li>
+      <li><b>Assignment</b> = you buy 100 shares at the strike; cost basis ≈ strike − premium kept</li>
     </ul>
     <div class="analogy">
-      <b>Example:</b> Stock $100. Sell the $95 put for $2.00 → <span class="profit">$200</span> credit. Set aside $9,500 cash.
-      If stock stays above $95, put expires; you keep $200. If assigned at $95, effective buy price ≈ $93. Risk remains if shares fall further.
+      <b>Example:</b> Stock $100. Sell the $95 put for $2.00 → <span class="profit">+$200</span> credit. Reserve $9,500 cash.<br>
+      Stock stays above $95 → put expires → keep $200.<br>
+      Assigned at $95 → you <b>buy 100 shares</b> for $9,500; effective cost ≈ $93/share after the $2 premium.
     </div>
-    <h3>Why prefer longer DTE (e.g. 45+)?</h3>
+
+    <div class="payoff-box">
+      <svg viewBox="0 0 520 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Cash-secured put payoff at expiry">
+  <line x1="40" y1="150" x2="500" y2="150" stroke="#8b9bb4" stroke-width="1.5" opacity=".55"/>
+  <line x1="40" y1="30" x2="40" y2="230" stroke="#8b9bb4" stroke-width="1" opacity=".3"/>
+  <polygon points="40.0,220.0 173.9,150 40.0,150" fill="#ef4444" opacity="0.3"/><polygon points="173.9,150 260.0,105.0 260.0,150" fill="#22c55e" opacity="0.3"/><polygon points="260.0,105.0 500.0,105.0 500.0,150 260.0,150" fill="#22c55e" opacity="0.3"/>
+  <path d="M40.0 220.0 L260.0 105.0 L500.0 105.0" fill="none" stroke="#e7ecf3" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
+  <text x="14" y="36" fill="#8b9bb4" font-size="11" font-family="system-ui,sans-serif">P/L</text>
+  <text x="250" y="250" fill="#8b9bb4" font-size="11" font-family="system-ui,sans-serif" text-anchor="middle">Stock price at expiry →</text>
+  <text x="360" y="92" fill="#86efac" font-size="12" font-family="system-ui,sans-serif" text-anchor="start">Max profit = premium</text><text x="70" y="220" fill="#fca5a5" font-size="12" font-family="system-ui,sans-serif" text-anchor="start">Loss if stock falls</text>
+</svg>
+      <div class="payoff-legend"><span class="lg">Green = profit</span><span class="lr">Red = loss</span></div>
+      <p class="payoff-caption">Short put at expiry: continuous line from max loss through breakeven to flat max profit (premium).</p>
+    </div>
+
+    <h3>Why many learners use ~30–45+ DTE</h3>
     <ul>
-      <li><b>More premium per unit of risk</b> — very short puts often pay little unless the strike is aggressive</li>
-      <li><b>Room to manage</b> — roll out in time, adjust strike, or close early before high gamma near expiry</li>
-      <li><b>Slower early theta on long-dated</b> is less relevant for short puts than for long options; still, many income traders target ~30–45+ DTE so they are paid for time and can exit around 50–75% of max profit</li>
-      <li><b>Avoid “lottery” weeklies</b> until you understand assignment, gaps, and earnings — the Advanced section encourages learning CSPs on longer-dated, liquid strikes first</li>
+      <li>More premium than ultra-short puts at a similar strike</li>
+      <li>Time to close early or roll if the trade goes against you</li>
+      <li>Avoid treating weeklies like lottery tickets until you understand assignment and gaps</li>
     </ul>
-    <div class="note">In the Builder, choose <b>Bullish → Cash Secured Put</b> (or <code>?template=cash_secured_put</code>). Edit premium to match a real chain. Cash for securing the put is not modeled as a separate leg — treat strike × 100 as reserved buying power.</div>
-    <div class="warn"><strong>Risk:</strong> A CSP can lose far more than the credit if the stock collapses. Only use cash you can actually deploy to own the shares. Educational only — not advice.</div>
+    <div class="warn"><strong>Risk:</strong> Only sell puts on stocks you are willing to <b>buy</b>. A CSP can lose far more than the credit. Educational only.</div>
     <a class="btn" href="/builder/?template=cash_secured_put">Load Cash Secured Put in Builder →</a>
   </div>
 
+  <!-- ========== WHEEL ========== -->
   <div class="card">
     <div class="small">Income cycle · CSP + covered call</div>
-    <h2>The Wheel strategy</h2>
-    <p>The <b>Wheel</b> is not a single option leg — it is a <b>loop</b> that connects cash-secured puts and covered calls. You collect premium while waiting to own shares you are willing to hold, then collect more premium while you own them, until the shares are called away — then you start over.</p>
+    <h2 id="wheel">The Wheel strategy</h2>
+    <p>The <b>Wheel</b> is a <b>loop</b>, not one option. It connects cash-secured puts and covered calls: collect premium while waiting to buy shares you accept owning → collect premium while you hold them → shares sold when a call is assigned → start again.</p>
 
-    <div class="wheel-visual" role="img" aria-label="Wheel strategy cycle: sell cash-secured put until assigned, sell covered call until shares are called away, then restart with CSP">
+    <div class="wheel-visual" role="img" aria-label="Wheel strategy cycle: sell CSP until assigned and you buy shares, sell covered call until shares are sold, then restart">
       <svg viewBox="0 0 640 420" width="100%" height="auto" xmlns="http://www.w3.org/2000/svg">
-        <!-- cycle ring -->
         <circle cx="320" cy="210" r="150" fill="none" stroke="#2d3a4f" stroke-width="3" stroke-dasharray="8 6"/>
-        <!-- arrows on ring (approximate) -->
         <path d="M320 60 A150 150 0 0 1 455 140" fill="none" stroke="#3b82f6" stroke-width="3"/>
         <polygon points="455,140 442,128 440,145" fill="#3b82f6"/>
         <path d="M470 210 A150 150 0 0 1 380 340" fill="none" stroke="#22c55e" stroke-width="3"/>
         <polygon points="380,340 392,328 398,345" fill="#22c55e"/>
         <path d="M260 350 A150 150 0 0 1 170 180" fill="none" stroke="#eab308" stroke-width="3"/>
         <polygon points="170,180 178,194 162,192" fill="#eab308"/>
-
-        <!-- center -->
         <circle cx="320" cy="210" r="48" fill="#1a2332" stroke="#3b82f6" stroke-width="2"/>
         <text x="320" y="205" text-anchor="middle" fill="#e7ecf3" font-size="15" font-weight="700" font-family="system-ui,sans-serif">WHEEL</text>
         <text x="320" y="224" text-anchor="middle" fill="#8b9bb4" font-size="11" font-family="system-ui,sans-serif">cycle</text>
-
-        <!-- Step 1 box top -->
-        <rect x="210" y="8" width="220" height="72" rx="12" fill="#1a2332" stroke="#3b82f6" stroke-width="1.5"/>
+        <rect x="200" y="8" width="240" height="72" rx="12" fill="#1a2332" stroke="#3b82f6" stroke-width="1.5"/>
         <text x="320" y="32" text-anchor="middle" fill="#60a5fa" font-size="12" font-weight="700" font-family="system-ui,sans-serif">1 · SELL CSP</text>
         <text x="320" y="50" text-anchor="middle" fill="#c8d0dc" font-size="11" font-family="system-ui,sans-serif">Cash-secured put · collect credit</text>
-        <text x="320" y="66" text-anchor="middle" fill="#8b9bb4" font-size="10" font-family="system-ui,sans-serif">Repeat until assigned (own 100 shares)</text>
-
-        <!-- Step 2 box right -->
+        <text x="320" y="66" text-anchor="middle" fill="#8b9bb4" font-size="10" font-family="system-ui,sans-serif">Repeat until assigned → you buy the shares</text>
         <rect x="430" y="168" width="200" height="84" rx="12" fill="#1a2332" stroke="#22c55e" stroke-width="1.5"/>
         <text x="530" y="194" text-anchor="middle" fill="#4ade80" font-size="12" font-weight="700" font-family="system-ui,sans-serif">2 · SELL COVERED CALL</text>
-        <text x="530" y="212" text-anchor="middle" fill="#c8d0dc" font-size="11" font-family="system-ui,sans-serif">You own the stock</text>
-        <text x="530" y="228" text-anchor="middle" fill="#c8d0dc" font-size="11" font-family="system-ui,sans-serif">Sell call against shares</text>
-        <text x="530" y="244" text-anchor="middle" fill="#8b9bb4" font-size="10" font-family="system-ui,sans-serif">Repeat until called away</text>
-
-        <!-- Step 3 box bottom-left -->
+        <text x="530" y="212" text-anchor="middle" fill="#c8d0dc" font-size="11" font-family="system-ui,sans-serif">You hold the shares</text>
+        <text x="530" y="228" text-anchor="middle" fill="#c8d0dc" font-size="11" font-family="system-ui,sans-serif">Sell a call against them</text>
+        <text x="530" y="244" text-anchor="middle" fill="#8b9bb4" font-size="10" font-family="system-ui,sans-serif">Repeat until shares are sold</text>
         <rect x="20" y="300" width="230" height="84" rx="12" fill="#1a2332" stroke="#eab308" stroke-width="1.5"/>
         <text x="135" y="326" text-anchor="middle" fill="#facc15" font-size="12" font-weight="700" font-family="system-ui,sans-serif">3 · RESTART</text>
-        <text x="135" y="344" text-anchor="middle" fill="#c8d0dc" font-size="11" font-family="system-ui,sans-serif">Shares called away → cash again</text>
+        <text x="135" y="344" text-anchor="middle" fill="#c8d0dc" font-size="11" font-family="system-ui,sans-serif">Shares sold → cash again</text>
         <text x="135" y="360" text-anchor="middle" fill="#c8d0dc" font-size="11" font-family="system-ui,sans-serif">Back to step 1: sell CSP</text>
         <text x="135" y="376" text-anchor="middle" fill="#8b9bb4" font-size="10" font-family="system-ui,sans-serif">Same stock or a new one</text>
       </svg>
     </div>
 
-    <ol style="margin:14px 0 10px;padding-left:20px">
-      <li style="margin:10px 0"><strong>Sell a cash-secured put</strong> on a stock you are willing to own. If it expires OTM, keep the premium and sell another put. If assigned, you buy 100 shares at the strike (cost basis ≈ strike − premiums kept).</li>
-      <li style="margin:10px 0"><strong>Sell a covered call</strong> against those shares. If the call expires OTM, keep the premium and sell another call. If assigned, the shares are called away at the call strike.</li>
-      <li style="margin:10px 0"><strong>Restart</strong> — with cash again, return to step 1 and sell a new CSP (same name or another underlier you accept owning).</li>
+    <ol class="step-list">
+      <li><strong>Sell a cash-secured put</strong> on a stock you are willing to buy. If it expires worthless, keep the premium and you can sell another put. If assigned, you <b>buy 100 shares</b> at the strike (cost basis ≈ strike − premiums kept).</li>
+      <li><strong>Sell a covered call</strong> against those shares. If the call expires worthless, keep the premium and you can sell another call. If the call is assigned, your shares are <b>sold</b> at the call strike.</li>
+      <li><strong>Restart</strong> — with cash again, return to step 1 and sell a new CSP.</li>
     </ol>
-
-    <div class="analogy">
-      <b>Why people study it:</b> each step is a structure you already know (CSP + covered call). The “wheel” is the sequence: income while waiting for shares → income while holding shares → shares leave → income again.
-    </div>
-    <div class="warn"><strong>Risk stays real:</strong> a falling stock still hurts (as the put seller / share owner). A strong rally can call shares away and cap upside. Premium does not make assignment “free.” Educational only — not a recommendation to run the wheel.</div>
+    <div class="warn"><strong>Risk stays real:</strong> a falling stock still hurts while you hold shares. A strong rally can force the sale of shares and cap upside. Educational only.</div>
     <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px">
       <a class="btn" href="/builder/?template=cash_secured_put">CSP in Builder →</a>
       <a class="btn btn-secondary" href="/builder/?template=covered_call">Covered Call in Builder →</a>
@@ -238,65 +255,164 @@
     </div>
   </div>
 
+  <!-- ========== COVERED CALL ========== -->
   <div class="card">
-    <div class="small">Debit vs credit</div>
-    <h2>Debit spreads vs credit spreads</h2>
-    <div class="grid2">
-      <div>
-        <h3>Debit spread</h3>
-        <p>You <b>pay</b> net premium (e.g. bull call, bear put). Max loss ≈ debit. Max gain ≈ width − debit.</p>
-        <a class="btn" href="/builder/?template=bull_call_spread">Bull call (debit) →</a>
-        <a class="btn btn-secondary" style="margin-top:8px" href="/builder/?template=bear_put_spread">Bear put (debit) →</a>
-      </div>
-      <div>
-        <h3>Credit spread</h3>
-        <p>You <b>receive</b> net premium (e.g. bull put, bear call). Max gain ≈ credit. Max loss ≈ width − credit.</p>
-        <div class="analogy">Example idea: sell $95 put / buy $90 put for a credit — defined risk if the stock stays above the short strike.</div>
-        <p style="font-size:.88rem;color:var(--muted)">Build manually in the Builder: Sell higher put + Buy lower put (same expiry), or use iron condor wings.</p>
-      </div>
+    <div class="small">Stock + short call · income</div>
+    <h2 id="covered-call">Covered call</h2>
+    <p>You <b>buy (or already hold) 100 shares</b> and <b>sell 1 call</b> against them. You collect a credit. Upside above the call strike is generally capped; downside on the shares remains — the premium only softens losses a little.</p>
+    <ul>
+      <li><b>Max profit</b> ≈ (call strike − stock purchase price) + premium, if shares are called away or finish above the strike</li>
+      <li><b>Breakeven</b> ≈ stock purchase price − premium</li>
+      <li><b>Risk</b> = stock can fall hard; premium is a small cushion, not insurance</li>
+    </ul>
+    <div class="analogy">
+      Buy stock at $100, sell the $105 call for $2 → <span class="profit">+$200</span> credit.<br>
+      Stock at $110 at expiry → shares sold at $105; total gain ≈ $5 + $2 = $7/share.<br>
+      Stock at $90 → loss on shares about $10, offset by $2 premium ≈ <span class="loss">$8</span>/share loss.
+    </div>
+    <div class="payoff-box">
+      <svg viewBox="0 0 520 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Covered call payoff at expiry">
+  <line x1="40" y1="150" x2="500" y2="150" stroke="#8b9bb4" stroke-width="1.5" opacity=".55"/>
+  <line x1="40" y1="30" x2="40" y2="230" stroke="#8b9bb4" stroke-width="1" opacity=".3"/>
+  <polygon points="40.0,230.0 182.2,150 40.0,150" fill="#ef4444" opacity="0.3"/><polygon points="182.2,150 280.0,95.0 280.0,150" fill="#22c55e" opacity="0.3"/><polygon points="280.0,95.0 500.0,95.0 500.0,150 280.0,150" fill="#22c55e" opacity="0.3"/>
+  <path d="M40.0 230.0 L280.0 95.0 L500.0 95.0" fill="none" stroke="#e7ecf3" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
+  <text x="14" y="36" fill="#8b9bb4" font-size="11" font-family="system-ui,sans-serif">P/L</text>
+  <text x="250" y="250" fill="#8b9bb4" font-size="11" font-family="system-ui,sans-serif" text-anchor="middle">Stock price at expiry →</text>
+  <text x="360" y="82" fill="#86efac" font-size="12" font-family="system-ui,sans-serif" text-anchor="start">Capped profit</text><text x="55" y="220" fill="#fca5a5" font-size="12" font-family="system-ui,sans-serif" text-anchor="start">Stock downside</text>
+</svg>
+      <div class="payoff-legend"><span class="lg">Green = profit</span><span class="lr">Red = loss</span></div>
+      <p class="payoff-caption">Covered call: line rises with the stock through breakeven to the short-call strike, then stays flat at max profit. Red = stock downside; green = profit zone.</p>
+    </div>
+    <a class="btn" href="/builder/?template=covered_call">Load Covered Call in Builder →</a>
+  </div>
+
+  <!-- ========== CREDIT / DEBIT SPREADS ========== -->
+  <div class="card">
+    <div class="small">Defined-risk verticals</div>
+    <h2 id="spreads">Debit spreads vs credit spreads</h2>
+    <p>A <b>vertical spread</b> is two options of the same type (calls or puts) and same expiry, different strikes. One is bought, one is sold. Risk is <b>defined</b> — you know the max loss at entry (before fees).</p>
+
+    <h3>Bull put spread (credit example)</h3>
+    <p>Sell a higher-strike put, buy a lower-strike put. You receive a net credit. You want the stock to stay <b>above</b> the short put strike.</p>
+    <div class="analogy">Sell $100 put / buy $95 put for $1.50 credit → max profit <span class="profit">$150</span>; max loss ≈ ($5 − $1.50) × 100 = <span class="loss">$350</span>.</div>
+    <div class="payoff-box">
+      <svg viewBox="0 0 520 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Bull put credit spread payoff at expiry">
+  <line x1="40" y1="150" x2="500" y2="150" stroke="#8b9bb4" stroke-width="1.5" opacity=".55"/>
+  <line x1="40" y1="30" x2="40" y2="230" stroke="#8b9bb4" stroke-width="1" opacity=".3"/>
+  <polygon points="40.0,205.0 140.0,205.0 140.0,150 40.0,150" fill="#ef4444" opacity="0.3"/><polygon points="140.0,205.0 197.6,150 140.0,150" fill="#ef4444" opacity="0.3"/><polygon points="197.6,150 250.0,100.0 250.0,150" fill="#22c55e" opacity="0.3"/><polygon points="250.0,100.0 500.0,100.0 500.0,150 250.0,150" fill="#22c55e" opacity="0.3"/>
+  <path d="M40.0 205.0 L140.0 205.0 L250.0 100.0 L500.0 100.0" fill="none" stroke="#e7ecf3" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
+  <text x="14" y="36" fill="#8b9bb4" font-size="11" font-family="system-ui,sans-serif">P/L</text>
+  <text x="250" y="250" fill="#8b9bb4" font-size="11" font-family="system-ui,sans-serif" text-anchor="middle">Stock price at expiry →</text>
+  <text x="340" y="88" fill="#86efac" font-size="12" font-family="system-ui,sans-serif" text-anchor="start">Max profit = credit</text><text x="50" y="222" fill="#fca5a5" font-size="12" font-family="system-ui,sans-serif" text-anchor="start">Max loss = width − credit</text>
+</svg>
+      <div class="payoff-legend"><span class="lg">Green = profit</span><span class="lr">Red = loss</span></div>
+      <p class="payoff-caption">Bull put (credit): flat max profit if stock stays high; limited max loss below the long put.</p>
+    </div>
+
+    <h3>Bull call spread (debit example)</h3>
+    <p>Buy a lower-strike call, sell a higher-strike call. You pay a net debit. You want the stock to rise toward (or above) the short call.</p>
+    <div class="analogy">Buy $100 call / sell $110 call for $4 debit → max loss <span class="loss">$400</span>; max profit ≈ ($10 − $4) × 100 = <span class="profit">$600</span>.</div>
+    <div class="payoff-box">
+      <svg viewBox="0 0 520 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Bull call debit spread payoff at expiry">
+  <line x1="40" y1="150" x2="500" y2="150" stroke="#8b9bb4" stroke-width="1.5" opacity=".55"/>
+  <line x1="40" y1="30" x2="40" y2="230" stroke="#8b9bb4" stroke-width="1" opacity=".3"/>
+  <polygon points="40.0,205.0 180.0,205.0 180.0,150 40.0,150" fill="#ef4444" opacity="0.3"/><polygon points="180.0,205.0 250.0,150 180.0,150" fill="#ef4444" opacity="0.3"/><polygon points="250.0,150 320.0,95.0 320.0,150" fill="#22c55e" opacity="0.3"/><polygon points="320.0,95.0 500.0,95.0 500.0,150 320.0,150" fill="#22c55e" opacity="0.3"/>
+  <path d="M40.0 205.0 L180.0 205.0 L320.0 95.0 L500.0 95.0" fill="none" stroke="#e7ecf3" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
+  <text x="14" y="36" fill="#8b9bb4" font-size="11" font-family="system-ui,sans-serif">P/L</text>
+  <text x="250" y="250" fill="#8b9bb4" font-size="11" font-family="system-ui,sans-serif" text-anchor="middle">Stock price at expiry →</text>
+  <text x="340" y="82" fill="#86efac" font-size="12" font-family="system-ui,sans-serif" text-anchor="start">Max profit = width − debit</text><text x="55" y="222" fill="#fca5a5" font-size="12" font-family="system-ui,sans-serif" text-anchor="start">Max loss = debit</text>
+</svg>
+      <div class="payoff-legend"><span class="lg">Green = profit</span><span class="lr">Red = loss</span></div>
+      <p class="payoff-caption">Bull call (debit): flat max loss (debit paid), then rises to flat max profit (width − debit).</p>
+    </div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px">
+      <a class="btn" href="/builder/?template=bull_call_spread">Bull call spread →</a>
+      <a class="btn btn-secondary" href="/builder/?template=bear_put_spread">Bear put spread →</a>
+      <a class="btn btn-secondary" href="/level3/">Spreads lesson</a>
     </div>
   </div>
 
+  <!-- ========== CALENDAR ========== -->
   <div class="card">
     <div class="small">Time spread</div>
-    <h2>Calendar spread (horizontal)</h2>
-    <p>Same strike, <b>different expiries</b>: typically sell a nearer-term option and buy a longer-dated one (net debit). You want the front month to decay faster while the back month keeps value — often best when price stays near the strike and IV doesn’t crush the long leg unfairly.</p>
-    <div class="analogy">Sell 30-DTE $100 call, buy 90-DTE $100 call. Watch the Builder with mixed DTEs and advance “Days Remaining.”</div>
+    <h2 id="calendar">Calendar spread (horizontal)</h2>
+    <p>Same strike, <b>different expirations</b>: typically <b>sell</b> a nearer-term option and <b>buy</b> a longer-dated one (net debit). You want the short front-month option to decay faster while the back-month keeps more value — often when price stays near the strike.</p>
+    <ul>
+      <li>Best thought of as a <b>time</b> trade, not a pure “stock goes to X” trade</li>
+      <li>IV changes matter a lot: a volatility crush can hurt the long leg</li>
+      <li>Payoff at the <em>front</em> expiry is not a simple single line — value depends on the remaining back-month option</li>
+    </ul>
+    <div class="analogy">Sell 30-DTE $100 call, buy 90-DTE $100 call for a debit. Ideal sketch: stock near $100 at the first expiry so the short call is cheap to close and the long call still has time value.</div>
+    <div class="payoff-box">
+      <svg viewBox="0 0 520 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Calendar spread conceptual payoff near front expiry">
+  <line x1="40" y1="150" x2="500" y2="150" stroke="#8b9bb4" stroke-width="1.5" opacity=".55"/>
+  <line x1="40" y1="30" x2="40" y2="230" stroke="#8b9bb4" stroke-width="1" opacity=".3"/>
+  <polygon points="40.0,205.0 120.0,205.0 120.0,150 40.0,150" fill="#ef4444" opacity="0.3"/><polygon points="120.0,205.0 181.6,150 120.0,150" fill="#ef4444" opacity="0.3"/><polygon points="181.6,150 260.0,80.0 260.0,150" fill="#22c55e" opacity="0.3"/><polygon points="260.0,80.0 338.4,150 260.0,150" fill="#22c55e" opacity="0.3"/><polygon points="338.4,150 400.0,205.0 400.0,150" fill="#ef4444" opacity="0.3"/><polygon points="400.0,205.0 500.0,205.0 500.0,150 400.0,150" fill="#ef4444" opacity="0.3"/>
+  <path d="M40.0 205.0 L120.0 205.0 L260.0 80.0 L400.0 205.0 L500.0 205.0" fill="none" stroke="#e7ecf3" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
+  <text x="14" y="36" fill="#8b9bb4" font-size="11" font-family="system-ui,sans-serif">P/L</text>
+  <text x="250" y="250" fill="#8b9bb4" font-size="11" font-family="system-ui,sans-serif" text-anchor="middle">Stock price at expiry →</text>
+  <text x="260" y="68" fill="#86efac" font-size="12" font-family="system-ui,sans-serif" text-anchor="middle">Peak near strike</text><text x="55" y="222" fill="#fca5a5" font-size="12" font-family="system-ui,sans-serif" text-anchor="start">Far move → loss</text><text x="400" y="222" fill="#fca5a5" font-size="12" font-family="system-ui,sans-serif" text-anchor="start">Far move → loss</text>
+</svg>
+      <div class="payoff-legend"><span class="lg">Green = profit</span><span class="lr">Red = loss</span></div>
+      <p class="payoff-caption">Calendar (illustrative near front expiry): continuous tent peaking near the strike. Green near the money; red when the stock moves far away. IV also matters in live markets.</p>
+    </div>
     <a class="btn" href="/builder/?template=calendar_call">Load Calendar (Call) →</a>
   </div>
 
+  <!-- ========== LEAPS ========== -->
   <div class="card">
-    <div class="small">Stock + short call</div>
-    <h2>Covered call (income overlay)</h2>
-    <p>Own 100 shares, sell 1 call against them. You collect premium (“rent”) and cap upside above the short strike. Downside on the shares remains — the premium only cushions losses slightly.</p>
+    <div class="small">Long-dated options</div>
+    <h2 id="leaps">LEAPS</h2>
+    <p><b>LEAPS</b> are options with expirations often <b>one year or more</b> out. A long LEAPS call is a long-term bullish view with a defined max loss (the premium). It can still go to zero if the thesis is wrong or time runs out.</p>
     <ul>
-      <li>Often used when neutral-to-mildly bullish on a stock you already hold</li>
-      <li>Prefer liquid strikes and enough DTE that you are paid for the risk (many use ~30–45 DTE as a teaching range)</li>
+      <li>Uses less cash than buying 100 shares, but is not “cheaper risk” — 100% of the premium can be lost</li>
+      <li>Theta is slower early than on a 30-day option, but it still decays</li>
+      <li>Some traders sell shorter calls against a LEAPS call (diagonal / “poor man’s covered call” style) — more moving parts</li>
     </ul>
-    <div class="note">In the Builder, add a <b>Stock</b> leg (Buy) plus a <b>Sell Call</b>. Template premiums are illustrative.</div>
+    <div class="payoff-box">
+      <svg viewBox="0 0 520 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Long LEAPS call payoff at expiry">
+  <line x1="40" y1="150" x2="500" y2="150" stroke="#8b9bb4" stroke-width="1.5" opacity=".55"/>
+  <line x1="40" y1="30" x2="40" y2="230" stroke="#8b9bb4" stroke-width="1" opacity=".3"/>
+  <polygon points="40.0,200.0 240.0,200.0 240.0,150 40.0,150" fill="#ef4444" opacity="0.3"/><polygon points="240.0,200.0 323.9,150 240.0,150" fill="#ef4444" opacity="0.3"/><polygon points="323.9,150 500.0,45.0 500.0,150" fill="#22c55e" opacity="0.3"/>
+  <path d="M40.0 200.0 L240.0 200.0 L500.0 45.0" fill="none" stroke="#e7ecf3" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
+  <text x="14" y="36" fill="#8b9bb4" font-size="11" font-family="system-ui,sans-serif">P/L</text>
+  <text x="250" y="250" fill="#8b9bb4" font-size="11" font-family="system-ui,sans-serif" text-anchor="middle">Stock price at expiry →</text>
+  <text x="70" y="220" fill="#fca5a5" font-size="12" font-family="system-ui,sans-serif" text-anchor="start">Max loss = premium</text><text x="380" y="70" fill="#86efac" font-size="12" font-family="system-ui,sans-serif" text-anchor="start">Upside if stock rises</text>
+</svg>
+      <div class="payoff-legend"><span class="lg">Green = profit</span><span class="lr">Red = loss</span></div>
+      <p class="payoff-caption">Long call / LEAPS at expiry: flat max loss (premium), then rising profit if stock is above strike.</p>
+    </div>
+    <a class="btn" href="/builder/?template=long_call">Start from Long Call (set DTE long) →</a>
   </div>
 
+  <!-- ========== IRON CONDOR ========== -->
   <div class="card">
-    <div class="small">Long-dated</div>
-    <h2>LEAPS strategies</h2>
-    <p><b>LEAPS</b> are long-term equity anticipation securities — options with expirations often a year or more out. Traders use them to:</p>
+    <div class="small">Neutral · defined risk</div>
+    <h2 id="iron-condor">Iron condor (recap)</h2>
+    <p>An <b>iron condor</b> combines a bull put spread and a bear call spread. You collect a net credit and want the stock to stay in a <b>range</b> between the short strikes. Both sides have long options so risk is capped.</p>
     <ul>
-      <li>Express a multi-month/year directional view with less capital than 100 shares (still can lose 100% of premium)</li>
-      <li>Sell shorter calls against a LEAPS long call (a <b>diagonal</b> / poor-man’s covered call style idea)</li>
+      <li><b>Max profit</b> = net credit if price stays between the short put and short call</li>
+      <li><b>Max loss</b> ≈ width of one wing − credit (on the side that is breached)</li>
+      <li>Often taught with longer DTE (e.g. ~45) so there is time to manage before high gamma near expiry</li>
     </ul>
-    <div class="analogy">Buy a 12–18 month call (LEAPS) as a surrogate for stock; optionally sell nearer calls against it to reduce cost basis — manage early assignment and dividend risk carefully in live markets.</div>
-    <p>In the Builder: set DTE to 365+, pick a call, and experiment. For a diagonal, use two call legs with different DTEs (similar to calendar, different strikes optional).</p>
-    <a class="btn" href="/builder/?template=long_call">Start from Long Call →</a>
-  </div>
-
-  <div class="card">
-    <h2>Iron condor &amp; defined risk (recap)</h2>
-    <p>Still the workhorse neutral defined-risk structure from Spreads. Longer DTE entries (e.g. 45) are often taught so you can take profits or adjust before the high-gamma zone.</p>
+    <div class="payoff-box">
+      <svg viewBox="0 0 520 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Short iron condor payoff at expiry">
+  <line x1="40" y1="150" x2="500" y2="150" stroke="#8b9bb4" stroke-width="1.5" opacity=".55"/>
+  <line x1="40" y1="30" x2="40" y2="230" stroke="#8b9bb4" stroke-width="1" opacity=".3"/>
+  <polygon points="40.0,205.0 100.0,205.0 100.0,150 40.0,150" fill="#ef4444" opacity="0.3"/><polygon points="100.0,205.0 141.9,150 100.0,150" fill="#ef4444" opacity="0.3"/><polygon points="141.9,150 180.0,100.0 180.0,150" fill="#22c55e" opacity="0.3"/><polygon points="180.0,100.0 340.0,100.0 340.0,150 180.0,150" fill="#22c55e" opacity="0.3"/><polygon points="340.0,100.0 378.1,150 340.0,150" fill="#22c55e" opacity="0.3"/><polygon points="378.1,150 420.0,205.0 420.0,150" fill="#ef4444" opacity="0.3"/><polygon points="420.0,205.0 500.0,205.0 500.0,150 420.0,150" fill="#ef4444" opacity="0.3"/>
+  <path d="M40.0 205.0 L100.0 205.0 L180.0 100.0 L340.0 100.0 L420.0 205.0 L500.0 205.0" fill="none" stroke="#e7ecf3" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
+  <text x="14" y="36" fill="#8b9bb4" font-size="11" font-family="system-ui,sans-serif">P/L</text>
+  <text x="250" y="250" fill="#8b9bb4" font-size="11" font-family="system-ui,sans-serif" text-anchor="middle">Stock price at expiry →</text>
+  <text x="230" y="85" fill="#86efac" font-size="12" font-family="system-ui,sans-serif" text-anchor="middle">Profit in the range</text><text x="50" y="222" fill="#fca5a5" font-size="12" font-family="system-ui,sans-serif" text-anchor="start">Limited loss</text><text x="430" y="222" fill="#fca5a5" font-size="12" font-family="system-ui,sans-serif" text-anchor="start">Limited loss</text>
+</svg>
+      <div class="payoff-legend"><span class="lg">Green = profit</span><span class="lr">Red = loss</span></div>
+      <p class="payoff-caption">Short iron condor: flat max profit between short strikes; limited losses outside the wings.</p>
+    </div>
     <a class="btn" href="/builder/?template=iron_condor">Load Iron Condor →</a>
   </div>
 
   <div class="warn">
-    <strong>Risk:</strong> Longer DTE is not “safer.” You can still lose the full debit, or the max loss on a credit structure. LEAPS can lose most of their value if the thesis is wrong or IV collapses. Education only — not advice.
+    <strong>Risk:</strong> Longer DTE is not automatically safer. You can still lose the full debit, or the maximum on a credit structure. LEAPS can lose most of their value if the thesis is wrong or IV collapses. Education only — not advice.
   </div>
 
   <div class="card" style="text-align:center">
@@ -305,14 +421,48 @@
   </div>
 </div>
 
-<footer>
-  <div>Educational only — not financial advice.</div>
+
+  <div class="card" id="risk-notes">
+    <h2>IV, earnings, and assignment</h2>
+    <div class="risk-grid">
+      <div class="risk-card">
+        <h3>IV when selling premium</h3>
+        <p>CSPs, covered calls, and iron condors collect premium. Higher IV can mean richer credits — and more risk of large moves. Compare credit size to wing width or stock risk, not IV in isolation.</p>
+      </div>
+      <div class="risk-card">
+        <h3>Earnings</h3>
+        <p>Holding short options through earnings can produce gaps through your short strikes. Many learners avoid short premium through binary events until they understand assignment and gap risk.</p>
+      </div>
+      <div class="risk-card">
+        <h3>Assignment</h3>
+        <p>Short puts → may <b>buy</b> shares. Short calls against stock → may <b>sell</b> shares. Pin risk and early exercise exist; defined-risk spreads still need monitoring near expiration.</p>
+      </div>
+    </div>
+    <div class="practice-prompt"><b>Practice:</b> Load <a href="/builder/?template=cash_secured_put">CSP</a>, then <a href="/builder/?template=covered_call">covered call</a>. Walk price through assignment zones and read max profit vs max loss on the solid line.</div>
+  </div>
+
+<footer class="site-footer">
+  <div class="footer-note">Educational only — not financial advice. Options involve risk of loss.</div>
   <div class="footer-links">
     <a href="/">Home</a>
+    <a href="/level1/">Basics</a>
+    <a href="/level2/">Fundamentals</a>
     <a href="/level3/">Spreads</a>
-    <a href="/strategies/">Strategies</a><a href="/builder/">Builder</a>
+    <a href="/level4/">Advanced</a>
+    <a href="/strategies/">Strategies</a>
+    <a href="/builder/">Builder</a>
+    <a href="/about/">About</a>
+    <a href="/contact/">Contact</a>
     <a href="/disclaimer/">Disclaimer</a>
+    <a href="/privacy/">Privacy</a>
   </div>
+    <div class="footer-tools" style="margin-top:12px;font-size:12px;opacity:.9">
+      More free tools:
+      <a href="https://lyricprep.com/" target="_blank" rel="noopener">LyricPrep</a> ·
+      <a href="https://jsm-image.com/" target="_blank" rel="noopener">JSM Image</a> ·
+      <a href="https://jsm-video.com/" target="_blank" rel="noopener">JSM Video</a> ·
+      <a href="https://jsm-loudness.com/" target="_blank" rel="noopener">JSM Loudness</a>
+    </div>
 </footer>
 
 

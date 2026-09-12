@@ -7,17 +7,22 @@
   <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48.png">
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
   <link rel="manifest" href="/site.webmanifest">
-
-  <title>Disclaimer — Educational Only | JSM Options</title>
-  <meta name="description" content="JSM Options is for education only. Options involve substantial risk of loss. Not financial advice. Read the full disclaimer before using the site or builder.">
-  <link rel="canonical" href="https://jsm-options.com/disclaimer/">
+  <title>Cash-Secured Put Explained for Beginners (CSP Strategy)</title>
+  <meta name="description" content="Learn cash-secured puts: sell a put while holding enough cash to buy 100 shares if assigned. See risk, premium income, break-even, and practice in the free Builder.">
+  <link rel="canonical" href="https://jsm-options.com/cash-secured-put/">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="JSM Options">
+  <meta property="og:title" content="Cash-Secured Put Explained for Beginners (CSP Strategy)">
+  <meta property="og:description" content="Learn cash-secured puts: sell a put while holding enough cash to buy 100 shares if assigned. See risk, premium income, break-even, and practice in the free Builder.">
+  <meta property="og:url" content="https://jsm-options.com/cash-secured-put/">
   <meta property="og:image" content="https://jsm-options.com/images/og-default.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Cash-Secured Put Explained for Beginners (CSP Strategy)">
+  <meta name="twitter:description" content="Learn cash-secured puts: sell a put while holding enough cash to buy 100 shares if assigned. See risk, premium income, break-even, and practice in the free Builder.">
   <meta name="twitter:image" content="https://jsm-options.com/images/og-default.png">
-  <meta property="og:type" content="website">
-  <link rel="stylesheet" href="/assets/style.css?v=20260912">
+  <link rel="stylesheet" href="/assets/style.css?v=20260914">
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-BDL003RCN6"></script>
   <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-BDL003RCN6');</script>
-
 <style id="jsm-mobile-nav">
 .nav-toggle{display:none;box-sizing:border-box;width:44px;height:44px;min-width:44px;min-height:44px;padding:0;border:1px solid var(--border,#2d3a4f);border-radius:10px;background:var(--card,#1a2332);color:var(--text,#e7ecf3);cursor:pointer;align-items:center;justify-content:center;flex-direction:column;gap:5px;-webkit-tap-highlight-color:transparent;touch-action:manipulation;position:relative;z-index:40}
 .nav-toggle span{display:block;width:18px;height:2px;border-radius:1px;background:currentColor;pointer-events:none}
@@ -55,24 +60,93 @@
   }
 }
 </style>
-
 </head>
 <body>
 <header class="site-header"><div class="site-header-inner"><a class="logo logo-link" href="/" aria-label="JSM Options Home"><div class="logo-icon">JSM</div><div><div style="font-weight:700">JSM Options</div><div class="brand-sub">jsm-options.com · Educational</div></div></a><div class="header-right"><nav class="nav" aria-label="Primary navigation"><a href="/">Home</a><a href="/level1/">Basics</a><a href="/level2/">Fundamentals</a><a href="/level3/">Spreads</a><a href="/level4/">Advanced</a><a href="/strategies/">Strategies</a><a href="/builder/">Builder</a></nav><button type="button" class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button><button type="button" class="theme-toggle" id="themeToggle" aria-label="Toggle color theme"><span id="themeIcon" class="theme-icon">☼</span><span id="themeLabel" class="theme-label">Dark</span></button></div></div></header>
 <div class="wrap">
+<nav class="breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span aria-hidden="true">/</span><span aria-current="page">Cash-Secured Put</span></nav>
   <div class="card">
-    <h1>Disclaimer</h1>
-    <div class="warn"><strong>Not financial advice.</strong> jsm-options.com is an educational website. Nothing here is a recommendation to buy, sell, or hold any security or option.</div>
-    <p>Options involve substantial risk and are not suitable for all investors. You can lose the entire premium paid on long options. Short options and complex strategies can involve losses that exceed the credit received; some short-call structures have theoretically unlimited risk if unhedged.</p>
-    <p>Examples, templates, and Builder outputs use simplified models (including European-style Black–Scholes approximations) and <b>illustrative</b> premiums. They ignore commissions, slippage, dividends nuances, early assignment, and liquidity. Live markets differ.</p>
-    <p>Past hypothetical results do not predict future results. Do your own research. Consider consulting a licensed professional. By using this site you agree you are responsible for your own decisions.</p>
-    <p>Operator: JSM Options · Contact: <a href="/contact/">Contact page</a> · <a href="mailto:admin@jsm-options.com">admin@jsm-options.com</a></p>
+    <h1>Cash-secured put (CSP) explained</h1>
+
+    <p>A <b>cash-secured put</b> means you <b>sell a put option</b> and set aside enough <b>cash</b> to buy 100 shares at the strike if you are assigned. You collect a <b>premium</b> up front. If the stock stays above the strike, the put may expire worthless and you keep the premium. If the stock falls below the strike, you may <b>buy the shares</b> at the strike (assignment).</p>
+    <p>Many beginners use CSPs when they are <b>willing to own the stock at a lower effective price</b> and want to be paid while they wait.</p>
+
+    <h2>Structure</h2>
+    <ul>
+      <li><b>Short 1 put</b></li>
+      <li><b>Cash reserved</b> ≈ strike × 100 (broker requirements can vary)</li>
+    </ul>
+
+    <h2>Payoff intuition</h2>
+    <ul>
+      <li><b>Max profit</b> = premium received (if put expires worthless)</li>
+      <li><b>Risk</b> = stock can fall well below the strike — you still buy at the strike (loss vs market price can be large)</li>
+      <li><b>Break-even</b> ≈ strike − premium per share</li>
+      <li>Assignment means <b>you buy 100 shares</b>, not a mystery outcome</li>
+    </ul>
+
+    <div class="payoff-box" style="background:var(--input);border:1px solid var(--border);border-radius:12px;padding:12px;margin:14px 0">
+      <svg viewBox="0 0 520 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Cash-secured put payoff at expiry: profit capped at premium if stock stays above strike, losses if stock falls" width="100%" height="auto">
+        <line x1="40" y1="150" x2="500" y2="150" stroke="#8b9bb4" stroke-width="1.5" opacity=".55"/>
+        <line x1="40" y1="30" x2="40" y2="230" stroke="#8b9bb4" stroke-width="1" opacity=".3"/>
+        <polygon points="40.0,220.0 180.0,150.0 40.0,150.0" fill="#ef4444" opacity="0.3"/>
+        <polygon points="180.0,150.0 260.0,105.0 260.0,150.0" fill="#22c55e" opacity="0.3"/>
+        <polygon points="260.0,105.0 500.0,105.0 500.0,150.0 260.0,150.0" fill="#22c55e" opacity="0.3"/>
+        <path d="M40.0 220.0 L260.0 105.0 L500.0 105.0" fill="none" stroke="#e7ecf3" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
+        <text x="14" y="36" fill="#8b9bb4" font-size="11" font-family="system-ui,sans-serif">P/L</text>
+        <text x="250" y="250" fill="#8b9bb4" font-size="11" font-family="system-ui,sans-serif" text-anchor="middle">Stock price at expiry →</text>
+        <text x="360" y="92" fill="#86efac" font-size="12" font-family="system-ui,sans-serif">Max profit = premium</text>
+        <text x="70" y="220" fill="#fca5a5" font-size="12" font-family="system-ui,sans-serif">Loss if stock falls</text>
+        <text x="180" y="140" fill="#facc15" font-size="11" font-family="system-ui,sans-serif" text-anchor="middle">BE</text>
+      </svg>
+      <p style="text-align:center;font-size:.8rem;color:var(--muted);margin:8px 0 0">Green = profit · Red = loss · Flat right side = put expires, you keep the credit</p>
+    </div>
+
+    <div class="analogy">
+      <b>Example:</b> Stock at $100. Sell the $95 put for $2.00 ($200 credit). Cash secured ≈ $9,500.<br>
+      Above $95 at expiry: keep ~$200; no shares.<br>
+      Assigned at $95: effective cost ≈ $95 − $2 = <b>$93</b> before fees. You now own the shares and take stock risk from there.
+    </div>
+
+    <h2>When it fits / when it does not</h2>
+    <ul>
+      <li><b>Fits:</b> you genuinely want to own the shares at a lower price; you can reserve the cash; you accept stock risk if assigned</li>
+      <li><b>Does not fit:</b> you cannot buy the shares; you need the cash for other goals; you are only chasing premium on a name you would hate to own</li>
+    </ul>
+
+    <h2>Link to the Wheel</h2>
+    <p>Many traders connect CSPs to the <a href="/wheel/">Wheel strategy</a>: sell puts until assigned, then sell <a href="/covered-call/">covered calls</a> until shares are called away, then start again.</p>
+
+    <p><a class="btn" href="/builder/?template=cash_secured_put">Open Cash-Secured Put in Builder →</a>
+    <a class="btn btn-secondary" href="/level4/">Advanced lesson (CSP, Wheel, more)</a>
+    <a class="btn btn-secondary" href="/level1/#options-chain">How to read the options chain</a></p>
+
+    <div class="warn"><strong>Educational only:</strong> Not financial advice. Selling puts can lead to owning shares at a loss versus the market. Not a broker; not affiliated with any institution.</div>
+  
   </div>
 </div>
-<footer>
+<footer class="site-footer">
+  <div class="footer-note">Educational only — not financial advice. Options involve risk of loss.</div>
   <div class="footer-links">
-    <a href="/">Home</a><a href="/privacy/">Privacy</a><a href="/contact/">Contact</a>
+    <a href="/">Home</a>
+    <a href="/level1/">Basics</a>
+    <a href="/level2/">Fundamentals</a>
+    <a href="/level3/">Spreads</a>
+    <a href="/level4/">Advanced</a>
+    <a href="/strategies/">Strategies</a>
+    <a href="/builder/">Builder</a>
+    <a href="/about/">About</a>
+    <a href="/contact/">Contact</a>
+    <a href="/disclaimer/">Disclaimer</a>
+    <a href="/privacy/">Privacy</a>
   </div>
+    <div class="footer-tools" style="margin-top:12px;font-size:12px;opacity:.9">
+      More free tools:
+      <a href="https://lyricprep.com/" target="_blank" rel="noopener">LyricPrep</a> ·
+      <a href="https://jsm-image.com/" target="_blank" rel="noopener">JSM Image</a> ·
+      <a href="https://jsm-video.com/" target="_blank" rel="noopener">JSM Video</a> ·
+      <a href="https://jsm-loudness.com/" target="_blank" rel="noopener">JSM Loudness</a>
+    </div>
 </footer>
 
 <script>

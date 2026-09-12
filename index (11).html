@@ -8,14 +8,12 @@
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
   <link rel="manifest" href="/site.webmanifest">
 
-  <title>About JSM Options — Free Options Education &amp; Strategy Builder</title>
-  <meta name="description" content="About JSM Options: free options trading course, curriculum path, browser Strategy Builder, and educational-only mission. Not a broker.">
-  <link rel="canonical" href="https://jsm-options.com/about/">
-  <meta property="og:title" content="About JSM Options — Free Options Education &amp; Strategy Builder">
-  <meta property="og:description" content="Plain-language options education and a free strategy builder. Educational only.">
-  <meta property="og:url" content="https://jsm-options.com/about/">
+  <title>Contact JSM Options</title>
+  <meta name="description" content="Send a message about the free options course or Strategy Builder. No name or email required. Educational questions only — not personalized trading advice.">
+  <link rel="canonical" href="https://jsm-options.com/contact/">
   <meta property="og:image" content="https://jsm-options.com/images/og-default.png">
   <meta name="twitter:image" content="https://jsm-options.com/images/og-default.png">
+  <meta property="og:type" content="website">
   <link rel="stylesheet" href="/assets/style.css?v=20260914">
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-BDL003RCN6"></script>
   <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-BDL003RCN6');</script>
@@ -62,85 +60,54 @@
 <body>
 <header class="site-header"><div class="site-header-inner"><a class="logo logo-link" href="/" aria-label="JSM Options Home"><div class="logo-icon">JSM</div><div><div style="font-weight:700">JSM Options</div><div class="brand-sub">jsm-options.com · Educational</div></div></a><div class="header-right"><nav class="nav" aria-label="Primary navigation"><a href="/">Home</a><a href="/level1/">Basics</a><a href="/level2/">Fundamentals</a><a href="/level3/">Spreads</a><a href="/level4/">Advanced</a><a href="/strategies/">Strategies</a><a href="/builder/">Builder</a></nav><button type="button" class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button><button type="button" class="theme-toggle" id="themeToggle" aria-label="Toggle color theme"><span id="themeIcon" class="theme-icon">☼</span><span id="themeLabel" class="theme-label">Dark</span></button></div></div></header>
 <div class="wrap">
-<nav class="breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span aria-hidden="true">/</span><span aria-current="page">About</span></nav>
+<nav class="breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span aria-hidden="true">/</span><span aria-current="page">Contact</span></nav>
 
   <div class="card">
-    <h1>About JSM Options</h1>
-    <p><b>jsm-options.com</b> is a free educational site for learning <b>listed equity options</b> — calls, puts, spreads, and multi-leg structures — with plain language and a browser-based <a href="/builder/">Strategy Builder</a>.</p>
-    <h2>What you can learn here</h2>
+    <h1>Contact</h1>
+    <p>We read messages about the free options education site and Strategy Builder. We do not provide personalized trade recommendations, portfolio reviews, or account support for brokers.</p>
+
+    <div class="contact-panel">
+      <form id="contactForm" class="contact-form" method="POST" action="#">
+        <label for="topic">Topic</label>
+        <select id="topic" name="topic">
+          <option value="">Select a topic (optional)</option>
+          <option value="Site or lesson question">Site or lesson question</option>
+          <option value="Builder / graph">Builder / graph</option>
+          <option value="Typo or content error">Typo or content error</option>
+          <option value="Other">Other</option>
+        </select>
+
+        <label for="message">Message</label>
+        <textarea id="message" name="message" rows="7" required minlength="10" maxlength="5000" placeholder="Write your message here… If it’s about a specific page, mention which one (e.g. Covered Call, Calendar)."></textarea>
+        <div class="char-meta"><span id="charCount">0</span> / 5000 · Minimum 10 characters</div>
+
+        <input type="text" name="_gotcha" id="gotcha" tabindex="-1" autocomplete="off" aria-hidden="true" class="hp-field">
+        <input type="hidden" name="_subject" value="JSM Options contact form">
+        <input type="hidden" name="_template" value="table">
+        <input type="hidden" name="_captcha" value="false">
+
+        <button type="submit" class="btn contact-send" id="contactSubmit">Send Message</button>
+        <p id="contactStatus" class="contact-status" role="status" aria-live="polite"></p>
+        <p class="contact-fineprint">No personal information is asked or stored. Your message is anonymous. Please don’t include passwords or sensitive data. If you want a reply, you can optionally include a contact method inside your message. See <a href="/privacy/">Privacy</a>.</p>
+      </form>
+    </div>
+
+    <h2>What to include</h2>
     <ul>
-      <li><a href="/level1/">Basics</a> — what an option is, calls vs puts, strike, premium, expiration, the ×100 multiplier</li>
-      <li><a href="/level2/">Fundamentals</a> — long call, long put, covered call, intrinsic vs time value, simple Greeks</li>
-      <li><a href="/level3/">Spreads</a> — vertical spreads and the iron condor (defined risk)</li>
-      <li><a href="/level4/">Advanced</a> — cash-secured puts, the Wheel, calendars, LEAPS, longer DTE ideas</li>
-      <li><a href="/strategies/">Strategies library</a> — many named structures with outlook and risk notes</li>
-      <li><a href="/builder/">Builder</a> — build legs, view expiry vs theoretical payoff, and inspect educational Greeks</li>
+      <li>Which page or Builder template you mean (e.g. Covered Call, Calendar)</li>
+      <li>Browser and device if something looks broken</li>
+      <li>A short description of the question or bug</li>
     </ul>
-    <h2>How the Builder works</h2>
-    <p>The Builder runs <b>in your browser</b>. Illustrative pricing uses a simple Black–Scholes-style model with the inputs you set (spot, IV, rates, dividends). It is not a live options chain, not a broker, and not a recommendation to trade.</p>
-    <h2>What we are not</h2>
+    <h2>What we typically cannot do</h2>
     <ul>
-      <li>Not a broker-dealer — we do not open accounts or execute orders</li>
-      <li>Not investment, tax, or legal advice</li>
-      <li>Not a signal service or “get rich quick” program</li>
+      <li>Tell you what to buy or sell</li>
+      <li>Guarantee replies within a fixed time</li>
+      <li>Recover passwords for third-party brokers (we have no customer trading accounts)</li>
     </ul>
-    <p>Options can expire worthless and losses can be substantial. Read the <a href="/disclaimer/">Disclaimer</a> before using any material on this site.</p>
-    <h2>Contact</h2>
-    <p>Questions about the site or curriculum: use the <a href="/contact/">contact form</a>.</p>
-    <p>Related free tools: <a href="https://lyricprep.com/" rel="noopener">LyricPrep</a>, <a href="https://jsm-image.com/" rel="noopener">JSM Image</a>, <a href="https://jsm-video.com/" rel="noopener">JSM Video</a>, <a href="https://jsm-loudness.com/" rel="noopener">JSM Loudness</a>.</p>
+    <p>For risk and educational limits, see the <a href="/disclaimer/">Disclaimer</a>. For data practices, see <a href="/privacy/">Privacy</a>.</p>
+    <p>Start learning: <a href="/level1/">Basics</a> · <a href="/builder/">Open Builder</a></p>
   </div>
 </div>
-
-<section class="tools-section" aria-labelledby="more-tools-title" style="margin-top:24px">
-  <div class="tools-heading">
-    <div class="small">JSM TOOLBOX</div>
-    <h2 id="more-tools-title">More Free Tools from JSM</h2>
-    <p>Practical free utilities for creators, media makers, and traders.</p>
-  </div>
-  <div class="tools-grid">
-    <a class="tool-card" href="https://lyricprep.com/" target="_blank" rel="noopener">
-      <div class="tool-icon" aria-hidden="true">🎵</div>
-      <div class="tool-content">
-        <div class="tool-name">LyricPrep</div>
-        <p>Free tools for preparing and formatting lyrics.</p>
-        <span class="tool-link">Visit LyricPrep ↗</span>
-      </div>
-    </a>
-    <a class="tool-card" href="https://jsm-image.com/" target="_blank" rel="noopener">
-      <div class="tool-icon" aria-hidden="true">🖼️</div>
-      <div class="tool-content">
-        <div class="tool-name">JSM Image</div>
-        <p>Free image utilities for everyday creative work.</p>
-        <span class="tool-link">Visit JSM Image ↗</span>
-      </div>
-    </a>
-    <a class="tool-card" href="https://jsm-video.com/" target="_blank" rel="noopener">
-      <div class="tool-icon" aria-hidden="true">🎬</div>
-      <div class="tool-content">
-        <div class="tool-name">JSM Video</div>
-        <p>Free video utilities for simple media tasks.</p>
-        <span class="tool-link">Visit JSM Video ↗</span>
-      </div>
-    </a>
-    <a class="tool-card" href="https://jsm-loudness.com/" target="_blank" rel="noopener">
-      <div class="tool-icon" aria-hidden="true">🔊</div>
-      <div class="tool-content">
-        <div class="tool-name">JSM Loudness</div>
-        <p>Free loudness and audio analysis utilities.</p>
-        <span class="tool-link">Visit JSM Loudness ↗</span>
-      </div>
-    </a>
-    <a class="tool-card tool-card-current" href="https://jsm-options.com/" aria-current="page">
-      <div class="tool-icon" aria-hidden="true">📈</div>
-      <div class="tool-content">
-        <div class="tool-name">JSM Options <span class="tool-current">You are here</span></div>
-        <p>Learn options, understand risk, and practice strategies.</p>
-        <span class="tool-link">Explore JSM Options →</span>
-      </div>
-    </a>
-  </div>
-</section>
-
 <footer class="site-footer">
   <div class="footer-note">Educational only — not financial advice. Options involve risk of loss.</div>
   <div class="footer-links">
@@ -228,5 +195,47 @@
 
 
 
+
+<script>
+(function(){
+  var form = document.getElementById('contactForm');
+  if (!form) return;
+  var status = document.getElementById('contactStatus');
+  var btn = document.getElementById('contactSubmit');
+
+  var ta = document.getElementById('message');
+  var count = document.getElementById('charCount');
+  function updateCount(){ if (count && ta) count.textContent = String(ta.value.length); }
+  if (ta) ta.addEventListener('input', updateCount);
+  updateCount();
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    var honey = document.getElementById('gotcha');
+    if (honey && honey.value) return;
+    var msg = (document.getElementById('message') || {}).value || '';
+    if (msg.trim().length < 10) {
+      if (status) status.textContent = 'Please write at least 10 characters.';
+      return;
+    }
+    var parts = ['con','tact','@','jsm-options','.com'];
+    var endpoint = 'https://formsubmit.co/ajax/' + parts.join('');
+    if (btn) { btn.disabled = true; btn.textContent = 'Sending…'; }
+    if (status) status.textContent = '';
+    var data = new FormData(form);
+    fetch(endpoint, { method:'POST', body:data, headers:{ 'Accept':'application/json' } })
+      .then(function(r){ return r.json().catch(function(){ return {}; }); })
+      .then(function(){
+        form.reset();
+        if (status) status.textContent = 'Message sent. Thank you.';
+      })
+      .catch(function(){
+        if (status) status.textContent = 'Could not send right now. Try again later.';
+      })
+      .finally(function(){
+        if (btn) { btn.disabled = false; btn.textContent = 'Send message'; }
+      });
+  });
+})();
+</script>
 </body>
 </html>

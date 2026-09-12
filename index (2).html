@@ -21,7 +21,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Bull Call Spread, Bear Put Spread &amp; Iron Condor Explained">
   <meta name="twitter:description" content="Defined-risk vertical spreads and iron condor with payoff examples. Free options education.">
-  <link rel="stylesheet" href="/assets/style.css?v=20260912">
+  <link rel="stylesheet" href="/assets/style.css?v=20260914">
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-BDL003RCN6"></script>
   <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-BDL003RCN6');</script>
 
@@ -68,14 +68,18 @@
 <header class="site-header"><div class="site-header-inner"><a class="logo logo-link" href="/" aria-label="JSM Options Home"><div class="logo-icon">JSM</div><div><div style="font-weight:700">JSM Options</div><div class="brand-sub">jsm-options.com · Educational</div></div></a><div class="header-right"><nav class="nav" aria-label="Primary navigation"><a href="/">Home</a><a href="/level1/">Basics</a><a href="/level2/">Fundamentals</a><a href="/level3/" class="active">Spreads</a><a href="/level4/">Advanced</a><a href="/strategies/">Strategies</a><a href="/builder/">Builder</a></nav><button type="button" class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button><button type="button" class="theme-toggle" id="themeToggle" aria-label="Toggle color theme"><span id="themeIcon" class="theme-icon">☼</span><span id="themeLabel" class="theme-label">Dark</span></button></div></div></header>
 
 <div class="wrap">
+<nav class="breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span aria-hidden="true">/</span><span aria-current="page">Spreads</span></nav>
+<nav class="lesson-toc" aria-label="On this page"><strong>On this page</strong><div class="lesson-toc-links"><a href="#why-spreads">Why spreads</a><a href="#bull-call">Bull call</a><a href="#bear-put">Bear put</a><a href="#iron-condor">Iron condor</a><a href="#risk-notes">Risk notes</a><a href="#practice">Practice</a></div></nav>
+
+
   <div class="hero">
     <span class="badge">Spreads · Defined risk</span>
     <h1>Vertical spreads & the iron condor</h1>
-    <p>Buy one option, sell another — cut cost or define risk. Then combine both sides into a market-neutral iron condor.</p>
+    <p>Buy one option, sell another — cut cost or define risk. This page walks through a <b>bull call spread</b>, a <b>bear put spread</b>, and the <b>iron condor</b> with payoff pictures and Builder links. Defined risk still means you can lose the full max loss — just not an undefined amount.</p>
   </div>
 
   <div class="card">
-    <h2>Why spreads?</h2>
+    <h2 id="why-spreads">Why spreads?</h2>
     <p>A naked long call is simple but you pay full premium. A naked short call can have large risk. A <b>vertical spread</b> pairs a buy and a sell in the same expiry so max loss (and often max gain) are capped.</p>
     <div class="note">Builder premiums in templates are <b>illustrative</b> — edit them to match a live option chain before you treat numbers as realistic. One contract = 100 shares. $1 = $100 cash.</div>
   </div>
@@ -83,7 +87,7 @@
   <!-- EXPANDED BULL CALL SPREAD - ABSOLUTE BEGINNER -->
   <div class="card">
     <div class="small">Bullish · defined risk · 2nd strategy after long call</div>
-    <h3>Bull call spread — the cheaper way to be bullish</h3>
+    <h3 id="bull-call">Bull call spread — the cheaper way to be bullish</h3>
     <p>This is usually the <b>second strategy traders learn</b> right after the long call. Why? A long call teaches you how brutal time decay (theta) can be. A bull call spread fixes part of that problem by selling a further out-of-the-money call against your long call.</p>
     <p>You still get leverage, but you pay less upfront and you worry less about theta. The tradeoff: your upside is capped at the short strike.</p>
 
@@ -235,28 +239,72 @@
   </div>
 
   <div class="card">
-    <div class="small">Bearish · defined risk</div>
-    <h3>Bear put spread</h3>
-    <p>Buy a higher-strike put, sell a lower-strike put. Net debit. You profit if the stock falls, with max gain capped at the short put strike.</p>
-    <div class="analogy">Buy $100 put, sell $90 put. Debit might be ~$4. Max value of spread = $10 width. Max loss = debit.</div>
-    <a class="btn" href="/builder/?template=bear_put_spread">Load Bear Put Spread →</a>
-  </div>
-
-  <div class="card">
-    <div class="small">Neutral · time &amp; range</div>
-    <h3>Iron condor</h3>
-    <p>Sell an OTM put spread and an OTM call spread (same expiry). Net <b>credit</b>. You want the stock to stay between the short strikes until expiry so both sides decay.</p>
+    <div class="small">Bearish · defined risk · debit spread</div>
+    <h2 id="bear-put">Bear put spread</h2>
+    <p>A <b>bear put spread</b> (also called a put debit spread) is how many traders express a <b>moderately bearish</b> view with <b>defined risk</b>. You <b>buy a put</b> at a higher strike and <b>sell a put</b> at a lower strike, same expiration. You pay a <b>net debit</b>.</p>
+    <p><strong>In plain English:</strong> you want the stock to fall, but you sell a cheaper lower-strike put to reduce what you pay. That also <b>caps</b> how much you can make — the short put limits the upside of the long put.</p>
     <ul>
-      <li><b>Max profit</b> ≈ net credit if price stays in the “tent”</li>
-      <li><b>Max loss</b> ≈ width of the tested wing − credit (still defined, not unlimited)</li>
-      <li>Risk rises if the stock trends hard or volatility explodes against you</li>
+      <li><b>Max loss</b> = net debit paid (×100 per spread)</li>
+      <li><b>Max profit</b> ≈ (strike width − net debit) × 100, if the stock is at or below the short put at expiry</li>
+      <li><b>Break-even</b> ≈ long put strike − net premium paid</li>
+      <li>You are bearish-to-neutral below the long strike; a big rally hurts (you can lose the debit)</li>
     </ul>
-    <div class="analogy">Short put at $90 / long put at $80 + short call at $110 / long call at $120. Credit collected upfront; profit if price stays roughly $90–$110.</div>
-    <a class="btn" href="/builder/?template=iron_condor">Load Iron Condor →</a>
+    <div class="analogy">
+      <b>Example:</b> Stock near $100. Buy the $100 put, sell the $90 put, net debit $4.<br>
+      Width = $10. Max loss = <span class="loss">$400</span> per spread. Max profit ≈ ($10 − $4) × 100 = <span class="profit">$600</span>.<br>
+      Break-even ≈ $100 − $4 = <b>$96</b>. Below $90 at expiry you still only make the max $600 — the short put caps further gains.
+    </div>
+    <img src="/images/bearish-put-spread-outcomes.webp" alt="Bearish put spread payoff diagram: max profit left of short put strike, break-even between strikes, max loss right of long put strike" width="900" height="560" loading="lazy" style="width:100%;height:auto;border-radius:12px;border:1px solid var(--border);margin:14px 0">
+    <p style="font-size:.88rem;color:var(--muted)">Blue = profit region · Red = loss region. The green X marks break-even (long put strike − net premium). The short put strike is where max profit flattens.</p>
+    <h3>Why beginners study this</h3>
+    <ul>
+      <li>Cheaper than buying a put alone (short put helps pay for the long put)</li>
+      <li>Risk is known on day one (the debit)</li>
+      <li>Same “vertical” idea as the bull call spread, flipped for a down move</li>
+    </ul>
+    <div class="note">Load it in the Builder, match a real option chain’s debit, and drag the underlying under the short strike to see max profit on the solid expiry line.</div>
+    <div class="warn"><strong>Risk:</strong> Defined risk is not zero risk. You can lose 100% of the debit. Early assignment on the short put is possible if it goes deep in the money. Education only.</div>
+    <a class="btn" href="/builder/?template=bear_put_spread">Load Bear Put Spread in Builder →</a>
+    <div class="analogy" style="margin-top:12px"><b>When not to use:</b> You expect a huge crash (a long put may pay more); you cannot define the debit as acceptable max loss; the put wing is illiquid.</div>
   </div>
 
   <div class="card">
-    <h2>How to practice in the Builder</h2>
+    <div class="small">Neutral · defined risk · credit structure</div>
+    <h2 id="iron-condor">Iron condor</h2>
+    <p>An <b>iron condor</b> combines a <b>bull put spread</b> (below the market) and a <b>bear call spread</b> (above the market), same expiration. You collect a <b>net credit</b>. You want the stock to stay in a <b>range</b> between the two short strikes so both short options expire worthless (or are cheap to buy back).</p>
+    <p><strong>In plain English:</strong> you sell “wings” of insurance on both sides and buy further OTM options so a crash or melt-up cannot produce unlimited loss. Profit is largest if price stays quiet in the middle.</p>
+    <ul>
+      <li><b>Max profit</b> ≈ net credit received if price finishes between the short put and short call</li>
+      <li><b>Max loss</b> ≈ width of the wing that is tested − credit (still defined)</li>
+      <li><b>Break-evens</b> ≈ short put − credit (lower) and short call + credit (upper)</li>
+      <li>Best intuition: neutral / range-bound; hard trends and IV spikes can push price into a wing</li>
+    </ul>
+    <div class="analogy">
+      <b>Example sketch:</b> Short $90 put / long $80 put + short $110 call / long $120 call. Collect a credit. Ideal outcome: stock stays roughly between $90 and $110 through expiry so both short options expire OTM.
+    </div>
+    <img src="/images/iron-condor-outcome.webp" alt="Iron condor payoff diagram showing max profit between short strikes B and C, break-evens, and defined max loss on both wings" width="900" height="560" loading="lazy" style="width:100%;height:auto;border-radius:12px;border:1px solid var(--border);margin:14px 0">
+    <h3>How to read the diagram</h3>
+    <ul>
+      <li><b>A → B</b> (left slope): long put wing and short put — the bear-put side of the condor</li>
+      <li><b>B → C</b> (flat top): max profit zone between the short put and short call</li>
+      <li><b>C → D</b> (right slope): short call and long call — the bull-call side</li>
+      <li><b>Max profit</b> = net premium received (credit × 100 per condor)</li>
+      <li><b>Max loss</b> = strike width of one wing − net premium (whichever side is breached)</li>
+      <li>Green X marks = lower and upper break-evens</li>
+    </ul>
+    <h3>Beginner tips</h3>
+    <ul>
+      <li>Start by understanding each vertical alone (bull put + bear call), then combine them</li>
+      <li>Wider short strikes = more room / usually less credit; tighter shorts = more credit / less room</li>
+      <li>Liquidity matters: prefer underlyings with tight spreads and decent open interest</li>
+      <li>In the Builder, use the Iron Condor template and move spot into the middle vs outside a wing</li>
+    </ul>
+    <div class="warn"><strong>Risk:</strong> Defined max loss can still be several times the credit. Assignment risk exists on short options. Gaps through a wing can approach max loss quickly. Education only — not a trade recommendation.</div>
+    <a class="btn" href="/builder/?template=iron_condor">Load Iron Condor in Builder →</a>
+  </div>
+
+  <div class="card">
+    <h2 id="practice">How to practice in the Builder</h2>
     <ol style="padding-left:20px;color:#c8d0dc;font-size:.92rem">
       <li style="margin:6px 0">Click a Load button above (or pick the template in the Builder dropdown).</li>
       <li style="margin:6px 0">Edit strikes and premiums to match a real chain.</li>
@@ -273,11 +321,48 @@
   </div>
 </div>
 
-<footer>
-  <div>Educational only — not financial advice.</div>
-  <div class="footer-links">
-    <a href="/">Home</a><a href="/strategies/">Strategies</a><a href="/builder/">Builder</a><a href="/disclaimer/">Disclaimer</a><a href="/contact/">Contact</a>
+
+  <div class="card" id="risk-notes">
+    <h2>When spreads fail beginners</h2>
+    <div class="risk-grid">
+      <div class="risk-card">
+        <h3>IV &amp; debit spreads</h3>
+        <p>Buying a debit spread when IV is very high can still hurt if IV falls (both legs can cheapen). Credit spreads can look attractive in high IV but need room for error.</p>
+      </div>
+      <div class="risk-card">
+        <h3>Earnings</h3>
+        <p>A defined-risk spread can still lose the full max loss overnight if the underlying gaps through your short strike. Size for the full max loss, not the credit alone.</p>
+      </div>
+      <div class="risk-card">
+        <h3>Liquidity</h3>
+        <p>Four-leg structures (iron condor) multiply bid–ask friction. Prefer liquid underlyings while learning.</p>
+      </div>
+    </div>
+    <div class="practice-prompt"><b>Practice:</b> Open <a href="/builder/?template=bear_put_spread">bear put spread</a> and <a href="/builder/?template=iron_condor">iron condor</a>. Drag price into the max-profit zone, then outside a wing — confirm max loss is capped.</div>
   </div>
+
+<footer class="site-footer">
+  <div class="footer-note">Educational only — not financial advice. Options involve risk of loss.</div>
+  <div class="footer-links">
+    <a href="/">Home</a>
+    <a href="/level1/">Basics</a>
+    <a href="/level2/">Fundamentals</a>
+    <a href="/level3/">Spreads</a>
+    <a href="/level4/">Advanced</a>
+    <a href="/strategies/">Strategies</a>
+    <a href="/builder/">Builder</a>
+    <a href="/about/">About</a>
+    <a href="/contact/">Contact</a>
+    <a href="/disclaimer/">Disclaimer</a>
+    <a href="/privacy/">Privacy</a>
+  </div>
+    <div class="footer-tools" style="margin-top:12px;font-size:12px;opacity:.9">
+      More free tools:
+      <a href="https://lyricprep.com/" target="_blank" rel="noopener">LyricPrep</a> ·
+      <a href="https://jsm-image.com/" target="_blank" rel="noopener">JSM Image</a> ·
+      <a href="https://jsm-video.com/" target="_blank" rel="noopener">JSM Video</a> ·
+      <a href="https://jsm-loudness.com/" target="_blank" rel="noopener">JSM Loudness</a>
+    </div>
 </footer>
 
 <script>
