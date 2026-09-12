@@ -294,6 +294,65 @@
     <div class="note">In the <a href="/builder/?template=long_put">Builder</a>, load a long put, drag the underlying price, and compare the solid expiry line with the dotted line (time value still left).</div>
   </div>
 
+
+  <div class="card" id="options-chain">
+    <h2>How to read an options chain</h2>
+    <p>An <b>options chain</b> is the table your broker shows for one stock or ETF: <b>calls on one side, puts on the other</b>, with <b>strikes down the middle</b>, for a chosen <b>expiration date</b>. Prices update during market hours; after the close you often see the last recorded quotes.</p>
+    <p>JSM Options is an <b>educational site only</b>. We are <b>not affiliated with, endorsed by, or connected to</b> any broker, exchange, or data provider. Screenshots and examples below are for learning how chains are typically organized — layouts differ by platform.</p>
+
+    <img src="/images/options-chain-example.png" alt="Example options chain layout: calls on the left, strikes in the center, puts on the right, with bid ask last delta gamma and expiration tabs" width="1200" height="560" loading="lazy" style="width:100%;height:auto;border-radius:12px;border:1px solid var(--border);margin:12px 0">
+    <p style="font-size:.82rem;color:var(--muted);margin:0 0 12px">Example layout only (illustrative). Your broker’s labels, colors, and columns may differ. Not a recommendation to trade this or any symbol.</p>
+
+    <h3>What you are looking at</h3>
+    <ul>
+      <li><b>Underlying &amp; last price</b> — the stock/ETF the options refer to (and often today’s % change).</li>
+      <li><b>Expiration tabs</b> — each tab is a different expiry (e.g. weekly or monthly). “Days” shows approximate time left.</li>
+      <li><b>Calls (usually left)</b> — right to <b>buy</b> 100 shares at the strike.</li>
+      <li><b>Puts (usually right)</b> — right to <b>sell</b> 100 shares at the strike.</li>
+      <li><b>Strike column (center)</b> — the fixed price in the option contract.</li>
+    </ul>
+
+    <h3>Columns you will see most often</h3>
+    <ul>
+      <li><b>Bid</b> — highest price buyers are currently offering. If you <b>sell</b> an option, you often start near the bid.</li>
+      <li><b>Ask</b> — lowest price sellers are asking. If you <b>buy</b> an option, you often pay near the ask.</li>
+      <li><b>Last</b> — last trade price (can be stale if the option is quiet).</li>
+      <li><b>Delta</b> — rough sensitivity to a $1 move in the stock (calls positive, puts negative). Beginners: treat it as “how stock-like is this option?”</li>
+      <li><b>Gamma</b> — how fast delta can change. More relevant as you go deeper; safe to note and move on at first.</li>
+      <li><b>IV (implied volatility)</b> — often shown for the expiration or per strike. Higher IV → options tend to be more expensive, all else equal.</li>
+    </ul>
+
+    <div class="analogy">
+      <b>Mid-price tip:</b> (bid + ask) ÷ 2 is a common “fair-ish” reference. Wide bid–ask spreads mean higher friction — harder to get a good fill, especially on low-volume strikes.
+    </div>
+
+    <h3>Contract size (the ×100 reminder)</h3>
+    <p>Listed equity options usually control <b>100 shares</b> per contract. A put with ask <b>$1.09</b> costs about <b>$109</b> to buy one contract (before commissions), not $1.09. Always multiply premium by 100 when estimating cash.</p>
+
+    <h3>How orders are typically placed (general)</h3>
+    <p>Steps are similar across brokers; exact buttons and names vary. This is a <b>generic outline</b>, not instructions for any specific firm:</p>
+    <ol style="padding-left:20px">
+      <li style="margin:6px 0"><b>Choose the underlying</b> (stock or ETF) and open its options chain.</li>
+      <li style="margin:6px 0"><b>Pick an expiration</b> (how much time you want).</li>
+      <li style="margin:6px 0"><b>Pick call or put</b> and a <b>strike</b>.</li>
+      <li style="margin:6px 0"><b>Action:</b> <i>Buy to open</i> (you are long) or <i>Sell to open</i> (you are short — higher risk if naked).</li>
+      <li style="margin:6px 0"><b>Quantity</b> in contracts (1 contract ≈ 100 shares of exposure).</li>
+      <li style="margin:6px 0"><b>Order type:</b> while learning, prefer a <b>limit</b> order (you set the max price to pay or min price to receive) over a market order.</li>
+      <li style="margin:6px 0"><b>Review</b> estimated debit/credit, fees, and buying power impact → submit only if you understand the max loss.</li>
+    </ol>
+
+    <div class="analogy">
+      <b>Buying a call example (illustrative):</b> Select a call strike → Buy to open → 1 contract → limit near the ask (or mid if you are patient) → confirm total ≈ premium × 100 + fees.
+    </div>
+
+    <h3>Connect the chain to this site</h3>
+    <p>After you understand a quote, you can copy the <b>strike</b> and a realistic <b>premium</b> (e.g. mid) into the <a href="/builder/">Strategy Builder</a> and see payoff and educational Greeks. The Builder is a simulator — not live brokerage data and not an order ticket.</p>
+
+    <div class="warn">
+      <strong>Important:</strong> JSM Options is not a broker and does not place orders. We are not affiliated with any brokerage, exchange, or institution. Options can expire worthless and losses can exceed your expectations if you sell naked options. Educational only — not financial advice.
+    </div>
+  </div>
+
   <div class="card">
     <h2>What “assignment” means (quick)</h2>
     <p>If you <b>sell</b> (short) an option, the buyer may exercise. Then you can be <span class="term">assigned</span>: forced to buy or sell the shares at the strike. That is why short calls without owning the shares (naked calls) can be very risky.</p>
