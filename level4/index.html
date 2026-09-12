@@ -21,7 +21,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Calendar Spreads, LEAPS &amp; Cash-Secured Puts Explained">
   <meta name="twitter:description" content="Calendar spreads, credit spreads, cash-secured puts, covered calls, and LEAPS explained for intermediate learners.">
-  <link rel="stylesheet" href="/assets/style.css?v=20260912">
+  <link rel="stylesheet" href="/assets/style.css?v=20260913">
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-BDL003RCN6"></script>
   <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-BDL003RCN6');</script>
   <style>
@@ -91,6 +91,8 @@
 <header class="site-header"><div class="site-header-inner"><a class="logo logo-link" href="/" aria-label="JSM Options Home"><div class="logo-icon">JSM</div><div><div style="font-weight:700">JSM Options</div><div class="brand-sub">jsm-options.com · Educational</div></div></a><div class="header-right"><nav class="nav" aria-label="Primary navigation"><a href="/">Home</a><a href="/level1/">Basics</a><a href="/level2/">Fundamentals</a><a href="/level3/">Spreads</a><a href="/level4/" class="active">Advanced</a><a href="/strategies/">Strategies</a><a href="/builder/">Builder</a></nav><button type="button" class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button><button type="button" class="theme-toggle" id="themeToggle" aria-label="Toggle color theme"><span id="themeIcon" class="theme-icon">☼</span><span id="themeLabel" class="theme-label">Dark</span></button></div></div></header>
 
 <div class="wrap">
+<nav class="breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span aria-hidden="true">/</span><span aria-current="page">Advanced</span></nav>
+
   <div class="hero">
     <span class="badge">Advanced · Longer horizons</span>
     <h1>Cash-secured puts, calendars, credits, covered calls &amp; LEAPS</h1>
@@ -183,13 +185,12 @@
       <svg viewBox="0 0 520 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Cash-secured put payoff at expiry">
   <line x1="40" y1="150" x2="500" y2="150" stroke="#8b9bb4" stroke-width="1.5" opacity=".55"/>
   <line x1="40" y1="30" x2="40" y2="230" stroke="#8b9bb4" stroke-width="1" opacity=".3"/>
-  <polygon points="40.0,230.0 180.00,150.0 180.0,150 40.0,150" fill="#ef4444" opacity="0.28"/>
-  <polygon points="180.0,150.0 260.00,105.0 260.0,150 180.0,150" fill="#22c55e" opacity="0.28"/>
-<polygon points="260.0,105.0 500.00,105.0 500.0,150 260.0,150" fill="#22c55e" opacity="0.28"/>
-  <path d="M40.0 230.0 L180.0 150.0 L260.0 105.0 L500.0 105.0" fill="none" stroke="#e7ecf3" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
+  <polygon points="40.0,220.0 173.9,150 40.0,150" fill="#ef4444" opacity="0.3"/><polygon points="173.9,150 260.0,105.0 260.0,150" fill="#22c55e" opacity="0.3"/><polygon points="260.0,105.0 500.0,105.0 500.0,150 260.0,150" fill="#22c55e" opacity="0.3"/>
+  <path d="M40.0 220.0 L260.0 105.0 L500.0 105.0" fill="none" stroke="#e7ecf3" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
   <text x="14" y="36" fill="#8b9bb4" font-size="11" font-family="system-ui,sans-serif">P/L</text>
   <text x="250" y="250" fill="#8b9bb4" font-size="11" font-family="system-ui,sans-serif" text-anchor="middle">Stock price at expiry →</text>
-<text x="360" y="92" fill="#86efac" font-size="12" font-family="system-ui,sans-serif" text-anchor="start">Max profit = premium</text><text x="70" y="220" fill="#fca5a5" font-size="12" font-family="system-ui,sans-serif" text-anchor="start">Loss if stock falls</text><text x="180" y="142" fill="#8b9bb4" font-size="12" font-family="system-ui,sans-serif" text-anchor="middle">Breakeven</text></svg>
+  <text x="360" y="92" fill="#86efac" font-size="12" font-family="system-ui,sans-serif" text-anchor="start">Max profit = premium</text><text x="70" y="220" fill="#fca5a5" font-size="12" font-family="system-ui,sans-serif" text-anchor="start">Loss if stock falls</text>
+</svg>
       <div class="payoff-legend"><span class="lg">Green = profit</span><span class="lr">Red = loss</span></div>
       <p class="payoff-caption">Short put at expiry: continuous line from max loss through breakeven to flat max profit (premium).</p>
     </div>
@@ -271,17 +272,11 @@
       <svg viewBox="0 0 520 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Covered call payoff at expiry">
   <line x1="40" y1="150" x2="500" y2="150" stroke="#8b9bb4" stroke-width="1.5" opacity=".55"/>
   <line x1="40" y1="30" x2="40" y2="230" stroke="#8b9bb4" stroke-width="1" opacity=".3"/>
-  <!-- red below zero: left of BE -->
-  <polygon points="40,230 160,150 40,150" fill="#ef4444" opacity="0.3"/>
-  <!-- green above zero: BE to strike (diagonal) then flat max profit -->
-  <polygon points="160,150 280,95 280,150" fill="#22c55e" opacity="0.3"/>
-  <polygon points="280,95 500,95 500,150 280,150" fill="#22c55e" opacity="0.3"/>
-  <path d="M40 230 L160 150 L280 95 L500 95" fill="none" stroke="#e7ecf3" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
+  <polygon points="40.0,230.0 182.2,150 40.0,150" fill="#ef4444" opacity="0.3"/><polygon points="182.2,150 280.0,95.0 280.0,150" fill="#22c55e" opacity="0.3"/><polygon points="280.0,95.0 500.0,95.0 500.0,150 280.0,150" fill="#22c55e" opacity="0.3"/>
+  <path d="M40.0 230.0 L280.0 95.0 L500.0 95.0" fill="none" stroke="#e7ecf3" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
   <text x="14" y="36" fill="#8b9bb4" font-size="11" font-family="system-ui,sans-serif">P/L</text>
-  <text x="360" y="82" fill="#86efac" font-size="12" font-family="system-ui,sans-serif">Capped profit</text>
-  <text x="55" y="220" fill="#fca5a5" font-size="12" font-family="system-ui,sans-serif">Stock downside</text>
-  <text x="160" y="142" fill="#8b9bb4" font-size="11" font-family="system-ui,sans-serif" text-anchor="middle">BE</text>
-  <text x="280" y="250" fill="#8b9bb4" font-size="11" font-family="system-ui,sans-serif" text-anchor="middle">Stock price at expiry →</text>
+  <text x="250" y="250" fill="#8b9bb4" font-size="11" font-family="system-ui,sans-serif" text-anchor="middle">Stock price at expiry →</text>
+  <text x="360" y="82" fill="#86efac" font-size="12" font-family="system-ui,sans-serif" text-anchor="start">Capped profit</text><text x="55" y="220" fill="#fca5a5" font-size="12" font-family="system-ui,sans-serif" text-anchor="start">Stock downside</text>
 </svg>
       <div class="payoff-legend"><span class="lg">Green = profit</span><span class="lr">Red = loss</span></div>
       <p class="payoff-caption">Covered call: line rises with the stock through breakeven to the short-call strike, then stays flat at max profit. Red = stock downside; green = profit zone.</p>
@@ -302,14 +297,12 @@
       <svg viewBox="0 0 520 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Bull put credit spread payoff at expiry">
   <line x1="40" y1="150" x2="500" y2="150" stroke="#8b9bb4" stroke-width="1.5" opacity=".55"/>
   <line x1="40" y1="30" x2="40" y2="230" stroke="#8b9bb4" stroke-width="1" opacity=".3"/>
-  <polygon points="40.0,205.0 140.00,205.0 140.0,150 40.0,150" fill="#ef4444" opacity="0.28"/>
-<polygon points="140.0,205.0 197.62,150.0 197.6,150 140.0,150" fill="#ef4444" opacity="0.28"/>
-  <polygon points="197.6,150.0 250.00,100.0 250.0,150 197.6,150" fill="#22c55e" opacity="0.28"/>
-<polygon points="250.0,100.0 500.00,100.0 500.0,150 250.0,150" fill="#22c55e" opacity="0.28"/>
+  <polygon points="40.0,205.0 140.0,205.0 140.0,150 40.0,150" fill="#ef4444" opacity="0.3"/><polygon points="140.0,205.0 197.6,150 140.0,150" fill="#ef4444" opacity="0.3"/><polygon points="197.6,150 250.0,100.0 250.0,150" fill="#22c55e" opacity="0.3"/><polygon points="250.0,100.0 500.0,100.0 500.0,150 250.0,150" fill="#22c55e" opacity="0.3"/>
   <path d="M40.0 205.0 L140.0 205.0 L250.0 100.0 L500.0 100.0" fill="none" stroke="#e7ecf3" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
   <text x="14" y="36" fill="#8b9bb4" font-size="11" font-family="system-ui,sans-serif">P/L</text>
   <text x="250" y="250" fill="#8b9bb4" font-size="11" font-family="system-ui,sans-serif" text-anchor="middle">Stock price at expiry →</text>
-<text x="340" y="88" fill="#86efac" font-size="12" font-family="system-ui,sans-serif" text-anchor="start">Max profit = credit</text><text x="50" y="222" fill="#fca5a5" font-size="12" font-family="system-ui,sans-serif" text-anchor="start">Max loss = width − credit</text></svg>
+  <text x="340" y="88" fill="#86efac" font-size="12" font-family="system-ui,sans-serif" text-anchor="start">Max profit = credit</text><text x="50" y="222" fill="#fca5a5" font-size="12" font-family="system-ui,sans-serif" text-anchor="start">Max loss = width − credit</text>
+</svg>
       <div class="payoff-legend"><span class="lg">Green = profit</span><span class="lr">Red = loss</span></div>
       <p class="payoff-caption">Bull put (credit): flat max profit if stock stays high; limited max loss below the long put.</p>
     </div>
@@ -321,14 +314,12 @@
       <svg viewBox="0 0 520 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Bull call debit spread payoff at expiry">
   <line x1="40" y1="150" x2="500" y2="150" stroke="#8b9bb4" stroke-width="1.5" opacity=".55"/>
   <line x1="40" y1="30" x2="40" y2="230" stroke="#8b9bb4" stroke-width="1" opacity=".3"/>
-  <polygon points="40.0,205.0 180.00,205.0 180.0,150 40.0,150" fill="#ef4444" opacity="0.28"/>
-<polygon points="180.0,205.0 250.00,150.0 250.0,150 180.0,150" fill="#ef4444" opacity="0.28"/>
-  <polygon points="250.0,150.0 320.00,95.0 320.0,150 250.0,150" fill="#22c55e" opacity="0.28"/>
-<polygon points="320.0,95.0 500.00,95.0 500.0,150 320.0,150" fill="#22c55e" opacity="0.28"/>
+  <polygon points="40.0,205.0 180.0,205.0 180.0,150 40.0,150" fill="#ef4444" opacity="0.3"/><polygon points="180.0,205.0 250.0,150 180.0,150" fill="#ef4444" opacity="0.3"/><polygon points="250.0,150 320.0,95.0 320.0,150" fill="#22c55e" opacity="0.3"/><polygon points="320.0,95.0 500.0,95.0 500.0,150 320.0,150" fill="#22c55e" opacity="0.3"/>
   <path d="M40.0 205.0 L180.0 205.0 L320.0 95.0 L500.0 95.0" fill="none" stroke="#e7ecf3" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
   <text x="14" y="36" fill="#8b9bb4" font-size="11" font-family="system-ui,sans-serif">P/L</text>
   <text x="250" y="250" fill="#8b9bb4" font-size="11" font-family="system-ui,sans-serif" text-anchor="middle">Stock price at expiry →</text>
-<text x="340" y="82" fill="#86efac" font-size="12" font-family="system-ui,sans-serif" text-anchor="start">Max profit = width − debit</text><text x="55" y="222" fill="#fca5a5" font-size="12" font-family="system-ui,sans-serif" text-anchor="start">Max loss = debit</text></svg>
+  <text x="340" y="82" fill="#86efac" font-size="12" font-family="system-ui,sans-serif" text-anchor="start">Max profit = width − debit</text><text x="55" y="222" fill="#fca5a5" font-size="12" font-family="system-ui,sans-serif" text-anchor="start">Max loss = debit</text>
+</svg>
       <div class="payoff-legend"><span class="lg">Green = profit</span><span class="lr">Red = loss</span></div>
       <p class="payoff-caption">Bull call (debit): flat max loss (debit paid), then rises to flat max profit (width − debit).</p>
     </div>
@@ -354,19 +345,11 @@
       <svg viewBox="0 0 520 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Calendar spread conceptual payoff near front expiry">
   <line x1="40" y1="150" x2="500" y2="150" stroke="#8b9bb4" stroke-width="1.5" opacity=".55"/>
   <line x1="40" y1="30" x2="40" y2="230" stroke="#8b9bb4" stroke-width="1" opacity=".3"/>
-  <!-- red left wing (below zero) -->
-  <polygon points="40,205 120,205 180,150 40,150" fill="#ef4444" opacity="0.3"/>
-  <!-- green center peak (above zero) -->
-  <polygon points="180,150 260,80 340,150" fill="#22c55e" opacity="0.3"/>
-  <!-- red right wing (below zero) -->
-  <polygon points="340,150 400,205 500,205 500,150" fill="#ef4444" opacity="0.3"/>
-  <!-- continuous tent line through zero crossings -->
-  <path d="M40 205 L120 205 L180 150 L260 80 L340 150 L400 205 L500 205" fill="none" stroke="#e7ecf3" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
+  <polygon points="40.0,205.0 120.0,205.0 120.0,150 40.0,150" fill="#ef4444" opacity="0.3"/><polygon points="120.0,205.0 181.6,150 120.0,150" fill="#ef4444" opacity="0.3"/><polygon points="181.6,150 260.0,80.0 260.0,150" fill="#22c55e" opacity="0.3"/><polygon points="260.0,80.0 338.4,150 260.0,150" fill="#22c55e" opacity="0.3"/><polygon points="338.4,150 400.0,205.0 400.0,150" fill="#ef4444" opacity="0.3"/><polygon points="400.0,205.0 500.0,205.0 500.0,150 400.0,150" fill="#ef4444" opacity="0.3"/>
+  <path d="M40.0 205.0 L120.0 205.0 L260.0 80.0 L400.0 205.0 L500.0 205.0" fill="none" stroke="#e7ecf3" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
   <text x="14" y="36" fill="#8b9bb4" font-size="11" font-family="system-ui,sans-serif">P/L</text>
-  <text x="260" y="68" fill="#86efac" font-size="12" font-family="system-ui,sans-serif" text-anchor="middle">Peak near strike</text>
-  <text x="70" y="222" fill="#fca5a5" font-size="11" font-family="system-ui,sans-serif">Far move → loss</text>
-  <text x="410" y="222" fill="#fca5a5" font-size="11" font-family="system-ui,sans-serif">Far move → loss</text>
-  <text x="260" y="250" fill="#8b9bb4" font-size="11" font-family="system-ui,sans-serif" text-anchor="middle">Stock price (at front expiry) →</text>
+  <text x="250" y="250" fill="#8b9bb4" font-size="11" font-family="system-ui,sans-serif" text-anchor="middle">Stock price at expiry →</text>
+  <text x="260" y="68" fill="#86efac" font-size="12" font-family="system-ui,sans-serif" text-anchor="middle">Peak near strike</text><text x="55" y="222" fill="#fca5a5" font-size="12" font-family="system-ui,sans-serif" text-anchor="start">Far move → loss</text><text x="400" y="222" fill="#fca5a5" font-size="12" font-family="system-ui,sans-serif" text-anchor="start">Far move → loss</text>
 </svg>
       <div class="payoff-legend"><span class="lg">Green = profit</span><span class="lr">Red = loss</span></div>
       <p class="payoff-caption">Calendar (illustrative near front expiry): continuous tent peaking near the strike. Green near the money; red when the stock moves far away. IV also matters in live markets.</p>
@@ -388,13 +371,12 @@
       <svg viewBox="0 0 520 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Long LEAPS call payoff at expiry">
   <line x1="40" y1="150" x2="500" y2="150" stroke="#8b9bb4" stroke-width="1.5" opacity=".55"/>
   <line x1="40" y1="30" x2="40" y2="230" stroke="#8b9bb4" stroke-width="1" opacity=".3"/>
-  <polygon points="40.0,200.0 240.00,200.0 240.0,150 40.0,150" fill="#ef4444" opacity="0.28"/>
-<polygon points="240.0,200.0 323.87,150.0 323.9,150 240.0,150" fill="#ef4444" opacity="0.28"/>
-  <polygon points="323.9,150.0 500.00,45.0 500.0,150 323.9,150" fill="#22c55e" opacity="0.28"/>
+  <polygon points="40.0,200.0 240.0,200.0 240.0,150 40.0,150" fill="#ef4444" opacity="0.3"/><polygon points="240.0,200.0 323.9,150 240.0,150" fill="#ef4444" opacity="0.3"/><polygon points="323.9,150 500.0,45.0 500.0,150" fill="#22c55e" opacity="0.3"/>
   <path d="M40.0 200.0 L240.0 200.0 L500.0 45.0" fill="none" stroke="#e7ecf3" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
   <text x="14" y="36" fill="#8b9bb4" font-size="11" font-family="system-ui,sans-serif">P/L</text>
   <text x="250" y="250" fill="#8b9bb4" font-size="11" font-family="system-ui,sans-serif" text-anchor="middle">Stock price at expiry →</text>
-<text x="70" y="220" fill="#fca5a5" font-size="12" font-family="system-ui,sans-serif" text-anchor="start">Max loss = premium</text><text x="380" y="70" fill="#86efac" font-size="12" font-family="system-ui,sans-serif" text-anchor="start">Upside if stock rises</text></svg>
+  <text x="70" y="220" fill="#fca5a5" font-size="12" font-family="system-ui,sans-serif" text-anchor="start">Max loss = premium</text><text x="380" y="70" fill="#86efac" font-size="12" font-family="system-ui,sans-serif" text-anchor="start">Upside if stock rises</text>
+</svg>
       <div class="payoff-legend"><span class="lg">Green = profit</span><span class="lr">Red = loss</span></div>
       <p class="payoff-caption">Long call / LEAPS at expiry: flat max loss (premium), then rising profit if stock is above strike.</p>
     </div>
@@ -415,17 +397,12 @@
       <svg viewBox="0 0 520 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Short iron condor payoff at expiry">
   <line x1="40" y1="150" x2="500" y2="150" stroke="#8b9bb4" stroke-width="1.5" opacity=".55"/>
   <line x1="40" y1="30" x2="40" y2="230" stroke="#8b9bb4" stroke-width="1" opacity=".3"/>
-  <polygon points="40.0,205.0 100.00,205.0 100.0,150 40.0,150" fill="#ef4444" opacity="0.28"/>
-<polygon points="100.0,205.0 141.90,150.0 141.9,150 100.0,150" fill="#ef4444" opacity="0.28"/>
-<polygon points="378.1,150.0 420.00,205.0 420.0,150 378.1,150" fill="#ef4444" opacity="0.28"/>
-<polygon points="420.0,205.0 500.00,205.0 500.0,150 420.0,150" fill="#ef4444" opacity="0.28"/>
-  <polygon points="141.9,150.0 180.00,100.0 180.0,150 141.9,150" fill="#22c55e" opacity="0.28"/>
-<polygon points="180.0,100.0 340.00,100.0 340.0,150 180.0,150" fill="#22c55e" opacity="0.28"/>
-<polygon points="340.0,100.0 378.10,150.0 378.1,150 340.0,150" fill="#22c55e" opacity="0.28"/>
+  <polygon points="40.0,205.0 100.0,205.0 100.0,150 40.0,150" fill="#ef4444" opacity="0.3"/><polygon points="100.0,205.0 141.9,150 100.0,150" fill="#ef4444" opacity="0.3"/><polygon points="141.9,150 180.0,100.0 180.0,150" fill="#22c55e" opacity="0.3"/><polygon points="180.0,100.0 340.0,100.0 340.0,150 180.0,150" fill="#22c55e" opacity="0.3"/><polygon points="340.0,100.0 378.1,150 340.0,150" fill="#22c55e" opacity="0.3"/><polygon points="378.1,150 420.0,205.0 420.0,150" fill="#ef4444" opacity="0.3"/><polygon points="420.0,205.0 500.0,205.0 500.0,150 420.0,150" fill="#ef4444" opacity="0.3"/>
   <path d="M40.0 205.0 L100.0 205.0 L180.0 100.0 L340.0 100.0 L420.0 205.0 L500.0 205.0" fill="none" stroke="#e7ecf3" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
   <text x="14" y="36" fill="#8b9bb4" font-size="11" font-family="system-ui,sans-serif">P/L</text>
   <text x="250" y="250" fill="#8b9bb4" font-size="11" font-family="system-ui,sans-serif" text-anchor="middle">Stock price at expiry →</text>
-<text x="230" y="85" fill="#86efac" font-size="12" font-family="system-ui,sans-serif" text-anchor="middle">Profit in the range</text><text x="50" y="222" fill="#fca5a5" font-size="12" font-family="system-ui,sans-serif" text-anchor="start">Limited loss</text><text x="430" y="222" fill="#fca5a5" font-size="12" font-family="system-ui,sans-serif" text-anchor="start">Limited loss</text></svg>
+  <text x="230" y="85" fill="#86efac" font-size="12" font-family="system-ui,sans-serif" text-anchor="middle">Profit in the range</text><text x="50" y="222" fill="#fca5a5" font-size="12" font-family="system-ui,sans-serif" text-anchor="start">Limited loss</text><text x="430" y="222" fill="#fca5a5" font-size="12" font-family="system-ui,sans-serif" text-anchor="start">Limited loss</text>
+</svg>
       <div class="payoff-legend"><span class="lg">Green = profit</span><span class="lr">Red = loss</span></div>
       <p class="payoff-caption">Short iron condor: flat max profit between short strikes; limited losses outside the wings.</p>
     </div>
@@ -442,13 +419,20 @@
   </div>
 </div>
 
-<footer>
-  <div>Educational only — not financial advice.</div>
+<footer class="site-footer">
+  <div class="footer-note">Educational only — not financial advice. Options involve risk of loss.</div>
   <div class="footer-links">
     <a href="/">Home</a>
+    <a href="/level1/">Basics</a>
+    <a href="/level2/">Fundamentals</a>
     <a href="/level3/">Spreads</a>
-    <a href="/strategies/">Strategies</a><a href="/builder/">Builder</a>
+    <a href="/level4/">Advanced</a>
+    <a href="/strategies/">Strategies</a>
+    <a href="/builder/">Builder</a>
+    <a href="/about/">About</a>
+    <a href="/contact/">Contact</a>
     <a href="/disclaimer/">Disclaimer</a>
+    <a href="/privacy/">Privacy</a>
   </div>
 </footer>
 
