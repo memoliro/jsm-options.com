@@ -85,6 +85,23 @@
       <li>Assignment means <b>you buy 100 shares</b>, not a mystery outcome</li>
     </ul>
 
+    <div class="payoff-box" style="background:var(--input);border:1px solid var(--border);border-radius:12px;padding:12px;margin:14px 0">
+      <svg viewBox="0 0 520 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Cash-secured put payoff at expiry: profit capped at premium if stock stays above strike, losses if stock falls" width="100%" height="auto">
+        <line x1="40" y1="150" x2="500" y2="150" stroke="#8b9bb4" stroke-width="1.5" opacity=".55"/>
+        <line x1="40" y1="30" x2="40" y2="230" stroke="#8b9bb4" stroke-width="1" opacity=".3"/>
+        <polygon points="40.0,220.0 180.0,150.0 40.0,150.0" fill="#ef4444" opacity="0.3"/>
+        <polygon points="180.0,150.0 260.0,105.0 260.0,150.0" fill="#22c55e" opacity="0.3"/>
+        <polygon points="260.0,105.0 500.0,105.0 500.0,150.0 260.0,150.0" fill="#22c55e" opacity="0.3"/>
+        <path d="M40.0 220.0 L260.0 105.0 L500.0 105.0" fill="none" stroke="#e7ecf3" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
+        <text x="14" y="36" fill="#8b9bb4" font-size="11" font-family="system-ui,sans-serif">P/L</text>
+        <text x="250" y="250" fill="#8b9bb4" font-size="11" font-family="system-ui,sans-serif" text-anchor="middle">Stock price at expiry →</text>
+        <text x="360" y="92" fill="#86efac" font-size="12" font-family="system-ui,sans-serif">Max profit = premium</text>
+        <text x="70" y="220" fill="#fca5a5" font-size="12" font-family="system-ui,sans-serif">Loss if stock falls</text>
+        <text x="180" y="140" fill="#facc15" font-size="11" font-family="system-ui,sans-serif" text-anchor="middle">BE</text>
+      </svg>
+      <p style="text-align:center;font-size:.8rem;color:var(--muted);margin:8px 0 0">Green = profit · Red = loss · Flat right side = put expires, you keep the credit</p>
+    </div>
+
     <div class="analogy">
       <b>Example:</b> Stock at $100. Sell the $95 put for $2.00 ($200 credit). Cash secured ≈ $9,500.<br>
       Above $95 at expiry: keep ~$200; no shares.<br>

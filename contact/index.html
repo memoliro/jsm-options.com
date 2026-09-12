@@ -9,7 +9,7 @@
   <link rel="manifest" href="/site.webmanifest">
 
   <title>Contact JSM Options</title>
-  <meta name="description" content="Contact JSM Options about the free options course or Strategy Builder. Educational questions only — not personalized trading advice.">
+  <meta name="description" content="Send a message about the free options course or Strategy Builder. No name or email required. Educational questions only — not personalized trading advice.">
   <link rel="canonical" href="https://jsm-options.com/contact/">
   <meta property="og:image" content="https://jsm-options.com/images/og-default.png">
   <meta name="twitter:image" content="https://jsm-options.com/images/og-default.png">
@@ -64,9 +64,30 @@
 
   <div class="card">
     <h1>Contact</h1>
-    <p>We read messages about the free options education site and Strategy Builder. We do not provide personalized trade recommendations, portfolio reviews, or account support for brokers.</p>
-    <h2>Email</h2>
-    <p><a href="mailto:admin@jsm-options.com">admin@jsm-options.com</a></p>
+    <p>Use the form below to send a message about the free options education site or Strategy Builder. We do not display an email address on this page.</p>
+    <p>We do <b>not</b> provide personalized trade recommendations, portfolio reviews, or broker account support.</p>
+
+    <form id="contactForm" class="contact-form" method="POST" action="#">
+      <label for="topic">Topic</label>
+      <select id="topic" name="topic">
+        <option value="Site or lesson question">Site or lesson question</option>
+        <option value="Builder / graph">Builder / graph</option>
+        <option value="Typo or content error">Typo or content error</option>
+        <option value="Other">Other</option>
+      </select>
+
+      <label for="message">Message</label>
+      <textarea id="message" name="message" rows="8" required maxlength="4000" placeholder="Which page or Builder template? What happened? If you want a reply, you can include a way to reach you in the message — it is optional."></textarea>
+
+      <input type="text" name="_gotcha" id="gotcha" tabindex="-1" autocomplete="off" aria-hidden="true" class="hp-field">
+      <input type="hidden" name="_subject" value="JSM Options contact form">
+      <input type="hidden" name="_template" value="table">
+      <input type="hidden" name="_captcha" value="false">
+
+      <button type="submit" class="btn" id="contactSubmit">Send message</button>
+      <p id="contactStatus" class="contact-status" role="status" aria-live="polite"></p>
+    </form>
+
     <h2>What to include</h2>
     <ul>
       <li>Which page or Builder template you mean (e.g. Covered Call, Calendar)</li>
@@ -170,5 +191,41 @@
 
 
 
+
+<script>
+(function(){
+  var form = document.getElementById('contactForm');
+  if (!form) return;
+  var status = document.getElementById('contactStatus');
+  var btn = document.getElementById('contactSubmit');
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    var honey = document.getElementById('gotcha');
+    if (honey && honey.value) return;
+    var msg = (document.getElementById('message') || {}).value || '';
+    if (!msg.trim()) {
+      if (status) status.textContent = 'Please write a message first.';
+      return;
+    }
+    var parts = ['con','tact','@','jsm-options','.com'];
+    var endpoint = 'https://formsubmit.co/ajax/' + parts.join('');
+    if (btn) { btn.disabled = true; btn.textContent = 'Sending…'; }
+    if (status) status.textContent = '';
+    var data = new FormData(form);
+    fetch(endpoint, { method:'POST', body:data, headers:{ 'Accept':'application/json' } })
+      .then(function(r){ return r.json().catch(function(){ return {}; }); })
+      .then(function(){
+        form.reset();
+        if (status) status.textContent = 'Message sent. Thank you.';
+      })
+      .catch(function(){
+        if (status) status.textContent = 'Could not send right now. Try again later.';
+      })
+      .finally(function(){
+        if (btn) { btn.disabled = false; btn.textContent = 'Send message'; }
+      });
+  });
+})();
+</script>
 </body>
 </html>

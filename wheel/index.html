@@ -75,6 +75,35 @@
       <li style="margin:6px 0"><b>Start again</b> with cash-secured puts — or stop if the stock no longer fits your plan.</li>
     </ol>
 
+    <div class="wheel-visual" role="img" aria-label="Wheel strategy cycle: sell CSP until assigned and you buy shares, sell covered call until shares are sold, then restart" style="margin:16px 0">
+      <svg viewBox="0 0 640 420" width="100%" height="auto" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="320" cy="210" r="150" fill="none" stroke="#2d3a4f" stroke-width="3" stroke-dasharray="8 6"/>
+        <path d="M320 60 A150 150 0 0 1 455 140" fill="none" stroke="#3b82f6" stroke-width="3"/>
+        <polygon points="455,140 442,128 440,145" fill="#3b82f6"/>
+        <path d="M470 210 A150 150 0 0 1 380 340" fill="none" stroke="#22c55e" stroke-width="3"/>
+        <polygon points="380,340 392,328 398,345" fill="#22c55e"/>
+        <path d="M260 350 A150 150 0 0 1 170 180" fill="none" stroke="#eab308" stroke-width="3"/>
+        <polygon points="170,180 178,194 162,192" fill="#eab308"/>
+        <circle cx="320" cy="210" r="48" fill="#1a2332" stroke="#3b82f6" stroke-width="2"/>
+        <text x="320" y="205" text-anchor="middle" fill="#e7ecf3" font-size="15" font-weight="700" font-family="system-ui,sans-serif">WHEEL</text>
+        <text x="320" y="224" text-anchor="middle" fill="#8b9bb4" font-size="11" font-family="system-ui,sans-serif">cycle</text>
+        <rect x="200" y="8" width="240" height="72" rx="12" fill="#1a2332" stroke="#3b82f6" stroke-width="1.5"/>
+        <text x="320" y="32" text-anchor="middle" fill="#60a5fa" font-size="12" font-weight="700" font-family="system-ui,sans-serif">1 · SELL CSP</text>
+        <text x="320" y="50" text-anchor="middle" fill="#c8d0dc" font-size="11" font-family="system-ui,sans-serif">Cash-secured put · collect credit</text>
+        <text x="320" y="66" text-anchor="middle" fill="#8b9bb4" font-size="10" font-family="system-ui,sans-serif">Repeat until assigned → you buy the shares</text>
+        <rect x="430" y="168" width="200" height="84" rx="12" fill="#1a2332" stroke="#22c55e" stroke-width="1.5"/>
+        <text x="530" y="194" text-anchor="middle" fill="#4ade80" font-size="12" font-weight="700" font-family="system-ui,sans-serif">2 · SELL COVERED CALL</text>
+        <text x="530" y="212" text-anchor="middle" fill="#c8d0dc" font-size="11" font-family="system-ui,sans-serif">You hold the shares</text>
+        <text x="530" y="228" text-anchor="middle" fill="#c8d0dc" font-size="11" font-family="system-ui,sans-serif">Sell a call against them</text>
+        <text x="530" y="244" text-anchor="middle" fill="#8b9bb4" font-size="10" font-family="system-ui,sans-serif">Repeat until shares are sold</text>
+        <rect x="20" y="300" width="230" height="84" rx="12" fill="#1a2332" stroke="#eab308" stroke-width="1.5"/>
+        <text x="135" y="326" text-anchor="middle" fill="#facc15" font-size="12" font-weight="700" font-family="system-ui,sans-serif">3 · RESTART</text>
+        <text x="135" y="344" text-anchor="middle" fill="#c8d0dc" font-size="11" font-family="system-ui,sans-serif">Shares sold → cash again</text>
+        <text x="135" y="360" text-anchor="middle" fill="#c8d0dc" font-size="11" font-family="system-ui,sans-serif">Back to step 1: sell CSP</text>
+        <text x="135" y="376" text-anchor="middle" fill="#8b9bb4" font-size="10" font-family="system-ui,sans-serif">Same stock or a new one</text>
+      </svg>
+    </div>
+
     <h2>Why people use it</h2>
     <ul>
       <li>Rules-based way to collect premium while aiming to own stocks they already like</li>
