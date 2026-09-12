@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <title>Iron Condor Options Strategy Explained (With Payoff Diagram)</title>
+  <meta name="description" content="Learn the iron condor: sell an OTM put spread and an OTM call spread for a credit. Defined risk, range-bound outlook, break-evens, and free Builder practice.">
+  <link rel="canonical" href="https://jsm-options.com/iron-condor/">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="JSM Options">
+  <meta property="og:title" content="Iron Condor Options Strategy Explained (With Payoff Diagram)">
+  <meta property="og:description" content="Learn the iron condor: sell an OTM put spread and an OTM call spread for a credit. Defined risk, range-bound outlook, break-evens, and free Builder practice.">
+  <meta property="og:url" content="https://jsm-options.com/iron-condor/">
+  <meta property="og:image" content="https://jsm-options.com/images/og-default.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Iron Condor Options Strategy Explained (With Payoff Diagram)">
+  <meta name="twitter:description" content="Learn the iron condor: sell an OTM put spread and an OTM call spread for a credit. Defined risk, range-bound outlook, break-evens, and free Builder practice.">
+  <meta name="twitter:image" content="https://jsm-options.com/images/og-default.png">
+  <link rel="stylesheet" href="/assets/style.css?v=20260913">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-BDL003RCN6"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-BDL003RCN6');</script>
+<style id="jsm-mobile-nav">
+.nav-toggle{display:none;box-sizing:border-box;width:44px;height:44px;min-width:44px;min-height:44px;padding:0;border:1px solid var(--border,#2d3a4f);border-radius:10px;background:var(--card,#1a2332);color:var(--text,#e7ecf3);cursor:pointer;align-items:center;justify-content:center;flex-direction:column;gap:5px;-webkit-tap-highlight-color:transparent;touch-action:manipulation;position:relative;z-index:40}
+.nav-toggle span{display:block;width:18px;height:2px;border-radius:1px;background:currentColor;pointer-events:none}
+.nav-toggle[aria-expanded="true"] span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.nav-toggle[aria-expanded="true"] span:nth-child(2){opacity:0}
+.nav-toggle[aria-expanded="true"] span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+@media (max-width:900px){
+  .nav-toggle{display:inline-flex!important}
+  .site-header{z-index:100!important;position:sticky;top:0}
+  .site-header .nav{
+    display:none!important;
+    position:fixed!important;
+    top:56px!important;left:0!important;right:0!important;
+    width:100%!important;
+    max-height:calc(100vh - 56px)!important;
+    overflow-y:auto!important;
+    -webkit-overflow-scrolling:touch;
+    flex-direction:column!important;
+    align-items:stretch!important;
+    gap:6px!important;
+    padding:12px 16px 20px!important;
+    margin:0!important;
+    background:#0f1419!important;
+    border-bottom:1px solid #2d3a4f!important;
+    box-shadow:0 12px 28px rgba(0,0,0,.45)!important;
+    z-index:9999!important;
+  }
+  html[data-theme="light"] .site-header .nav{background:#ffffff!important;border-bottom-color:#e2e8f0!important}
+  .site-header .nav.is-open{display:flex!important}
+  .site-header .nav a{
+    width:100%!important;text-align:left!important;
+    padding:14px!important;font-size:16px!important;
+    min-height:48px!important;display:flex!important;align-items:center!important;
+    border-radius:10px!important;box-sizing:border-box!important;
+  }
+}
+</style>
+</head>
+<body>
+<header class="site-header"><div class="site-header-inner"><a class="logo logo-link" href="/" aria-label="JSM Options Home"><div class="logo-icon">JSM</div><div><div style="font-weight:700">JSM Options</div><div class="brand-sub">jsm-options.com · Educational</div></div></a><div class="header-right"><nav class="nav" aria-label="Primary navigation"><a href="/">Home</a><a href="/level1/">Basics</a><a href="/level2/">Fundamentals</a><a href="/level3/">Spreads</a><a href="/level4/">Advanced</a><a href="/strategies/">Strategies</a><a href="/builder/">Builder</a></nav><button type="button" class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button><button type="button" class="theme-toggle" id="themeToggle" aria-label="Toggle color theme"><span id="themeIcon" class="theme-icon">☼</span><span id="themeLabel" class="theme-label">Dark</span></button></div></div></header>
+<div class="wrap">
+<nav class="breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span aria-hidden="true">/</span><span aria-current="page">Iron Condor</span></nav>
+  <div class="card">
+    <h1>Iron condor strategy explained</h1>
+
+    <p>An <b>iron condor</b> is a <b>defined-risk</b>, usually <b>neutral / range-bound</b> options structure. You sell an out-of-the-money <b>put spread</b> below the market and an out-of-the-money <b>call spread</b> above the market, same expiration, for a <b>net credit</b>.</p>
+    <p>You want the underlying to stay between the two short strikes so both short options lose value. Profit is limited to the credit; loss is limited by the long options on each wing.</p>
+
+    <h2>Structure (4 legs)</h2>
+    <ul>
+      <li>Sell OTM put (higher put strike of the put wing)</li>
+      <li>Buy further OTM put (lower put strike) — defines risk on the downside</li>
+      <li>Sell OTM call (lower call strike of the call wing)</li>
+      <li>Buy further OTM call (higher call strike) — defines risk on the upside</li>
+    </ul>
+
+    <h2>Payoff intuition</h2>
+    <ul>
+      <li><b>Max profit</b> ≈ net credit if price stays between the short put and short call</li>
+      <li><b>Max loss</b> ≈ width of the tested wing − credit</li>
+      <li><b>Break-evens</b> ≈ short put − credit (lower) and short call + credit (upper)</li>
+    </ul>
+
+    <img src="/images/iron-condor-outcome.jpg" alt="Iron condor payoff diagram with max profit between short strikes and defined max loss on both wings" width="900" height="560" loading="lazy" style="width:100%;height:auto;border-radius:12px;border:1px solid var(--border);margin:12px 0">
+
+    <h2>When it fits / when it does not</h2>
+    <ul>
+      <li><b>Fits:</b> you expect a quiet range; you want defined risk; you understand credit vs wing width</li>
+      <li><b>Does not fit:</b> you expect a big breakout; you cannot manage assignment or early tests of a wing; liquidity is poor</li>
+    </ul>
+
+    <p><a class="btn" href="/builder/?template=iron_condor">Open Iron Condor in Builder →</a>
+    <a class="btn btn-secondary" href="/level3/">Full Spreads lesson</a>
+    <a class="btn btn-secondary" href="/strategies/">Strategies library</a></p>
+
+    <div class="warn"><strong>Educational only:</strong> Defined risk is not “no risk.” You can still lose several times the credit. Not a broker; not trade advice.</div>
+  
+  </div>
+</div>
+<footer class="site-footer">
+  <div class="footer-note">Educational only — not financial advice. Options involve risk of loss.</div>
+  <div class="footer-links">
+    <a href="/">Home</a>
+    <a href="/level1/">Basics</a>
+    <a href="/level2/">Fundamentals</a>
+    <a href="/level3/">Spreads</a>
+    <a href="/level4/">Advanced</a>
+    <a href="/strategies/">Strategies</a>
+    <a href="/builder/">Builder</a>
+    <a href="/about/">About</a>
+    <a href="/contact/">Contact</a>
+    <a href="/disclaimer/">Disclaimer</a>
+    <a href="/privacy/">Privacy</a>
+  </div>
+    <div class="footer-tools" style="margin-top:12px;font-size:12px;opacity:.9">
+      More free tools:
+      <a href="https://lyricprep.com/" target="_blank" rel="noopener">LyricPrep</a> ·
+      <a href="https://jsm-image.com/" target="_blank" rel="noopener">JSM Image</a> ·
+      <a href="https://jsm-video.com/" target="_blank" rel="noopener">JSM Video</a> ·
+      <a href="https://jsm-loudness.com/" target="_blank" rel="noopener">JSM Loudness</a>
+    </div>
+</footer>
+
+<script>
+(function(){
+  const root=document.documentElement, toggle=document.getElementById('themeToggle'), icon=document.getElementById('themeIcon'), label=document.getElementById('themeLabel');
+  function applyTheme(theme){
+    root.setAttribute('data-theme',theme);
+    if(icon) icon.textContent=theme==='dark'?'🌙':'☀️';
+    if(label) label.textContent=theme==='dark'?'Dark':'Light';
+    if(toggle) toggle.setAttribute('aria-label',theme==='dark'?'Switch to light theme':'Switch to dark theme');
+    try{localStorage.setItem('jsm-theme',theme)}catch(e){}
+  }
+  let saved=null; try{saved=localStorage.getItem('jsm-theme')}catch(e){}
+  const initial=(saved==='light'||saved==='dark')?saved:((window.matchMedia&&window.matchMedia('(prefers-color-scheme: light)').matches)?'light':'dark');
+  applyTheme(initial);
+  if(toggle) toggle.addEventListener('click',function(){applyTheme(root.getAttribute('data-theme')==='dark'?'light':'dark')});
+})();
+</script>
+<script>
+(function(){
+  function initNav(){
+    var btn = document.getElementById('navToggle');
+    var nav = document.querySelector('.site-header .nav');
+    if (!btn || !nav) return;
+    if (btn.getAttribute('data-nav-bound') === '1') return;
+    btn.setAttribute('data-nav-bound', '1');
+
+    btn.addEventListener('click', function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      var open = !nav.classList.contains('is-open');
+      nav.classList.toggle('is-open', open);
+      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      btn.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+    });
+
+    // Close after choosing a link
+    nav.addEventListener('click', function (e) {
+      if (e.target.closest('a')) {
+        nav.classList.remove('is-open');
+        btn.setAttribute('aria-expanded', 'false');
+        btn.setAttribute('aria-label', 'Open menu');
+      }
+    });
+
+    // Close on outside click (use capture delay so button click isn't treated as outside)
+    document.addEventListener('click', function (e) {
+      if (!nav.classList.contains('is-open')) return;
+      if (btn.contains(e.target) || nav.contains(e.target)) return;
+      nav.classList.remove('is-open');
+      btn.setAttribute('aria-expanded', 'false');
+      btn.setAttribute('aria-label', 'Open menu');
+    });
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initNav);
+  } else {
+    initNav();
+  }
+})();
+</script>
+
+
+
+
+</body>
+</html>
