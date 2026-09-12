@@ -81,17 +81,34 @@
 </div>
 <div id="grid" class="strategy-grid"></div><div id="empty" class="empty">No strategies match your search. Try another term or choose “All”.</div>
 <section class="card" style="margin-top:18px"><h2 style="margin-top:0">How to use this library</h2><div class="grid3"><div><h3>1. Start with outlook</h3><p>Decide whether you expect the underlying to rise, fall, stay in a range, or make a large move.</p></div><div><h3>2. Check risk</h3><p>Look for defined versus potentially large or unlimited risk before studying the mechanics.</p></div><div><h3>3. Test the payoff</h3><p>Open the <a href="/builder/" style="color:var(--text);text-decoration:underline">Strategy Builder</a> and experiment with strikes, premiums and expiration prices.</p></div></div></section>
-</main>
-  <div class="card">
-    <h2>Popular strategy guides</h2>
-    <p>Deep-dive pages for common search topics:</p>
-    <ul>
-      <li><a href="/covered-call/">Covered call</a></li>
-      <li><a href="/cash-secured-put/">Cash-secured put</a></li>
-      <li><a href="/iron-condor/">Iron condor</a></li>
-      <li><a href="/wheel/">Wheel strategy</a></li>
-    </ul>
+
+<section class="card" style="margin-top:18px">
+  <h2 style="margin-top:0">Popular strategy guides</h2>
+  <p style="color:var(--muted);margin:0 0 14px">Deep-dive pages for common search topics — structure, risk, examples, and Builder links.</p>
+  <div class="grid3" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px">
+    <a href="/covered-call/" class="guide-tile" style="display:block;padding:14px 16px;border:1px solid var(--border);border-radius:12px;background:var(--input);text-decoration:none;color:var(--text)">
+      <div style="font-size:11px;color:var(--accent);font-weight:700;text-transform:uppercase;letter-spacing:.06em">Bullish · Income</div>
+      <h3 style="margin:8px 0 6px;font-size:16px">Covered call</h3>
+      <p style="margin:0;font-size:13px;color:var(--muted);line-height:1.45">Own shares, sell a call, collect premium.</p>
+    </a>
+    <a href="/cash-secured-put/" class="guide-tile" style="display:block;padding:14px 16px;border:1px solid var(--border);border-radius:12px;background:var(--input);text-decoration:none;color:var(--text)">
+      <div style="font-size:11px;color:var(--accent);font-weight:700;text-transform:uppercase;letter-spacing:.06em">Bullish · Entry</div>
+      <h3 style="margin:8px 0 6px;font-size:16px">Cash-secured put</h3>
+      <p style="margin:0;font-size:13px;color:var(--muted);line-height:1.45">Sell a put with cash ready to buy shares.</p>
+    </a>
+    <a href="/iron-condor/" class="guide-tile" style="display:block;padding:14px 16px;border:1px solid var(--border);border-radius:12px;background:var(--input);text-decoration:none;color:var(--text)">
+      <div style="font-size:11px;color:var(--accent);font-weight:700;text-transform:uppercase;letter-spacing:.06em">Neutral · Defined risk</div>
+      <h3 style="margin:8px 0 6px;font-size:16px">Iron condor</h3>
+      <p style="margin:0;font-size:13px;color:var(--muted);line-height:1.45">Credit structure for a range-bound outlook.</p>
+    </a>
+    <a href="/wheel/" class="guide-tile" style="display:block;padding:14px 16px;border:1px solid var(--border);border-radius:12px;background:var(--input);text-decoration:none;color:var(--text)">
+      <div style="font-size:11px;color:var(--accent);font-weight:700;text-transform:uppercase;letter-spacing:.06em">Cycle · Income</div>
+      <h3 style="margin:8px 0 6px;font-size:16px">Wheel strategy</h3>
+      <p style="margin:0;font-size:13px;color:var(--muted);line-height:1.45">CSP until assigned, then covered calls.</p>
+    </a>
   </div>
+</section>
+</main>
 
 <footer class="site-footer">
   <div class="footer-note">Educational only — not financial advice. Options involve risk of loss.</div>
