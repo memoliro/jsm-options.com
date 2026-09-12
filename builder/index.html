@@ -633,14 +633,20 @@
 
       function val(Ss, days, vol) {
         let total = 0;
+        const optionDtes = [];
+        for (let i = 0; i < legs.length; i++) {
+          if (legs[i].type !== 'stock') optionDtes.push(legs[i].dte);
+        }
+        const minDte = optionDtes.length ? Math.min.apply(null, optionDtes) : 0;
+        const elapsed = Math.max(0, minDte - days);
         for (let i = 0; i < legs.length; i++) {
           const leg = legs[i];
           let vps;
           if (leg.type === 'stock') {
             vps = Ss;
           } else {
-            const T = Math.max(0, Math.min(leg.dte, days)) / 365;
-            vps = blackScholes(Ss, leg.strike, T, r, q, vol, leg.type);
+            const residualDays = Math.max(0, leg.dte - elapsed);
+            vps = blackScholes(Ss, leg.strike, residualDays / 365, r, q, vol, leg.type);
           }
           total += signedQty(leg) * vps * legShareMult(leg);
         }
@@ -1019,13 +1025,28 @@
     function positionValueAt(S, daysLeft, useExpiryOnly) {
       let total = 0;
       const params = getParams();
+      // Multi-expiry (calendar / diagonal): residual time is relative to the nearest option.
+      // "At expiry" = nearest-dated options expire (T=0); longer-dated keep (leg.dte - minDte) days.
+      const optionDtes = [];
+      for (let i = 0; i < legs.length; i++) {
+        if (legs[i].type !== 'stock') optionDtes.push(legs[i].dte);
+      }
+      const minDte = optionDtes.length ? Math.min.apply(null, optionDtes) : 0;
+
       for (const leg of legs) {
         let valPerShare;
         if (leg.type === 'stock') {
           valPerShare = S;
         } else {
-          const legT = useExpiryOnly ? 0 : Math.max(0, Math.min(leg.dte, daysLeft)) / 365;
-          valPerShare = blackScholes(S, leg.strike, legT, params.r, params.q, params.iv, leg.type);
+          let residualDays;
+          if (useExpiryOnly) {
+            residualDays = Math.max(0, leg.dte - minDte);
+          } else {
+            // daysLeft slider ≈ days remaining until nearest expiry
+            const elapsed = Math.max(0, minDte - daysLeft);
+            residualDays = Math.max(0, leg.dte - elapsed);
+          }
+          valPerShare = blackScholes(S, leg.strike, residualDays / 365, params.r, params.q, params.iv, leg.type);
         }
         total += signedQty(leg) * valPerShare * legShareMult(leg);
       }
