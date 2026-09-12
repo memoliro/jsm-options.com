@@ -58,35 +58,40 @@
 
 </head>
 <body>
-<header class="site-header"><div class="site-header-inner"><a class="logo logo-link" href="/" aria-label="JSM Options Home"><div class="logo-icon">JSM</div><div><div style="font-weight:700">JSM Options</div><div class="brand-sub">jsm-options.com · Educational</div></div></a><div class="header-right"><nav class="nav" aria-label="Primary navigation"><a href="/">Home</a><a href="/level1/">Basics</a><a href="/level2/">Fundamentals</a><a href="/level3/">Spreads</a><a href="/level4/">Advanced</a><a href="/strategies/">Strategies</a><a href="/builder/">Builder</a></nav><button type="button" class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button><button type="button" class="theme-toggle" id="themeToggle" aria-label="Toggle color theme"><span id="themeIcon" class="theme-icon">☼</span><span id="themeLabel" class="theme-label">Dark</span></button></div></div></header>
+<header class="site-header"><div class="site-header-inner"><a class="logo logo-link" href="/" aria-label="JSM Options Home"><div class="logo-icon">JSM</div><div><div style="font-weight:700">JSM Options</div><div class="brand-sub">jsm-options.com · Educational</div></div></a><div class="header-right"><nav class="nav" aria-label="Primary navigation"><a href="/">Home</a><a href="/level1/">Basics</a><a href="/level2/">Fundamentals</a><a href="/level3/">Spreads</a><a href="/level4/">Advanced</a><a href="/strategies/">Strategies</a>
+    <a href="/cheat-sheet/">Cheat sheet</a><a href="/builder/">Builder</a></nav><button type="button" class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button><button type="button" class="theme-toggle" id="themeToggle" aria-label="Toggle color theme"><span id="themeIcon" class="theme-icon">☼</span><span id="themeLabel" class="theme-label">Dark</span></button></div></div></header>
 <div class="wrap">
 <nav class="breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span aria-hidden="true">/</span><span aria-current="page">Contact</span></nav>
 
   <div class="card">
     <h1>Contact</h1>
-    <p>Use the form below to send a message about the free options education site or Strategy Builder. We do not display an email address on this page.</p>
-    <p>We do <b>not</b> provide personalized trade recommendations, portfolio reviews, or broker account support.</p>
+    <p>We read messages about the free options education site and Strategy Builder. We do not provide personalized trade recommendations, portfolio reviews, or account support for brokers.</p>
 
-    <form id="contactForm" class="contact-form" method="POST" action="#">
-      <label for="topic">Topic</label>
-      <select id="topic" name="topic">
-        <option value="Site or lesson question">Site or lesson question</option>
-        <option value="Builder / graph">Builder / graph</option>
-        <option value="Typo or content error">Typo or content error</option>
-        <option value="Other">Other</option>
-      </select>
+    <div class="contact-panel">
+      <form id="contactForm" class="contact-form" method="POST" action="#">
+        <label for="topic">Topic</label>
+        <select id="topic" name="topic">
+          <option value="">Select a topic (optional)</option>
+          <option value="Site or lesson question">Site or lesson question</option>
+          <option value="Builder / graph">Builder / graph</option>
+          <option value="Typo or content error">Typo or content error</option>
+          <option value="Other">Other</option>
+        </select>
 
-      <label for="message">Message</label>
-      <textarea id="message" name="message" rows="8" required maxlength="4000" placeholder="Which page or Builder template? What happened? If you want a reply, you can include a way to reach you in the message — it is optional."></textarea>
+        <label for="message">Message</label>
+        <textarea id="message" name="message" rows="7" required minlength="10" maxlength="5000" placeholder="Write your message here… If it’s about a specific page, mention which one (e.g. Covered Call, Calendar)."></textarea>
+        <div class="char-meta"><span id="charCount">0</span> / 5000 · Minimum 10 characters</div>
 
-      <input type="text" name="_gotcha" id="gotcha" tabindex="-1" autocomplete="off" aria-hidden="true" class="hp-field">
-      <input type="hidden" name="_subject" value="JSM Options contact form">
-      <input type="hidden" name="_template" value="table">
-      <input type="hidden" name="_captcha" value="false">
+        <input type="text" name="_gotcha" id="gotcha" tabindex="-1" autocomplete="off" aria-hidden="true" class="hp-field">
+        <input type="hidden" name="_subject" value="JSM Options contact form">
+        <input type="hidden" name="_template" value="table">
+        <input type="hidden" name="_captcha" value="false">
 
-      <button type="submit" class="btn" id="contactSubmit">Send message</button>
-      <p id="contactStatus" class="contact-status" role="status" aria-live="polite"></p>
-    </form>
+        <button type="submit" class="btn contact-send" id="contactSubmit">Send Message</button>
+        <p id="contactStatus" class="contact-status" role="status" aria-live="polite"></p>
+        <p class="contact-fineprint">No personal information is asked or stored. Your message is anonymous. Please don’t include passwords or sensitive data. If you want a reply, you can optionally include a contact method inside your message. See <a href="/privacy/">Privacy</a>.</p>
+      </form>
+    </div>
 
     <h2>What to include</h2>
     <ul>
@@ -198,13 +203,19 @@
   if (!form) return;
   var status = document.getElementById('contactStatus');
   var btn = document.getElementById('contactSubmit');
+
+  var ta = document.getElementById('message');
+  var count = document.getElementById('charCount');
+  function updateCount(){ if (count && ta) count.textContent = String(ta.value.length); }
+  if (ta) ta.addEventListener('input', updateCount);
+  updateCount();
   form.addEventListener('submit', function(e){
     e.preventDefault();
     var honey = document.getElementById('gotcha');
     if (honey && honey.value) return;
     var msg = (document.getElementById('message') || {}).value || '';
-    if (!msg.trim()) {
-      if (status) status.textContent = 'Please write a message first.';
+    if (msg.trim().length < 10) {
+      if (status) status.textContent = 'Please write at least 10 characters.';
       return;
     }
     var parts = ['con','tact','@','jsm-options','.com'];

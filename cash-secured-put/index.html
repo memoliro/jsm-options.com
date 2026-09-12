@@ -7,18 +7,18 @@
   <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48.png">
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
   <link rel="manifest" href="/site.webmanifest">
-  <title>Cash-Secured Put Explained for Beginners (CSP Strategy)</title>
-  <meta name="description" content="Learn cash-secured puts: sell a put while holding enough cash to buy 100 shares if assigned. See risk, premium income, break-even, and practice in the free Builder.">
+  <title>Cash-Secured Put Strategy (CSP) for Beginners</title>
+  <meta name="description" content="Cash-secured put (CSP) explained: sell a put with cash ready to buy 100 shares if assigned. Premium, break-even, assignment, and Builder practice. Educational only.">
   <link rel="canonical" href="https://jsm-options.com/cash-secured-put/">
   <meta property="og:type" content="article">
   <meta property="og:site_name" content="JSM Options">
-  <meta property="og:title" content="Cash-Secured Put Explained for Beginners (CSP Strategy)">
-  <meta property="og:description" content="Learn cash-secured puts: sell a put while holding enough cash to buy 100 shares if assigned. See risk, premium income, break-even, and practice in the free Builder.">
+  <meta property="og:title" content="Cash-Secured Put Strategy (CSP) for Beginners">
+  <meta property="og:description" content="Cash-secured put (CSP) explained: sell a put with cash ready to buy 100 shares if assigned. Premium, break-even, assignment, and Builder practice. Educational only.">
   <meta property="og:url" content="https://jsm-options.com/cash-secured-put/">
   <meta property="og:image" content="https://jsm-options.com/images/og-default.png">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Cash-Secured Put Explained for Beginners (CSP Strategy)">
-  <meta name="twitter:description" content="Learn cash-secured puts: sell a put while holding enough cash to buy 100 shares if assigned. See risk, premium income, break-even, and practice in the free Builder.">
+  <meta name="twitter:title" content="Cash-Secured Put Strategy (CSP) for Beginners">
+  <meta name="twitter:description" content="Cash-secured put (CSP) explained: sell a put with cash ready to buy 100 shares if assigned. Premium, break-even, assignment, and Builder practice. Educational only.">
   <meta name="twitter:image" content="https://jsm-options.com/images/og-default.png">
   <link rel="stylesheet" href="/assets/style.css?v=20260914">
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-BDL003RCN6"></script>
@@ -60,15 +60,17 @@
   }
 }
 </style>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "What is a cash-secured put?", "acceptedAnswer": {"@type": "Answer", "text": "You sell a put and reserve enough cash to buy 100 shares at the strike if assigned. You keep the premium if the put expires worthless."}}, {"@type": "Question", "name": "What happens if a cash-secured put is assigned?", "acceptedAnswer": {"@type": "Answer", "text": "You buy 100 shares at the put strike. Effective cost is about strike minus premium collected."}}, {"@type": "Question", "name": "Is a cash-secured put the same as the Wheel?", "acceptedAnswer": {"@type": "Answer", "text": "A CSP is the first leg of the Wheel. The Wheel continues by selling covered calls after you are assigned shares."}}]}</script>
 </head>
 <body>
 <header class="site-header"><div class="site-header-inner"><a class="logo logo-link" href="/" aria-label="JSM Options Home"><div class="logo-icon">JSM</div><div><div style="font-weight:700">JSM Options</div><div class="brand-sub">jsm-options.com · Educational</div></div></a><div class="header-right"><nav class="nav" aria-label="Primary navigation"><a href="/">Home</a><a href="/level1/">Basics</a><a href="/level2/">Fundamentals</a><a href="/level3/">Spreads</a><a href="/level4/">Advanced</a><a href="/strategies/">Strategies</a><a href="/builder/">Builder</a></nav><button type="button" class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button><button type="button" class="theme-toggle" id="themeToggle" aria-label="Toggle color theme"><span id="themeIcon" class="theme-icon">☼</span><span id="themeLabel" class="theme-label">Dark</span></button></div></div></header>
 <div class="wrap">
 <nav class="breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span aria-hidden="true">/</span><span aria-current="page">Cash-Secured Put</span></nav>
   <div class="card">
-    <h1>Cash-secured put (CSP) explained</h1>
+    <h1>Cash-secured put strategy (CSP)</h1>
 
-    <p>A <b>cash-secured put</b> means you <b>sell a put option</b> and set aside enough <b>cash</b> to buy 100 shares at the strike if you are assigned. You collect a <b>premium</b> up front. If the stock stays above the strike, the put may expire worthless and you keep the premium. If the stock falls below the strike, you may <b>buy the shares</b> at the strike (assignment).</p>
+    <p class="kw-targets"><b>Search focus:</b> cash secured put · cash secured put strategy · CSP options · sell cash secured put · cash secured put example</p>
+<p>A <b>cash-secured put</b> means you <b>sell a put option</b> and set aside enough <b>cash</b> to buy 100 shares at the strike if you are assigned. You collect a <b>premium</b> up front. If the stock stays above the strike, the put may expire worthless and you keep the premium. If the stock falls below the strike, you may <b>buy the shares</b> at the strike (assignment).</p>
     <p>Many beginners use CSPs when they are <b>willing to own the stock at a lower effective price</b> and want to be paid while they wait.</p>
 
     <h2>Structure</h2>
@@ -120,6 +122,13 @@
     <p><a class="btn" href="/builder/?template=cash_secured_put">Open Cash-Secured Put in Builder →</a>
     <a class="btn btn-secondary" href="/level4/">Advanced lesson (CSP, Wheel, more)</a>
     <a class="btn btn-secondary" href="/level1/#options-chain">How to read the options chain</a></p>
+
+    
+    <h2 id="guide-faq">Beginner FAQ</h2>
+    <p><strong>What is a cash-secured put?</strong><br>You sell a put and reserve enough cash to buy 100 shares at the strike if assigned. You keep the premium if the put expires worthless.</p>
+<p><strong>What happens if a cash-secured put is assigned?</strong><br>You buy 100 shares at the put strike. Effective cost is about strike minus premium collected.</p>
+<p><strong>Is a cash-secured put the same as the Wheel?</strong><br>A CSP is the first leg of the Wheel. The Wheel continues by selling covered calls after you are assigned shares.</p>
+    <p class="practice-prompt"><b>Next:</b> Print the <a href="/cheat-sheet/">options cheat sheet</a> or open this setup in the Builder.</p>
 
     <div class="warn"><strong>Educational only:</strong> Not financial advice. Selling puts can lead to owning shares at a loss versus the market. Not a broker; not affiliated with any institution.</div>
   

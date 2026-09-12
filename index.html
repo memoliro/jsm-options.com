@@ -1,30 +1,14 @@
-<!DOCTYPE html>
-<html lang="en" data-theme="dark">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
   <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48.png">
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
   <link rel="manifest" href="/site.webmanifest">
-
-  <title>What Is an Option? Calls &amp; Puts Explained for Beginners</title>
-  <meta name="description" content="What is a stock option? Learn calls and puts with simple analogies, key terms, the ×100 multiplier, intrinsic vs time value, moneyness, and a long-call payoff picture. Free beginner lesson.">
-  <link rel="canonical" href="https://jsm-options.com/level1/">
-  <meta property="og:type" content="article">
-  <meta property="og:site_name" content="JSM Options">
-  <meta property="og:title" content="What Is an Option? Calls &amp; Puts Explained for Beginners">
-  <meta property="og:description" content="Learn calls and puts with simple analogies, key terms, and a basic long-call payoff picture. Free beginner lesson.">
-  <meta property="og:url" content="https://jsm-options.com/level1/">
+<title>Free Options Trading Course for Beginners | Live Strategy Builder</title><meta name="description" content="Free options trading course for beginners: calls, puts, spreads, and a live strategy builder with payoff graphs. Learn step by step — educational only, not financial advice."><link rel="canonical" href="https://jsm-options.com/"><meta property="og:type" content="website"><meta property="og:site_name" content="JSM Options"><meta property="og:title" content="Free Options Trading Course for Beginners | Live Strategy Builder"><meta property="og:description" content="Free options course for beginners with a live strategy builder. Calls, puts, spreads, and payoff graphs — educational only."><meta property="og:url" content="https://jsm-options.com/">
   <meta property="og:image" content="https://jsm-options.com/images/og-default.png">
-  <meta name="twitter:image" content="https://jsm-options.com/images/og-default.png">
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="What Is an Option? Calls &amp; Puts Explained for Beginners">
-  <meta name="twitter:description" content="Learn calls and puts with simple analogies, key terms, and a basic long-call payoff picture.">
-  <link rel="stylesheet" href="/assets/style.css?v=20260914">
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-BDL003RCN6"></script>
-  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-BDL003RCN6');</script>
-
+  <meta name="twitter:image" content="https://jsm-options.com/images/og-default.png"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Free Options Trading Course for Beginners | Live Strategy Builder"><meta name="twitter:description" content="Free options trading course for beginners plus a live strategy builder. Calls, puts, covered calls, spreads, and more."><link rel="stylesheet" href="/assets/style.css?v=20260914"><style>
+.home-hero{padding:48px 0 30px;display:grid;grid-template-columns:1.15fr .85fr;gap:28px;align-items:center}.home-hero h1{font-size:clamp(38px,5.5vw,68px);line-height:1.02;letter-spacing:-.045em;margin:10px 0 18px;max-width:760px}.home-hero p{font-size:17px;line-height:1.65;color:var(--muted);max-width:680px}.hero-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:24px}.btn-primary,.btn-secondary{display:inline-flex;align-items:center;justify-content:center;padding:12px 17px;border-radius:10px;text-decoration:none;font-weight:700;border:1px solid var(--border)}.btn-primary{background:var(--accent);color:#06110a!important;border-color:var(--accent)}.btn-secondary{background:var(--card);color:var(--text)!important}.eyebrow{font-size:11px;text-transform:uppercase;letter-spacing:.12em;color:var(--accent);font-weight:800}.payoff-demo{border:1px solid var(--border);border-radius:20px;background:linear-gradient(145deg,var(--card),var(--input));padding:18px;box-shadow:0 18px 45px rgba(0,0,0,.12)}.payoff-demo svg{width:100%;height:auto;display:block}.demo-legend{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-top:8px}.home-section{margin:28px 0}.section-head{display:flex;justify-content:space-between;gap:18px;align-items:end;margin-bottom:15px}.section-head h2{margin:0;font-size:25px}.section-head p{margin:5px 0 0;color:var(--muted);font-size:13px}.path-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.path-card{display:block;padding:18px;border:1px solid var(--border);border-radius:15px;background:var(--card);color:var(--text)!important;text-decoration:none!important;transition:.15s transform,.15s border-color}.path-card:hover{transform:translateY(-2px);border-color:var(--accent)}.path-num{font-size:11px;color:var(--dim)}.path-card h3{margin:9px 0 6px;font-size:17px}.path-card p{margin:0;color:var(--muted);font-size:13px;line-height:1.5}.outlook-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.outlook{padding:17px;border:1px solid var(--border);border-radius:15px;background:var(--card)}.outlook b{font-size:15px}.outlook p{margin:6px 0 0;color:var(--muted);font-size:12px;line-height:1.45}.builder-feature{display:grid;grid-template-columns:1fr 1fr;gap:18px;padding:24px;border:1px solid var(--border);border-radius:18px;background:linear-gradient(145deg,var(--card),var(--input))}.builder-feature h2{margin:0 0 8px;font-size:28px}.builder-feature p{color:var(--muted);line-height:1.6}.checklist{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:16px}.check{padding:10px 12px;border-radius:10px;background:var(--input);font-size:12px}.strategy-preview{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.mini-strategy{padding:17px;border:1px solid var(--border);border-radius:14px;background:var(--card)}.mini-strategy .tag{font-size:10px;color:var(--accent);text-transform:uppercase;letter-spacing:.08em;font-weight:800}.mini-strategy h3{margin:7px 0 5px}.mini-strategy p{font-size:12px;color:var(--muted);line-height:1.45;margin:0}.home-note{font-size:11px;color:var(--dim);margin:25px 0}.concept-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}.concept-card{padding:20px;border:1px solid var(--border);border-radius:16px;background:var(--card)}.concept-card h3{margin:0 0 10px;font-size:18px}.concept-card p{margin:0 0 10px;color:var(--muted);font-size:14px;line-height:1.55}.concept-card .analogy-box{margin:12px 0;padding:12px;border-radius:10px;background:var(--input);font-size:13px;line-height:1.5;color:var(--text)}.payoff-mini{margin-top:12px;border:1px solid var(--border);border-radius:12px;padding:10px;background:var(--input)}.payoff-mini svg{width:100%;height:auto;display:block}@media(max-width:700px){.concept-grid{grid-template-columns:1fr}}
+@media(max-width:900px){.home-hero,.builder-feature{grid-template-columns:1fr}.path-grid,.outlook-grid{grid-template-columns:1fr 1fr}.strategy-preview{grid-template-columns:1fr}}@media(max-width:600px){.home-hero{padding-top:30px}.path-grid,.outlook-grid,.checklist{grid-template-columns:1fr}.section-head{display:block}}
+</style>
 <style id="jsm-mobile-nav">
 .nav-toggle{display:none;box-sizing:border-box;width:44px;height:44px;min-width:44px;min-height:44px;padding:0;border:1px solid var(--border,#2d3a4f);border-radius:10px;background:var(--card,#1a2332);color:var(--text,#e7ecf3);cursor:pointer;align-items:center;justify-content:center;flex-direction:column;gap:5px;-webkit-tap-highlight-color:transparent;touch-action:manipulation;position:relative;z-index:40}
 .nav-toggle span{display:block;width:18px;height:2px;border-radius:1px;background:currentColor;pointer-events:none}
@@ -63,349 +47,67 @@
 }
 </style>
 
-</head>
-<body>
-<header class="site-header"><div class="site-header-inner"><a class="logo logo-link" href="/" aria-label="JSM Options Home"><div class="logo-icon">JSM</div><div><div style="font-weight:700">JSM Options</div><div class="brand-sub">jsm-options.com · Educational</div></div></a><div class="header-right"><nav class="nav" aria-label="Primary navigation"><a href="/">Home</a><a href="/level1/" class="active">Basics</a><a href="/level2/">Fundamentals</a><a href="/level3/">Spreads</a><a href="/level4/">Advanced</a><a href="/strategies/">Strategies</a><a href="/builder/">Builder</a></nav><button type="button" class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button><button type="button" class="theme-toggle" id="themeToggle" aria-label="Toggle color theme"><span id="themeIcon" class="theme-icon">☼</span><span id="themeLabel" class="theme-label">Dark</span></button></div></div></header>
+</head><body><header class="site-header"><div class="site-header-inner"><a class="logo logo-link" href="/" aria-label="JSM Options Home"><div class="logo-icon">JSM</div><div><div style="font-weight:700">JSM Options</div><div class="brand-sub">jsm-options.com · Educational</div></div></a><div class="header-right"><nav class="nav" aria-label="Primary navigation"><a href="/" class="active">Home</a><a href="/level1/">Basics</a><a href="/level2/">Fundamentals</a><a href="/level3/">Spreads</a><a href="/level4/">Advanced</a><a href="/strategies/">Strategies</a>
+    <a href="/cheat-sheet/">Cheat sheet</a><a href="/builder/">Builder</a></nav><button type="button" class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button><button type="button" class="theme-toggle" id="themeToggle" aria-label="Toggle color theme"><span id="themeIcon" class="theme-icon">☼</span><span id="themeLabel" class="theme-label">Dark</span></button></div></div></header><main class="wrap wide">
+<section class="home-hero"><div><div class="eyebrow">Free course · Live strategy builder</div><h1>Free options trading course for beginners</h1><p>Learn calls, puts, and spreads step by step — then practice each idea in the live Strategy Builder with payoff graphs and educational Greeks. No account required.</p><div class="hero-actions"><a class="btn-primary" href="/level1/">Start with Basics →</a><a class="btn-secondary" href="/builder/">Open Builder</a></div></div><div class="payoff-demo"><div class="eyebrow">Sample · Long Iron Condor</div>
+<svg viewBox="0 0 520 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Long iron condor payoff at expiry">
+  <line x1="40" y1="150" x2="500" y2="150" stroke="#8b9bb4" stroke-width="1.5" opacity=".55"/>
+  <line x1="40" y1="30" x2="40" y2="230" stroke="#8b9bb4" stroke-width="1" opacity=".3"/>
+  <polygon points="40.0,85.0 100.0,85.0 100.0,150 40.0,150" fill="#22c55e" opacity="0.3"/><polygon points="100.0,85.0 147.3,150 100.0,150" fill="#22c55e" opacity="0.3"/><polygon points="147.3,150 180.0,195.0 180.0,150" fill="#ef4444" opacity="0.3"/><polygon points="180.0,195.0 340.0,195.0 340.0,150 180.0,150" fill="#ef4444" opacity="0.3"/><polygon points="340.0,195.0 372.7,150 340.0,150" fill="#ef4444" opacity="0.3"/><polygon points="372.7,150 420.0,85.0 420.0,150" fill="#22c55e" opacity="0.3"/><polygon points="420.0,85.0 500.0,85.0 500.0,150 420.0,150" fill="#22c55e" opacity="0.3"/>
+  <path d="M40.0 85.0 L100.0 85.0 L180.0 195.0 L340.0 195.0 L420.0 85.0 L500.0 85.0" fill="none" stroke="#e7ecf3" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
+  <text x="14" y="36" fill="#8b9bb4" font-size="11" font-family="system-ui,sans-serif">P/L</text>
+  <text x="250" y="250" fill="#8b9bb4" font-size="11" font-family="system-ui,sans-serif" text-anchor="middle">Stock price at expiry →</text>
+  <text x="230" y="215" fill="#fca5a5" font-size="12" font-family="system-ui,sans-serif" text-anchor="middle">Loss in the middle</text><text x="55" y="75" fill="#86efac" font-size="12" font-family="system-ui,sans-serif" text-anchor="start">Profit</text><text x="450" y="75" fill="#86efac" font-size="12" font-family="system-ui,sans-serif" text-anchor="start">Profit</text>
+</svg>
+<div class="demo-legend"><span style="color:#ef4444">■ Red = loss</span><span style="color:#22c55e">■ Green = profit</span><span style="opacity:.7">White line = P/L at expiry</span></div></div></section>
+<section class="home-section"><div class="section-head"><div><h2>Choose your starting point</h2><p>You do not need to know everything before you begin.</p></div></div><div class="path-grid"><a class="path-card" href="/level1/"><span class="path-num">01 · NEW TO OPTIONS</span><h3>Start with Basics</h3><p>Calls, puts, strikes, premiums, expiration and the language you need first.</p></a><a class="path-card" href="/level2/"><span class="path-num">02 · BUILDING BLOCKS</span><h3>Learn Fundamentals</h3><p>See long, short, covered and protective positions with real-number examples.</p></a><a class="path-card" href="/level3/"><span class="path-num">03 · COMBINATIONS</span><h3>Explore Spreads</h3><p>Understand defined-risk combinations such as verticals and iron condors.</p></a><a class="path-card" href="/level4/"><span class="path-num">04 · GO DEEPER</span><h3>Study Advanced</h3><p>Move into calendars, LEAPS, longer DTE and more sophisticated concepts.</p></a></div></section>
 
-<div class="wrap">
-<nav class="breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span aria-hidden="true">/</span><span aria-current="page">Basics</span></nav>
-
-  <div class="card">
-    <span class="badge">Basics · No jargon overload</span>
-    <h1>What is an option? It’s a reservation ticket.</h1>
-    <p>If you’ve paid to <b>reserve</b> sneakers, a console, concert tickets, or a house, you already get the idea. A stock option is the same kind of contract — a paid right, with a deadline, on an underlying asset.</p>
-    <img src="/images/sneaker_store_reservation.webp" alt="Sneaker store reservation analogy for a call option" width="900" height="500" loading="eager">
-  </div>
-
-  <div class="note" role="note">
-    <strong>Mindset:</strong> Options are not a get-rich-quick path. Treat this as a skill you build slowly. <strong>Less is more</strong> — learn the vocabulary and one simple long option before you size up or sell options. Never risk money you cannot afford to lose.
-  </div>
-
-  <div class="card">
-    <h2>Story 1: The $100 sneakers (a Call)</h2>
-    <p>Limited sneakers cost <span class="term">$100</span>. You only have $5 today. You pay $5 to reserve the <em>right</em> to buy at $100 within 30 days.</p>
-    <p>That $5 is the <span class="term">Premium</span>. $100 is the <span class="term">Strike</span>. 30 days is the <span class="term">Expiry</span>. The sneakers are the <span class="term">Underlying</span>.</p>
-    <div class="analogy">
-      <b>Outcomes</b>
-      <ul>
-        <li>Sneakers go to $150 → you still buy at $100. Economic gain about <span class="profit">$45</span> after the $5 fee ($50 intrinsic − $5 premium).</li>
-        <li>They fall to $70 → you walk away. Loss only the <span class="loss">$5</span> premium.</li>
-      </ul>
-      <p>That contract is a <b>Call</b>. <span class="term">CALL = right to BUY</span>.</p>
+<section class="home-section" id="calls-and-puts">
+  <div class="section-head"><div>
+    <h2>Calls vs puts — in plain English</h2>
+    <p>Two basic building blocks. One is a bullish ticket; the other is more like insurance.</p>
+  </div></div>
+  <div class="concept-grid">
+    <div class="concept-card">
+      <h3>Long call — a reservation to buy</h3>
+      <p>A <b>long call</b> gives you the right (not the obligation) to <b>buy</b> 100 shares at a set strike before expiration. You pay a premium. If the stock rises enough, the call can gain value; if not, you can lose the premium you paid.</p>
+      <div class="analogy-box"><b>Analogy:</b> Like placing a refundable-style hold on a product at a fixed price — you pay a fee for the right to buy later. If the price never matters to you, the fee is the cost of the option.</div>
+      <div class="payoff-mini">
+        <svg viewBox="0 0 520 220" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Long call payoff: limited loss, unlimited upside">
+  <line x1="40" y1="150" x2="500" y2="150" stroke="#8b9bb4" stroke-width="1.5" opacity=".55"/>
+  <line x1="40" y1="30" x2="40" y2="230" stroke="#8b9bb4" stroke-width="1" opacity=".3"/>
+  <polygon points="40.0,190.0 220.0,190.0 220.0,150 40.0,150" fill="#ef4444" opacity="0.3"/><polygon points="220.0,190.0 294.7,150 220.0,150" fill="#ef4444" opacity="0.3"/><polygon points="294.7,150 500.0,40.0 500.0,150" fill="#22c55e" opacity="0.3"/>
+  <path d="M40.0 190.0 L220.0 190.0 L500.0 40.0" fill="none" stroke="#e7ecf3" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
+  <text x="14" y="36" fill="#8b9bb4" font-size="11" font-family="system-ui,sans-serif">P/L</text>
+  <text x="250" y="210" fill="#8b9bb4" font-size="11" font-family="system-ui,sans-serif" text-anchor="middle">Stock price at expiry →</text>
+  <text x="70" y="210" fill="#fca5a5" font-size="12" font-family="system-ui,sans-serif" text-anchor="start">Max loss = premium</text><text x="380" y="70" fill="#86efac" font-size="12" font-family="system-ui,sans-serif" text-anchor="start">Upside if stock rises</text><text x="250" y="28" fill="#8b9bb4" font-size="12" font-family="system-ui,sans-serif" text-anchor="middle">Long call · P/L at expiry</text>
+</svg>
+      </div>
     </div>
-    <img src="/images/options_trading_terms_infographic.webp" alt="Options terms: underlying, strike, premium, expiry, call vs put" width="900" height="500" loading="lazy">
-  </div>
-
-  <div class="card">
-    <h2>Story 2: House — Call vs Put</h2>
-    <img src="/images/call_vs_put_house_poster.webp" alt="House analogy comparing a call option (right to buy) and a put option (right to sell)" width="900" height="500" loading="lazy">
-    <p><b>Call:</b> you pay a fee now to lock the right to <b>buy</b> later at a set price — useful if you expect the price to go <b>up</b>.</p>
-    <p><b>Put:</b> you pay a fee to lock the right to <b>sell</b> at a set price — useful if you expect the price to go <b>down</b>, or as insurance on something you already own.</p>
-    <div class="analogy">
-      <b>Key idea:</b> Buying an option is a <b>right</b>, not an obligation. You can walk away. On a long (bought) option, maximum loss is the premium you paid (plus fees) — you cannot lose more than that on the option itself.
-    </div>
-  </div>
-
-  <div class="card">
-    <h2>Story 3: Concert tickets (time runs out)</h2>
-    <p>Face value $200, show in 30 days. You pay $20 for the right to buy at $200. If resale hits $400, that right is valuable. If resale is $100, you let it expire and lose only the <span class="loss">$20</span>.</p>
-    <p><span class="term">Expiry</span> is the hard deadline. After expiration, an option that finishes out of the money is typically worth zero. Time is not free — every day that passes can reduce the “extra” value of the option beyond pure intrinsic value.</p>
-  </div>
-
-  <div class="card">
-    <h2>Five core words</h2>
-    <ul>
-      <li><span class="term">Underlying</span> — the asset the option is written on (stock, ETF, index… or sneakers in the story).</li>
-      <li><span class="term">Strike</span> — the agreed buy (call) or sell (put) price.</li>
-      <li><span class="term">Premium</span> — the price of the option, quoted <em>per share</em>.</li>
-      <li><span class="term">Expiry / DTE</span> — when the right ends; DTE = days to expiration.</li>
-      <li><span class="term">Call vs Put</span> — call = right to buy; put = right to sell.</li>
-    </ul>
-    <p><span class="term">Long</span> = you <b>buy</b> the option. <span class="term">Short</span> = you <b>sell</b> (write) the option. This page focuses on long options — the side with defined risk equal to the premium.</p>
-  </div>
-
-  <div class="card">
-    <h2>Why everything is ×100</h2>
-    <p>One standard U.S. equity option contract usually covers <b>100 shares</b>. Brokers quote premiums per share, so you must multiply by 100 to get real cash.</p>
-    <div class="analogy">
-      Premium quoted at <b>$3.00</b> → one contract costs about <b>$300</b> (plus commissions).<br>
-      If that option later trades at $5.00, the position is worth about <b>$500</b>. Your P/L is on the full ×100 amount — not the $3 or $5 alone.
-    </div>
-    <div class="warn"><strong>Beginner trap:</strong> reading a $2.50 quote as “$2.50 total.” It is $250 per contract. Always check the total debit or credit before you click buy or sell.</div>
-  </div>
-
-  <div class="card">
-    <h2>Intrinsic value vs extrinsic (time) value</h2>
-    <p>Every option premium is made of two parts. Understanding them explains why a call can lose money even when the stock drifts up a little.</p>
-
-    <p><strong>Intrinsic value</strong> — what the option is worth if you exercised it <em>right now</em> (the “built-in” part).</p>
-    <ul>
-      <li><b>Call:</b> max(stock price − strike, 0)</li>
-      <li><b>Put:</b> max(strike − stock price, 0)</li>
-    </ul>
-    <p>If that number is zero, the option has <em>no</em> intrinsic value (it is out of the money or at the money).</p>
-
-    <p><strong>Extrinsic value</strong> (also called <strong>time value</strong>) — everything else in the premium:</p>
-    <div class="analogy" style="margin-top:8px">
-      <b>Premium = Intrinsic + Extrinsic</b><br>
-      Extrinsic is the “hope and time” part: days left until expiration, how much the market expects the stock to move, and supply/demand for that option.
-    </div>
-
-    <h3 style="margin-top:18px;font-size:1.05rem">Worked example (call)</h3>
-    <p>Stock is <b>$108</b>. You look at the <b>$100</b> call. It is quoted at <b>$10</b>.</p>
-    <ul>
-      <li>Intrinsic = $108 − $100 = <b>$8</b></li>
-      <li>Extrinsic (time value) = $10 − $8 = <b>$2</b></li>
-    </ul>
-    <p>You are paying $8 for value that already exists, plus $2 for the chance the stock moves more (and for the time left on the clock).</p>
-
-    <h3 style="margin-top:18px;font-size:1.05rem">Same idea for a put</h3>
-    <p>Stock is <b>$92</b>. The <b>$100</b> put is quoted at <b>$11</b>.</p>
-    <ul>
-      <li>Intrinsic = $100 − $92 = <b>$8</b></li>
-      <li>Extrinsic = $11 − $8 = <b>$3</b></li>
-    </ul>
-
-    <h3 style="margin-top:18px;font-size:1.05rem">What happens as expiration approaches?</h3>
-    <p>Extrinsic value tends to <b>melt away</b> toward zero as the deadline nears (all else equal). That melting is <span class="term">time decay</span>. At expiration:</p>
-    <ul>
-      <li>An option is worth only its intrinsic value (or zero if still out of the money).</li>
-      <li>Any extrinsic you paid is gone unless the stock moved enough to make up for it.</li>
-    </ul>
-    <div class="analogy">
-      <b>If the stock is still $108 at expiration:</b> the $100 call is worth about <b>$8</b> (intrinsic only). The $2 of time value has decayed to zero.<br>
-      <b>If the stock is $100 or below at expiration:</b> the call is typically worth <b>$0</b> — all $10 of premium is lost.
-    </div>
-
-    <div style="margin-top:14px;overflow-x:auto">
-      <table style="width:100%;border-collapse:collapse;font-size:.88rem">
-        <thead>
-          <tr>
-            <th style="border:1px solid var(--border);padding:8px;text-align:left;background:var(--input)">Situation (call, strike $100)</th>
-            <th style="border:1px solid var(--border);padding:8px;text-align:left;background:var(--input)">Intrinsic</th>
-            <th style="border:1px solid var(--border);padding:8px;text-align:left;background:var(--input)">Extrinsic</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td style="border:1px solid var(--border);padding:8px">Stock $108, premium $10, 30 days left</td>
-            <td style="border:1px solid var(--border);padding:8px">$8</td>
-            <td style="border:1px solid var(--border);padding:8px">$2</td>
-          </tr>
-          <tr>
-            <td style="border:1px solid var(--border);padding:8px">Stock $108, same call, 1 day left</td>
-            <td style="border:1px solid var(--border);padding:8px">$8</td>
-            <td style="border:1px solid var(--border);padding:8px">Often near $0–$0.50</td>
-          </tr>
-          <tr>
-            <td style="border:1px solid var(--border);padding:8px">Stock $95, premium $2, 30 days left</td>
-            <td style="border:1px solid var(--border);padding:8px">$0 (OTM)</td>
-            <td style="border:1px solid var(--border);padding:8px">$2 (all time value)</td>
-          </tr>
-          <tr>
-            <td style="border:1px solid var(--border);padding:8px">Stock $95 at expiration</td>
-            <td style="border:1px solid var(--border);padding:8px">$0</td>
-            <td style="border:1px solid var(--border);padding:8px">$0</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <div class="note" style="margin-top:14px">
-      <strong>Why this matters:</strong> When you <b>buy</b> an option, time decay works <em>against</em> you — extrinsic tends to shrink each day. When you <b>sell</b> (write) an option, that same decay can work <em>in your favor</em> (you will see this with covered calls on the <a href="/level2/">Fundamentals</a> page). Volatility changes can also raise or lower extrinsic value quickly, even if the stock price barely moves.
+    <div class="concept-card">
+      <h3>Long put — more like insurance</h3>
+      <p>A <b>long put</b> gives you the right to <b>sell</b> 100 shares at a set strike. You pay a premium. Puts often gain when the stock falls. Many beginners learn puts first as a <b>hedge</b> idea — protection — not only as a bet that price will drop.</p>
+      <div class="analogy-box"><b>Car / home insurance analogy:</b> You pay a premium so that <em>if</em> something bad happens (a crash, a fire — or here, a sharp drop in the stock), you have a defined right that can offset the damage. If nothing bad happens, the premium is the cost of peace of mind. A put is not identical to an insurance policy, but the “pay for protection / limited loss of the premium” intuition is the same.</div>
+      <div class="payoff-mini">
+        <svg viewBox="0 0 520 220" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Long put payoff: profit if stock falls, max loss is premium">
+  <line x1="40" y1="150" x2="500" y2="150" stroke="#8b9bb4" stroke-width="1.5" opacity=".55"/>
+  <line x1="40" y1="30" x2="40" y2="230" stroke="#8b9bb4" stroke-width="1" opacity=".3"/>
+  <polygon points="40.0,50.0 225.7,150 40.0,150" fill="#22c55e" opacity="0.3"/><polygon points="225.7,150 300.0,190.0 300.0,150" fill="#ef4444" opacity="0.3"/><polygon points="300.0,190.0 500.0,190.0 500.0,150 300.0,150" fill="#ef4444" opacity="0.3"/>
+  <path d="M40.0 50.0 L300.0 190.0 L500.0 190.0" fill="none" stroke="#e7ecf3" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
+  <text x="14" y="36" fill="#8b9bb4" font-size="11" font-family="system-ui,sans-serif">P/L</text>
+  <text x="250" y="210" fill="#8b9bb4" font-size="11" font-family="system-ui,sans-serif" text-anchor="middle">Stock price at expiry →</text>
+  <text x="60" y="80" fill="#86efac" font-size="12" font-family="system-ui,sans-serif" text-anchor="start">Profit if stock falls</text><text x="320" y="210" fill="#fca5a5" font-size="12" font-family="system-ui,sans-serif" text-anchor="start">Max loss = premium</text><text x="250" y="28" fill="#8b9bb4" font-size="12" font-family="system-ui,sans-serif" text-anchor="middle">Long put · P/L at expiry</text>
+</svg>
+      </div>
     </div>
   </div>
+  <p style="margin-top:14px;font-size:13px;color:var(--muted)">Next step: <a href="/level1/">Basics</a> for terms and the ×100 multiplier, or open a <a href="/builder/?template=long_put">long put in the Builder</a> and drag the underlying price.</p>
+</section>
 
-  <div class="card">
-    <h2>In, at, or out of the money</h2>
-    <p><span class="term">Moneyness</span> is shorthand for where the stock sits relative to the strike:</p>
-    <ul>
-      <li><strong>ITM (in the money)</strong> — call: stock above strike. Put: stock below strike. Already has intrinsic value.</li>
-      <li><strong>ATM (at the money)</strong> — stock near the strike. Mostly time value.</li>
-      <li><strong>OTM (out of the money)</strong> — call: stock below strike. Put: stock above strike. No intrinsic value; needs a move to become valuable at expiration.</li>
-    </ul>
-    <p>OTM options are cheaper and need a bigger move. ITM options cost more and behave more like owning (or shorting) the stock. Neither is “always better” — they are different tools.</p>
-  </div>
-
-  <div class="card">
-    <h2>Payoff picture (long call)</h2>
-    <img src="/images/call_option_payoff_infographic.webp" alt="Long call payoff diagram showing loss limited to premium and profit rising above strike" width="900" height="500" loading="lazy">
-    <p>At expiration, below the strike you typically lose the premium paid. Above the strike, value rises roughly dollar-for-dollar with the stock. Rough break-even ≈ <b>strike + premium paid</b>.</p>
-    <div class="analogy">
-      <b>Example:</b> $100 strike + $3 premium → about <b>$103</b> at expiry to break even (before commissions).<br>
-      One contract = 100 shares, so $3 ≈ <b>$300</b> cash at risk.
-    </div>
-    <div class="note">In the <a href="/builder/?template=long_call">Builder</a>, the solid line is P/L at expiry; the dotted line includes time value before expiry. Green = profit, red = loss.</div>
-  </div>
-
-  <div class="card">
-    <h2>Long put in one minute</h2>
-    <p>A <b>long put</b> is the bearish twin of the long call: you pay a premium for the right to <b>sell</b> 100 shares at the strike. You profit if the stock falls enough to cover the premium. Maximum loss is still only the premium paid.</p>
-
-    <div class="analogy">
-      <b>Car / home insurance analogy:</b> You pay a premium so that <em>if</em> something bad happens (a crash, a fire — or here, a sharp drop in the stock), you have a defined right that can offset the damage. If nothing bad happens, the premium is the cost of peace of mind. A put is not identical to an insurance policy, but the “pay for protection / limited loss of the premium” idea is the same. Puts can also be used to speculate that price will fall — still with max loss ≈ the premium if you only buy the put.
-    </div>
-
-    <h3 style="margin:18px 0 10px;font-size:1.05rem">Payoff picture (long put)</h3>
-    <div class="payoff-box" style="background:var(--input);border:1px solid var(--border);border-radius:12px;padding:14px 12px 10px;margin:8px 0 12px">
-      <svg viewBox="0 0 640 340" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Long put payoff: insurance-style protection, profit if stock falls, max loss equals premium paid" width="100%" height="auto">
-        <!-- title band -->
-        <rect x="0" y="0" width="640" height="44" fill="#1a2332" rx="8"/>
-        <text x="320" y="28" text-anchor="middle" fill="#e7ecf3" font-size="16" font-weight="700" font-family="system-ui,sans-serif">Long put — like insurance on a stock price</text>
-
-        <!-- insurance callout -->
-        <rect x="24" y="56" width="592" height="52" rx="10" fill="#0f1419" stroke="#3b82f6" stroke-width="1.5"/>
-        <text x="320" y="78" text-anchor="middle" fill="#93c5fd" font-size="13" font-weight="600" font-family="system-ui,sans-serif">You pay a premium (like an insurance fee)</text>
-        <text x="320" y="96" text-anchor="middle" fill="#8b9bb4" font-size="12" font-family="system-ui,sans-serif">If the stock falls a lot → put can pay off · If stock stays high → you only lose the premium</text>
-
-        <!-- axes -->
-        <line x1="70" y1="200" x2="600" y2="200" stroke="#8b9bb4" stroke-width="1.5" opacity=".55"/>
-        <line x1="70" y1="120" x2="70" y2="300" stroke="#8b9bb4" stroke-width="1" opacity=".35"/>
-        <text x="40" y="205" fill="#8b9bb4" font-size="11" font-family="system-ui,sans-serif">0</text>
-        <text x="335" y="318" text-anchor="middle" fill="#8b9bb4" font-size="12" font-family="system-ui,sans-serif">Stock price at expiration →</text>
-        <text x="28" y="160" fill="#8b9bb4" font-size="11" font-family="system-ui,sans-serif">P/L</text>
-
-        <!-- green profit zone (left of BE) -->
-        <polygon points="70,130 250,200 70,200" fill="#22c55e" opacity="0.28"/>
-        <!-- red loss zone (right of BE, flat at -premium) -->
-        <polygon points="250,200 320,240 600,240 600,200" fill="#ef4444" opacity="0.28"/>
-
-        <!-- straight payoff path: diagonal then flat (no kink at zero) -->
-        <path d="M70 130 L320 240 L600 240" fill="none" stroke="#e7ecf3" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round"/>
-
-        <!-- markers -->
-        <circle cx="250" cy="200" r="4" fill="#facc15"/>
-        <text x="250" y="190" text-anchor="middle" fill="#facc15" font-size="11" font-family="system-ui,sans-serif">Break-even</text>
-        <text x="250" y="258" text-anchor="middle" fill="#8b9bb4" font-size="11" font-family="system-ui,sans-serif">strike − premium</text>
-
-        <text x="100" y="155" fill="#86efac" font-size="12" font-weight="600" font-family="system-ui,sans-serif">Profit if stock falls</text>
-        <text x="400" y="265" fill="#fca5a5" font-size="12" font-weight="600" font-family="system-ui,sans-serif">Max loss = premium paid</text>
-        <text x="320" y="288" text-anchor="middle" fill="#8b9bb4" font-size="11" font-family="system-ui,sans-serif">Strike → · flat when put expires worthless</text>
-      </svg>
-      <p style="text-align:center;font-size:.8rem;color:var(--muted);margin:8px 0 0">Green = profit · Red = loss · Yellow dot = break-even at expiry</p>
-    </div>
-
-    <div class="analogy">
-      <b>Example:</b> Stock $100. Buy $95 put for $2.50 → $250 debit (one contract).<br>
-      At expiration if stock is $80: intrinsic = $15 → profit ≈ ($15 − $2.50) × 100 = <span class="profit">+$1,250</span>.<br>
-      If stock stays above $95: put expires worthless → loss = <span class="loss">$250</span> (the “insurance premium”).
-    </div>
-    <p>Break-even at expiration for a long put ≈ <b>strike − premium paid</b> (here ≈ $92.50).</p>
-    <div class="note">In the <a href="/builder/?template=long_put">Builder</a>, load a long put, drag the underlying price, and compare the solid expiry line with the dotted line (time value still left).</div>
-  </div>
-
-
-  <div class="card" id="options-chain">
-    <h2>How to read an options chain</h2>
-    <p>An <b>options chain</b> is the table your broker shows for one stock or ETF: <b>calls on one side, puts on the other</b>, with <b>strikes down the middle</b>, for a chosen <b>expiration date</b>. Prices update during market hours; after the close you often see the last recorded quotes.</p>
-    <p>JSM Options is an <b>educational site only</b>. We are <b>not affiliated with, endorsed by, or connected to</b> any broker, exchange, or data provider. Screenshots and examples below are for learning how chains are typically organized — layouts differ by platform.</p>
-
-    <img src="/images/options-chain-example.webp" alt="Example options chain layout: calls on the left, strikes in the center, puts on the right, with bid ask last delta gamma and expiration tabs" width="1200" height="560" loading="lazy" style="width:100%;height:auto;border-radius:12px;border:1px solid var(--border);margin:12px 0">
-    <p style="font-size:.82rem;color:var(--muted);margin:0 0 12px">Example layout only (illustrative). Your broker’s labels, colors, and columns may differ. Not a recommendation to trade this or any symbol.</p>
-
-    <h3>What you are looking at</h3>
-    <ul>
-      <li><b>Underlying &amp; last price</b> — the stock/ETF the options refer to (and often today’s % change).</li>
-      <li><b>Expiration tabs</b> — each tab is a different expiry (e.g. weekly or monthly). “Days” shows approximate time left.</li>
-      <li><b>Calls (usually left)</b> — right to <b>buy</b> 100 shares at the strike.</li>
-      <li><b>Puts (usually right)</b> — right to <b>sell</b> 100 shares at the strike.</li>
-      <li><b>Strike column (center)</b> — the fixed price in the option contract.</li>
-    </ul>
-
-    <h3>Columns you will see most often</h3>
-    <ul>
-      <li><b>Bid</b> — highest price buyers are currently offering. If you <b>sell</b> an option, you often start near the bid.</li>
-      <li><b>Ask</b> — lowest price sellers are asking. If you <b>buy</b> an option, you often pay near the ask.</li>
-      <li><b>Last</b> — last trade price (can be stale if the option is quiet).</li>
-      <li><b>Delta</b> — rough sensitivity to a $1 move in the stock (calls positive, puts negative). Beginners: treat it as “how stock-like is this option?”</li>
-      <li><b>Gamma</b> — how fast delta can change. More relevant as you go deeper; safe to note and move on at first.</li>
-      <li><b>IV (implied volatility)</b> — often shown for the expiration or per strike. Higher IV → options tend to be more expensive, all else equal.</li>
-    </ul>
-
-    <div class="analogy">
-      <b>Mid-price tip:</b> (bid + ask) ÷ 2 is a common “fair-ish” reference. Wide bid–ask spreads mean higher friction — harder to get a good fill, especially on low-volume strikes.
-    </div>
-
-    <h3>Contract size (the ×100 reminder)</h3>
-    <p>Listed equity options usually control <b>100 shares</b> per contract. A put with ask <b>$1.09</b> costs about <b>$109</b> to buy one contract (before commissions), not $1.09. Always multiply premium by 100 when estimating cash.</p>
-
-    <h3>How orders are typically placed (general)</h3>
-    <p>Steps are similar across brokers; exact buttons and names vary. This is a <b>generic outline</b>, not instructions for any specific firm:</p>
-    <ol style="padding-left:20px">
-      <li style="margin:6px 0"><b>Choose the underlying</b> (stock or ETF) and open its options chain.</li>
-      <li style="margin:6px 0"><b>Pick an expiration</b> (how much time you want).</li>
-      <li style="margin:6px 0"><b>Pick call or put</b> and a <b>strike</b>.</li>
-      <li style="margin:6px 0"><b>Action:</b> <i>Buy to open</i> (you are long) or <i>Sell to open</i> (you are short — higher risk if naked).</li>
-      <li style="margin:6px 0"><b>Quantity</b> in contracts (1 contract ≈ 100 shares of exposure).</li>
-      <li style="margin:6px 0"><b>Order type:</b> while learning, prefer a <b>limit</b> order (you set the max price to pay or min price to receive) over a market order.</li>
-      <li style="margin:6px 0"><b>Review</b> estimated debit/credit, fees, and buying power impact → submit only if you understand the max loss.</li>
-    </ol>
-
-    <div class="analogy">
-      <b>Buying a call example (illustrative):</b> Select a call strike → Buy to open → 1 contract → limit near the ask (or mid if you are patient) → confirm total ≈ premium × 100 + fees.
-    </div>
-
-    <h3>Connect the chain to this site</h3>
-    <p>After you understand a quote, you can copy the <b>strike</b> and a realistic <b>premium</b> (e.g. mid) into the <a href="/builder/">Strategy Builder</a> and see payoff and educational Greeks. The Builder is a simulator — not live brokerage data and not an order ticket.</p>
-
-    <div class="warn">
-      <strong>Important:</strong> JSM Options is not a broker and does not place orders. We are not affiliated with any brokerage, exchange, or institution. Options can expire worthless and losses can exceed your expectations if you sell naked options. Educational only — not financial advice.
-    </div>
-  </div>
-
-  <div class="card">
-    <h2>What “assignment” means (quick)</h2>
-    <p>If you <b>sell</b> (short) an option, the buyer may exercise. Then you can be <span class="term">assigned</span>: forced to buy or sell the shares at the strike. That is why short calls without owning the shares (naked calls) can be very risky.</p>
-    <p>This Basics page stays on the <b>long</b> side — you own the right. Selling options comes later, with clearer rules and risk limits (for example, a covered call against shares you already own).</p>
-  </div>
-
-  <div class="card">
-    <h2>Why options exist at all</h2>
-    <p>In real markets, options are used to:</p>
-    <ul>
-      <li><strong>Speculate</strong> with defined risk (long call/put) or defined risk spreads later.</li>
-      <li><strong>Hedge</strong> — e.g. a put as insurance on shares you own.</li>
-      <li><strong>Generate income</strong> — e.g. selling a call against stock you own (covered call), which you will meet in Fundamentals.</li>
-    </ul>
-    <p>None of those uses require gambling your whole account. Size small while you learn.</p>
-  </div>
-
-  <div class="card">
-    <h2>Beginner FAQ</h2>
-    <p style="margin-bottom:12px;color:var(--muted);font-size:.92rem">Short answers to the questions most people ask first.</p>
-
-    <p><strong>Is an option the same as owning the stock?</strong><br>
-    No. A long call gives exposure that can <em>behave</em> a bit like stock if it is deep in the money, but you do not receive dividends the same way, rights expire, and small moves plus time decay can still produce a loss.</p>
-
-    <p style="margin-top:14px"><strong>Can I lose more than I paid for a long call or long put?</strong><br>
-    On the option itself, no — maximum loss is the premium (plus fees). That is why many beginners start with long options: the worst case is known upfront.</p>
-
-    <p style="margin-top:14px"><strong>Why did my call drop when the stock barely moved?</strong><br>
-    You likely paid some <b>extrinsic (time) value</b>. Each day that value can shrink (time decay), and implied volatility can fall too. A small favorable stock move may not be enough to offset both. The stock has to move <em>enough</em>, and often <em>soon enough</em>.</p>
-
-    <p style="margin-top:14px"><strong>What is the difference between intrinsic and extrinsic value?</strong><br>
-    <b>Intrinsic</b> is the value if exercised right now (for a call: stock minus strike, if positive). <b>Extrinsic</b> (time value) is the rest of the premium — time left and expected movement. At expiration, extrinsic goes to zero; only intrinsic remains.</p>
-
-    <p style="margin-top:14px"><strong>Do I have to wait until expiration?</strong><br>
-    No. You can sell the option in the market any time before expiration (when the market is open and there is a buyer). Many people close early to lock a gain or cut a loss.</p>
-
-    <p style="margin-top:14px"><strong>Is this a way to get rich quickly?</strong><br>
-    No. Options amplify outcomes in both directions. Sustainable progress looks like small size, one idea at a time, and learning from each trade — not all-in bets.</p>
-  </div>
-
-  <div class="warn"><strong>Common beginner mistakes:</strong> treating the premium quote as total cash (forgetting ×100); buying far out-of-the-money options and hoping for a miracle move; ignoring expiration; selling naked calls before understanding assignment risk; sizing so large that one loss ends the experiment.</div>
-
-  <div class="card" style="text-align:center">
-    <h3>Next: real-number fundamentals</h3>
-    <p>Long call, long put, and covered call with full examples, payoff tables, and Greeks in plain English.</p>
-    <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:12px">
-      <a class="btn" href="/level2/">Fundamentals →</a>
-      <a class="btn btn-secondary" href="/builder/?template=long_call">Try Long Call in Builder</a>
-    </div>
-  </div>
-</div>
-
-<footer class="site-footer">
+<section class="home-section"><div class="section-head"><div><h2>Start with your market view</h2><p>Strategies make more sense when you connect them to an outlook.</p></div><a href="/strategies/">View all Strategies →</a></div><div class="outlook-grid"><div class="outlook"><b>↗ Bullish</b><p>You expect the underlying to rise.</p></div><div class="outlook"><b>↘ Bearish</b><p>You expect the underlying to fall.</p></div><div class="outlook"><b>→ Neutral</b><p>You expect price to stay in a range.</p></div><div class="outlook"><b>⚡ Big Move</b><p>You expect volatility without knowing direction.</p></div></div></section>
+<section class="home-section"><div class="builder-feature"><div><div class="eyebrow">The hands-on part</div><h2>Do not just read about an option. Build it.</h2><p>Change the strike, premium and expiration price. See the payoff curve move. Use the Builder to turn the concepts you learn into something you can inspect.</p><a class="btn-primary" href="/builder/">Open Strategy Builder →</a></div><div class="checklist"><div class="check">✓ Profit & loss at expiration</div><div class="check">✓ Break-even thinking</div><div class="check">✓ Long & short positions</div><div class="check">✓ Multi-leg structures</div><div class="check">✓ Visual payoff curves</div><div class="check">✓ Educational, client-side tool</div></div></div></section>
+<section class="home-section"><div class="section-head"><div><h2>Popular strategies to explore</h2><p>Use the library to compare ideas before opening the Builder.</p></div></div><div class="strategy-preview"><a class="mini-strategy" href="/strategies/"><span class="tag">Bullish · Income</span><h3>Covered Call</h3><p>Own shares and sell a call to collect premium while accepting capped upside.</p></a><a class="mini-strategy" href="/strategies/"><span class="tag">Defined Risk</span><h3>Bull Call Spread</h3><p>A moderate bullish position with both risk and upside defined.</p></a><a class="mini-strategy" href="/strategies/"><span class="tag">Volatility</span><h3>Long Straddle</h3><p>A defined-risk approach for expecting a sufficiently large move in either direction.</p></a></div></section>
+<p class="home-note">Educational only — not financial advice. Options involve risk and can result in losses. Examples are simplified and do not account for every real-world factor.</p></main><footer class="site-footer">
   <div class="footer-note">Educational only — not financial advice. Options involve risk of loss.</div>
   <div class="footer-links">
     <a href="/">Home</a>
@@ -427,24 +129,7 @@
       <a href="https://jsm-video.com/" target="_blank" rel="noopener">JSM Video</a> ·
       <a href="https://jsm-loudness.com/" target="_blank" rel="noopener">JSM Loudness</a>
     </div>
-</footer>
-
-<script>
-(function(){
-  const root=document.documentElement, toggle=document.getElementById('themeToggle'), icon=document.getElementById('themeIcon'), label=document.getElementById('themeLabel');
-  function applyTheme(theme){
-    root.setAttribute('data-theme',theme);
-    if(icon) icon.textContent=theme==='dark'?'🌙':'☀️';
-    if(label) label.textContent=theme==='dark'?'Dark':'Light';
-    if(toggle) toggle.setAttribute('aria-label',theme==='dark'?'Switch to light theme':'Switch to dark theme');
-    try{localStorage.setItem('jsm-theme',theme)}catch(e){}
-  }
-  let saved=null; try{saved=localStorage.getItem('jsm-theme')}catch(e){}
-  const initial=(saved==='light'||saved==='dark')?saved:((window.matchMedia&&window.matchMedia('(prefers-color-scheme: light)').matches)?'light':'dark');
-  applyTheme(initial);
-  if(toggle) toggle.addEventListener('click',function(){applyTheme(root.getAttribute('data-theme')==='dark'?'light':'dark')});
-})();
-</script>
+</footer><script>(function(){const key="jsm-theme",root=document.documentElement,btn=document.getElementById("themeToggle"),icon=document.getElementById("themeIcon"),label=document.getElementById("themeLabel");function apply(t){root.setAttribute("data-theme",t);if(icon)icon.textContent=t==="dark"?"🌙":"☀️";if(label)label.textContent=t==="dark"?"Dark":"Light";if(btn)btn.setAttribute("aria-pressed",t==="light"?"true":"false");if(btn)btn.setAttribute("aria-label",t==="dark"?"Switch to light theme":"Switch to dark theme");}const saved=localStorage.getItem(key);apply(saved||"dark");if(btn)btn.addEventListener("click",()=>{const next=root.getAttribute("data-theme")==="light"?"dark":"light";apply(next);localStorage.setItem(key,next)});})();</script>
 <script>
 (function(){
   function initNav(){
@@ -492,5 +177,4 @@
 
 
 
-</body>
-</html>
+</body></html>
