@@ -306,3 +306,28 @@ html[data-theme="light"] .note{color:#1e40af;background:rgba(37,99,235,.06)}
 .footer-tools{margin-top:12px;font-size:12px;color:var(--muted,#8b9bb4)}
 .footer-tools a{color:var(--muted,#8b9bb4);text-decoration:none}
 .footer-tools a:hover{color:var(--accent,#3b82f6)}
+
+/* Sticky lesson TOC */
+.lesson-toc{
+  position:sticky;top:64px;z-index:15;
+  margin:0 0 16px;padding:12px 14px;
+  border:1px solid var(--border);border-radius:12px;
+  background:var(--card);font-size:13px;
+}
+.lesson-toc strong{display:block;margin-bottom:8px;font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.lesson-toc-links{display:flex;flex-wrap:wrap;gap:6px 10px}
+.lesson-toc a{color:var(--muted);text-decoration:none;padding:4px 8px;border-radius:8px;border:1px solid transparent}
+.lesson-toc a:hover{color:var(--text);border-color:var(--border);background:var(--input)}
+@media(max-width:700px){.lesson-toc{position:static}}
+
+.practice-prompt{
+  margin:14px 0 0;padding:12px 14px;border-radius:10px;
+  border-left:3px solid var(--accent);
+  background:var(--input);font-size:13px;line-height:1.5;
+}
+.practice-prompt b{color:var(--accent)}
+.risk-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:12px}
+@media(max-width:800px){.risk-grid{grid-template-columns:1fr}}
+.risk-card{padding:14px;border:1px solid var(--border);border-radius:12px;background:var(--input)}
+.risk-card h3{margin:0 0 8px;font-size:15px}
+.risk-card p{margin:0;font-size:13px;color:var(--muted);line-height:1.5}

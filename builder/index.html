@@ -21,7 +21,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Free Options Strategy Builder &amp; Payoff Calculator">
   <meta name="twitter:description" content="Live payoff graph and Greeks for covered call, iron condor, spreads, and custom multi-leg strategies.">
-  <link rel="stylesheet" href="/assets/style.css?v=20260913">
+  <link rel="stylesheet" href="/assets/style.css?v=20260914">
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-BDL003RCN6"></script>
 <script>
@@ -1246,6 +1246,8 @@
     }
 
     function recalc() {
+      try { if (typeof updateShareUrlQuiet === "function") { /* share updated on button only */ } } catch (e) {}
+
       if (!legs.length) return;
       const params = getParams();
       const S = params.S;
@@ -1417,7 +1419,81 @@
       }
     }
 
-    // Boot once: honor ?template= on every load/refresh
+
+    function legsToQuery() {
+      try {
+        var payload = legs.map(function (l) {
+          return {
+            side: l.side,
+            type: l.type,
+            strike: l.strike,
+            dte: l.dte,
+            qty: l.qty,
+            premium: l.premium
+          };
+        });
+        var S = document.getElementById('spot') ? document.getElementById('spot').value : '';
+        var obj = { legs: payload, S: S };
+        return btoa(unescape(encodeURIComponent(JSON.stringify(obj)))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+      } catch (e) { return ''; }
+    }
+
+    function legsFromQuery(token) {
+      try {
+        var pad = token.length % 4 === 0 ? '' : '===='.slice(token.length % 4);
+        var b64 = token.replace(/-/g, '+').replace(/_/g, '/') + pad;
+        var json = decodeURIComponent(escape(atob(b64)));
+        var obj = JSON.parse(json);
+        if (!obj || !obj.legs || !obj.legs.length) return false;
+        legs = obj.legs.map(function (l) {
+          return {
+            id: nextId++,
+            side: l.side === 'sell' ? 'sell' : 'buy',
+            type: (l.type === 'put' || l.type === 'stock') ? l.type : 'call',
+            strike: Number(l.strike) || 100,
+            dte: Number(l.dte) || 30,
+            qty: Number(l.qty) || 1,
+            premium: Number(l.premium) || 0
+          };
+        });
+        if (obj.S && document.getElementById('spot')) {
+          document.getElementById('spot').value = obj.S;
+          var sl = document.getElementById('spotSlider');
+          if (sl) sl.value = obj.S;
+        }
+        return true;
+      } catch (e) { return false; }
+    }
+
+    function updateShareUrlQuiet() {
+      try {
+        if (!legs.length) return;
+        var token = legsToQuery();
+        if (!token) return;
+        var url = new URL(window.location.href);
+        url.searchParams.delete('template');
+        url.searchParams.set('setup', token);
+        window.history.replaceState(null, '', url.pathname + '?' + url.searchParams.toString());
+      } catch (e) {}
+    }
+
+    var shareBtn = document.getElementById('shareSetup');
+    if (shareBtn) {
+      shareBtn.addEventListener('click', function () {
+        updateShareUrlQuiet();
+        var link = window.location.href;
+        var status = document.getElementById('shareStatus');
+        function ok() { if (status) status.textContent = 'Link copied — paste to share this setup.'; }
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(link).then(ok).catch(function () {
+            if (status) status.textContent = 'Copy from the address bar.';
+          });
+        } else if (status) status.textContent = 'Copy from the address bar.';
+      });
+    }
+
+
+    // Boot once: honor ?setup= or ?template= on every load/refresh
     // Shared JSM theme preference
     (function () {
       const root = document.documentElement;
@@ -1442,12 +1518,23 @@
     })();
 
     (function bootBuilder() {
-      var templateKey = null;
-      try {
-        templateKey = new URLSearchParams(window.location.search).get('template');
-      } catch (e) {}
+      var params = null;
+      try { params = new URLSearchParams(window.location.search); } catch (e) {}
+      var setupToken = params ? params.get('setup') : null;
+      var templateKey = params ? params.get('template') : null;
       var spotEl = document.getElementById('spotSlider');
       if (spotEl) spotEl.value = 100;
+
+      if (setupToken && legsFromQuery(setupToken)) {
+        syncDTESlider();
+        updateSpotSliderRange();
+        renderLegs();
+        recalc();
+        var tip = document.getElementById('templateTip');
+        if (tip) tip.innerHTML = 'Shared setup loaded from the URL. Edit freely — use <strong>Copy share link</strong> again after changes.';
+        return;
+      }
+
       if (templateKey) {
         var sel = document.getElementById('strategyTemplate');
         var found = false;

@@ -21,7 +21,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Calendar Spreads, LEAPS &amp; Cash-Secured Puts Explained">
   <meta name="twitter:description" content="Calendar spreads, credit spreads, cash-secured puts, covered calls, and LEAPS explained for intermediate learners.">
-  <link rel="stylesheet" href="/assets/style.css?v=20260913">
+  <link rel="stylesheet" href="/assets/style.css?v=20260914">
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-BDL003RCN6"></script>
   <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-BDL003RCN6');</script>
   <style>
@@ -92,6 +92,8 @@
 
 <div class="wrap">
 <nav class="breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span aria-hidden="true">/</span><span aria-current="page">Advanced</span></nav>
+<nav class="lesson-toc" aria-label="On this page"><strong>On this page</strong><div class="lesson-toc-links"><a href="#dte">45+ DTE</a><a href="#csp">CSP</a><a href="#wheel">Wheel</a><a href="#covered-call">Covered call</a><a href="#spreads">Debit/credit</a><a href="#calendar">Calendar</a><a href="#leaps">LEAPS</a><a href="#iron-condor">Iron condor</a><a href="#risk-notes">Risk notes</a></div></nav>
+
 
   <div class="hero">
     <span class="badge">Advanced · Longer horizons</span>
@@ -100,7 +102,7 @@
   </div>
 
   <div class="card">
-    <h2>Why target 45+ DTE?</h2>
+    <h2 id="dte">Why target 45+ DTE?</h2>
     <ul>
       <li><b>Slower early decay</b> — theta is often gentler far from expiry than in the final 2 weeks.</li>
       <li><b>Room to adjust</b> — roll, close, or hedge before gamma spikes near expiration.</li>
@@ -110,7 +112,7 @@
   </div>
 
   <div class="card">
-    <h2>Theta decay — sample shape</h2>
+    <h2 id="theta">Theta decay — sample shape</h2>
     <p>Typical teaching picture: with other factors fixed, <b>time value</b> often falls faster in the last weeks before expiry than early in the life of the option. Long options usually <span class="loss">pay</span> theta; short premium often <span class="profit">collects</span> it — with risk attached.</p>
     <div class="theta-box">
       <svg viewBox="0 0 640 280" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Illustrative theta decay: time value falls faster as expiry approaches">
@@ -166,7 +168,7 @@
   <!-- ========== CSP ========== -->
   <div class="card">
     <div class="small">Bullish-to-neutral · income</div>
-    <h2>Cash-secured put (CSP)</h2>
+    <h2 id="csp">Cash-secured put (CSP)</h2>
     <p>You <b>sell a put</b> and keep enough cash in the account to <b>buy 100 shares</b> at the strike if the buyer exercises. You receive a <b>credit</b> (premium) up front.</p>
     <p><strong>In plain English:</strong> you are paid to stand ready to buy the stock at a lower price. If the stock stays above the strike, the put often expires worthless and you keep the credit. If the stock falls and you are assigned, you <b>buy the shares</b> at the strike (your broker uses the cash you set aside).</p>
     <ul>
@@ -208,7 +210,7 @@
   <!-- ========== WHEEL ========== -->
   <div class="card">
     <div class="small">Income cycle · CSP + covered call</div>
-    <h2>The Wheel strategy</h2>
+    <h2 id="wheel">The Wheel strategy</h2>
     <p>The <b>Wheel</b> is a <b>loop</b>, not one option. It connects cash-secured puts and covered calls: collect premium while waiting to buy shares you accept owning → collect premium while you hold them → shares sold when a call is assigned → start again.</p>
 
     <div class="wheel-visual" role="img" aria-label="Wheel strategy cycle: sell CSP until assigned and you buy shares, sell covered call until shares are sold, then restart">
@@ -256,7 +258,7 @@
   <!-- ========== COVERED CALL ========== -->
   <div class="card">
     <div class="small">Stock + short call · income</div>
-    <h2>Covered call</h2>
+    <h2 id="covered-call">Covered call</h2>
     <p>You <b>buy (or already hold) 100 shares</b> and <b>sell 1 call</b> against them. You collect a credit. Upside above the call strike is generally capped; downside on the shares remains — the premium only softens losses a little.</p>
     <ul>
       <li><b>Max profit</b> ≈ (call strike − stock purchase price) + premium, if shares are called away or finish above the strike</li>
@@ -287,7 +289,7 @@
   <!-- ========== CREDIT / DEBIT SPREADS ========== -->
   <div class="card">
     <div class="small">Defined-risk verticals</div>
-    <h2>Debit spreads vs credit spreads</h2>
+    <h2 id="spreads">Debit spreads vs credit spreads</h2>
     <p>A <b>vertical spread</b> is two options of the same type (calls or puts) and same expiry, different strikes. One is bought, one is sold. Risk is <b>defined</b> — you know the max loss at entry (before fees).</p>
 
     <h3>Bull put spread (credit example)</h3>
@@ -333,7 +335,7 @@
   <!-- ========== CALENDAR ========== -->
   <div class="card">
     <div class="small">Time spread</div>
-    <h2>Calendar spread (horizontal)</h2>
+    <h2 id="calendar">Calendar spread (horizontal)</h2>
     <p>Same strike, <b>different expirations</b>: typically <b>sell</b> a nearer-term option and <b>buy</b> a longer-dated one (net debit). You want the short front-month option to decay faster while the back-month keeps more value — often when price stays near the strike.</p>
     <ul>
       <li>Best thought of as a <b>time</b> trade, not a pure “stock goes to X” trade</li>
@@ -360,7 +362,7 @@
   <!-- ========== LEAPS ========== -->
   <div class="card">
     <div class="small">Long-dated options</div>
-    <h2>LEAPS</h2>
+    <h2 id="leaps">LEAPS</h2>
     <p><b>LEAPS</b> are options with expirations often <b>one year or more</b> out. A long LEAPS call is a long-term bullish view with a defined max loss (the premium). It can still go to zero if the thesis is wrong or time runs out.</p>
     <ul>
       <li>Uses less cash than buying 100 shares, but is not “cheaper risk” — 100% of the premium can be lost</li>
@@ -386,7 +388,7 @@
   <!-- ========== IRON CONDOR ========== -->
   <div class="card">
     <div class="small">Neutral · defined risk</div>
-    <h2>Iron condor (recap)</h2>
+    <h2 id="iron-condor">Iron condor (recap)</h2>
     <p>An <b>iron condor</b> combines a bull put spread and a bear call spread. You collect a net credit and want the stock to stay in a <b>range</b> between the short strikes. Both sides have long options so risk is capped.</p>
     <ul>
       <li><b>Max profit</b> = net credit if price stays between the short put and short call</li>
@@ -418,6 +420,26 @@
     <a class="btn btn-secondary" href="/level3/">← Spreads</a>
   </div>
 </div>
+
+
+  <div class="card" id="risk-notes">
+    <h2>IV, earnings, and assignment</h2>
+    <div class="risk-grid">
+      <div class="risk-card">
+        <h3>IV when selling premium</h3>
+        <p>CSPs, covered calls, and iron condors collect premium. Higher IV can mean richer credits — and more risk of large moves. Compare credit size to wing width or stock risk, not IV in isolation.</p>
+      </div>
+      <div class="risk-card">
+        <h3>Earnings</h3>
+        <p>Holding short options through earnings can produce gaps through your short strikes. Many learners avoid short premium through binary events until they understand assignment and gap risk.</p>
+      </div>
+      <div class="risk-card">
+        <h3>Assignment</h3>
+        <p>Short puts → may <b>buy</b> shares. Short calls against stock → may <b>sell</b> shares. Pin risk and early exercise exist; defined-risk spreads still need monitoring near expiration.</p>
+      </div>
+    </div>
+    <div class="practice-prompt"><b>Practice:</b> Load <a href="/builder/?template=cash_secured_put">CSP</a>, then <a href="/builder/?template=covered_call">covered call</a>. Walk price through assignment zones and read max profit vs max loss on the solid line.</div>
+  </div>
 
 <footer class="site-footer">
   <div class="footer-note">Educational only — not financial advice. Options involve risk of loss.</div>

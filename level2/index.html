@@ -7,7 +7,7 @@
   <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48.png">
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
   <link rel="manifest" href="/site.webmanifest">
-  <link rel="stylesheet" href="/assets/style.css?v=20260913">
+  <link rel="stylesheet" href="/assets/style.css?v=20260914">
 
   <title>Long Call, Long Put &amp; Covered Call Explained (With Examples)</title>
   <meta name="description" content="Learn long call, long put, and covered call strategies with real numbers, payoff diagrams, moneyness, Greeks in plain English, and a beginner FAQ. Free options fundamentals.">
@@ -407,6 +407,8 @@
 
 <div class="wrap">
 <nav class="breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span aria-hidden="true">/</span><span aria-current="page">Fundamentals</span></nav>
+<nav class="lesson-toc" aria-label="On this page"><strong>On this page</strong><div class="lesson-toc-links"><a href="#long-call">Long call</a><a href="#long-put">Long put</a><a href="#covered-call">Covered call</a><a href="#intrinsic">Intrinsic / time</a><a href="#greeks">Greeks</a><a href="#risk-notes">Risk notes</a><a href="#faq">FAQ</a></div></nav>
+
 
   <div class="hero">
     <span class="badge">Fundamentals</span>
@@ -421,7 +423,7 @@
   <!-- ========== LONG CALL ========== -->
   <div class="card">
     <div class="small">Bullish · Defined risk</div>
-    <h2>Long Call — the simplest bullish option</h2>
+    <h2 id="long-call">Long Call — the simplest bullish option</h2>
     <p>A <strong>long call</strong> gives you the right (not the obligation) to buy 100 shares of a stock at a fixed price (the <span class="term">strike</span>) before a fixed date (the <span class="term">expiration</span>). You pay a price for that right — the <span class="term">premium</span>.</p>
     <p>You only need the stock to rise enough so that the gain in the option covers what you paid. Your maximum loss is the premium you paid. Your potential gain is theoretically unlimited if the stock keeps rising.</p>
 
@@ -436,7 +438,7 @@
 
   <!-- Payoff diagram section -->
   <div class="card">
-    <h2>Payoff Diagram and Calculations</h2>
+    <h2 id="payoff">Payoff Diagram and Calculations</h2>
     <p>This picture shows what happens to your profit or loss at expiration depending on the stock price. Everything left of the strike is a flat loss (you lose the premium). Once the stock is above the strike, the line rises. You break even when the stock reaches strike + premium.</p>
 
     <div class="diagram-wrap">
@@ -482,7 +484,7 @@
 
   <!-- Moneyness -->
   <div class="card">
-    <h2>Call Options and Moneyness</h2>
+    <h2 id="moneyness-call">Call Options and Moneyness</h2>
     <p><strong>Moneyness</strong> simply answers: “Is the strike already profitable or not?” It tells you how much of the option price is “real” value versus hope value.</p>
 
     <div class="diagram-wrap">
@@ -500,7 +502,7 @@
 
   <!-- When to use + time decay -->
   <div class="card">
-    <h2>When a Long Call can make sense</h2>
+    <h2 id="when-call">When a Long Call can make sense</h2>
     <ul>
       <li>You are strongly bullish but want a defined maximum loss (you can’t lose more than the premium).</li>
       <li>You want leverage — control 100 shares for a fraction of the stock’s cost.</li>
@@ -516,7 +518,9 @@
   <!-- ========== LONG PUT DETAIL ========== -->
   <div class="card">
     <div class="small">Bearish position · Detailed walkthrough</div>
-    <h2>Long Put — how it really works</h2>
+    <div class="practice-prompt"><b>Practice:</b> In the <a href="/builder/?template=long_call">Builder (long call)</a>, set premium ≈ 3 and drag the underlying above and below the strike. Confirm max loss ≈ premium × 100.</div>
+
+  <h2 id="long-put">Long Put — how it really works</h2>
     <p>A long put means you <strong>buy the right to sell</strong> shares at a specific strike price before or at expiration, depending on the contract. You normally buy a put when you believe the underlying will fall. Unlike shorting the stock, the maximum loss on the option itself is limited to the premium paid.</p>
 
     <div class="metric-grid">
@@ -558,7 +562,7 @@
   </div>
 
   <div class="card">
-    <h2>Put moneyness: ITM, ATM and OTM</h2>
+    <h2 id="moneyness-put">Put moneyness: ITM, ATM and OTM</h2>
     <p>For a put, the relationship is the reverse of a call. A put is <strong>in the money (ITM)</strong> when the stock is below the strike, <strong>at the money (ATM)</strong> when the stock is around the strike, and <strong>out of the money (OTM)</strong> when the stock is above the strike.</p>
     <div class="diagram">
       <img src="/images/long-put-moneyness.jpg" alt="Long put moneyness showing in-the-money, at-the-money and out-of-the-money" width="800" height="auto" loading="lazy">
@@ -572,7 +576,7 @@
   </div>
 
   <div class="card">
-    <h2>When can a Long Put make sense?</h2>
+    <h2 id="when-put">When can a Long Put make sense?</h2>
     <ul>
       <li>You have a bearish view and expect a meaningful decline.</li>
       <li>You want a defined maximum loss instead of taking potentially larger losses from short stock.</li>
@@ -609,7 +613,9 @@
   </div>
 
   <div class="card">
-    <h2>Covered Call — collecting “rent” (deep dive)</h2>
+    <div class="practice-prompt"><b>Practice:</b> Load a <a href="/builder/?template=long_put">long put</a>. Move price down through break-even (strike − premium). Note max loss is still only the premium.</div>
+
+  <h2 id="covered-call">Covered Call — collecting “rent” (deep dive)</h2>
     <p>A covered call is one of the most popular income strategies for investors who already own stock. You own (or buy) 100 shares and sell one call option against those shares. The call is “covered” because you already hold the shares you might have to deliver if the option is exercised.</p>
     <p>Think of it like collecting rent on a house you own: you receive cash (the option premium) for giving someone else the right to buy your shares at a set price (the strike) by a set date. You keep that cash no matter what happens next.</p>
 
@@ -674,13 +680,15 @@
 
   <!-- Why ×100 -->
   <div class="card">
-    <h2>Why everything is ×100</h2>
+    <div class="practice-prompt"><b>Practice:</b> Open a <a href="/builder/?template=covered_call">covered call</a>. Raise the underlying above the short call strike — see upside flatten. Lower it — see stock-like downside with a small premium cushion.</div>
+
+  <h2 id="multiplier">Why everything is ×100</h2>
     <p>One standard equity option contract multiplies by <b>100 shares</b>. A $3 quote is about <b>$300</b> cash. The Builder always uses this multiplier so P/L matches what you see at a brokerage.</p>
   </div>
 
   <!-- Intrinsic / extrinsic / time value -->
   <div class="card">
-    <h2>Intrinsic, extrinsic, and time decay</h2>
+    <h2 id="intrinsic">Intrinsic, extrinsic, and time decay</h2>
     <p>Review from <a href="/level1/">Basics</a>: the option’s market price (premium) always splits into two parts.</p>
     <div class="analogy">
       <b>Premium = Intrinsic value + Extrinsic value (time value)</b>
@@ -699,7 +707,25 @@
 
   <!-- Greeks -->
   <div class="card">
-    <h2>Greeks in plain English</h2>
+    <div class="card" id="risk-notes">
+    <h2>Risk notes beginners skip</h2>
+    <div class="risk-grid">
+      <div class="risk-card">
+        <h3>Implied volatility (IV)</h3>
+        <p>High IV makes options more expensive. Buying premium into a high-IV event (e.g. earnings) can lose even if you get the direction right, if IV collapses after the event (“IV crush”).</p>
+      </div>
+      <div class="risk-card">
+        <h3>Earnings &amp; events</h3>
+        <p>Big moves and IV changes cluster around earnings. Educational examples ignore gaps; live markets do not. Size smaller around known events until you understand the risk.</p>
+      </div>
+      <div class="risk-card">
+        <h3>Early assignment</h3>
+        <p>If you <b>sell</b> an option, you can be assigned before expiration — more often when a call is deep ITM near an ex-dividend date, or a put is deep ITM. Long options: you choose when to exercise.</p>
+      </div>
+    </div>
+  </div>
+
+  <h2 id="greeks">Greeks in plain English</h2>
     <p>The Builder shows live Greeks. Here’s what they mean for a <b>position</b> (not just one option):</p>
     <ul>
       <li><span class="term">Delta (Δ)</span> — approx. dollar change if the stock moves $1. Positive ≈ bullish bias; negative ≈ bearish. A long call delta of 0.40 behaves roughly like owning 40 shares.</li>
@@ -714,7 +740,7 @@
 
   <!-- FAQ -->
   <div class="card faq">
-    <h2>Beginner FAQ</h2>
+    <h2 id="faq">Beginner FAQ</h2>
     <p style="margin-bottom:14px">Click any question to open the answer.</p>
 
     <details>
