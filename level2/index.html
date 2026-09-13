@@ -401,7 +401,7 @@
 }
 </style>
 
-<script src="/assets/site.js?v=20260915" defer></script>
+<script src="/assets/site.js?v=20260916" defer></script>
 </head>
 <body>
 <header class="site-header"><div class="site-header-inner"><a class="logo logo-link" href="/" aria-label="JSM Options Home"><div class="logo-icon">JSM</div><div><div style="font-weight:700">JSM Options</div><div class="brand-sub">jsm-options.com · Educational</div></div></a><div class="header-right"><nav class="nav" aria-label="Primary navigation"><a href="/">Home</a><a href="/level1/">Basics</a><a href="/level2/" class="active">Fundamentals</a><a href="/level3/">Spreads</a><a href="/level4/">Advanced</a><a href="/strategies/">Strategies</a><a href="/cheat-sheet/">Cheat sheet</a><a href="/builder/">Builder</a></nav><button type="button" class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button><button type="button" class="theme-toggle" id="themeToggle" aria-label="Toggle color theme"><span id="themeIcon" class="theme-icon">☼</span><span id="themeLabel" class="theme-label">Dark</span></button></div></div></header>
@@ -704,11 +704,8 @@
       In the <a href="/builder/">Builder</a>, drag <b>Days Remaining</b> downward and watch the theoretical P/L curve change. That is time value disappearing in real time. Also try raising or lowering IV — extrinsic can jump even when the stock price is flat.
     </div>
     <div class="warn"><strong>Practical takeaway:</strong> A stock move in your direction is not enough by itself. The move often needs to be large enough (and soon enough) to overcome the extrinsic you paid. That is why “stock went up a bit but my call is red” is so common for beginners.</div>
-  </div>
-
-  <!-- Greeks -->
-  <div class="card">
-    <div class="card" id="risk-notes">
+  
+<div class="card" id="risk-notes">
     <h2>Risk notes beginners skip</h2>
     <div class="risk-grid">
       <div class="risk-card">
@@ -824,8 +821,10 @@
     </div>
   </div>
 </div>
+</div>
 
-<footer class="site-footer">
+  <!-- Greeks -->
+  <div class="card"><footer class="site-footer">
   <div class="footer-note">Educational only — not financial advice. Options involve risk of loss.</div>
   <div class="footer-links">
     <a href="/">Home</a>
@@ -851,22 +850,7 @@
 
 
 
-<script>
-(function(){
-  const root=document.documentElement, toggle=document.getElementById('themeToggle'), icon=document.getElementById('themeIcon'), label=document.getElementById('themeLabel');
-  function applyTheme(theme){
-    root.setAttribute('data-theme',theme);
-    if(icon) icon.textContent=theme==='dark'?'🌙':'☀️';
-    if(label) label.textContent=theme==='dark'?'Dark':'Light';
-    if(toggle) toggle.setAttribute('aria-label',theme==='dark'?'Switch to light theme':'Switch to dark theme');
-    try{localStorage.setItem('jsm-theme',theme)}catch(e){}
-  }
-  let saved=null; try{saved=localStorage.getItem('jsm-theme')}catch(e){}
-  const initial=(saved==='light'||saved==='dark')?saved:((window.matchMedia&&window.matchMedia('(prefers-color-scheme: light)').matches)?'light':'dark');
-  applyTheme(initial);
-  if(toggle) toggle.addEventListener('click',function(){applyTheme(root.getAttribute('data-theme')==='dark'?'light':'dark')});
-})();
-</script>
+
 <script>
 (function(){
   function initNav(){

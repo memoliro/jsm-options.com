@@ -87,9 +87,11 @@
     if (saved === 'light' || saved === 'dark') applyTheme(saved);
     else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) applyTheme('light');
     else applyTheme('dark');
-    if (toggle && toggle.getAttribute('data-theme-bound') !== '1') {
-      toggle.setAttribute('data-theme-bound', '1');
-      toggle.addEventListener('click', function () {
+    if (toggle) {
+      var fresh = toggle.cloneNode(true);
+      toggle.parentNode.replaceChild(fresh, toggle);
+      fresh.setAttribute('data-theme-bound', '1');
+      fresh.addEventListener('click', function () {
         applyTheme(root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
       });
     }
