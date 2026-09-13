@@ -204,6 +204,28 @@
       var themeBtn = document.getElementById('themeToggle');
       headerRight.insertBefore(a, themeBtn || null);
     }
+
+  function injectTrGlossary() {
+    if (lang() !== 'tr') return;
+    if (document.getElementById('terimler')) return;
+    var footer = document.querySelector('.site-footer');
+    if (!footer) return;
+    var wrap = document.createElement('div');
+    wrap.className = 'wrap';
+    wrap.innerHTML = '<div class="card" id="terimler"><h2>Bu sitedeki İngilizce terimler</h2><p>Uluslararası borsalarda işlem yapmak için bu terimlere alışmalısınız.</p><dl class="term-glossary">'
+      + '<dt>call</dt><dd>Strike’tan hisse alma hakkı.</dd>'
+      + '<dt>put</dt><dd>Strike’tan hisse satma hakkı.</dd>'
+      + '<dt>strike</dt><dd>Kullanım fiyatı.</dd>'
+      + '<dt>premium</dt><dd>Ödenen veya alınan prim.</dd>'
+      + '<dt>expiry</dt><dd>Vade sonu.</dd>'
+      + '<dt>long / short</dt><dd>Almış / satmış pozisyon.</dd>'
+      + '<dt>Greeks</dt><dd>Delta, theta gibi duyarlılıklar.</dd>'
+      + '<dt>Builder</dt><dd>Canlı strateji simülatörü.</dd>'
+      + '</dl></div>';
+    footer.parentNode.insertBefore(wrap, footer);
+  }
+
+    injectTrGlossary();
     initTheme();
     initNavToggle();
   }
