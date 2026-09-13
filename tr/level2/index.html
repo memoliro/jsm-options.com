@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="tr" data-theme="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -7,16 +7,363 @@
   <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48.png">
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
   <link rel="manifest" href="/site.webmanifest">
+  <link rel="stylesheet" href="/assets/style.css?v=20260914">
 
-  <title>Kavramlar — Yakında | JSM Options</title>
-  <meta name="description" content="Kavramlar sayfası hazırlanıyor. JSM Options Türkçe.">
+  <title>Long Call, Long Put ve Covered Call | Temeller</title>
+  <meta name="description" content="Long call, long put ve Covered Call: sayılar, payoff, intrinsic, Greeks. Türkçe Temeller — eğitim amaçlıdır.">
   <link rel="canonical" href="https://jsm-options.com/tr/level2/">
+<link rel="alternate" hreflang="tr" href="https://jsm-options.com/tr/level2/">
+<link rel="alternate" hreflang="en" href="https://jsm-options.com/level2/">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="JSM Options">
+  <meta property="og:title" content="Long Call, Long Put &amp; Covered Call Explained (With Examples)">
+  <meta property="og:description" content="Real-number examples, payoff diagrams, moneyness, Greeks — sade dille, and a beginner FAQ for long call, long put, and covered call.">
+  <meta property="og:url" content="https://jsm-options.com/tr/level2/">
   <meta property="og:image" content="https://jsm-options.com/images/og-default.png">
   <meta name="twitter:image" content="https://jsm-options.com/images/og-default.png">
-  <meta property="og:type" content="website">
-  <link rel="stylesheet" href="/assets/style.css?v=20260914">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Long Call, Long Put &amp; Covered Call Explained (With Examples)">
+  <meta name="twitter:description" content="Real-number examples, payoff diagrams, and Greeks — sade dille for long call, long put, and covered call.">
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-BDL003RCN6"></script>
   <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-BDL003RCN6');</script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Long call veya long put’ta en fazla ne kaybederim?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Ödediğiniz premium (artı komisyon). Bu tanımlı maksimum zarardır. Opsiyon alındıktan sonra hisse ters gitse de broker ek para istemez."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Hisse biraz yükselirken call neden değer kaybeder?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "İki yaygın neden: (1) time decay (theta) — her gün biraz değer gider; (2) implied volatility düşmüştür (vega). Küçük yükseliş, özellikle expiry yakınında veya büyük olay sonrası, ikisini dengelemeye yetmeyebilir."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What does break-even mean for a long call?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Expiry’de break-even = strike + ödenen premium. Kâr için hisse bu fiyatın üstünde olmalıdır. Expiry’den önce opsiyonda hâlâ time value vardır; piyasa fiyatı intrinsic’ten yüksek olabilir."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "ITM, ATM yoksa OTM call mı alayım?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Tek doğru yok. ITM daha pahalıdır ama olasılık daha yüksek ve hisseye daha çok benzer. OTM ucuzdur ama daha büyük hareket ister. ATM ortadadır; hem büyük harekete hem time decay’e en duyarlıdır. Birçok kişi ucuz olduğu için hafif OTM veya ATM ile başlar, sonra olasılık ve delta’yı öğrenir."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Covered Call, long call’dan nasıl farklı?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Long call, yalnızca premium kadar tanımlı riskli saf bir bullish bahistir. Covered Call için 100 hisse gerekir; üzerine call satıp premium alırsınız. Hisse strike altında kalırsa premium sizde kalır ama upside tavanlanır ve hisse düşünce düşüşün tamamı sizde kalır."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Expiry’ye kadar tutmak zorunda mıyım?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Hayır. Expiry’den önce satabilirsiniz (piyasa açık ve alıcı varken). Birçok kişi kârı kilitlemek veya theta hızlanmadan zararı kesmek için erken kapatır."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What does one contract = 100 shares really mean for my money?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Opsiyon 2.50$ kote ise bir kontrat 2.50$ × 100 = 250$ (artı ücret). Sonra 4.00$ olursa pozisyon 400$ eder. P/L bu 100 hisse çarpanıyladır. Yalnızca hisse başı koteye değil, toplam debit/credit’e bakın."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Opsiyon hızlı zengin olma yolu mu?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Hayır. Bu beklenti yeni başlayanların en hızlı para kaybetme yollarındandır. Opsiyon hem kazancı hem zararı büyütür. Sürdürülebilir öğrenme: küçük boyut, mümkünse tanımlı risk, aylar içinde karar kalitesi — bir haftada hesabı ikiye katlamak değil."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What does less is more mean for beginners?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Daha az kontrat, daha az strateji, aynı anda daha az fikir. İyi anlaşılmış bir long call veya Covered Call, açıklayamadığınız beş iç içe pozisyondan daha öğreticidir. Küçük boyut duyguyu da sakin tutar; toparlama kovalamak yerine sonuçtan öğrenirsiniz."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Bu yatırım tavsiyesi mi?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Hayır. Sitedeki her şey yalnızca eğitimdir. Opsiyonlar ciddi zarar riski içerir ve herkes için uygun değildir. Gerçek parayla işlemden önce kendi araştırmanızı yapın; gerekirse nitelikli bir danışmana sorun."
+        }
+      }
+    ]
+  }
+  </script>
+  <style>
+    /* ========== Theme variables (match jsm-options.com dark + light mode) ========== */
+    :root, [data-theme="dark"] {
+      --bg: #0f1419;
+      --card: #1a2332;
+      --border: #2d3a4f;
+      --text: #e7ecf3;
+      --muted: #8b9bb4;
+      --accent: #3b82f6;
+      --green: #22c55e;
+      --red: #ef4444;
+      --yellow: #eab308;
+      --input: #0f172a;
+      --header-bg: rgba(15,20,25,.92);
+      --hero-from: #1a2332;
+      --hero-to: #0f1419;
+      --link: #93c5fd;
+      --p: #c8d0dc;
+      --term-bg: #243044;
+      --warn-bg: rgba(239,68,68,.08);
+      --warn-border: rgba(239,68,68,.35);
+      --warn-text: #fecaca;
+      --note-bg: rgba(59,130,246,.08);
+      --note-border: rgba(59,130,246,.35);
+      --note-text: #bfdbfe;
+      --btn-secondary: #334155;
+      --btn-secondary-hover: #475569;
+      --table-th: #93c5fd;
+      --faq-summary: #e7ecf3;
+      --img-border: #2d3a4f;
+    }
+    [data-theme="light"] {
+      --bg: #f4f6f9;
+      --card: #ffffff;
+      --border: #d8dee9;
+      --text: #0f172a;
+      --muted: #64748b;
+      --accent: #2563eb;
+      --green: #16a34a;
+      --red: #dc2626;
+      --yellow: #ca8a04;
+      --input: #f1f5f9;
+      --header-bg: rgba(255,255,255,.92);
+      --hero-from: #ffffff;
+      --hero-to: #f1f5f9;
+      --link: #1d4ed8;
+      --p: #334155;
+      --term-bg: #e2e8f0;
+      --warn-bg: rgba(220,38,38,.06);
+      --warn-border: rgba(220,38,38,.25);
+      --warn-text: #991b1b;
+      --note-bg: rgba(37,99,235,.06);
+      --note-border: rgba(37,99,235,.25);
+      --note-text: #1e3a8a;
+      --btn-secondary: #e2e8f0;
+      --btn-secondary-hover: #cbd5e1;
+      --table-th: #1e40af;
+      --faq-summary: #0f172a;
+      --img-border: #cbd5e1;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      line-height: 1.6;
+      transition: background .2s, color .2s;
+    }
+    a { color: var(--link); text-decoration: none; }
+    a:hover { color: var(--accent); }
+
+    /* Header */
+    .site-header {
+      position: sticky; top: 0; z-index: 20;
+      background: var(--header-bg);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .site-header-inner {
+      max-width: 1100px; margin: 0 auto; padding: 12px 16px;
+      display: flex; justify-content: space-between; align-items: center;
+      flex-wrap: nowrap; gap: 18px;
+    }
+    .logo { display: flex; align-items: center; gap: 10px; }
+    .logo-link { color: inherit; text-decoration: none; flex: 0 0 auto; }
+    .logo-link:hover { color: inherit; }
+    .header-right { display: flex; align-items: center; justify-content: flex-end; gap: 10px; flex: 1 1 auto; min-width: 0; flex-wrap: nowrap; }
+    .logo-link { color: inherit; text-decoration: none; }
+    .logo-icon {
+      width: 32px; height: 32px;
+      background: linear-gradient(135deg, #3b82f6, #34d399);
+      color: #fff; border-radius: 50%;
+      display: grid; place-items: center;
+      font-weight: 800; font-size: 12px;
+    }
+    .nav { display: flex; gap: 6px; flex-wrap: nowrap; align-items: center; min-width: 0; overflow-x: auto; scrollbar-width: none; }
+    .nav::-webkit-scrollbar { display: none; }
+    .nav a {
+      padding: 6px 11px; border-radius: 9999px;
+      border: 1px solid var(--border); background: var(--card);
+      font-size: 12px; color: var(--muted); white-space: nowrap; flex: 0 0 auto;
+    }
+    .nav a:hover { color: var(--text); border-color: var(--accent); }
+    .nav a.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+    /* Theme toggle */
+    .theme-toggle {
+      flex: 0 0 auto;
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 6px 12px; border-radius: 9999px;
+      border: 1px solid var(--border); background: var(--card);
+      font-size: 12px; color: var(--muted); cursor: pointer;
+      user-select: none;
+    }
+    .theme-toggle:hover { color: var(--text); border-color: var(--accent); }
+    .theme-toggle .icon { font-size: 14px; line-height: 1; }
+
+    .wrap { max-width: 1100px; margin: 0 auto; padding: 24px 16px; }
+    .card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 12px; padding: 20px; margin-bottom: 16px;
+    }
+    .hero {
+      background: linear-gradient(135deg, var(--hero-from), var(--hero-to));
+      border: 1px solid var(--border); border-radius: 16px;
+      padding: 28px 24px; margin-bottom: 20px;
+    }
+    h1 {
+      font-size: clamp(1.45rem, 3.5vw, 2rem); line-height: 1.25; margin-bottom: 12px;
+      background: linear-gradient(90deg, #60a5fa, #34d399);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text; color: #60a5fa;
+    }
+    h2 { font-size: 1.2rem; margin: 16px 0 10px; color: var(--link); }
+    h3 { font-size: 1.05rem; margin: 12px 0 8px; color: var(--text); }
+    p { font-size: .95rem; color: var(--p); margin: 10px 0; }
+    .small { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; }
+    .badge {
+      display: inline-flex; padding: 4px 10px; border-radius: 9999px;
+      background: var(--input); border: 1px solid var(--border);
+      font-size: 11px; color: var(--muted); margin-bottom: 8px;
+    }
+    .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    @media (max-width: 900px) {
+      .site-header-inner { gap: 10px; }
+      .header-right { gap: 8px; }
+      .nav { gap: 4px; }
+      .nav a { padding: 5px 8px; font-size: 11px; }
+      .theme-toggle { min-width: 68px; padding: 5px 9px; }
+    }
+    @media (max-width: 800px) { .grid2 { grid-template-columns: 1fr; } }
+
+    img {
+      max-width: 100%; border-radius: 10px;
+      border: 1px solid var(--img-border); margin: 12px 0;
+      display: block;
+    }
+    .diagram-wrap {
+      background: var(--input); border: 1px solid var(--border);
+      border-radius: 12px; padding: 12px; margin: 14px 0;
+      text-align: center;
+    }
+    .diagram-caption {
+      font-size: 12px; color: var(--muted); margin-top: 8px;
+    }
+
+    .analogy {
+      background: var(--input); border: 1px dashed var(--border);
+      border-radius: 10px; padding: 14px; margin: 14px 0;
+      color: var(--p); font-size: .9rem;
+    }
+    .term {
+      display: inline-block; padding: 2px 8px; border-radius: 6px;
+      background: var(--term-bg); color: var(--text);
+      font-family: ui-monospace, monospace; font-size: 12px;
+    }
+
+    footer {
+      text-align: center; padding: 24px 16px; font-size: 12px;
+      color: var(--muted); border-top: 1px solid var(--border); margin-top: 24px;
+    }
+    footer a { color: var(--muted); }
+    footer a:hover { color: var(--text); }
+    .footer-links { margin-top: 8px; display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+
+    .btn, .btn-ghost {
+      display: inline-block; background: var(--accent); color: #fff !important;
+      border: 1px solid var(--accent); border-radius: 8px;
+      padding: 8px 14px; font-weight: 600; font-size: .88rem;
+    }
+    .btn:hover, .btn-ghost:hover { background: #2563eb; border-color: #2563eb; }
+    .btn-secondary {
+      background: var(--btn-secondary); border-color: var(--btn-secondary);
+      color: var(--text) !important;
+    }
+    .btn-secondary:hover {
+      background: var(--btn-secondary-hover); border-color: var(--btn-secondary-hover);
+      color: var(--text) !important;
+    }
+
+    ul { padding-left: 20px; }
+    li { margin: 6px 0; font-size: .92rem; color: var(--p); }
+    .profit { color: var(--green); font-weight: 600; }
+    .loss { color: var(--red); font-weight: 600; }
+
+    .table-wrap { overflow-x: auto; margin: 12px 0; }
+    table { width: 100%; border-collapse: collapse; font-size: .88rem; }
+    th, td { border: 1px solid var(--border); padding: 8px 10px; text-align: left; }
+    th { background: var(--input); color: var(--table-th); font-weight: 600; }
+    td { color: var(--p); }
+
+    .warn {
+      background: var(--warn-bg); border: 1px solid var(--warn-border);
+      border-radius: 10px; padding: 12px 14px; margin: 12px 0;
+      font-size: .88rem; color: var(--warn-text);
+    }
+    .note {
+      background: var(--note-bg); border: 1px solid var(--note-border);
+      border-radius: 10px; padding: 12px 14px; margin: 12px 0;
+      font-size: .88rem; color: var(--note-text);
+    }
+
+    /* FAQ accordion */
+    .faq details {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 10px; margin-bottom: 10px; overflow: hidden;
+    }
+    .faq summary {
+      padding: 14px 16px; cursor: pointer; font-weight: 600;
+      color: var(--faq-summary); list-style: none;
+      display: flex; justify-content: space-between; align-items: center;
+      gap: 12px;
+    }
+    .faq summary::-webkit-details-marker { display: none; }
+    .faq summary::after {
+      content: '+'; font-size: 1.2rem; color: var(--muted); flex-shrink: 0;
+    }
+    .faq details[open] summary::after { content: '−'; }
+    .faq .faq-body {
+      padding: 0 16px 16px; color: var(--p); font-size: .92rem;
+      border-top: 1px solid var(--border);
+    }
+    .faq .faq-body p { margin-top: 10px; }
+
+    .section-label {
+      font-size: 11px; text-transform: uppercase; letter-spacing: .08em;
+      color: var(--muted); margin-bottom: 4px;
+    }
+  </style>
 
 <style id="jsm-mobile-nav">
 .nav-toggle{display:none;box-sizing:border-box;width:44px;height:44px;min-width:44px;min-height:44px;padding:0;border:1px solid var(--border,#2d3a4f);border-radius:10px;background:var(--card,#1a2332);color:var(--text,#e7ecf3);cursor:pointer;align-items:center;justify-content:center;flex-direction:column;gap:5px;-webkit-tap-highlight-color:transparent;touch-action:manipulation;position:relative;z-index:40}
@@ -59,27 +406,438 @@
 <script src="/assets/site.js?v=20260917" defer></script>
 </head>
 <body>
-<header class="site-header"><div class="site-header-inner"><a class="logo logo-link" href="/" aria-label="JSM Options Home"><div class="logo-icon">JSM</div><div><div style="font-weight:700">JSM Options</div><div class="brand-sub">jsm-options.com · Educational</div></div></a><div class="header-right"><nav class="nav" aria-label="Primary navigation"><a href="/">Home</a><a href="/level1/">Basics</a><a href="/level2/">Fundamentals</a><a href="/level3/">Spreads</a><a href="/level4/">Advanced</a><a href="/strategies/">Strategies</a><a href="/cheat-sheet/">Cheat sheet</a><a href="/builder/">Builder</a></nav><button type="button" class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button><button type="button" class="theme-toggle" id="themeToggle" aria-label="Toggle color theme"><span id="themeIcon" class="theme-icon">☼</span><span id="themeLabel" class="theme-label">Dark</span></button></div></div></header>
+<header class="site-header"><div class="site-header-inner"><a class="logo logo-link" href="/tr/" aria-label="JSM Options Home"><div class="logo-icon">JSM</div><div><div style="font-weight:700">JSM Options</div><div class="brand-sub">jsm-options.com · Educational</div></div></a><div class="header-right"><nav class="nav" aria-label="Primary navigation"><a href="/">Home</a><a href="/tr/level1/">Basics</a><a href="/level2/" class="active">Temeller</a><a href="/tr/level3/">Spreads</a><a href="/level4/">Advanced</a><a href="/strategies/">Strategies</a><a href="/cheat-sheet/">Cheat sheet</a><a href="/tr/builder/">Builder</a></nav><button type="button" class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button><button type="button" class="theme-toggle" id="themeToggle" aria-label="Toggle color theme"><span id="themeIcon" class="theme-icon">☼</span><span id="themeLabel" class="theme-label">Dark</span></button></div></div></header>
+
 <div class="wrap">
-<nav class="breadcrumbs" aria-label="Breadcrumb"><a href="/tr/">Ana Sayfa</a><span aria-hidden="true">/</span><span aria-current="page">Kavramlar</span></nav>
-  <div class="card coming-soon">
-    <h1>Kavramlar</h1>
-    <p>Bu sayfanın Türkçe içeriği hazırlanıyor. Menü ve altbilgi İngilizce sitedekiyle aynıdır.</p>
-    <p><a class="btn" href="/level2/">İngilizce sayfa</a>
-    <a class="btn btn-secondary" href="/tr/builder/">TR Builder</a></p>
-    <div class="warn"><strong>Yalnızca eğitim amaçlıdır</strong> — yatırım tavsiyesi değildir.</div>
+<nav class="breadcrumbs" aria-label="Breadcrumb"><a href="/tr/">Ana Sayfa</a><span aria-hidden="true">/</span><span aria-current="page">Temeller</span></nav>
+<div class="card term-banner">
+  <p style="margin:0"><b>Temel terimler</b> — call, put, strike, premium, expiry ve strateji adları bilinçli olarak İngilizce bırakıldı. Uluslararası borsalarda işlem yapmak için bu terimlere alışmalısınız. Türkçe karşılıkları sayfa sonunda vardır.</p>
+</div>
+
+<nav class="lesson-toc" aria-label="Bu sayfada"><strong>Bu sayfada</strong><div class="lesson-toc-links"><a href="#long-call">Long call</a><a href="#long-put">Long put</a><a href="#covered-call">Covered call</a><a href="#intrinsic">Intrinsic / zaman</a><a href="#greeks">Greeks</a><a href="#risk-notes">Risk notları</a><a href="#faq">FAQ</a></div></nav>
+
+
+  <div class="hero">
+    <span class="badge">Temeller</span>
+    <h1>Long Call, Long Put, Covered Call — gerçek sayılarla</h1>
+    <p>Birkaç yüz dolarlık premium’un neden 10.000$’lık hisse maruziyetini kontrol edebildiği — ve riskin hâlâ nerede durduğu. Sıfırdan başlayanlar için.</p>
+  </div>
+
+  <div class="note" role="note">
+    <strong>Mekanikten önce zihniyet:</strong> Opsiyon ticareti <em>hızlı zengin olma</em> yolu değildir. İşin içinde kalanlar bunu uzun vadeli bir beceri gibi görür: küçük boyut, net kural, sabır. <strong>Az olan çoktur</strong> — az kontrat, tanımlı risk ve bir stratejiyi derin anlamak, her yeni fikri kovalamaktan iyidir. Premium sıfıra inebilir. Zaman her gün long opsiyonun aleyhine işler. Önce öğrenin, boyutu küçük tutun, kaybetmeyi göze alamayacağınız parayı riske atmayın.
+  </div>
+
+  <!-- ========== LONG CALL ========== -->
+  <div class="card">
+    <div class="small">Bullish · Defined risk</div>
+    <h2 id="long-call">Long Call — en sade bullish opsiyon</h2>
+    <p>Bir <strong>long call</strong>, belirli bir tarihten (<span class="term">expiry</span>) önce, sabit bir fiyattan (<span class="term">strike</span>) 100 hisse <b>alma hakkı</b> verir — yükümlülük değil. Bu hak için bir fiyat ödersiniz: <span class="term">premium</span>.</p>
+    <p>Hissenin, opsiyondaki kazancın ödediğiniz premium’u karşılayacak kadar yükselmesi yeter. Maksimum zarar ödediğiniz premium’dur. Hisse yükselmeye devam ederse teorik kazanç üstten açık uçludur.</p>
+
+    <div class="analogy">
+      <strong>Sade sayılar:</strong> Hisse 100$. 105$ call’u 3$’ye alırsınız → toplam 300$ ödersiniz (1 kontrat = 100 hisse).<br>
+      Expiry’de hisse 110$ ise: intrinsic = 5$ → kâr = (5$ − 3$) × 100 = <span class="profit">+200$</span>.<br>
+      Hisse 105$ altında kalırsa opsiyon değersiz expire olur → max zarar = <span class="loss">300$</span>.
+    </div>
+
+    <a class="btn" href="/tr/builder/?template=long_call">Builder’da Long Call yükle →</a>
+  </div>
+
+  <!-- Payoff diagram section -->
+  <div class="card">
+    <h2 id="payoff">Payoff diyagramı ve hesap</h2>
+    <p>Bu resim, expiry’de hisse fiyatına göre kar/zararın ne olduğunu gösterir. Strike’ın solunda zarar yataydır (premium gider). Hisse strike’ın üstüne çıkınca çizgi yükselir. Başabaş, hisse strike + premium’a ulaşınca gelir.</p>
+
+    <div class="diagram-wrap">
+      <img src="/images/long-call-payoff.webp" alt="Long Call Option payoff diagram showing loss below strike, break-even at strike plus premium, and unlimited profit as stock rises" width="800" height="auto">
+      <div class="diagram-caption">Break-even = strike + ödenen premium. Strike’ın altında premium gider; break-even üstünde kâr hisseyle büyür.</div>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Expiry’de hisse</th>
+            <th>Ne olur</th>
+            <th>Kabaca P/L (1 kontrat)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Strike’ın epey altında</td>
+            <td>Opsiyon değersiz expire olur</td>
+            <td class="loss">− tüm premium</td>
+          </tr>
+          <tr>
+            <td>Tam strike’ta</td>
+            <td>Intrinsic yok</td>
+            <td class="loss">− tüm premium</td>
+          </tr>
+          <tr>
+            <td>Strike + premium (break-even)</td>
+            <td>Intrinsic, ödediğinize eşit</td>
+            <td>0$</td>
+          </tr>
+          <tr>
+            <td>Break-even’in epey üstünde</td>
+            <td>Intrinsic &gt; premium</td>
+            <td class="profit">Hisse 1$ yükseldikçe kâr 100$ artar</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="note"><strong>Unutmayın:</strong> Bir hisse opsiyon kontrati neredeyse her zaman 100 hisse kontrol eder. 3$ kote ≈ 300$ nakit. Builder bu çarpanı kendisi kullanır.</div>
+  </div>
+
+  <!-- Moneyness -->
+  <div class="card">
+    <h2 id="moneyness-call">Call ve moneyness</h2>
+    <p><strong>Moneyness</strong> şunu sorar: “Strike zaten kârlı mı, değil mi?” Opsiyon fiyatının ne kadarının “gerçek” (intrinsic), ne kadarının umut (extrinsic) olduğunu gösterir.</p>
+
+    <div class="diagram-wrap">
+      <img src="/images/call-moneyness.jpg" alt="Call option moneyness chart: out-of-the-money left of strike, at-the-money near strike, in-the-money right of strike" width="800" height="auto">
+      <div class="diagram-caption">Strike’ın solu = Out-of-the-money (OTM). Strike civarı = At-the-money (ATM). Strike’ın sağı = In-the-money (ITM).</div>
+    </div>
+
+    <ul>
+      <li><strong>In-the-money (ITM)</strong> — Strike, güncel hissenin altındadır. Call’da zaten intrinsic vardır. Daha pahalı, expiry’de kârlı bitme olasılığı daha yüksek, delta daha yüksek.</li>
+      <li><strong>At-the-money (ATM)</strong> — Strike hisseye yakındır. Fiyatın çoğu time value (extrinsic). Büyük harekete (gamma) ve time decay’e (theta) en duyarlı bölge.</li>
+      <li><strong>Out-of-the-money (OTM)</strong> — Strike hissenin üstündedir. Ucuz, yalnızca time value. Kâra geçmek için daha büyük hareket ister. Olasılık ve delta daha düşük.</li>
+    </ul>
+    <div class="note">Yeni başlayanlar ucuz olduğu için hafif OTM veya ATM call alır. Unutmayın: daha ucuz genelde daha düşük başarı ihtimali demektir.</div>
+  </div>
+
+  <!-- When to use + time decay -->
+  <div class="card">
+    <h2 id="when-call">Long Call ne zaman anlamlı olabilir</h2>
+    <ul>
+      <li>Güçlü bullish’siniz ama maksimum zararın tanımlı olmasını istiyorsunuz (premium’dan fazlasını kaybetmezsiniz).</li>
+      <li>Kaldıraç istiyorsunuz — 100 hisseyi, hissenin maliyetinin bir parçasıyla kontrol etmek.</li>
+      <li>Yakında büyük hareket bekliyorsunuz (earnings, haber) ve zamanlamanın önemli olduğunu kabul ediyorsunuz.</li>
+      <li>Volatilitenin yükseleceğini bekliyorsunuz (IV artınca long call genelde değerlenir).</li>
+    </ul>
+
+    <h3 style="margin-top:20px">Büyük tuzak: time decay (theta)</h3>
+    <p>Long call eriyen bir varlıktır. Hisse ve volatilite değişmezse geçen her gün opsiyon biraz değer kaybeder. Expiry’ye yaklaşınca erime hızlanır. Hisse biraz yükselse bile theta ve olası volatility crush yüzünden opsiyon zarar edebilir.</p>
+    <div class="warn"><strong>Uyarı:</strong> Hissenin sizin yönünüzde, <em>yeterince</em> ve <em>yeterince çabuk</em> hareket etmesi gerekir. “Hakli ama geç” long opsiyonda çoğu zaman para kaybettirir.</div>
+  </div>
+
+  <!-- ========== LONG PUT DETAIL ========== -->
+  <div class="card">
+    <div class="small">Bearish pozisyon · Adım adım</div>
+    <div class="practice-prompt"><b>Alıştırma:</b> <a href="/tr/builder/?template=long_call">Builder (long call)</a> içinde premium ≈ 3 yapın, underlying’i strike’ın üstüne ve altına kaydırın. Max zararın ≈ premium × 100 olduğunu görün.</div>
+
+  <h2 id="long-put">Long Put — gerçekte nasıl çalışır</h2>
+    <p>Long put, belirli bir strike’tan hisse <strong>satma hakkını satın almak</strong> demektir. Underlying’in düşeceğini düşünüyorsanız put alırsınız. Hisseyi short etmekten farkı: opsiyonun kendisinde maksimum zarar ödenen premium ile sınırlıdır.</p>
+
+    <div class="metric-grid">
+      <div class="metric"><div class="label">Örnek hisse</div><div class="val">100$</div></div>
+      <div class="metric"><div class="label">Put strike</div><div class="val">95$</div></div>
+      <div class="metric"><div class="label">Premium</div><div class="val loss">2.50$</div></div>
+      <div class="metric"><div class="label">Kontrat maliyeti</div><div class="val loss">250$</div></div>
+    </div>
+
+    <div class="analogy">
+      <strong>Düşen hisse fiyatına sigorta gibi düşünün.</strong><br>
+      95$’dan satma hakkı için hisse başına 2.50$ ödersiniz. Expiry’de put’un intrinsic değeri <code>max(95$ − hisse, 0)</code>’dır. Expiry P/L = bu değer − 2.50$ premium.
+    </div>
+  </div>
+
+  <div class="grid2">
+    <div class="card">
+      <h3>Long Put expiry sonuçları</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Expiry’de hisse</th><th>Put değeri</th><th>Hisse başı P/L</th><th>1 contract</th></tr></thead>
+          <tbody>
+            <tr><td>110$</td><td>0$</td><td class="loss">-2.50$</td><td class="loss">-250$</td></tr>
+            <tr><td>95$</td><td>0$</td><td class="loss">-2.50$</td><td class="loss">-250$</td></tr>
+            <tr><td>92.50$</td><td>2.50$</td><td>0$</td><td>0$</td></tr>
+            <tr><td>80$</td><td>15$</td><td class="profit">+12.50$</td><td class="profit">+1,250$</td></tr>
+            <tr><td>50$</td><td>45$</td><td class="profit">+42.50$</td><td class="profit">+4,250$</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="callout"><strong>Expiry’de break-even:</strong> 95$ − 2.50$ = <strong>92.50$</strong>.</div>
+    </div>
+
+    <div class="card">
+      <h3>Hisse düşünce ne olur?</h3>
+      <img src="/images/long-put-outcomes.jpg" alt="Long put outcome examples as the stock price falls" loading="lazy">
+      <p class="diagram-caption">Strike’ın altında hisse düştükçe put dolar-dolar intrinsic kazanır. Ama önce ödediğiniz premium’un çıkması gerekir.</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2 id="moneyness-put">Put moneyness: ITM, ATM ve OTM</h2>
+    <p>Put’ta ilişki call’un tersidir. Put, hisse strike’ın altındayken <strong>ITM</strong>, strike civarındayken <strong>ATM</strong>, strike’ın üstündeyken <strong>OTM</strong>’dir.</p>
+    <div class="diagram">
+      <img src="/images/long-put-moneyness.jpg" alt="Long put moneyness showing in-the-money, at-the-money and out-of-the-money" width="800" height="auto" loading="lazy">
+      <div class="diagram-caption">Put’ta: hisse strike’a göre ne kadar düşükse intrinsic o kadar fazladır.</div>
+    </div>
+    <ul>
+      <li><strong>ITM put</strong> — hisse strike’ın altında. Opsiyonda zaten intrinsic vardır.</li>
+      <li><strong>ATM put</strong> — hisse strike civarında. Intrinsic az veya yok; fiyatın çoğu time/extrinsic.</li>
+      <li><strong>OTM put</strong> — hisse strike’ın üstünde. O anda intrinsic yok; değerlenmesi için düşüş gerekir.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2 id="when-put">Long Put ne zaman anlamlı olabilir?</h2>
+    <ul>
+      <li>Bearish görüşünüz var ve anlamlı bir düşüş bekliyorsunuz.</li>
+      <li>Short hisse yerine tanımlı maksimum zarar istiyorsunuz.</li>
+      <li>100 hisse almaktan daha az sermayeyle aşağı yön maruziyeti istiyorsunuz.</li>
+      <li>Put’u mevcut hisse pozisyonuna hedge olarak kullanıyorsunuz.</li>
+    </ul>
+    <h3 style="margin-top:20px">Büyük tuzak: zamanlama</h3>
+    <p>Hisse eninde sonunda düştü diye put otomatik kâr etmez. Hisse, ödenen premium ve time decay’i aşacak kadar — mümkünse yeterince çabuk — düşmelidir. Implied volatility de expiry’den önce opsiyonun piyasa değerini değiştirir.</p>
+    <div class="warn"><strong>Uyarı:</strong> “Bearish” ile “kârlı” aynı şey değildir. 2.50$’ye alınan 95$ put için expiry’de hissenin <strong>92.50$</strong> altında bitmesi gerekir.</div>
+  </div>
+
+  <!-- LONG PUT -->
+  <div class="grid2">
+    <div class="card">
+      <div class="small">Bearish · Defined risk</div>
+      <h3>Long Put</h3>
+      <p>Strike’tan 100 hisse <em>satma</em> hakkı verir. Hisse ödediğiniz premium’u karşılayacak kadar düşünce kâr edersiniz. Max zarar yine yalnızca premium’dur.</p>
+      <div class="analogy">
+        Hisse 100$. 95$ put’u 2.50$’ye alın → 250$ debit.<br>
+        80$’da: (15$ − 2.50$) × 100 = <span class="profit">+1.250$</span>.
+      </div>
+      <a class="btn" href="/tr/builder/?template=long_put">Builder’da Long Put yükle →</a>
+    </div>
+
+    <div class="card">
+      <div class="small">Income · zaten 100 hisseniz var</div>
+      <h3>Covered Call — “kira” toplamak</h3>
+      <p>100 hisse alın / tutun. Üzerine bir call satın. Premium sizde kalır. Hisse strike altında kalırsa hisse + premium sizde kalır. Strike’ı aşarsa hisseler call away edilebilir (strike’tan satarsınız). Upside tavanlanır; hisse düşüş riski durur.</p>
+      <ul>
+        <li>Yatay veya hafif yükseliş beklerken sık kullanılır</li>
+        <li>Hisse çökerse zararı <b>yok etmez</b></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="practice-prompt"><b>Alıştırma:</b> <a href="/tr/builder/?template=long_put">Long put</a> yükleyin. Fiyatı break-even’in (strike − premium) altına indirin. Max zararın hâlâ yalnızca premium olduğunu görün.</div>
+
+  <h2 id="covered-call">Covered Call — “kira” toplamak (derin bakış)</h2>
+    <p>Covered Call, zaten hisse tutanlar için en yaygın gelir stratejilerinden biridir. 100 hisse alır (veya zaten tutarsınız) ve bu hisselerin üzerine bir call satarsınız. Call “covered”dır çünkü assignment olursa teslim etmeniz gereken hisseler elinizdedir.</p>
+    <p>Sahip olduğunuz eve kira almak gibi düşünün: başkasına, belirli bir tarihe kadar belirli fiyattan (strike) hisselerinizi alma hakkı verdiğiniz için nakit (premium) alırsınız. Sonra ne olursa olsun o nakit sizde kalır.</p>
+
+    <div class="analogy">
+      <strong>Sade resim:</strong> You own 100 shares of XYZ at 100$. You sell a 110$ call that expires in about 30–45 days and collect 2$ per share (200$ total). That 200$ is yours to keep. In return, you agree that if XYZ is above 110$ at expiration, you will sell your shares at 110$.
+    </div>
+
+    <h3>Ne zaman kullanılır</h3>
+    <ul>
+      <li>Neutral veya hafif bullish’siniz — hisse yatay kalır veya az yükselir diye beklersiniz.</li>
+      <li>Hisseyi beğeniyor ve tutmayı planlıyorsunuz; beklerken ek gelir istiyorsunuz.</li>
+      <li>Hedef satış fiyatınız var; hisse oraya gelirse o yüksek strike’tan satmaya razısınız.</li>
+      <li>Hafif düşüşlere küçük bir tampon istiyorsunuz (premium etkin maliyeti düşürür).</li>
+    </ul>
+
+    <h3>Örnekteki ana sayılar</h3>
+    <ul>
+      <li><strong>Toplanan premium:</strong> 2$ × 100 = <span class="profit">200$</span> hemen nakit.</li>
+      <li><strong>Break-even:</strong> Hisse maliyeti − premium = 100$ − 2$ = <strong>98$</strong>. Yalnızca hisse tutmaya göre 2$ düşene kadar zarar görünmez.</li>
+      <li><strong>Maksimum kâr:</strong> (Strike − hisse maliyeti) + premium = (110$ − 100$) + 2$ = <strong>hisse başı 12$ (1.200$)</strong>. Expiry’de hisse strike’ta veya üstündeyse bu tavan kilitlenir.</li>
+      <li><strong>Maksimum zarar:</strong> Hisse sıfıra giderse teorik olarak hisse başı 98$ (maliyet − premium). Premium yalnızca küçük bir düşüşü yastıklar; büyük çöküşe <em>kalkan olmaz</em>.</li>
+    </ul>
+
+    <div class="diagram-wrap">
+      <img src="/images/covered-call-payoff.webp" alt="Covered Call payoff diagram at expiration showing max profit, breakeven and downside risk" width="800" height="auto" loading="lazy">
+      <div class="diagram-caption">Yeşil çizgi = expiry’de Covered Call P/L. Mavi kesikli = yalnızca hisse (açık uçlu yükseliş). Hisse 110$ strike’ın üstüne çıkınca Covered Call düzleşir — “tavanlanan upside” takası budur.</div>
+    </div>
+
+    <h3>Covered Call sonuçları (örnek)</h3>
+    <p>100$’dan 100 hisse. 110$ call’u 2$’ye satın → <span class="profit">200$</span> credit.</p>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Expiry’de hisse</th><th>Call sonucu</th><th>Ne kalır / ne satılır</th><th>100$ maliyete göre kabaca P/L</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>90$</td><td>Değersiz expire olur</td><td>Hisse + 200$ premium kalır</td><td>Stock −10$ + premium 2$ = <span class="loss">−8$</span>/share</td></tr>
+          <tr><td>98$</td><td>Değersiz expire olur</td><td>Hisse + 200$ premium kalır</td><td>Break-even (hisse −2$ + premium 2$)</td></tr>
+          <tr><td>105$</td><td>Değersiz expire olur</td><td>Hisse + 200$ premium kalır</td><td>Stock +5$ + premium 2$ = <span class="profit">+7$</span>/share</td></tr>
+          <tr><td>110$</td><td>ATM / assignment olabilir</td><td>110$’dan sat veya hisse + premium</td><td>Max kâr bölgesi başlar → <span class="profit">+12$</span>/share</td></tr>
+          <tr><td>120$</td><td>Assignment olası</td><td>Hisseler 110$’dan call away; 200$ premium kalır</td><td>Tavan <span class="profit">+12$</span>/share (fazladan 10$’ı kaçırırsınız)</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>İki ana takas</h3>
+    <ul>
+      <li><strong>Büyük yükselişi bırakırsınız.</strong> Hisse strike’ı aşarsa kâr tavanlanır. Call alan hisseleri strike’tan alır; siz yalnızca premium + strike’a kadar olan kazancı tutarsınız.</li>
+      <li><strong>Düşüş hâlâ çoğunlukla sizin.</strong> 2$ premium %20–30 düşüşü kurtarmaz. Covered Call gelir stratejisidir, hedge değildir. Gerçek aşağı koruma için protective put veya collar gerekir.</li>
+    </ul>
+
+    <div class="note">
+      <strong>İpucu:</strong> Birçok kişi hafif OTM call satar (strike biraz yukarıda) ki assignment’tan önce hisse biraz daha yükselsin. Premium ile time decay dengesine göre çoğu zaman 30–45 günlük expiry seçilir. Expiry’den (veya erken kapattıktan) sonra hisse duruyorsa yeniden call satılabilir — “kira” böyle tekrarlanabilir.
+    </div>
+
+    <div class="warn">
+      <strong>Önemli:</strong> Covered Call hisse riskini kaldırmaz. Hisse sert düşerse toplanan küçük premium zararın yalnızca ince bir dilimini karşılar. Hisseler call away olunca elinizde hisse kalmaz — yeni call satmak için yeniden hisse almanız gerekir.
+    </div>
+
+    <p style="margin-top:16px"><a class="btn" href="/tr/builder/?template=covered_call">Builder’da Covered Call yükle →</a></p>
+  </div>
+
+  <!-- Why ×100 -->
+  <div class="card">
+    <div class="practice-prompt"><b>Alıştırma:</b> <a href="/tr/builder/?template=covered_call">Covered Call</a> açın. Underlying’i short call strike’ının üstüne çıkarın — upside’ın düzleştiğini görün. Aşağı çekin — hisse gibi düşüş + ince premium yastığı.</div>
+
+  <h2 id="multiplier">Neden her şey ×100</h2>
+    <p>Standart hisse opsiyon kontrati <b>100 hisse</b> ile çarpılır. 3$ kote ≈ <b>300$</b> nakit. Builder bu çarpanı kullanır; P/L broker ekranına yaklaşır.</p>
+  </div>
+
+  <!-- Intrinsic / extrinsic / time value -->
+  <div class="card">
+    <h2 id="intrinsic">Intrinsic, extrinsic ve time decay</h2>
+    <p><a href="/tr/level1/">Giriş</a> tekrarı: opsiyonun piyasa fiyatı (premium) her zaman ikiye ayrılır.</p>
+    <div class="analogy">
+      <b>Premium = Intrinsic value + Extrinsic value (time value)</b>
+    </div>
+    <ul>
+      <li><strong>Intrinsic</strong> — şimdi kullanılsa edeceği değer. Call: max(hisse − strike, 0). Put: max(strike − hisse, 0). “Gerçek” kısım.</li>
+      <li><strong>Extrinsic (time value)</strong> — kalanı. Kalan süre, beklenen hareket ve talebi fiyatlar. Bedava değildir; expiry yaklaşırken genelde erir.</li>
+    </ul>
+    <p><strong>Sayısal kontrol:</strong> Hisse 105$, 100$ call 7.50$ → intrinsic 5$, extrinsic 2.50$. Expiry’de hisse hâlâ 105$ ise call ≈ 5$ — 2.50$ time value gitmiştir.</p>
+    <p><span class="term">Time decay (theta)</span> extrinsic’in günlük erimesidir. <b>Long</b> call/put’ta theta genelde rüzgâr aleyhinizedir. <b>Short</b> premium’da (Covered Call’daki short call gibi) hisse sakin kalırsa aynı erime lehinize çalışabilir.</p>
+    <div class="note">
+      <a href="/tr/builder/">Builder</a>’da <b>Days Remaining</b>’i aşağı çekin; teorik P/L eğrisinin değişimini izleyin. Time value gerçek zamanda kaybolur. IV’yi de oynatın — hisse dururken bile extrinsic zıplayabilir.
+    </div>
+    <div class="warn"><strong>Pratik özet:</strong> Hissenin sizin yönünüze gitmesi yetmez. Hareket, ödediğiniz extrinsic’i aşacak kadar büyük ve çoğu zaman yeterince çabuk olmalıdır. Bu yüzden “hisse biraz çıktı ama call’um kırmızı” yeni başlayanlarda çok yaygındır.</div>
+  
+<div class="card" id="risk-notes">
+    <h2>Yeni başlayanların atladığı risk notları</h2>
+    <div class="risk-grid">
+      <div class="risk-card">
+        <h3>Implied volatility (IV)</h3>
+        <p>Yüksek IV opsiyonu pahalılaştırır. Yüksek IV’li bir olaya (earnings) premium almak, yön doğru olsa bile olay sonrası IV çökerse (“IV crush”) zarar ettirebilir.</p>
+      </div>
+      <div class="risk-card">
+        <h3>Earnings &amp; events</h3>
+        <p>Büyük hareket ve IV değişimi earnings etrafında toplanır. Eğitim örnekleri boşluk (gap) yok sayar; canlı piyasa saymaz. Riski anlayana kadar bilinen olaylarda boyutu küçültün.</p>
+      </div>
+      <div class="risk-card">
+        <h3>Early assignment</h3>
+        <p>Opsiyon <b>satarsanız</b> expiry’den önce assignment olabilir — deep ITM call + temettü tarihi veya deep ITM put’ta daha sık. Long tarafta hakkı ne zaman kullanacağınızı siz seçersiniz.</p>
+      </div>
+    </div>
+  </div>
+
+  <h2 id="greeks">Greeks — sade dille</h2>
+    <p>Builder canlı Greeks gösterir. Bir <b>pozisyon</b> için anlamları (tek opsiyon değil):</p>
+    <ul>
+      <li><span class="term">Delta (Δ)</span> — hisse 1$ giderse kabaca kaç dolar değişir. Pozitif ≈ bullish eğilim; negatif ≈ bearish. 0.40 deltalı long call kabaca 40 hisse tutmaya benzer.</li>
+      <li><span class="term">Gamma (Γ)</span> — delta’nın ne kadar hızlı değiştiği. ATM ve expiry yakınında en yüksek. Yüksek gamma P/L’nin hızla ivmelenmesi demektir.</li>
+      <li><span class="term">Theta (Θ)</span> — yalnızca zamandan beklenen günlük dolar değişimi (çoğunlukla extrinsic erimesi). Long opsiyonda theta genelde negatif (erime aleyhinize). Short premium’da çoğu zaman pozitif.</li>
+      <li><span class="term">Vega (ν)</span> — implied volatility 1 puan artarsa dolar değişimi. Yüksek IV genelde extrinsic’i kaldırır; long tarafa yarar, short tarafa yaramaz.</li>
+    </ul>
+    <div class="note">Builder’da bir şablon açın; fiyat, kalan gün veya IV’yi oynatın — delta / theta / vega anında güncellenir.</div>
+  </div>
+
+  <div class="warn"><strong>Sık hatalar:</strong> premium kotasını toplam nakit sanmak (×100 unutmak); long opsiyonun “yavaşça” sıfıra ineceğini sanmak; teorik sınırsız riski anlamadan naked call satmak; time decay’in her gün long aleyhine çalıştığını yok saymak.</div>
+
+  <!-- FAQ -->
+  <div class="card faq">
+    <h2 id="faq">Yeni başlayan SSS</h2>
+    <p style="margin-bottom:14px">Yanıtı açmak için soruya tıklayın.</p>
+
+    <details>
+      <summary>Long call veya long put’ta en fazla ne kaybederim?</summary>
+      <div class="faq-body">
+        <p>Ödediğiniz premium (artı komisyon). Bu tanımlı maksimum zarardır. Opsiyon alındıktan sonra hisse ters gitse de broker ek para istemez.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary>Hisse biraz yükselirken call neden değer kaybeder?</summary>
+      <div class="faq-body">
+        <p>İki yaygın neden: (1) time decay (theta) — her gün biraz değer gider; (2) implied volatility düşmüştür (vega). Küçük yükseliş, özellikle expiry yakınında veya büyük olay sonrası, ikisini dengelemeye yetmeyebilir.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary>Long call’da “break-even” ne demek?</summary>
+      <div class="faq-body">
+        <p>Expiry’de break-even = strike + ödenen premium. Kâr için hisse bu fiyatın üstünde olmalıdır. Expiry’den önce opsiyonda hâlâ time value vardır; piyasa fiyatı intrinsic’ten yüksek olabilir.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary>ITM, ATM yoksa OTM call mı alayım?</summary>
+      <div class="faq-body">
+        <p>Tek doğru yok. ITM daha pahalıdır ama olasılık daha yüksek ve hisseye daha çok benzer. OTM ucuzdur ama daha büyük hareket ister. ATM ortadadır; hem büyük harekete hem time decay’e en duyarlıdır. Birçok kişi ucuz olduğu için hafif OTM veya ATM ile başlar, sonra olasılık ve delta’yı öğrenir.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary>Covered Call, long call’dan nasıl farklı?</summary>
+      <div class="faq-body">
+        <p>Long call, yalnızca premium kadar tanımlı riskli saf bir bullish bahistir. Covered Call için 100 hisse gerekir; üzerine call satıp premium alırsınız. Hisse strike altında kalırsa premium sizde kalır ama upside tavanlanır ve hisse düşünce düşüşün tamamı sizde kalır.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary>Expiry’ye kadar tutmak zorunda mıyım?</summary>
+      <div class="faq-body">
+        <p>Hayır. Expiry’den önce satabilirsiniz (piyasa açık ve alıcı varken). Birçok kişi kârı kilitlemek veya theta hızlanmadan zararı kesmek için erken kapatır.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary>“1 kontrat = 100 hisse” param için ne demek?</summary>
+      <div class="faq-body">
+        <p>Opsiyon 2.50$ kote ise bir kontrat 2.50$ × 100 = 250$ (artı ücret). Sonra 4.00$ olursa pozisyon 400$ eder. P/L bu 100 hisse çarpanıyladır. Yalnızca hisse başı koteye değil, toplam debit/credit’e bakın.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary>Opsiyon hızlı zengin olma yolu mu?</summary>
+      <div class="faq-body">
+        <p>Hayır. Bu beklenti yeni başlayanların en hızlı para kaybetme yollarındandır. Opsiyon hem kazancı hem zararı büyütür. Sürdürülebilir öğrenme: küçük boyut, mümkünse tanımlı risk, aylar içinde karar kalitesi — bir haftada hesabı ikiye katlamak değil.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary>Yeni başlayan için “az olan çoktur” ne demek?</summary>
+      <div class="faq-body">
+        <p>Daha az kontrat, daha az strateji, aynı anda daha az fikir. İyi anlaşılmış bir long call veya Covered Call, açıklayamadığınız beş iç içe pozisyondan daha öğreticidir. Küçük boyut duyguyu da sakin tutar; toparlama kovalamak yerine sonuçtan öğrenirsiniz.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary>Bu yatırım tavsiyesi mi?</summary>
+      <div class="faq-body">
+        <p>Hayır. Sitedeki her şey yalnızca eğitimdir. Opsiyonlar ciddi zarar riski içerir ve herkes için uygun değildir. Gerçek parayla işlemden önce kendi araştırmanızı yapın; gerekirse nitelikli bir danışmana sorun.</p>
+      </div>
+    </details>
+  </div>
+
+  <div class="card" style="text-align:center">
+    <h3>Sırada: defined-risk spread’ler</h3>
+    <p>Vertical spread ve Iron Condor — birçok kişinin her iki tarafta da bilinen maksimum zarar istemesinin nedeni.</p>
+    <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:12px">
+      <a class="btn" href="/tr/level3/">Spreads →</a>
+      <a class="btn btn-secondary" href="/tr/builder/">Builder’ı aç</a>
+    </div>
   </div>
 </div>
+
 <footer class="site-footer">
   <div class="footer-note">Educational only — not financial advice. Options involve risk of loss.</div>
   <div class="footer-links">
     <a href="/">Home</a>
-    <a href="/level1/">Basics</a>
-    <a href="/level2/">Fundamentals</a>
-    <a href="/level3/">Spreads</a>
+    <a href="/tr/level1/">Basics</a>
+    <a href="/level2/">Temeller</a>
+    <a href="/tr/level3/">Spreads</a>
     <a href="/level4/">Advanced</a>
     <a href="/strategies/">Strategies</a>
-    <a href="/builder/">Builder</a>
+    <a href="/tr/builder/">Builder</a>
     <a href="/about/">About</a>
     <a href="/contact/">Contact</a>
     <a href="/disclaimer/">Disclaimer</a>
@@ -93,6 +851,8 @@
       <a href="https://jsm-loudness.com/" target="_blank" rel="noopener">JSM Loudness</a>
     </div>
 </footer>
+
+
 
 
 <script>
@@ -138,8 +898,6 @@
   }
 })();
 </script>
-
-
 
 
 
