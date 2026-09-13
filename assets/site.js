@@ -215,11 +215,17 @@
     wrap.innerHTML = '<div class="card" id="terimler"><h2>Bu sitedeki İngilizce terimler</h2><p>Uluslararası borsalarda işlem yapmak için bu terimlere alışmalısınız.</p><dl class="term-glossary">'
       + '<dt>call</dt><dd>Strike’tan hisse alma hakkı.</dd>'
       + '<dt>put</dt><dd>Strike’tan hisse satma hakkı.</dd>'
-      + '<dt>strike</dt><dd>Kullanım fiyatı.</dd>'
+      + '<dt>strike</dt><dd>Opsiyon kontratında baz alınan fiyat.</dd>'
       + '<dt>premium</dt><dd>Ödenen veya alınan prim.</dd>'
       + '<dt>expiry</dt><dd>Vade sonu.</dd>'
       + '<dt>long / short</dt><dd>Almış / satmış pozisyon.</dd>'
       + '<dt>Greeks</dt><dd>Delta, theta gibi duyarlılıklar.</dd>'
+      + '<dt>assignment</dt><dd>Kontrat şartlarından olan, hisse alma / satma yükümlülüğünün gerçekleşmesi.</dd>'
+      + '<dt>underlying</dt><dd>Baz alınan varlık (hisse veya ETF).</dd>'
+      + '<dt>Covered Call</dt><dd>Hisse + short call; premium alınır, yükselişten kâr sınırlanır / tavanlanır.</dd>'
+      + '<dt>Cash-Secured Put</dt><dd>Nakit teminatlı short put; assignment durumunda hisse alma yükümlülüğü vardır.</dd>'
+      + '<dt>Iron Condor</dt><dd>İki kanatlı (4 bacaklı), belirlenmiş-risk, yatay / bant beklentisine uygun credit (gelir) stratejisi.</dd>'
+      + '<dt>Bullish / Bearish / Neutral</dt><dd>Boğa / yükseliş · Ayı / düşüş · yatay beklenti.</dd>'
       + '<dt>Builder</dt><dd>Canlı strateji simülatörü.</dd>'
       + '</dl></div>';
     footer.parentNode.insertBefore(wrap, footer);
