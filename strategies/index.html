@@ -67,6 +67,7 @@
 }
 </style>
 
+<script src="/assets/site.js?v=20260915" defer></script>
 </head>
 <body>
 <header class="site-header"><div class="site-header-inner"><a class="logo logo-link" href="/" aria-label="JSM Options Home"><div class="logo-icon">JSM</div><div><div style="font-weight:700">JSM Options</div><div class="brand-sub">jsm-options.com · Educational</div></div></a><div class="header-right"><nav class="nav" aria-label="Primary navigation"><a href="/">Home</a><a href="/level1/">Basics</a><a href="/level2/">Fundamentals</a><a href="/level3/">Spreads</a><a href="/level4/">Advanced</a><a href="/strategies/" class="active">Strategies</a><a href="/cheat-sheet/">Cheat sheet</a><a href="/builder/">Builder</a></nav><button type="button" class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button><button type="button" class="theme-toggle" id="themeToggle" aria-label="Toggle color theme"><span id="themeIcon" class="theme-icon">☼</span><span id="themeLabel" class="theme-label">Dark</span></button></div></div></header>
@@ -224,10 +225,17 @@ const builderTpl={
   'Calendar Spread':'calendar_call','LEAPS Call':'long_call','LEAPS Put':'long_put',
   'Butterfly':'long_call_butterfly','Cash Secured Put':'cash_secured_put'
 };
+const guidePage={
+  'Covered Call':'/covered-call/',
+  'Cash Secured Put':'/cash-secured-put/',
+  'Short Iron Condor':'/iron-condor/'
+};
 function builderBtn(s){
   const t=builderTpl[s.name];
-  if(t) return `<p style="margin-top:12px"><a class="btn" style="display:inline-block;font-size:12px;padding:7px 12px" href="/builder/?template=${t}">Try in Builder →</a></p>`;
-  return `<p style="margin-top:12px"><a class="btn btn-secondary" style="display:inline-block;font-size:12px;padding:7px 12px;background:#334155;border-color:#334155;color:var(--text)!important" href="/builder/">Open Builder →</a></p>`;
+  const g=guidePage[s.name];
+  const guide=g?`<a class="btn btn-secondary" style="display:inline-block;font-size:12px;padding:7px 12px;margin-left:8px" href="${g}">Guide →</a>`:'';
+  if(t) return `<p style="margin-top:12px"><a class="btn" style="display:inline-block;font-size:12px;padding:7px 12px" href="/builder/?template=${t}">Try in Builder →</a>${guide}</p>`;
+  return `<p style="margin-top:12px"><a class="btn btn-secondary" style="display:inline-block;font-size:12px;padding:7px 12px;background:#334155;border-color:#334155;color:var(--text)!important" href="/builder/">Open Builder →</a>${guide}</p>`;
 }
 function render(){const q=search.value.trim().toLowerCase();const rows=strategies.filter(s=>(active==='all'||s.cat.includes(active))&&(!q||(s.name+' '+s.tag+' '+s.type+' '+s.legs+' '+s.desc).toLowerCase().includes(q)));count.textContent=rows.length;grid.innerHTML=rows.map(s=>`<article class="strategy-card"><div class="strategy-head"><div><h2>${s.name}</h2><span class="pill ${s.cat.includes('bullish')?'bullish':s.cat.includes('bearish')?'bearish':s.cat.includes('volatile')?'vol':s.cat.includes('hedging')?'hedge':'neutral'}">${s.tag}</span></div><span class="pill">${s.type}</span></div><div class="legs"><b>Structure:</b> ${s.legs}</div><p>${s.desc}</p>${payoffChart(s)}<div class="stats"><div class="stat"><span>Max profit</span><strong>${s.profit}</strong></div><div class="stat"><span>Max loss</span><strong>${s.loss}</strong></div><div class="stat"><span>Time decay</span><strong>${s.decay}</strong></div></div>${builderBtn(s)}</article>`).join('');empty.style.display=rows.length?'none':'block'}
 document.querySelectorAll('.filter').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.filter').forEach(x=>x.classList.remove('active'));b.classList.add('active');active=b.dataset.filter;render()}));search.addEventListener('input',render);render();
