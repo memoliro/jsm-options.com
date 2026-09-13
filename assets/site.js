@@ -27,8 +27,8 @@
 
   var NAV_TR = {
     '/': 'Ana Sayfa',
-    '/level1/': 'Temel',
-    '/level2/': 'Kavramlar',
+    '/level1/': 'Giriş',
+    '/level2/': 'Temeller',
     '/level3/': 'Spreadler',
     '/level4/': 'İleri',
     '/strategies/': 'Stratejiler',
@@ -116,7 +116,7 @@
         var href = (item.href === '/') ? (pre ? '/tr/' : '/') : (pre + item.href);
         var label = item.label;
         if (lang() === 'tr') {
-          var map = { 'Home':'Ana Sayfa','Basics':'Temel','Fundamentals':'Kavramlar','Spreads':'Spreadler','Advanced':'İleri','Strategies':'Stratejiler','Cheat sheet':'Özet','Builder':'Builder','About':'Hakkında','Contact':'İletişim','Disclaimer':'Sorumluluk','Privacy':'Gizlilik' };
+          var map = { 'Home':'Ana Sayfa','Basics':'Giriş','Fundamentals':'Temeller','Spreads':'Spreadler','Advanced':'İleri','Strategies':'Stratejiler','Cheat sheet':'Özet','Builder':'Builder','About':'Hakkında','Contact':'İletişim','Disclaimer':'Sorumluluk','Privacy':'Gizlilik' };
           label = map[item.label] || item.label;
         }
         return '<a href="' + href + '">' + label + '</a>';
