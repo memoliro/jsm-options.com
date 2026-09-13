@@ -374,3 +374,11 @@ html[data-theme="light"] .note{color:#1e40af;background:rgba(37,99,235,.06)}
   a{color:#111!important;text-decoration:none!important}
   .sheet-table th,.sheet-table td{border-color:#333}
 }
+
+.lang-switch{
+  display:inline-flex;align-items:center;justify-content:center;
+  padding:6px 10px;border-radius:9999px;border:1px solid var(--border);
+  background:var(--card);color:var(--muted);font-size:12px;font-weight:700;
+  text-decoration:none;flex:0 0 auto;
+}
+.lang-switch:hover{color:var(--text)}

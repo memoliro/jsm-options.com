@@ -1,0 +1,1613 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+
+  <title>Free Options Strategy Builder &amp; Payoff Calculator</title>
+  <meta name="description" content="Build and simulate options strategies free: long call, covered call, iron condor, spreads, and more. Live payoff graph, Greeks, and stock + options legs. Educational only.">
+  <link rel="canonical" href="https://jsm-options.com/tr/builder/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="JSM Options">
+  <meta property="og:title" content="Free Options Strategy Builder &amp; Payoff Calculator">
+  <meta property="og:description" content="Build and simulate options strategies free with a live payoff graph and Greeks. Covered call, iron condor, spreads, and more.">
+  <meta property="og:url" content="https://jsm-options.com/tr/builder/">
+  <meta property="og:image" content="https://jsm-options.com/images/og-default.png">
+  <meta name="twitter:image" content="https://jsm-options.com/images/og-default.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Free Options Strategy Builder &amp; Payoff Calculator">
+  <meta name="twitter:description" content="Live payoff graph and Greeks for covered call, iron condor, spreads, and custom multi-leg strategies.">
+  <link rel="stylesheet" href="/assets/style.css?v=20260914">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-BDL003RCN6"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-BDL003RCN6');
+</script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <style>
+    :root {
+      --bg: #0f1419;
+      --card: #1a2332;
+      --border: #2d3a4f;
+      --text: #e7ecf3;
+      --muted: #8b9bb4;
+      --accent: #3b82f6;
+      --green: #22c55e;
+      --red: #ef4444;
+      --yellow: #eab308;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.45;
+      padding: 12px;
+      max-width: 1280px;
+      margin: 0 auto;
+    }
+    h1 {
+      font-size: clamp(1.25rem, 3vw, 1.55rem);
+      margin-bottom: 2px;
+      background: linear-gradient(90deg, #60a5fa, #34d399);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .subtitle { color: var(--muted); font-size: 0.88rem; margin-bottom: 14px; }
+
+    .top-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: flex-end;
+      margin-bottom: 12px;
+    }
+    .top-bar .field { flex: 1 1 120px; min-width: 100px; }
+    .top-bar .field.wide { flex: 2 1 200px; }
+
+    .main-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px 14px;
+    }
+    .card h2 {
+      font-size: 0.92rem;
+      margin-bottom: 10px;
+      color: #93c5fd;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    label {
+      display: block;
+      font-size: 0.72rem;
+      color: var(--muted);
+      margin-bottom: 2px;
+    }
+    input, select {
+      width: 100%;
+      padding: 7px 8px;
+      background: #0f172a;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text);
+      font-size: 0.85rem;
+    }
+    input:focus, select:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    button {
+      cursor: pointer;
+      border: none;
+      border-radius: 7px;
+      padding: 8px 12px;
+      font-weight: 600;
+      font-size: 0.84rem;
+      transition: all 0.15s;
+    }
+    .btn-primary { background: var(--accent); color: white; }
+    .btn-primary:hover { background: #2563eb; }
+    .btn-secondary { background: #334155; color: var(--text); }
+    .btn-secondary:hover { background: #475569; }
+    .btn-danger {
+      background: #7f1d1d;
+      color: #fecaca;
+      padding: 5px 8px;
+      font-size: 0.75rem;
+      flex-shrink: 0;
+    }
+    .btn-play {
+      background: linear-gradient(135deg, #059669, #10b981);
+      color: white;
+    }
+    .btn-sm { padding: 6px 10px; font-size: 0.78rem; }
+
+    /* Leg rows - horizontal on desktop */
+    .legs-header, .leg-row {
+      display: grid;
+      grid-template-columns: 80px 80px 90px 70px 60px 90px 40px;
+      gap: 8px;
+      align-items: center;
+      margin-bottom: 4px;
+    }
+    @media (min-width: 700px) {
+      .legs-header, .leg-row {
+        grid-template-columns: 90px 90px 110px 80px 70px 100px 44px;
+      }
+    }
+    .legs-header {
+      font-size: 0.65rem;
+      color: var(--muted);
+      padding: 0 2px;
+      margin-bottom: 2px;
+    }
+    .leg-row input, .leg-row select {
+      margin: 0;
+      padding: 5px 3px;
+      font-size: 0.78rem;
+    }
+    .leg-row {
+      background: #0f172a;
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      padding: 5px 5px;
+    }
+    .leg-row.long { border-left: 3px solid var(--green); }
+    .leg-row.short { border-left: 3px solid var(--red); }
+    .cash-line {
+      font-size: 0.7rem;
+      font-weight: 600;
+      margin: -1px 0 7px 4px;
+      font-variant-numeric: tabular-nums;
+    }
+    .cash-debit { color: var(--red); }
+    .cash-credit { color: var(--green); }
+
+    @media (max-width: 640px) {
+      .legs-header { display: none; }
+      .leg-row {
+        grid-template-columns: 1fr 1fr;
+        gap: 6px 8px;
+        padding: 8px;
+      }
+      .leg-row .remove-cell { grid-column: 2; justify-self: end; }
+    }
+
+    #chartContainer {
+      position: relative;
+      height: min(380px, 52vh);
+      background: #0f172a;
+      border-radius: 8px;
+      padding: 6px;
+    }
+    .legend-note {
+      font-size: 0.74rem;
+      color: var(--muted);
+      margin-top: 6px;
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .legend-note span { display: flex; align-items: center; gap: 5px; }
+    .dot { width: 11px; height: 3px; border-radius: 2px; }
+    .dot.green { background: #22c55e; }
+    .dot.red { background: #ef4444; }
+    .dot.dotted {
+      background: repeating-linear-gradient(90deg, #94a3b8 0 3px, transparent 3px 6px);
+      height: 3px;
+    }
+
+    .controls-compact {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    @media (min-width: 600px) {
+      .controls-compact { grid-template-columns: 1fr 1fr; }
+    }
+    .slider-group label { margin-bottom: 0; }
+    .slider-group input[type=range] {
+      width: 100%;
+      margin: 3px 0;
+      accent-color: var(--accent);
+    }
+    .pl-box {
+      text-align: center;
+      padding: 8px 10px;
+      border-radius: 8px;
+      background: #0f172a;
+      border: 1px solid var(--border);
+    }
+    .pl-value {
+      font-size: 1.35rem;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+    }
+    .pl-positive { color: var(--green); }
+    .pl-negative { color: var(--red); }
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 6px;
+      margin-top: 6px;
+    }
+    @media (max-width: 500px) {
+      .metrics { grid-template-columns: 1fr 1fr; }
+    }
+    .metric {
+      background: #0f172a;
+      border-radius: 7px;
+      padding: 6px;
+      text-align: center;
+      border: 1px solid var(--border);
+    }
+    .metric .label { font-size: 0.65rem; color: var(--muted); }
+    .metric .val { font-size: 0.82rem; font-weight: 600; }
+
+    .edu-tip {
+      background: #1e3a5f;
+      border-left: 3px solid #3b82f6;
+      padding: 8px 10px;
+      border-radius: 0 7px 7px 0;
+      font-size: 0.78rem;
+      color: #bfdbfe;
+      margin-top: 8px;
+    }
+    .btn-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 8px;
+    }
+    footer {
+      margin-top: 16px;
+      text-align: center;
+      font-size: 0.72rem;
+      color: var(--muted);
+    }
+    .greeks-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      margin-top: 10px;
+    }
+    @media (max-width: 600px) {
+      .greeks-grid { grid-template-columns: 1fr 1fr; }
+    }
+    .greek-card {
+      background: #0f172a;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 8px 10px;
+    }
+    .greek-card .g-name {
+      font-size: 0.72rem;
+      color: #93c5fd;
+      font-weight: 600;
+    }
+    .greek-card .g-val {
+      font-size: 1.05rem;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+      margin: 2px 0;
+    }
+    .greek-card .g-impact {
+      font-size: 0.68rem;
+      color: var(--muted);
+      line-height: 1.35;
+    }
+  
+    .site-header{position:sticky;top:0;z-index:30;background:rgba(15,20,25,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border,#2d3a4f);width:100%;}
+    .site-header-inner{max-width:1280px;margin:0 auto;padding:12px 16px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;}
+    .site-header .nav a{padding:6px 11px;border-radius:9999px;border:1px solid var(--border,#2d3a4f);background:var(--card,#1a2332);font-size:12px;color:var(--muted,#8b9bb4);text-decoration:none;}
+    .site-header .nav a.active{background:var(--accent,#3b82f6);color:#fff;border-color:var(--accent,#3b82f6);}
+    .site-header .logo{display:flex;align-items:center;gap:10px;}
+    .site-header .logo-icon{width:32px;height:32px;background:linear-gradient(135deg,#3b82f6,#34d399);color:#fff;border-radius:50%;display:grid;place-items:center;font-weight:800;font-size:12px;}
+.builder-wrap{max-width:1280px;margin:0 auto;padding:12px 16px 24px;}
+  
+  
+    /* ===== Shared JSM header + theme switcher ===== */
+    .site-header{position:sticky;top:0;z-index:30;background:var(--header-bg,rgba(15,20,25,.92));backdrop-filter:blur(12px);border-bottom:1px solid var(--border);width:100%;margin:0 -12px;padding:0 12px;}
+    .site-header-inner{max-width:1280px;margin:0 auto;padding:12px 16px;display:flex;justify-content:space-between;align-items:center;flex-wrap:nowrap;gap:12px;}
+    .header-right{display:flex;align-items:center;justify-content:flex-end;gap:8px;min-width:0;}
+    .site-header .nav{display:flex;gap:6px;flex-wrap:wrap;align-items:center;justify-content:flex-end;}
+    .site-header .nav a{padding:6px 11px;border-radius:9999px;border:1px solid var(--border);background:var(--card);font-size:12px;color:var(--muted);text-decoration:none;}
+    .site-header .nav a:hover{color:var(--text);border-color:var(--accent);}
+    .site-header .nav a.active{background:var(--accent);color:#fff;border-color:var(--accent);}
+    .theme-toggle{flex:0 0 auto;display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:6px 10px;min-height:30px;border:1px solid var(--border);border-radius:9999px;background:var(--card);color:var(--muted);font:600 12px/1 'Segoe UI',system-ui,-apple-system,sans-serif;cursor:pointer;white-space:nowrap;}
+    .theme-toggle:hover{color:var(--text);border-color:var(--accent);}
+    .theme-toggle .icon{font-size:13px;line-height:1;}
+    :root,[data-theme="dark"]{--header-bg:rgba(15,20,25,.92);}
+    [data-theme="light"]{
+      --bg:#f4f6f9;--card:#fff;--border:#d8dee9;--text:#0f172a;--muted:#64748b;--accent:#2563eb;--green:#16a34a;--red:#dc2626;--yellow:#ca8a04;--input:#f1f5f9;--header-bg:rgba(255,255,255,.92);
+    }
+    [data-theme="light"] body{background:var(--bg);color:var(--text);}
+    [data-theme="light"] input,[data-theme="light"] select{background:var(--input);color:var(--text);}
+    [data-theme="light"] .card{background:var(--card);border-color:var(--border);}
+    [data-theme="light"] .site-header{background:var(--header-bg);}
+    [data-theme="light"] .greek-card{background:#f8fafc;}
+    [data-theme="light"] .greek-card .g-name{color:#1d4ed8;}
+    [data-theme="light"] .btn-secondary{background:#e2e8f0;color:#334155;}
+    [data-theme="light"] .btn-danger{background:#fee2e2;color:#991b1b;}
+    [data-theme="light"] .site-header .nav a{background:#fff;color:#64748b;}
+    [data-theme="light"] .site-header .nav a.active{background:#2563eb;color:#fff;}
+    [data-theme="light"] .theme-toggle{background:#fff;color:#64748b;}
+    .nav-toggle{display:none;flex:0 0 auto;width:44px;height:44px;min-width:44px;min-height:44px;padding:0;border:1px solid var(--border);border-radius:10px;background:var(--card);color:var(--text);cursor:pointer;align-items:center;justify-content:center;flex-direction:column;gap:5px;-webkit-tap-highlight-color:transparent;touch-action:manipulation;position:relative;z-index:40}
+    .nav-toggle span{display:block;width:18px;height:2px;border-radius:1px;background:currentColor;transition:transform .2s,opacity .2s}
+    .nav-toggle[aria-expanded="true"] span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+    .nav-toggle[aria-expanded="true"] span:nth-child(2){opacity:0}
+    .nav-toggle[aria-expanded="true"] span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+    @media(max-width:900px){
+      .site-header{z-index:100}
+      .site-header-inner{flex-wrap:nowrap;position:relative}
+      .header-right{gap:8px;justify-content:flex-end;flex-wrap:nowrap}
+      .nav-toggle{display:inline-flex!important}
+      .site-header .nav{display:none!important;position:fixed;top:56px;left:0;right:0;width:100%;max-height:calc(100vh - 56px);overflow-y:auto;-webkit-overflow-scrolling:touch;flex-direction:column;align-items:stretch;gap:6px;padding:12px 16px 20px;margin:0;background:var(--bg,#0f1419);border-bottom:1px solid var(--border);box-shadow:0 12px 28px rgba(0,0,0,.35);z-index:99}
+      .site-header .nav.is-open{display:flex!important}
+      .site-header .nav a{width:100%;text-align:left;padding:14px 14px;font-size:16px;border-radius:10px;min-height:48px;display:flex;align-items:center;box-sizing:border-box}
+    }
+    @media(max-width:600px){.site-header .brand-sub{display:none}.theme-toggle .theme-label,#themeLabel{display:none}}.theme-toggle .theme-label,#themeLabel{display:none}}
+</style>
+
+<style id="jsm-mobile-nav">
+.nav-toggle{display:none;box-sizing:border-box;width:44px;height:44px;min-width:44px;min-height:44px;padding:0;border:1px solid var(--border,#2d3a4f);border-radius:10px;background:var(--card,#1a2332);color:var(--text,#e7ecf3);cursor:pointer;align-items:center;justify-content:center;flex-direction:column;gap:5px;-webkit-tap-highlight-color:transparent;touch-action:manipulation;position:relative;z-index:40}
+.nav-toggle span{display:block;width:18px;height:2px;border-radius:1px;background:currentColor;pointer-events:none}
+.nav-toggle[aria-expanded="true"] span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.nav-toggle[aria-expanded="true"] span:nth-child(2){opacity:0}
+.nav-toggle[aria-expanded="true"] span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+@media (max-width:900px){
+  .nav-toggle{display:inline-flex!important}
+  .site-header{z-index:100!important;position:sticky;top:0}
+  .site-header .nav{
+    display:none!important;
+    position:fixed!important;
+    top:56px!important;left:0!important;right:0!important;
+    width:100%!important;
+    max-height:calc(100vh - 56px)!important;
+    overflow-y:auto!important;
+    -webkit-overflow-scrolling:touch;
+    flex-direction:column!important;
+    align-items:stretch!important;
+    gap:6px!important;
+    padding:12px 16px 20px!important;
+    margin:0!important;
+    background:#0f1419!important;
+    border-bottom:1px solid #2d3a4f!important;
+    box-shadow:0 12px 28px rgba(0,0,0,.45)!important;
+    z-index:9999!important;
+  }
+  html[data-theme="light"] .site-header .nav{background:#ffffff!important;border-bottom-color:#e2e8f0!important}
+  .site-header .nav.is-open{display:flex!important}
+  .site-header .nav a{
+    width:100%!important;text-align:left!important;
+    padding:14px!important;font-size:16px!important;
+    min-height:48px!important;display:flex!important;align-items:center!important;
+    border-radius:10px!important;box-sizing:border-box!important;
+  }
+}
+</style>
+
+<script src="/assets/site.js?v=20260916" defer></script>
+</head>
+<body>
+    <header class="site-header"><div class="site-header-inner"><a class="logo logo-link" href="/" aria-label="JSM Options Home"><div class="logo-icon">JSM</div><div><div style="font-weight:700">JSM Options</div><div class="brand-sub">jsm-options.com · Educational</div></div></a><div class="header-right"><nav class="nav" aria-label="Primary navigation"><a href="/">Home</a><a href="/level1/">Basics</a><a href="/level2/">Fundamentals</a><a href="/level3/">Spreads</a><a href="/level4/">Advanced</a><a href="/strategies/">Strategies</a><a href="/cheat-sheet/">Cheat sheet</a><a href="/builder/" class="active">Builder</a></nav><button type="button" class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button><button type="button" class="theme-toggle" id="themeToggle" aria-label="Toggle color theme"><span id="themeIcon" class="theme-icon">☼</span><span id="themeLabel" class="theme-label">Dark</span></button></div></div></header>
+<nav class="breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span aria-hidden="true">/</span><span aria-current="page">Builder</span></nav>
+
+  <div class="builder-wrap">
+  <h1>Opsiyon Strateji Builder ve Simülatör</h1>
+  <p class="subtitle">Canlı · ×100 contract multiplier · Green = profit · Red = loss</p>
+
+  <div class="card" style="margin-bottom:12px;">
+    <div class="top-bar">
+      <div class="field wide">
+        <label>Strateji şablonu <span style="font-weight:400;color:var(--muted)">(örnek primler — zincire göre düzenleyin)</span></label>
+        <select id="strategyTemplate" onchange="applyTemplate()">
+          <option value="">— Şablon seçin —</option>
+          <optgroup label="Bullish">
+            <option value="long_call">Long Call</option>
+            <option value="covered_call">Covered Call</option>
+            <option value="cash_secured_put">Cash Secured Put</option>
+            <option value="bull_call_spread">Bull Call Spread</option>
+            <option value="long_straddle">Long Straddle</option>
+            <option value="long_strangle">Long Strangle</option>
+            <option value="long_call_butterfly">Long Call Butterfly</option>
+            <option value="call_condor">Call Condor</option>
+          </optgroup>
+          <optgroup label="Bearish">
+            <option value="long_put">Long Put</option>
+            <option value="bear_put_spread">Bear Put Spread</option>
+            <option value="long_straddle_bear">Long Straddle</option>
+            <option value="long_strangle_bear">Long Strangle</option>
+            <option value="long_put_butterfly">Long Put Butterfly</option>
+            <option value="put_condor">Put Condor</option>
+          </optgroup>
+          <optgroup label="Neutral / Time-decay">
+            <option value="short_straddle">Short Straddle</option>
+            <option value="short_strangle">Short Strangle</option>
+            <option value="iron_condor">Iron Condor</option>
+            <option value="iron_butterfly">Iron Butterfly</option>
+            <option value="calendar_call">Calendar Spread (Call)</option>
+          </optgroup>
+        </select>
+      </div>
+      <div class="field">
+        <label>Hisse fiyatı ($)</label>
+        <input id="spot" type="number" value="100" step="0.5" min="1" oninput="liveUpdate()" />
+      </div>
+      <div class="field">
+        <label>IV (%)</label>
+        <input id="iv" type="number" value="25" step="1" min="1" max="200" oninput="liveUpdate()" />
+      </div>
+      <div class="field">
+        <label>Rate (%)</label>
+        <input id="rate" type="number" value="5" step="0.25" min="0" max="20" oninput="liveUpdate()" />
+      </div>
+      <div class="field">
+        <label>Div Yield (%)</label>
+        <input id="divYield" type="number" value="0" step="0.1" min="0" max="15" oninput="liveUpdate()" />
+      </div>
+    </div>
+  </div>
+
+  <div class="main-grid">
+    <!-- Mevcut bacaklar — above graph -->
+    <div class="card">
+      <h2>Mevcut bacaklar</h2>
+      <div class="legs-header">
+        <span>Side</span>
+        <span>Type</span>
+        <span>Strike</span>
+        <span>DTE</span>
+        <span>Qty</span>
+        <span>Premium / Cost</span>
+        <span></span>
+      </div>
+      <div id="legsList"></div>
+      <div class="btn-row">
+        <button class="btn-primary btn-sm" onclick="addEmptyLeg()">+ Bacak ekle</button>
+        <button class="btn-secondary btn-sm" onclick="clearLegs()">Temizle</button>
+      </div>
+      <p style="font-size:0.7rem;color:var(--muted);margin-top:8px;">
+        Borç = ödersiniz · Alacak = alırsınız · <strong>Options:</strong> Adet = kontrat (×100) · <strong>Stock:</strong> Adet = hisse adedi, Maliyet = giriş fiyatı (Strike ve DTE yok sayılır)
+      </p>
+    </div>
+
+    <!-- Kar/Zarar grafiği -->
+    <div class="card">
+      <h2>Kar/Zarar grafiği</h2>
+      <div id="chartContainer">
+        <canvas id="payoffChart"></canvas>
+      </div>
+      <div class="legend-note">
+        <span><span class="dot green"></span> Green = P/L ≥ 0</span>
+        <span><span class="dot red"></span> Red = P/L &lt; 0</span>
+        <span><span class="dot dotted"></span> Dotted = with time left · Solid = at expiry · Gray line = price · Yellow line = P/L</span>
+      </div>
+
+      <div class="controls-compact">
+        <div>
+          <div class="slider-group">
+            <label>Kalan gün <strong id="daysLeftLabel">90</strong></label>
+            <input type="range" id="daysLeft" min="0" max="90" value="90" oninput="onDaysChange()" />
+          </div>
+          <div class="slider-group" style="margin-top:6px;">
+            <label>Dayanak <strong id="spotLabel">$100.00</strong></label>
+            <input type="range" id="spotSlider" min="40" max="180" step="0.5" value="100" oninput="onSpotSlide()" />
+          </div>
+          <div class="btn-row">
+            <button class="btn-play btn-sm" onclick="animateTheta()">▶ Theta</button>
+            <button class="btn-secondary btn-sm" onclick="resetTime()">Reset Time</button>
+            <button class="btn-secondary btn-sm" onclick="randomWalk()">Random Walk</button>
+          </div>
+        </div>
+        <div>
+          <div class="pl-box">
+            <div style="font-size:0.7rem;color:var(--muted);">K/Z (teorik)</div>
+            <div id="plValue" class="pl-value pl-positive">$0</div>
+          </div>
+          <div class="metrics">
+            <div class="metric">
+              <div class="label">Net prim (borç/alacak)</div>
+              <div class="val" id="netPremium">$0</div>
+            </div>
+            <div class="metric">
+              <div class="label">Maks. kâr</div>
+              <div class="val" id="maxProfit">—</div>
+            </div>
+            <div class="metric">
+              <div class="label">Maks. zarar</div>
+              <div class="val" id="maxLoss">—</div>
+            </div>
+            <div class="metric">
+              <div class="label">Başabaş</div>
+              <div class="val" id="breakevens">—</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <h2 style="margin-top:14px;margin-bottom:6px;">Opsiyon Grekleri <span style="font-size:0.72rem;color:var(--muted);font-weight:500;">(pozisyon toplamı · ×100)</span></h2>
+      <div class="greeks-grid">
+        <div class="greek-card">
+          <div class="g-name">Δ Delta</div>
+          <div class="g-val" id="gDelta">—</div>
+          <div class="g-impact" id="gDeltaImpact">Fiyat duyarlılığı: hisse $1 hareket ederse K/Z yaklaşık ne kadar değişir.</div>
+        </div>
+        <div class="greek-card">
+          <div class="g-name">Γ Gamma</div>
+          <div class="g-val" id="gGamma">—</div>
+          <div class="g-impact" id="gGammaImpact">Convexity: hisse hareket edince Delta’nın ne kadar hızlı değiştiği.</div>
+        </div>
+        <div class="greek-card">
+          <div class="g-name">Θ Theta</div>
+          <div class="g-val" id="gTheta">—</div>
+          <div class="g-impact" id="gThetaImpact">Zaman aşımı: başka bir şey değişmezse günlük beklenen K/Z değişimi.</div>
+        </div>
+        <div class="greek-card">
+          <div class="g-name">ν Vega</div>
+          <div class="g-val" id="gVega">—</div>
+          <div class="g-impact" id="gVegaImpact">Volatilite duyarlılığı: IV 1 puan artarsa K/Z değişimi.</div>
+        </div>
+      </div>
+      <div class="edu-tip" id="eduTip" style="margin-top:10px;">
+        Varsayılan: Long Call. Alanları değiştirin — grafik ve Grekler anında güncellenir. Covered Call için şablonu seçin veya Hisse (Adet 100) + Sat Call (Adet 1) ekleyin.
+      </div>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+  <div class="footer-note">Educational only — not financial advice. Options involve risk of loss.</div>
+  <div class="footer-links">
+    <a href="/">Home</a>
+    <a href="/level1/">Basics</a>
+    <a href="/level2/">Fundamentals</a>
+    <a href="/level3/">Spreads</a>
+    <a href="/level4/">Advanced</a>
+    <a href="/strategies/">Strategies</a>
+    <a href="/builder/">Builder</a>
+    <a href="/about/">About</a>
+    <a href="/contact/">Contact</a>
+    <a href="/disclaimer/">Disclaimer</a>
+    <a href="/privacy/">Privacy</a>
+  </div>
+    <div class="footer-tools" style="margin-top:12px;font-size:12px;opacity:.9">
+      More free tools:
+      <a href="https://lyricprep.com/" target="_blank" rel="noopener">LyricPrep</a> ·
+      <a href="https://jsm-image.com/" target="_blank" rel="noopener">JSM Image</a> ·
+      <a href="https://jsm-video.com/" target="_blank" rel="noopener">JSM Video</a> ·
+      <a href="https://jsm-loudness.com/" target="_blank" rel="noopener">JSM Loudness</a>
+    </div>
+</footer>
+
+  <script>
+    const MULTIPLIER = 100;
+    let legs = [];
+    let chart = null;
+    let animating = false;
+    let crosshairS = 100;
+    let crosshairPL = 0;
+    let maxDTE = 90;
+    let nextId = 1;
+
+    function normCDF(x) {
+      const a1 = 0.254829592, a2 = -0.284496736, a3 = 1.421413741;
+      const a4 = -1.453152027, a5 = 1.061405429, p = 0.3275911;
+      const sign = x < 0 ? -1 : 1;
+      x = Math.abs(x) / Math.sqrt(2);
+      const t = 1 / (1 + p * x);
+      const y = 1 - (((((a5 * t + a4) * t) + a3) * t + a2) * t + a1) * t * Math.exp(-x * x);
+      return 0.5 * (1 + sign * y);
+    }
+
+    function blackScholes(S, K, T, r, q, sigma, type) {
+      if (type === 'stock') return S;
+      if (T <= 0.0001) {
+        return type === 'call' ? Math.max(S - K, 0) : Math.max(K - S, 0);
+      }
+      const sqrtT = Math.sqrt(T);
+      const d1 = (Math.log(S / K) + (r - q + 0.5 * sigma * sigma) * T) / (sigma * sqrtT);
+      const d2 = d1 - sigma * sqrtT;
+      if (type === 'call') {
+        return S * Math.exp(-q * T) * normCDF(d1) - K * Math.exp(-r * T) * normCDF(d2);
+      }
+      return K * Math.exp(-r * T) * normCDF(-d2) - S * Math.exp(-q * T) * normCDF(-d1);
+    }
+
+    // Finite-difference Greeks (position-level, already × MULTIPLIER via signedQty)
+    function positionGreeks() {
+      const p = getParams();
+      const S = p.S;
+      const daysLeft = p.daysLeft;
+      const iv = p.iv;
+      const r = p.r;
+      const q = p.q;
+      const dS = Math.max(0.5, S * 0.005);
+      const dVol = 0.01; // 1 vol point
+      const dT = 1 / 365; // 1 day
+
+      function val(Ss, days, vol) {
+        let total = 0;
+        const optionDtes = [];
+        for (let i = 0; i < legs.length; i++) {
+          if (legs[i].type !== 'stock') optionDtes.push(legs[i].dte);
+        }
+        const minDte = optionDtes.length ? Math.min.apply(null, optionDtes) : 0;
+        const elapsed = Math.max(0, minDte - days);
+        for (let i = 0; i < legs.length; i++) {
+          const leg = legs[i];
+          let vps;
+          if (leg.type === 'stock') {
+            vps = Ss;
+          } else {
+            const residualDays = Math.max(0, leg.dte - elapsed);
+            vps = blackScholes(Ss, leg.strike, residualDays / 365, r, q, vol, leg.type);
+          }
+          total += signedQty(leg) * vps * legShareMult(leg);
+        }
+        return total;
+      }
+
+      const v0 = val(S, daysLeft, iv);
+      const vUp = val(S + dS, daysLeft, iv);
+      const vDn = val(S - dS, daysLeft, iv);
+      const vVol = val(S, daysLeft, iv + dVol);
+      const vTime = daysLeft > 0 ? val(S, Math.max(0, daysLeft - 1), iv) : v0;
+
+      const delta = (vUp - vDn) / (2 * dS);
+      const gamma = (vUp - 2 * v0 + vDn) / (dS * dS);
+      const theta = vTime - v0; // P/L change for 1 day passing
+      const vega = vVol - v0;   // P/L change for +1% IV
+
+      return { delta: delta, gamma: gamma, theta: theta, vega: vega };
+    }
+
+    function defaultLongCall() {
+      const S = parseFloat(document.getElementById('spot').value) || 100;
+      return [{
+        id: nextId++,
+        side: 'buy',
+        type: 'call',
+        strike: Math.round(S),
+        dte: 90,
+        qty: 1,
+        premium: 5.00
+      }];
+    }
+
+    function applyTemplate() {
+      const key = document.getElementById('strategyTemplate').value;
+      if (!key) return;
+      const S = parseFloat(document.getElementById('spot').value) || 100;
+      const K = Math.round(S);
+      const iv = parseFloat(document.getElementById('iv').value) || 25;
+      const p = Math.max(0.5, +(S * 0.04 * (iv / 25)).toFixed(2));
+
+      const templates = {
+        long_call: [
+          { side: 'buy', type: 'call', strike: K, dte: 90, qty: 1, premium: p }
+        ],
+        covered_call: [
+          { side: 'buy', type: 'stock', strike: 0, dte: 0, qty: 100, premium: +S.toFixed(2) },
+          { side: 'sell', type: 'call', strike: K + 10, dte: 45, qty: 1, premium: +(p * 0.55).toFixed(2) }
+        ],
+        cash_secured_put: [
+          { side: 'sell', type: 'put', strike: K, dte: 90, qty: 1, premium: +(p * 0.9).toFixed(2) }
+        ],
+        bull_call_spread: [
+          { side: 'buy', type: 'call', strike: K, dte: 90, qty: 1, premium: +(p * 1.2).toFixed(2) },
+          { side: 'sell', type: 'call', strike: K + 10, dte: 90, qty: 1, premium: +(p * 0.6).toFixed(2) }
+        ],
+        long_straddle: [
+          { side: 'buy', type: 'call', strike: K, dte: 90, qty: 1, premium: p },
+          { side: 'buy', type: 'put', strike: K, dte: 90, qty: 1, premium: p }
+        ],
+        long_strangle: [
+          { side: 'buy', type: 'call', strike: K + 10, dte: 90, qty: 1, premium: +(p * 0.6).toFixed(2) },
+          { side: 'buy', type: 'put', strike: K - 10, dte: 90, qty: 1, premium: +(p * 0.6).toFixed(2) }
+        ],
+        long_call_butterfly: [
+          { side: 'buy', type: 'call', strike: K - 10, dte: 90, qty: 1, premium: +(p * 1.4).toFixed(2) },
+          { side: 'sell', type: 'call', strike: K, dte: 90, qty: 2, premium: p },
+          { side: 'buy', type: 'call', strike: K + 10, dte: 90, qty: 1, premium: +(p * 0.5).toFixed(2) }
+        ],
+        call_condor: [
+          { side: 'buy', type: 'call', strike: K - 15, dte: 90, qty: 1, premium: +(p * 1.5).toFixed(2) },
+          { side: 'sell', type: 'call', strike: K - 5, dte: 90, qty: 1, premium: +(p * 1.1).toFixed(2) },
+          { side: 'sell', type: 'call', strike: K + 5, dte: 90, qty: 1, premium: +(p * 0.7).toFixed(2) },
+          { side: 'buy', type: 'call', strike: K + 15, dte: 90, qty: 1, premium: +(p * 0.35).toFixed(2) }
+        ],
+        long_put: [
+          { side: 'buy', type: 'put', strike: K, dte: 90, qty: 1, premium: p }
+        ],
+        bear_put_spread: [
+          { side: 'buy', type: 'put', strike: K, dte: 90, qty: 1, premium: +(p * 1.2).toFixed(2) },
+          { side: 'sell', type: 'put', strike: K - 10, dte: 90, qty: 1, premium: +(p * 0.6).toFixed(2) }
+        ],
+        long_straddle_bear: [
+          { side: 'buy', type: 'call', strike: K, dte: 90, qty: 1, premium: p },
+          { side: 'buy', type: 'put', strike: K, dte: 90, qty: 1, premium: p }
+        ],
+        long_strangle_bear: [
+          { side: 'buy', type: 'call', strike: K + 10, dte: 90, qty: 1, premium: +(p * 0.6).toFixed(2) },
+          { side: 'buy', type: 'put', strike: K - 10, dte: 90, qty: 1, premium: +(p * 0.6).toFixed(2) }
+        ],
+        long_put_butterfly: [
+          { side: 'buy', type: 'put', strike: K - 10, dte: 90, qty: 1, premium: +(p * 0.5).toFixed(2) },
+          { side: 'sell', type: 'put', strike: K, dte: 90, qty: 2, premium: p },
+          { side: 'buy', type: 'put', strike: K + 10, dte: 90, qty: 1, premium: +(p * 1.4).toFixed(2) }
+        ],
+        put_condor: [
+          { side: 'buy', type: 'put', strike: K + 15, dte: 90, qty: 1, premium: +(p * 1.5).toFixed(2) },
+          { side: 'sell', type: 'put', strike: K + 5, dte: 90, qty: 1, premium: +(p * 1.1).toFixed(2) },
+          { side: 'sell', type: 'put', strike: K - 5, dte: 90, qty: 1, premium: +(p * 0.7).toFixed(2) },
+          { side: 'buy', type: 'put', strike: K - 15, dte: 90, qty: 1, premium: +(p * 0.35).toFixed(2) }
+        ],
+        short_straddle: [
+          { side: 'sell', type: 'call', strike: K, dte: 45, qty: 1, premium: p },
+          { side: 'sell', type: 'put', strike: K, dte: 45, qty: 1, premium: p }
+        ],
+        short_strangle: [
+          { side: 'sell', type: 'call', strike: K + 10, dte: 45, qty: 1, premium: +(p * 0.55).toFixed(2) },
+          { side: 'sell', type: 'put', strike: K - 10, dte: 45, qty: 1, premium: +(p * 0.55).toFixed(2) }
+        ],
+        iron_condor: [
+          { side: 'sell', type: 'put', strike: K - 10, dte: 45, qty: 1, premium: +(p * 0.7).toFixed(2) },
+          { side: 'buy', type: 'put', strike: K - 20, dte: 45, qty: 1, premium: +(p * 0.3).toFixed(2) },
+          { side: 'sell', type: 'call', strike: K + 10, dte: 45, qty: 1, premium: +(p * 0.7).toFixed(2) },
+          { side: 'buy', type: 'call', strike: K + 20, dte: 45, qty: 1, premium: +(p * 0.3).toFixed(2) }
+        ],
+        iron_butterfly: [
+          { side: 'sell', type: 'put', strike: K, dte: 45, qty: 1, premium: p },
+          { side: 'buy', type: 'put', strike: K - 10, dte: 45, qty: 1, premium: +(p * 0.4).toFixed(2) },
+          { side: 'sell', type: 'call', strike: K, dte: 45, qty: 1, premium: p },
+          { side: 'buy', type: 'call', strike: K + 10, dte: 45, qty: 1, premium: +(p * 0.4).toFixed(2) }
+        ],
+        calendar_call: [
+          { side: 'sell', type: 'call', strike: K, dte: 30, qty: 1, premium: +(p * 0.55).toFixed(2) },
+          { side: 'buy', type: 'call', strike: K, dte: 90, qty: 1, premium: p }
+        ]
+      };
+
+      const t = templates[key];
+      if (!t) return;
+      legs = t.map(leg => ({ ...leg, id: nextId++ }));
+      if (chart) { try { chart.destroy(); } catch (e) {} chart = null; }
+      syncDTESlider();
+      updateSpotSliderRange();
+      renderLegs();
+      recalc();
+      document.getElementById('strategyTemplate').value = key;
+      setTemplateTip(key);
+    }
+
+    // Lesson bridges for deep-linked templates
+    const TEMPLATE_LESSONS = {
+      long_call: { title: 'Long Call', href: '/tr/level2/', label: 'Fundamentals' },
+      long_put: { title: 'Long Put', href: '/tr/level2/', label: 'Fundamentals' },
+      covered_call: { title: 'Covered Call', href: '/tr/covered-call/', label: 'Covered Call guide' },
+      cash_secured_put: { title: 'Cash-Secured Put', href: '/tr/cash-secured-put/', label: 'CSP guide' },
+      bull_call_spread: { title: 'Bull Call Spread', href: '/tr/level3/', label: 'Spreads' },
+      bear_put_spread: { title: 'Bear Put Spread', href: '/tr/level3/', label: 'Spreads' },
+      iron_condor: { title: 'Iron Condor', href: '/tr/iron-condor/', label: 'Iron Condor guide' },
+      iron_butterfly: { title: 'Iron Butterfly', href: '/tr/strategies/', label: 'Strategies' },
+      long_straddle: { title: 'Long Straddle', href: '/tr/strategies/', label: 'Strategies' },
+      short_straddle: { title: 'Short Straddle', href: '/tr/strategies/', label: 'Strategies' },
+      long_strangle: { title: 'Long Strangle', href: '/tr/strategies/', label: 'Strategies' },
+      short_strangle: { title: 'Short Strangle', href: '/tr/strategies/', label: 'Strategies' },
+      calendar_call: { title: 'Calendar Spread (Call)', href: '/tr/level4/', label: 'Advanced' },
+      long_call_butterfly: { title: 'Call Butterfly', href: '/tr/strategies/', label: 'Strategies' },
+      call_condor: { title: 'Call Condor', href: '/tr/strategies/', label: 'Strategies' },
+      long_put_butterfly: { title: 'Put Butterfly', href: '/tr/strategies/', label: 'Strategies' },
+      put_condor: { title: 'Put Condor', href: '/tr/strategies/', label: 'Strategies' }
+    };
+
+    function setTemplateTip(key) {
+      const tip = document.getElementById('eduTip');
+      if (!tip) return;
+      const meta = TEMPLATE_LESSONS[key];
+      if (meta) {
+        tip.innerHTML = 'You\'re looking at a <strong>' + meta.title + '</strong> — ders: <a href="' + meta.href + '">' + meta.label + ' lesson</a>, veya bacakları düzenleyin.';
+      } else {
+        tip.innerHTML = 'Template loaded. Alanları değiştirin — grafik ve Grekler anında güncellenir.';
+      }
+    }
+
+    function signedQty(leg) {
+      return leg.side === 'buy' ? leg.qty : -leg.qty;
+    }
+
+    // Options: Qty = contracts → ×100 shares. Stock: Qty = actual number of shares (no extra ×100).
+    function legShareMult(leg) {
+      return leg.type === 'stock' ? 1 : MULTIPLIER;
+    }
+
+    function legCash(leg) {
+      return signedQty(leg) * leg.premium * legShareMult(leg);
+    }
+
+    function addEmptyLeg() {
+      const S = parseFloat(document.getElementById('spot').value) || 100;
+      legs.push({
+        id: nextId++,
+        side: 'buy',
+        type: 'call',
+        strike: Math.round(S),
+        dte: 90,
+        qty: 1,
+        premium: 3.00
+      });
+      syncDTESlider();
+      renderLegs();
+      recalc();
+    }
+
+    function removeLeg(id) {
+      legs = legs.filter(l => l.id !== id);
+      if (legs.length === 0) legs = defaultLongCall();
+      syncDTESlider();
+      renderLegs();
+      recalc();
+    }
+
+    function clearLegs() {
+      legs = defaultLongCall();
+      syncDTESlider();
+      renderLegs();
+      recalc();
+    }
+
+    // liveTyping = true → update model + graph only (keep focus in the input)
+    // liveTyping = false → also re-render leg rows (cash labels, disabled fields, etc.)
+    function updateLegField(id, field, value, liveTyping) {
+      const leg = legs.find(l => l.id === id);
+      if (!leg) return;
+      if (field === 'side' || field === 'type') {
+        leg[field] = value;
+        // When switching to Stock: use current spot as cost basis; Qty = shares (default 100)
+        if (field === 'type' && value === 'stock') {
+          const S = parseFloat(document.getElementById('spot').value) || 100;
+          if (!leg.premium || leg.premium < 1) leg.premium = +S.toFixed(2);
+          leg.strike = 0;
+          leg.dte = 0;
+          if (!leg.qty || leg.qty < 10) leg.qty = 100; // typical 1 lot for covered strategies
+        }
+        // When switching from Stock to option: give sensible defaults (Qty becomes contracts)
+        if (field === 'type' && value !== 'stock') {
+          const S = parseFloat(document.getElementById('spot').value) || 100;
+          if (!leg.strike || leg.strike < 1) leg.strike = Math.round(S);
+          if (!leg.dte || leg.dte < 1) leg.dte = 45;
+          if (!leg.premium || leg.premium > S * 0.5) leg.premium = +(S * 0.03).toFixed(2);
+          if (leg.qty >= 100) leg.qty = 1; // was share count → 1 contract
+        }
+      } else if (field === 'strike' || field === 'premium') {
+        leg[field] = parseFloat(value) || 0;
+      } else if (field === 'dte' || field === 'qty') {
+        leg[field] = Math.max(1, parseInt(value, 10) || 1);
+      }
+      if (field === 'dte' || field === 'type') syncDTESlider();
+      if (field === 'strike' || field === 'type') updateSpotSliderRange();
+      // Re-render only when structure changes or on blur — never on every keystroke
+      if (!liveTyping) {
+        renderLegs();
+      } else {
+        // Still refresh the cash label under this leg without touching the inputs
+        updateLegCashLabel(id);
+      }
+      recalc();
+    }
+
+    function updateLegCashLabel(id) {
+      const leg = legs.find(l => l.id === id);
+      if (!leg) return;
+      const rows = document.querySelectorAll('#legsList .leg-row');
+      const cashLines = document.querySelectorAll('#legsList .cash-line');
+      // legs and cash-lines are interleaved 1:1 in the same order as the legs array
+      const idx = legs.findIndex(l => l.id === id);
+      if (idx < 0 || !cashLines[idx]) return;
+      const isStock = leg.type === 'stock';
+      const cash = legCash(leg);
+      const cashCls = cash >= 0 ? 'cash-debit' : 'cash-credit';
+      const cashTxt = (cash >= 0 ? '+' : '') + cash.toFixed(0);
+      const cashLabel = isStock
+        ? (leg.side === 'buy' ? 'Stock cost ' : 'Stock credit ') + cashTxt + ' (' + leg.qty + ' shares)'
+        : (cash >= 0 ? 'Debit' : 'Credit') + ' ' + cashTxt + ' (×100)';
+      cashLines[idx].className = 'cash-line ' + cashCls;
+      cashLines[idx].textContent = cashLabel;
+    }
+
+    function syncDTESlider() {
+      const optionDTEs = legs.filter(l => l.type !== 'stock').map(l => l.dte || 0);
+      maxDTE = optionDTEs.length ? Math.max(...optionDTEs) : 90;
+      if (maxDTE < 1) maxDTE = 90;
+      const slider = document.getElementById('daysLeft');
+      slider.max = maxDTE;
+      if (parseInt(slider.value, 10) > maxDTE) slider.value = maxDTE;
+      document.getElementById('daysLeftLabel').textContent = slider.value;
+    }
+
+    function renderLegs() {
+      const container = document.getElementById('legsList');
+      if (!legs.length) {
+        container.innerHTML = '<p style="color:var(--muted);font-size:0.82rem;">No legs.</p>';
+        return;
+      }
+      container.innerHTML = legs.map(function(l) {
+        const isStock = l.type === 'stock';
+        const cash = legCash(l);
+        const cashCls = cash >= 0 ? 'cash-debit' : 'cash-credit';
+        const cashTxt = (cash >= 0 ? '+' : '') + cash.toFixed(0);
+        const rowCls = l.side === 'buy' ? 'long' : 'short';
+        const sideBuy = l.side === 'buy' ? ' selected' : '';
+        const sideSell = l.side === 'sell' ? ' selected' : '';
+        const typeCall = l.type === 'call' ? ' selected' : '';
+        const typePut = l.type === 'put' ? ' selected' : '';
+        const typeStock = isStock ? ' selected' : '';
+        const debitCredit = cash >= 0 ? 'Debit' : 'Credit';
+        const cashLabel = isStock
+          ? (l.side === 'buy' ? 'Stock cost ' : 'Stock credit ') + cashTxt + ' (' + l.qty + ' shares)'
+          : debitCredit + ' ' + cashTxt + ' (×100)';
+
+        // Strike & DTE disabled for stock; premium becomes Cost/Share
+        // oninput → liveTyping=true (update graph, keep focus)
+        // onchange → liveTyping=false (re-render cash labels / structure)
+        const strikeInput = isStock
+          ? '<input type="text" value="—" disabled title="Not used for stock" style="opacity:0.45;cursor:not-allowed;" />'
+          : '<input type="number" value="' + l.strike + '" step="0.5" min="0.5" ' +
+              'onchange="updateLegField(' + l.id + ',\'strike\',this.value,false)" ' +
+              'oninput="updateLegField(' + l.id + ',\'strike\',this.value,true)" />';
+        const dteInput = isStock
+          ? '<input type="text" value="—" disabled title="Not used for stock" style="opacity:0.45;cursor:not-allowed;" />'
+          : '<input type="number" value="' + l.dte + '" min="1" max="730" ' +
+              'onchange="updateLegField(' + l.id + ',\'dte\',this.value,false)" ' +
+              'oninput="updateLegField(' + l.id + ',\'dte\',this.value,true)" />';
+        const premiumTitle = isStock ? 'Cost per share (entry price)' : 'Option premium per share';
+        const premiumInput =
+          '<input type="number" value="' + l.premium + '" step="0.05" min="0" title="' + premiumTitle + '" ' +
+            'onchange="updateLegField(' + l.id + ',\'premium\',this.value,false)" ' +
+            'oninput="updateLegField(' + l.id + ',\'premium\',this.value,true)" />';
+        const qtyInput =
+          '<input type="number" value="' + l.qty + '" min="1" step="1" ' +
+            'onchange="updateLegField(' + l.id + ',\'qty\',this.value,false)" ' +
+            'oninput="updateLegField(' + l.id + ',\'qty\',this.value,true)" />';
+
+        return (
+          '<div class="leg-row ' + rowCls + '">' +
+            '<select onchange="updateLegField(' + l.id + ',\'side\',this.value,false)">' +
+              '<option value="buy"' + sideBuy + '>Buy</option>' +
+              '<option value="sell"' + sideSell + '>Sell</option>' +
+            '</select>' +
+            '<select onchange="updateLegField(' + l.id + ',\'type\',this.value,false)">' +
+              '<option value="call"' + typeCall + '>Call</option>' +
+              '<option value="put"' + typePut + '>Put</option>' +
+              '<option value="stock"' + typeStock + '>Stock</option>' +
+            '</select>' +
+            strikeInput +
+            dteInput +
+            qtyInput +
+            premiumInput +
+            '<div class="remove-cell">' +
+              '<button class="btn-danger" onclick="removeLeg(' + l.id + ')" title="Remove">✕</button>' +
+            '</div>' +
+          '</div>' +
+          '<div class="cash-line ' + cashCls + '">' + cashLabel + '</div>'
+        );
+      }).join('');
+    }
+
+    function updateSpotSliderRange() {
+      if (!legs.length) return;
+      const strikes = legs.filter(l => l.type !== 'stock').map(l => l.strike);
+      const S = parseFloat(document.getElementById('spot').value) || 100;
+      const all = strikes.length ? strikes : [S];
+      const lo = Math.min(S, ...all) * 0.55;
+      const hi = Math.max(S, ...all) * 1.55;
+      const slider = document.getElementById('spotSlider');
+      slider.min = Math.max(1, Math.floor(lo));
+      slider.max = Math.ceil(hi);
+    }
+
+    function getParams() {
+      return {
+        S: parseFloat(document.getElementById('spot').value) || 100,
+        daysLeft: parseInt(document.getElementById('daysLeft').value, 10),
+        iv: (parseFloat(document.getElementById('iv').value) || 25) / 100,
+        r: (parseFloat(document.getElementById('rate').value) || 5) / 100,
+        q: (parseFloat(document.getElementById('divYield').value) || 0) / 100
+      };
+    }
+
+    function positionValueAt(S, daysLeft, useExpiryOnly) {
+      let total = 0;
+      const params = getParams();
+      // Multi-expiry (calendar / diagonal): residual time is relative to the nearest option.
+      // "At expiry" = nearest-dated options expire (T=0); longer-dated keep (leg.dte - minDte) days.
+      const optionDtes = [];
+      for (let i = 0; i < legs.length; i++) {
+        if (legs[i].type !== 'stock') optionDtes.push(legs[i].dte);
+      }
+      const minDte = optionDtes.length ? Math.min.apply(null, optionDtes) : 0;
+
+      for (const leg of legs) {
+        let valPerShare;
+        if (leg.type === 'stock') {
+          valPerShare = S;
+        } else {
+          let residualDays;
+          if (useExpiryOnly) {
+            residualDays = Math.max(0, leg.dte - minDte);
+          } else {
+            // daysLeft slider ≈ days remaining until nearest expiry
+            const elapsed = Math.max(0, minDte - daysLeft);
+            residualDays = Math.max(0, leg.dte - elapsed);
+          }
+          valPerShare = blackScholes(S, leg.strike, residualDays / 365, params.r, params.q, params.iv, leg.type);
+        }
+        total += signedQty(leg) * valPerShare * legShareMult(leg);
+      }
+      return total;
+    }
+
+    function initialCost() {
+      return legs.reduce(function(sum, l) { return sum + legCash(l); }, 0);
+    }
+
+    function plAt(S, daysLeft) {
+      return positionValueAt(S, daysLeft, false) - initialCost();
+    }
+
+    function expiryPayoff(S) {
+      return positionValueAt(S, 0, true) - initialCost();
+    }
+
+    function segmentColor(ctx, pos, neg) {
+      const y0 = ctx.p0.parsed.y;
+      const y1 = ctx.p1.parsed.y;
+      if (y0 >= 0 && y1 >= 0) return pos;
+      if (y0 < 0 && y1 < 0) return neg;
+      return (y0 + y1) >= 0 ? pos : neg;
+    }
+
+    function buildChartData() {
+      if (!legs.length) return { labels: [], expiry: [], theoretical: [] };
+      const params = getParams();
+      const S = params.S;
+      const daysLeft = params.daysLeft;
+      const strikes = legs.filter(function(l) { return l.type !== 'stock'; }).map(function(l) { return l.strike; });
+      const base = strikes.length ? strikes : [S];
+      const lo = Math.min(S * 0.65, Math.min.apply(null, base) * 0.65);
+      const hi = Math.max(S * 1.45, Math.max.apply(null, base) * 1.45);
+      const priceSet = {};
+      const steps = 160;
+      for (let i = 0; i <= steps; i++) {
+        const price = lo + (hi - lo) * (i / steps);
+        priceSet[price.toFixed(6)] = price;
+      }
+      for (let s = 0; s < base.length; s++) {
+        const k = base[s];
+        priceSet[k.toFixed(6)] = k;
+        priceSet[(k - 0.01).toFixed(6)] = Math.max(0.01, k - 0.01);
+        priceSet[(k + 0.01).toFixed(6)] = k + 0.01;
+      }
+      const labels = Object.keys(priceSet).map(Number).sort(function(a, b) { return a - b; });
+      const expiry = [];
+      const theoretical = [];
+      for (let i = 0; i < labels.length; i++) {
+        expiry.push(expiryPayoff(labels[i]));
+        theoretical.push(plAt(labels[i], daysLeft));
+      }
+      return { labels: labels, expiry: expiry, theoretical: theoretical };
+    }
+
+
+    const crosshairPlugin = {
+      id: 'crosshairLines',
+      afterDraw: function(chart) {
+        const cx = chart.scales.x;
+        const cy = chart.scales.y;
+        if (!cx || !cy) return;
+        const ctx = chart.ctx;
+        const x = cx.getPixelForValue(crosshairS);
+        const y = cy.getPixelForValue(crosshairPL);
+        const top = chart.chartArea.top;
+        const bottom = chart.chartArea.bottom;
+        const left = chart.chartArea.left;
+        const right = chart.chartArea.right;
+        if (x < left || x > right) return;
+        ctx.save();
+        ctx.lineWidth = 1;
+        ctx.setLineDash([4, 3]);
+        // vertical at underlying price
+        ctx.strokeStyle = 'rgba(148, 163, 184, 0.85)';
+        ctx.beginPath();
+        ctx.moveTo(x, top);
+        ctx.lineTo(x, bottom);
+        ctx.stroke();
+        // horizontal at current P/L
+        if (y >= top && y <= bottom) {
+          ctx.strokeStyle = 'rgba(250, 204, 21, 0.9)';
+          ctx.beginPath();
+          ctx.moveTo(left, y);
+          ctx.lineTo(right, y);
+          ctx.stroke();
+        }
+        ctx.setLineDash([]);
+        // small labels
+        ctx.font = '11px Segoe UI, system-ui, sans-serif';
+        ctx.fillStyle = 'rgba(148, 163, 184, 0.95)';
+        const priceLbl = '$' + crosshairS.toFixed(1);
+        ctx.fillText(priceLbl, Math.min(x + 4, right - 48), top + 12);
+        ctx.fillStyle = 'rgba(250, 204, 21, 0.95)';
+        const plLbl = (crosshairPL >= 0 ? '+' : '') + '$' + crosshairPL.toFixed(0);
+        ctx.fillText(plLbl, left + 4, Math.max(y - 4, top + 12));
+        ctx.restore();
+      }
+    };
+
+    function updateChart() {
+      const data = buildChartData();
+      const ctx = document.getElementById('payoffChart').getContext('2d');
+      const gS = 'rgba(34,197,94,0.95)', rS = 'rgba(239,68,68,0.95)';
+      const gD = 'rgba(34,197,94,0.65)', rD = 'rgba(239,68,68,0.65)';
+
+      if (chart) {
+        chart.data.labels = data.labels;
+        chart.data.datasets[0].data = data.expiry;
+        chart.data.datasets[1].data = data.theoretical;
+        chart.update('none');
+        return;
+      }
+
+      chart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: data.labels,
+          datasets: [
+            {
+              label: 'Payoff at Expiry',
+              data: data.expiry,
+              borderColor: gS,
+              borderWidth: 2.5,
+              pointRadius: 0,
+              tension: 0,
+              fill: false,
+              segment: { borderColor: function(ctx) { return segmentColor(ctx, gS, rS); } }
+            },
+            {
+              label: 'Theoretical (time left)',
+              data: data.theoretical,
+              borderColor: gD,
+              borderWidth: 2,
+              borderDash: [6, 4],
+              pointRadius: 0,
+              tension: 0,
+              fill: false,
+              segment: { borderColor: function(ctx) { return segmentColor(ctx, gD, rD); } }
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          interaction: { mode: 'index', intersect: false },
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              callbacks: {
+                title: function(items) { return 'Stock: $' + Number(items[0].label).toFixed(2); },
+                label: function(ctx) { return ctx.dataset.label + ': $' + ctx.parsed.y.toFixed(0); }
+              }
+            }
+          },
+          scales: {
+            x: {
+              type: 'linear',
+              title: { display: true, text: 'Dayanak ($)', color: '#94a3b8' },
+              ticks: { color: '#94a3b8', callback: function(v) { return '$' + v.toFixed(0); } },
+              grid: { color: 'rgba(45,58,79,0.55)' }
+            },
+            y: {
+              title: { display: true, text: 'P/L ($)', color: '#94a3b8' },
+              ticks: { color: '#94a3b8', callback: function(v) { return '$' + v.toFixed(0); } },
+              grid: { color: 'rgba(45,58,79,0.55)' }
+            }
+          }
+        },
+        plugins: [crosshairPlugin]
+      });
+    }
+
+    function formatMoney(val) {
+      const abs = Math.abs(val);
+      return (val < 0 ? '-' : '') + '$' + (abs >= 100 ? abs.toFixed(0) : abs.toFixed(2));
+    }
+
+    function liveUpdate() {
+      updateSpotSliderRange();
+      recalc();
+    }
+
+    function recalc() {
+      try { if (typeof updateShareUrlQuiet === "function") { /* share updated on button only */ } } catch (e) {}
+
+      if (!legs.length) return;
+      const params = getParams();
+      const S = params.S;
+      const daysLeft = params.daysLeft;
+      const pl = plAt(S, daysLeft);
+      const plEl = document.getElementById('plValue');
+      plEl.textContent = (pl >= 0 ? '+' : '') + formatMoney(pl);
+      plEl.className = 'pl-value ' + (pl >= 0 ? 'pl-positive' : 'pl-negative');
+
+      const net = initialCost();
+      const netEl = document.getElementById('netPremium');
+      if (net > 0) {
+        netEl.textContent = 'Debit ' + formatMoney(net);
+        netEl.style.color = 'var(--red)';
+      } else if (net < 0) {
+        netEl.textContent = 'Credit ' + formatMoney(Math.abs(net));
+        netEl.style.color = 'var(--green)';
+      } else {
+        netEl.textContent = '$0';
+        netEl.style.color = 'var(--text)';
+      }
+
+      const data = buildChartData();
+      const maxP = Math.max.apply(null, data.expiry);
+      const minP = Math.min.apply(null, data.expiry);
+      let maxProfitText = formatMoney(maxP);
+      let maxLossText = formatMoney(minP);
+      if (data.expiry.length > 2) {
+        const lastSlope = data.expiry[data.expiry.length - 1] - data.expiry[data.expiry.length - 2];
+        if (lastSlope > 15 && maxP > 2000) maxProfitText = 'Unlimited';
+        const firstSlope = data.expiry[1] - data.expiry[0];
+        if (firstSlope < -15 && minP < -2000) maxLossText = 'Unlimited';
+      }
+      document.getElementById('maxProfit').textContent = maxProfitText;
+      document.getElementById('maxLoss').textContent = maxLossText;
+
+      const bes = [];
+      for (let i = 1; i < data.expiry.length; i++) {
+        if (data.expiry[i - 1] * data.expiry[i] <= 0) {
+          const x0 = data.labels[i - 1], x1 = data.labels[i];
+          const y0 = data.expiry[i - 1], y1 = data.expiry[i];
+          if (Math.abs(y1 - y0) > 1e-9) {
+            bes.push((x0 - y0 * (x1 - x0) / (y1 - y0)).toFixed(1));
+          }
+        }
+      }
+      document.getElementById('breakevens').textContent = bes.length ? bes.map(function(b) { return '$' + b; }).join(' / ') : '—';
+      document.getElementById('spotLabel').textContent = '$' + S.toFixed(2);
+      document.getElementById('daysLeftLabel').textContent = daysLeft;
+
+      crosshairS = S;
+      crosshairPL = pl;
+      updateChart();
+      updateGreeksUI();
+      updateEduTip();
+    }
+
+
+    function updateGreeksUI() {
+      if (!legs.length) {
+        document.getElementById('gDelta').textContent = '—';
+        document.getElementById('gGamma').textContent = '—';
+        document.getElementById('gTheta').textContent = '—';
+        document.getElementById('gVega').textContent = '—';
+        return;
+      }
+      const g = positionGreeks();
+      const fmt = function(x, d) {
+        const n = (d === undefined) ? 2 : d;
+        const s = x >= 0 ? '+' : '';
+        return s + x.toFixed(n);
+      };
+      document.getElementById('gDelta').textContent = fmt(g.delta, 1);
+      document.getElementById('gGamma').textContent = fmt(g.gamma, 2);
+      document.getElementById('gTheta').textContent = fmt(g.theta, 1);
+      document.getElementById('gVega').textContent = fmt(g.vega, 1);
+
+      // Impact blurbs (plain English)
+      const d = g.delta;
+      const th = g.theta;
+      const vg = g.vega;
+      document.getElementById('gDeltaImpact').textContent =
+        d > 5 ? 'Bullish bias: position gains if stock rises ~$' + Math.abs(d).toFixed(0) + ' per $1 up.'
+        : d < -5 ? 'Bearish bias: position gains if stock falls ~$' + Math.abs(d).toFixed(0) + ' per $1 down.'
+        : 'Near delta-neutral: small stock moves have limited directional impact.';
+      document.getElementById('gGammaImpact').textContent =
+        Math.abs(g.gamma) > 1
+          ? 'High gamma: Delta will shift quickly as the stock moves — P/L can accelerate.'
+          : 'Low gamma: Delta is relatively stable for small price moves.';
+      document.getElementById('gThetaImpact').textContent =
+        th < -5 ? 'Time works against you: about $' + Math.abs(th).toFixed(0) + ' expected decay per day.'
+        : th > 5 ? 'Time works for you: about $' + Math.abs(th).toFixed(0) + ' expected gain per day from decay.'
+        : 'Little daily time decay at current settings.';
+      document.getElementById('gVegaImpact').textContent =
+        vg > 5 ? 'Long volatility: +1% IV adds ~$' + Math.abs(vg).toFixed(0) + ' to position value.'
+        : vg < -5 ? 'Short volatility: +1% IV costs ~$' + Math.abs(vg).toFixed(0) + '; you benefit if IV falls.'
+        : 'Low vega: IV changes have limited effect right now.';
+    }
+
+    function onDaysChange() {
+      document.getElementById('daysLeftLabel').textContent = document.getElementById('daysLeft').value;
+      recalc();
+    }
+
+    function onSpotSlide() {
+      const v = parseFloat(document.getElementById('spotSlider').value);
+      document.getElementById('spot').value = v.toFixed(1);
+      document.getElementById('spotLabel').textContent = '$' + v.toFixed(2);
+      recalc();
+    }
+
+    function resetTime() {
+      document.getElementById('daysLeft').value = maxDTE;
+      document.getElementById('daysLeftLabel').textContent = maxDTE;
+      recalc();
+    }
+
+    async function animateTheta() {
+      if (animating || !legs.length) return;
+      animating = true;
+      const slider = document.getElementById('daysLeft');
+      let current = parseInt(slider.value, 10);
+      while (current > 0 && animating) {
+        current -= 1;
+        slider.value = current;
+        document.getElementById('daysLeftLabel').textContent = current;
+        recalc();
+        await new Promise(function(r) { setTimeout(r, 220); });
+      }
+      animating = false;
+    }
+
+    function randomWalk() {
+      let S = parseFloat(document.getElementById('spot').value);
+      const iv = (parseFloat(document.getElementById('iv').value) || 25) / 100;
+      const shock = (Math.random() * 2 - 1) * (iv / Math.sqrt(365)) * S * 2.5;
+      S = Math.max(1, S + shock);
+      document.getElementById('spot').value = S.toFixed(1);
+      document.getElementById('spotSlider').value = S;
+      document.getElementById('spotLabel').textContent = '$' + S.toFixed(2);
+      recalc();
+    }
+
+    function updateEduTip() {
+      const tip = document.getElementById('eduTip');
+      if (!tip) return;
+      // Keep template lesson bridge if a known template is selected
+      const sel = document.getElementById('strategyTemplate');
+      const key = sel && sel.value;
+      if (key && TEMPLATE_LESSONS[key]) {
+        setTemplateTip(key);
+        return;
+      }
+      const hasLong = legs.some(function(l) { return l.side === 'buy'; });
+      const hasShort = legs.some(function(l) { return l.side === 'sell'; });
+      const hasStock = legs.some(function(l) { return l.type === 'stock'; });
+      if (hasStock && hasShort) {
+        tip.innerHTML = '<strong>Stock + options:</strong> Stock Qty = number of shares, Cost = entry price. Option Adet = kontrat (×100). For a Covered Call use 100 shares + 1 short call. <a href="/level2/">Fundamentals lesson</a>';
+      } else if (hasStock) {
+        tip.innerHTML = '<strong>Stock leg:</strong> Qty = number of shares, Cost = entry price. Strike and DTE are ignored. Add a short call (Qty 1) for a Covered Call.';
+      } else if (legs.length === 1 && hasLong) {
+        tip.innerHTML = '<strong>Long option:</strong> You pay a Debit. Solid = expiry payoff. Dotted includes time value. Drag Kalan gün to watch theta decay.';
+      } else if (legs.length === 1 && hasShort) {
+        tip.innerHTML = '<strong>Short option:</strong> You receive a Credit. Theta works in your favor if the stock stays near the strike.';
+      } else if (hasLong && hasShort) {
+        tip.innerHTML = '<strong>Multi-leg:</strong> Net prim (borç/alacak) shown above. Edit any leg field live — graph updates instantly. Use Strateji şablonu for common setups.';
+      } else {
+        tip.innerHTML = 'Edit legs or pick a Strateji şablonu. Graph is live.';
+      }
+    }
+
+
+    function legsToQuery() {
+      try {
+        var payload = legs.map(function (l) {
+          return {
+            side: l.side,
+            type: l.type,
+            strike: l.strike,
+            dte: l.dte,
+            qty: l.qty,
+            premium: l.premium
+          };
+        });
+        var S = document.getElementById('spot') ? document.getElementById('spot').value : '';
+        var obj = { legs: payload, S: S };
+        return btoa(unescape(encodeURIComponent(JSON.stringify(obj)))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+      } catch (e) { return ''; }
+    }
+
+    function legsFromQuery(token) {
+      try {
+        var pad = token.length % 4 === 0 ? '' : '===='.slice(token.length % 4);
+        var b64 = token.replace(/-/g, '+').replace(/_/g, '/') + pad;
+        var json = decodeURIComponent(escape(atob(b64)));
+        var obj = JSON.parse(json);
+        if (!obj || !obj.legs || !obj.legs.length) return false;
+        legs = obj.legs.map(function (l) {
+          return {
+            id: nextId++,
+            side: l.side === 'sell' ? 'sell' : 'buy',
+            type: (l.type === 'put' || l.type === 'stock') ? l.type : 'call',
+            strike: Number(l.strike) || 100,
+            dte: Number(l.dte) || 30,
+            qty: Number(l.qty) || 1,
+            premium: Number(l.premium) || 0
+          };
+        });
+        if (obj.S && document.getElementById('spot')) {
+          document.getElementById('spot').value = obj.S;
+          var sl = document.getElementById('spotSlider');
+          if (sl) sl.value = obj.S;
+        }
+        return true;
+      } catch (e) { return false; }
+    }
+
+    function updateShareUrlQuiet() {
+      try {
+        if (!legs.length) return;
+        var token = legsToQuery();
+        if (!token) return;
+        var url = new URL(window.location.href);
+        url.searchParams.delete('template');
+        url.searchParams.set('setup', token);
+        window.history.replaceState(null, '', url.pathname + '?' + url.searchParams.toString());
+      } catch (e) {}
+    }
+
+    var shareBtn = document.getElementById('shareSetup');
+    if (shareBtn) {
+      shareBtn.addEventListener('click', function () {
+        updateShareUrlQuiet();
+        var link = window.location.href;
+        var status = document.getElementById('shareStatus');
+        function ok() { if (status) status.textContent = 'Link copied — paste to share this setup.'; }
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(link).then(ok).catch(function () {
+            if (status) status.textContent = 'Copy from the address bar.';
+          });
+        } else if (status) status.textContent = 'Copy from the address bar.';
+      });
+    }
+
+
+    // Boot once: honor ?setup= or ?template= on every load/refresh
+    // Shared JSM theme preference
+    (function () {
+      const root = document.documentElement;
+      const toggle = document.getElementById('themeToggle');
+      const icon = document.getElementById('themeIcon');
+      const label = document.getElementById('themeLabel');
+      function applyTheme(theme) {
+        root.setAttribute('data-theme', theme);
+        if (icon) icon.textContent = theme === 'dark' ? '🌙' : '☀️';
+        if (label) label.textContent = theme === 'dark' ? 'Dark' : 'Light';
+        if (toggle) toggle.setAttribute('aria-label', 'Switch to ' + (theme === 'dark' ? 'light' : 'dark') + ' theme');
+        try { localStorage.setItem('jsm-theme', theme); } catch (e) {}
+      }
+      let saved = null;
+      try { saved = localStorage.getItem('jsm-theme'); } catch (e) {}
+      if (saved === 'light' || saved === 'dark') applyTheme(saved);
+      else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) applyTheme('light');
+      else applyTheme('dark');
+      if (toggle) toggle.addEventListener('click', function () {
+        applyTheme(root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+      });
+    })();
+
+    (function bootBuilder() {
+      var params = null;
+      try { params = new URLSearchParams(window.location.search); } catch (e) {}
+      var setupToken = params ? params.get('setup') : null;
+      var templateKey = params ? params.get('template') : null;
+      var spotEl = document.getElementById('spotSlider');
+      if (spotEl) spotEl.value = 100;
+
+      if (setupToken && legsFromQuery(setupToken)) {
+        syncDTESlider();
+        updateSpotSliderRange();
+        renderLegs();
+        recalc();
+        var tip = document.getElementById('templateTip');
+        if (tip) tip.innerHTML = 'Shared setup loaded from the URL. Edit freely — use <strong>Bağlantıyı kopyala</strong> again after changes.';
+        return;
+      }
+
+      if (templateKey) {
+        var sel = document.getElementById('strategyTemplate');
+        var found = false;
+        if (sel) {
+          for (var i = 0; i < sel.options.length; i++) {
+            if (sel.options[i].value === templateKey) {
+              sel.value = templateKey;
+              found = true;
+              break;
+            }
+          }
+        }
+        if (found && typeof applyTemplate === 'function') {
+          applyTemplate();
+          return;
+        }
+      }
+      legs = defaultLongCall();
+      syncDTESlider();
+      updateSpotSliderRange();
+      renderLegs();
+      recalc();
+    })();
+
+</script>
+  </div>
+<script>
+(function(){
+  function initNav(){
+    var btn = document.getElementById('navToggle');
+    var nav = document.querySelector('.site-header .nav');
+    if (!btn || !nav) return;
+    if (btn.getAttribute('data-nav-bound') === '1') return;
+    btn.setAttribute('data-nav-bound', '1');
+
+    btn.addEventListener('click', function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      var open = !nav.classList.contains('is-open');
+      nav.classList.toggle('is-open', open);
+      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      btn.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+    });
+
+    // Close after choosing a link
+    nav.addEventListener('click', function (e) {
+      if (e.target.closest('a')) {
+        nav.classList.remove('is-open');
+        btn.setAttribute('aria-expanded', 'false');
+        btn.setAttribute('aria-label', 'Open menu');
+      }
+    });
+
+    // Close on outside click (use capture delay so button click isn't treated as outside)
+    document.addEventListener('click', function (e) {
+      if (!nav.classList.contains('is-open')) return;
+      if (btn.contains(e.target) || nav.contains(e.target)) return;
+      nav.classList.remove('is-open');
+      btn.setAttribute('aria-expanded', 'false');
+      btn.setAttribute('aria-label', 'Open menu');
+    });
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initNav);
+  } else {
+    initNav();
+  }
+})();
+</script>
+
+
+
+
+</body>
+</html>

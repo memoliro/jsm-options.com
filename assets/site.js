@@ -25,6 +25,46 @@
     { href: '/privacy/', label: 'Privacy' }
   ];
 
+  var NAV_TR = {
+    '/': 'Ana Sayfa',
+    '/level1/': 'Temel',
+    '/level2/': 'Kavramlar',
+    '/level3/': 'Spreadler',
+    '/level4/': 'İleri',
+    '/strategies/': 'Stratejiler',
+    '/cheat-sheet/': 'Özet',
+    '/builder/': 'Builder'
+  };
+
+  function lang() {
+    var p = location.pathname || '/';
+    return (p === '/tr' || p === '/tr/' || p.indexOf('/tr/') === 0) ? 'tr' : 'en';
+  }
+
+  function prefix() {
+    return lang() === 'tr' ? '/tr' : '';
+  }
+
+  function stripTr(p) {
+    if (p === '/tr' || p === '/tr/') return '/';
+    if (p.indexOf('/tr/') === 0) {
+      var rest = p.slice(3);
+      return rest || '/';
+    }
+    return p;
+  }
+
+  function switchHref() {
+    var p = location.pathname || '/';
+    var search = location.search || '';
+    if (lang() === 'tr') {
+      var rest = stripTr(p);
+      return (rest === '/' ? '/' : rest) + search;
+    }
+    if (p === '/' || p === '') return '/tr/' + (search ? search : '');
+    return '/tr' + (p.charAt(0) === '/' ? p : '/' + p) + search;
+  }
+
   function path() {
     var p = (location.pathname || '/').replace(/index\.html$/, '');
     if (!p.endsWith('/')) p += '/';
@@ -33,7 +73,7 @@
   }
 
   function isActive(href) {
-    var cur = path();
+    var cur = stripTr(path());
     if (href === '/') return cur === '/' || cur === '';
     return cur.indexOf(href) === 0;
   }
@@ -42,9 +82,14 @@
     var nav = document.querySelector('.site-header .nav');
     if (!nav) return;
     nav.setAttribute('aria-label', 'Primary navigation');
+    var pre = prefix();
+    var L = lang();
     nav.innerHTML = NAV.map(function (item) {
       var cls = isActive(item.href) ? ' class="active"' : '';
-      return '<a href="' + item.href + '"' + cls + '>' + item.label + '</a>';
+      var href = pre + item.href;
+      if (item.href === '/') href = pre ? '/tr/' : '/';
+      var label = (L === 'tr' && NAV_TR[item.href]) ? NAV_TR[item.href] : item.label;
+      return '<a href="' + href + '"' + cls + '>' + label + '</a>';
     }).join('');
   }
 
@@ -62,10 +107,19 @@
       '</div>'
     );
     footer.innerHTML =
-      '<div class="footer-note">Educational only — not financial advice. Options involve risk of loss.</div>' +
+      '<div class="footer-note">' + (lang() === 'tr'
+        ? 'Yalnızca eğitim amaçlıdır — yatırım tavsiyesi değildir. Opsiyon işlemleri zarar riski içerir.'
+        : 'Educational only — not financial advice. Options involve risk of loss.') + '</div>' +
       '<div class="footer-links">' +
       FOOTER_LINKS.map(function (item) {
-        return '<a href="' + item.href + '">' + item.label + '</a>';
+        var pre = prefix();
+        var href = (item.href === '/') ? (pre ? '/tr/' : '/') : (pre + item.href);
+        var label = item.label;
+        if (lang() === 'tr') {
+          var map = { 'Home':'Ana Sayfa','Basics':'Temel','Fundamentals':'Kavramlar','Spreads':'Spreadler','Advanced':'İleri','Strategies':'Stratejiler','Cheat sheet':'Özet','Builder':'Builder','About':'Hakkında','Contact':'İletişim','Disclaimer':'Sorumluluk','Privacy':'Gizlilik' };
+          label = map[item.label] || item.label;
+        }
+        return '<a href="' + href + '">' + label + '</a>';
       }).join('\n') +
       '</div>' + toolsHtml;
   }
@@ -130,6 +184,26 @@
   function boot() {
     syncNav();
     syncFooter();
+    var headerRight = document.querySelector('.header-right');
+    if (headerRight && !document.getElementById('langSwitch')) {
+      var a = document.createElement('a');
+      a.id = 'langSwitch';
+      a.className = 'lang-switch';
+      a.href = (function () {
+        var p = location.pathname || '/';
+        var q = location.search || '';
+        if (lang() === 'tr') {
+          if (p === '/tr' || p === '/tr/') return '/' + q;
+          return p.replace(/^\/tr/, '') + q;
+        }
+        if (p === '/' || p === '') return '/tr/' + q;
+        return '/tr' + p + q;
+      })();
+      a.textContent = lang() === 'tr' ? 'EN' : 'TR';
+      a.setAttribute('aria-label', lang() === 'tr' ? 'English' : 'Türkçe');
+      var themeBtn = document.getElementById('themeToggle');
+      headerRight.insertBefore(a, themeBtn || null);
+    }
     initTheme();
     initNavToggle();
   }
