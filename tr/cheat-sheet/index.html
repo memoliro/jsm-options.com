@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="tr" data-theme="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -8,9 +8,11 @@
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
   <link rel="manifest" href="/site.webmanifest">
 
-  <title>Özet Kart — Yakında | JSM Options</title>
-  <meta name="description" content="Özet Kart sayfası hazırlanıyor. JSM Options Türkçe.">
+  <title>Opsiyon Özet Kartı (Yazdırılabilir) | JSM Options</title>
+  <meta name="description" content="Yazdırılabilir opsiyon özet kartı: ×100, break-even, Covered Call, CSP, Iron Condor, Wheel. Eğitim amaçlıdır.">
   <link rel="canonical" href="https://jsm-options.com/tr/cheat-sheet/">
+<link rel="alternate" hreflang="tr" href="https://jsm-options.com/tr/cheat-sheet/">
+<link rel="alternate" hreflang="en" href="https://jsm-options.com/cheat-sheet/">
   <meta property="og:image" content="https://jsm-options.com/images/og-default.png">
   <meta name="twitter:image" content="https://jsm-options.com/images/og-default.png">
   <meta property="og:type" content="website">
@@ -59,27 +61,68 @@
 <script src="/assets/site.js?v=20260917" defer></script>
 </head>
 <body>
-<header class="site-header"><div class="site-header-inner"><a class="logo logo-link" href="/" aria-label="JSM Options Home"><div class="logo-icon">JSM</div><div><div style="font-weight:700">JSM Options</div><div class="brand-sub">jsm-options.com · Educational</div></div></a><div class="header-right"><nav class="nav" aria-label="Primary navigation"><a href="/">Home</a><a href="/level1/">Basics</a><a href="/level2/">Fundamentals</a><a href="/level3/">Spreads</a><a href="/level4/">Advanced</a><a href="/strategies/">Strategies</a><a href="/cheat-sheet/">Cheat sheet</a><a href="/builder/">Builder</a></nav><button type="button" class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button><button type="button" class="theme-toggle" id="themeToggle" aria-label="Toggle color theme"><span id="themeIcon" class="theme-icon">☼</span><span id="themeLabel" class="theme-label">Dark</span></button></div></div></header>
+<header class="site-header"><div class="site-header-inner"><a class="logo logo-link" href="/tr/" aria-label="JSM Options Home"><div class="logo-icon">JSM</div><div><div style="font-weight:700">JSM Options</div><div class="brand-sub">jsm-options.com · Educational</div></div></a><div class="header-right"><nav class="nav" aria-label="Primary navigation"><a href="/">Home</a><a href="/tr/level1/">Basics</a><a href="/level2/">Fundamentals</a><a href="/level3/">Spreads</a><a href="/level4/">Advanced</a><a href="/strategies/">Strategies</a><a href="/cheat-sheet/" class="active">Cheat sheet</a><a href="/tr/builder/">Builder</a></nav><button type="button" class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button><button type="button" class="theme-toggle" id="themeToggle" aria-label="Toggle color theme"><span id="themeIcon" class="theme-icon">☼</span><span id="themeLabel" class="theme-label">Dark</span></button></div></div></header>
 <div class="wrap">
-<nav class="breadcrumbs" aria-label="Breadcrumb"><a href="/tr/">Ana Sayfa</a><span aria-hidden="true">/</span><span aria-current="page">Özet Kart</span></nav>
-  <div class="card coming-soon">
-    <h1>Özet Kart</h1>
-    <p>Bu sayfanın Türkçe içeriği hazırlanıyor. Menü ve altbilgi İngilizce sitedekiyle aynıdır.</p>
-    <p><a class="btn" href="/cheat-sheet/">İngilizce sayfa</a>
-    <a class="btn btn-secondary" href="/tr/builder/">TR Builder</a></p>
-    <div class="warn"><strong>Yalnızca eğitim amaçlıdır</strong> — yatırım tavsiyesi değildir.</div>
+<div class="card term-banner">
+  <p style="margin:0"><b>Temel terimler</b> — call, put, strike, premium, expiry ve strateji adları bilinçli olarak İngilizce bırakıldı. Uluslararası borsalarda işlem yapmak için bu terimlere alışmalısınız. Türkçe karşılıkları sayfa sonunda vardır.</p>
+</div>
+
+<nav class="breadcrumbs" aria-label="Breadcrumb"><a href="/tr/">Ana Sayfa</a><span aria-hidden="true">/</span><span aria-current="page">Özet</span></nav>
+
+  <div class="card">
+    <h1>Yeni başlayanlar için opsiyon özet kartı</h1>
+    <p>Bu sayfayı yazdırın (Ctrl/Cmd+P) veya PDF kaydedin. Call, put, ×100 çarpan ve dört yaygın yapı için kısa hatırlatmalar. Yalnızca eğitim — yatırım tavsiyesi değildir.</p>
+    <p>
+      <button type="button" class="btn" onclick="window.print()">Özeti yazdır</button>
+      <a class="btn btn-secondary" href="/cheat-sheet/jsm-options-cheat-sheet.pdf">PDF indir (İngilizce)</a>
+    </p>
+
+    <h2>Unutulmaması gerekenler</h2>
+    <ul>
+      <li>Kote hisse opsiyon kontrati genelde = <b>100 hisse</b>. Premium 1.50$ ≈ kontrat başı <b>150$</b>.</li>
+      <li><b>Long call</b> = alma hakkı. <b>Long put</b> = satma hakkı (sıkça sigorta ile karşılaştırılır).</li>
+      <li>Alan debit öder (max zarar ≈ premium). Satan credit alır (risk, short’un covered mı yoksa spread mi olduğuna bağlıdır).</li>
+      <li>Expiry’de break-even (ücret hariç): call ≈ strike + premium; put ≈ strike − premium.</li>
+    </ul>
+
+    <h2>Temel formüller</h2>
+    <div style="overflow-x:auto">
+    <table class="sheet-table">
+      <thead><tr><th>Strateji</th><th>Break-even (yaklaşık)</th><th>Max kâr</th><th>Max zarar</th></tr></thead>
+      <tbody>
+        <tr><td>Long call</td><td>Strike + premium</td><td>Sınırsız</td><td>Ödenen premium</td></tr>
+        <tr><td>Long put</td><td>Strike − premium</td><td>Strike − premium (sıfıra kadar)</td><td>Ödenen premium</td></tr>
+        <tr><td>Covered call</td><td>Hisse maliyeti − premium</td><td>(Strike − hisse maliyeti) + premium</td><td>Hisse düşüşü − premium</td></tr>
+        <tr><td>Cash-secured put</td><td>Strike − premium</td><td>Alınan premium</td><td>Strike − premium (hisse riski)</td></tr>
+        <tr><td>Bear put spread</td><td>Long put strike − net debit</td><td>Genişlik − debit</td><td>Net debit</td></tr>
+        <tr><td>Iron condor</td><td>Short put − credit / short call + credit</td><td>Net credit</td><td>Kanat genişliği − credit</td></tr>
+      </tbody>
+    </table>
+    </div>
+
+    <h2>Strateji rehberleri</h2>
+    <ul>
+      <li><a href="/tr/covered-call/">Covered call strategy</a> — hisse tutun, call satın, premium alın</li>
+      <li><a href="/tr/cash-secured-put/">Cash-secured put (CSP)</a> — hisse almaya hazır nakitle put satın</li>
+      <li><a href="/tr/iron-condor/">Iron condor strategy</a> — defined-risk bant işlemi</li>
+      <li><a href="/tr/wheel/">Wheel strategy</a> — assignment’a kadar CSP, sonra Covered Call</li>
+    </ul>
+
+    <p>Ayrıca <a href="/tr/builder/">Strategy Builder</a>’da deneyin veya <a href="/tr/level1/">Giriş</a>’ten başlayın.</p>
+
+    <div class="warn"><strong>Yalnızca eğitim:</strong> Broker değil, işlem tavsiyesi değil. Formüller komisyon, temettü ve early assignment’ı yok sayar.</div>
   </div>
 </div>
 <footer class="site-footer">
   <div class="footer-note">Educational only — not financial advice. Options involve risk of loss.</div>
   <div class="footer-links">
     <a href="/">Home</a>
-    <a href="/level1/">Basics</a>
+    <a href="/tr/level1/">Basics</a>
     <a href="/level2/">Fundamentals</a>
     <a href="/level3/">Spreads</a>
     <a href="/level4/">Advanced</a>
     <a href="/strategies/">Strategies</a>
-    <a href="/builder/">Builder</a>
+    <a href="/tr/builder/">Builder</a>
     <a href="/about/">About</a>
     <a href="/contact/">Contact</a>
     <a href="/disclaimer/">Disclaimer</a>
@@ -143,6 +186,46 @@
 
 
 
+<script>
+(function(){
+  var form = document.getElementById('contactForm');
+  if (!form) return;
+  var status = document.getElementById('contactStatus');
+  var btn = document.getElementById('contactSubmit');
 
+  var ta = document.getElementById('message');
+  var count = document.getElementById('charCount');
+  function updateCount(){ if (count && ta) count.textContent = String(ta.value.length); }
+  if (ta) ta.addEventListener('input', updateCount);
+  updateCount();
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    var honey = document.getElementById('gotcha');
+    if (honey && honey.value) return;
+    var msg = (document.getElementById('message') || {}).value || '';
+    if (msg.trim().length < 10) {
+      if (status) status.textContent = 'Please write at least 10 characters.';
+      return;
+    }
+    var parts = ['con','tact','@','jsm-options','.com'];
+    var endpoint = 'https://formsubmit.co/ajax/' + parts.join('');
+    if (btn) { btn.disabled = true; btn.textContent = 'Sending…'; }
+    if (status) status.textContent = '';
+    var data = new FormData(form);
+    fetch(endpoint, { method:'POST', body:data, headers:{ 'Accept':'application/json' } })
+      .then(function(r){ return r.json().catch(function(){ return {}; }); })
+      .then(function(){
+        form.reset();
+        if (status) status.textContent = 'Message sent. Thank you.';
+      })
+      .catch(function(){
+        if (status) status.textContent = 'Could not send right now. Try again later.';
+      })
+      .finally(function(){
+        if (btn) { btn.disabled = false; btn.textContent = 'Send message'; }
+      });
+  });
+})();
+</script>
 </body>
 </html>
