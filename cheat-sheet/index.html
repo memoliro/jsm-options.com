@@ -56,6 +56,19 @@
 </style>
 
 <script src="/assets/site.js?v=20260920" defer></script>
+<style>
+.strategy-explore-section{margin-top:42px;padding-top:8px}
+.strategy-four-cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;margin-top:20px}
+.strategy-card{position:relative;display:flex;flex-direction:column;min-height:245px;padding:22px!important;text-decoration:none!important;border:1px solid var(--border);border-radius:16px;background:var(--card);box-shadow:var(--shadow-sm);transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease;overflow:hidden}
+.strategy-card:hover{transform:translateY(-5px);border-color:var(--primary-border);box-shadow:var(--shadow)}
+.strategy-icon{display:flex;align-items:center;justify-content:center;width:48px;height:48px;margin-bottom:14px;border-radius:14px;background:var(--primary-soft);font-size:24px}
+.strategy-card .tag{align-self:flex-start;margin-bottom:9px}
+.strategy-card h3{margin:0 0 9px;font-size:1.15rem;color:var(--text)}
+.strategy-card p{margin:0;color:var(--muted);line-height:1.55;font-size:.88rem;flex:1}
+.strategy-link{margin-top:17px;color:var(--primary);font-size:.82rem;font-weight:700}
+@media(max-width:1000px){.strategy-four-cards{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:560px){.strategy-four-cards{grid-template-columns:1fr}.strategy-card{min-height:0}}
+</style>
 </head>
 <body>
 <header class="site-header"><div class="site-header-inner"><a class="logo logo-link" href="/" aria-label="JSM Options Home"><div class="logo-icon">JSM</div><div><div style="font-weight:700">JSM Options</div><div class="brand-sub">jsm-options.com · Educational</div></div></a><div class="header-right"><nav class="nav" aria-label="Primary navigation"><a href="/">Home</a><a href="/level1/">Basics</a><a href="/level2/">Fundamentals</a><a href="/level3/">Spreads</a><a href="/level4/">Advanced</a><a href="/strategies/">Strategies</a><a href="/cheat-sheet/" class="active">Cheat sheet</a><a href="/builder/">Builder</a></nav><button type="button" class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button><button type="button" class="theme-toggle" id="themeToggle" aria-label="Toggle color theme"><span id="themeIcon" class="theme-icon">☼</span><span id="themeLabel" class="theme-label">Dark</span></button></div></div></header>
@@ -104,11 +117,11 @@
     <p>Also practice in the <a href="/builder/">Strategy Builder</a> or start at <a href="/level1/">Basics</a>.</p>
 
 
-<section class="home-section"><div class="section-head"><div><h2>Popular strategies to explore</h2><p>Use the library to compare ideas before opening the Builder.</p></div></div><div class="strategy-preview">
-<a class="mini-strategy" href="/covered-call/"><span class="tag">Bullish · Income</span><h3>Covered Call</h3><p>Own shares and sell a call to collect premium while accepting capped upside.</p></a>
-<a class="mini-strategy" href="/cash-secured-put/"><span class="tag">Bullish · Entry</span><h3>Cash-Secured Put</h3><p>Sell a put with cash ready to buy 100 shares if assigned.</p></a>
-<a class="mini-strategy" href="/iron-condor/"><span class="tag">Neutral · Defined risk</span><h3>Iron Condor</h3><p>Credit structure for a range-bound outlook with defined risk.</p></a>
-<a class="mini-strategy" href="/wheel/"><span class="tag">Cycle · Income</span><h3>Wheel Strategy</h3><p>Sell CSPs until assigned, then covered calls until shares are sold.</p></a>
+<section class="home-section strategy-explore-section"><div class="section-head"><div><h2>Popular strategies to explore</h2><p>Four common strategies — compare the idea, outlook, and risk before opening the full guide.</p></div></div><div class="strategy-preview strategy-four-cards">
+<a class="mini-strategy strategy-card" href="/covered-call/"><span class="strategy-icon">🏠</span><span class="tag">Bullish · Income</span><h3>Covered Call</h3><p>Own shares and sell a call to collect premium while accepting capped upside.</p><span class="strategy-link">Learn strategy →</span></a>
+<a class="mini-strategy strategy-card" href="/cash-secured-put/"><span class="strategy-icon">💵</span><span class="tag">Bullish · Entry</span><h3>Cash-Secured Put</h3><p>Sell a put with cash ready to buy 100 shares if assigned.</p><span class="strategy-link">Learn strategy →</span></a>
+<a class="mini-strategy strategy-card" href="/iron-condor/"><span class="strategy-icon">📊</span><span class="tag">Neutral · Defined risk</span><h3>Iron Condor</h3><p>Use a four-leg credit structure when you expect price to stay in a range.</p><span class="strategy-link">Learn strategy →</span></a>
+<a class="mini-strategy strategy-card" href="/wheel/"><span class="strategy-icon">🔄</span><span class="tag">Cycle · Income</span><h3>Wheel Strategy</h3><p>Sell CSPs until assigned, then covered calls until the shares are called away.</p><span class="strategy-link">Learn strategy →</span></a>
 </div></section>
 
     <div class="warn"><strong>Educational only:</strong> Not a broker and not trade advice. Formulas ignore commissions, dividends, and early assignment.</div>
