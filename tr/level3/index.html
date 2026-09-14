@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="tr" data-theme="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -8,12 +8,21 @@
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
   <link rel="manifest" href="/site.webmanifest">
 
-  <title>Spreadler — Yakında | JSM Options</title>
-  <meta name="description" content="Spreadler sayfası hazırlanıyor. JSM Options Türkçe.">
+  <title>Vertical Spread ve Iron Condor | Spreadler</title>
+  <meta name="description" content="Bull call spread, bear put spread ve Iron Condor: tanımlı risk, payoff, Builder. Türkçe Spreadler — eğitim amaçlıdır.">
   <link rel="canonical" href="https://jsm-options.com/tr/level3/">
+<link rel="alternate" hreflang="tr" href="https://jsm-options.com/tr/level3/">
+<link rel="alternate" hreflang="en" href="https://jsm-options.com/level3/">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="JSM Options">
+  <meta property="og:title" content="Bull Call Spread, Bear Put Spread &amp; Iron Condor Explained">
+  <meta property="og:description" content="Defined-risk vertical spreads and iron condor with payoff examples. Alıştırma each strategy in the free options builder.">
+  <meta property="og:url" content="https://jsm-options.com/tr/level3/">
   <meta property="og:image" content="https://jsm-options.com/images/og-default.png">
   <meta name="twitter:image" content="https://jsm-options.com/images/og-default.png">
-  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Bull Call Spread, Bear Put Spread &amp; Iron Condor Explained">
+  <meta name="twitter:description" content="Defined-risk vertical spreads and iron condor with payoff examples. Free options education.">
   <link rel="stylesheet" href="/assets/style.css?v=20260914">
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-BDL003RCN6"></script>
   <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-BDL003RCN6');</script>
@@ -59,27 +68,293 @@
 <script src="/assets/site.js?v=20260917" defer></script>
 </head>
 <body>
-<header class="site-header"><div class="site-header-inner"><a class="logo logo-link" href="/" aria-label="JSM Options Home"><div class="logo-icon">JSM</div><div><div style="font-weight:700">JSM Options</div><div class="brand-sub">jsm-options.com · Educational</div></div></a><div class="header-right"><nav class="nav" aria-label="Primary navigation"><a href="/">Home</a><a href="/level1/">Basics</a><a href="/level2/">Fundamentals</a><a href="/level3/">Spreads</a><a href="/level4/">Advanced</a><a href="/strategies/">Strategies</a><a href="/cheat-sheet/">Cheat sheet</a><a href="/builder/">Builder</a></nav><button type="button" class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button><button type="button" class="theme-toggle" id="themeToggle" aria-label="Toggle color theme"><span id="themeIcon" class="theme-icon">☼</span><span id="themeLabel" class="theme-label">Dark</span></button></div></div></header>
+<header class="site-header"><div class="site-header-inner"><a class="logo logo-link" href="/tr/" aria-label="JSM Options Home"><div class="logo-icon">JSM</div><div><div style="font-weight:700">JSM Options</div><div class="brand-sub">jsm-options.com · Educational</div></div></a><div class="header-right"><nav class="nav" aria-label="Primary navigation"><a href="/">Home</a><a href="/level1/">Basics</a><a href="/tr/level2/">Fundamentals</a><a href="/level3/" class="active">Spreads</a><a href="/level4/">Advanced</a><a href="/strategies/">Strategies</a><a href="/cheat-sheet/">Cheat sheet</a><a href="/tr/builder/">Builder</a></nav><button type="button" class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button><button type="button" class="theme-toggle" id="themeToggle" aria-label="Toggle color theme"><span id="themeIcon" class="theme-icon">☼</span><span id="themeLabel" class="theme-label">Dark</span></button></div></div></header>
+
 <div class="wrap">
 <nav class="breadcrumbs" aria-label="Breadcrumb"><a href="/tr/">Ana Sayfa</a><span aria-hidden="true">/</span><span aria-current="page">Spreadler</span></nav>
-  <div class="card coming-soon">
-    <h1>Spreadler</h1>
-    <p>Bu sayfanın Türkçe içeriği hazırlanıyor. Menü ve altbilgi İngilizce sitedekiyle aynıdır.</p>
-    <p><a class="btn" href="/level3/">İngilizce sayfa</a>
-    <a class="btn btn-secondary" href="/tr/builder/">TR Builder</a></p>
-    <div class="warn"><strong>Yalnızca eğitim amaçlıdır</strong> — yatırım tavsiyesi değildir.</div>
-  </div>
+<div class="card term-banner">
+  <p style="margin:0"><b>Temel terimler</b> — call, put, strike, premium, expiry ve strateji adları bilinçli olarak İngilizce bırakıldı. Uluslararası borsalarda işlem yapmak için bu terimlere alışmalısınız. Türkçe karşılıkları sayfa sonunda vardır.</p>
 </div>
-<footer class="site-footer">
+
+<nav class="lesson-toc" aria-label="Bu sayfada"><strong>Bu sayfada</strong><div class="lesson-toc-links"><a href="#why-spreads">Neden spread</a><a href="#bull-call">Bull call</a><a href="#bear-put">Bear put</a><a href="#iron-condor">Iron condor</a><a href="#risk-notes">Risk notları</a><a href="#practice">Alıştırma</a></div></nav>
+
+
+  <div class="hero">
+    <span class="badge">Spreadler · Defined risk</span>
+    <h1>Vertical spread ve Iron Condor</h1>
+    <p>Bir opsiyon alın, birini satın — maliyeti düşürün veya riski tanımlayın. Bu sayfa <b>bull call spread</b>, <b>bear put spread</b> ve <b>Iron Condor</b>’u payoff resmi ve Builder bağlantısıyla anlatır. Defined risk, max zararın tamamını kaybedemeyeceğiniz anlamına gelmez — yalnızca belirsiz (sınırsız) olmamasıdır.</p>
+  </div>
+
+  <div class="card">
+    <h2 id="why-spreads">Neden spread?</h2>
+    <p>Naked long call sadedir ama tüm premium’u ödersiniz. Naked short call’un riski büyük olabilir. <b>Vertical spread</b>, aynı expiry’de bir alış ve bir satışı eşler; max zarar (ve çoğu zaman max kâr) tavanlanır.</p>
+    <div class="note">Builder şablonlarındaki premium <b>örnektir</b> — sayıları gerçek sanmadan önce canlı options chain’e göre düzenleyin. 1 kontrat = 100 hisse. 1$ kote = 100$ nakit.</div>
+  </div>
+
+  <!-- EXPANDED BULL CALL SPREAD - ABSOLUTE BEGINNER -->
+  <div class="card">
+    <div class="small">Bullish · defined risk · long call’dan sonraki 2. strateji</div>
+    <h3 id="bull-call">Bull call spread — daha ucuz bullish yol</h3>
+    <p>Bu genelde long call’dan sonra öğrenilen <b>ikinci stratejidir</b>. Neden? Long call, time decay’in (theta) ne kadar sert olabileceğini öğretir. Bull call spread, long call’unuzun üzerine daha OTM bir call satarak bu sorunun bir kısmını çözer.</p>
+    <p>Kaldıraç durur ama peşin daha az ödersiniz ve theta’yı daha az hissedersiniz. Takas: upside short strike’ta tavanlanır.</p>
+
+    <div class="analogy">
+      <b>Şöyle düşünün:</b> Hisse 100$. Aynı expiry’de 100$ call’u 6.50$’ye alır, 110$ call’u 2.50$’ye satarsınız. Net 4.00$ ödersiniz (400$). Hisse 110$+ olursa spread genişliği 10$ eder (1000$). Kâr = 10$ − 4$ = 6$ (600$). Hisse 100$ altında kalırsa ikisi de değersiz expire olur; zarar yalnızca 4$ (400$).
+    </div>
+
+    <h2 style="margin-top:28px;">Nasıl kurulur</h2>
+    <ul>
+      <li><b>1 call alın</b> — paraya daha yakın (düşük strike)</li>
+      <li><b>1 call satın</b> — daha OTM (yüksek strike)</li>
+      <li>İkisi de <b>call</b>, aynı expiry, aynı underlying</li>
+      <li>Tek emir olarak girin. Ayrı ayrı “leg in” risk ekler — bir bacak aleyhinize kaçabilir.</li>
+    </ul>
+    <div class="note">Aynı işlem: <b>call debit spread, vertical spread, long call spread</b>.</div>
+
+    <h2>Payoff — nerede kazanır, kaybeder, başabaş olursunuz</h2>
+    <p>Short call daha OTM’dir. Long call maliyetini düşüren credit verir ve theta’yı yumuşatır; ama upside’ı da tavanlar.</p>
+    
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Zone</th><th>Formula</th><th>Örnek 100/110</th></tr></thead>
+        <tbody>
+          <tr><td><b>Max Profit</b></td><td>Spread genişliği − net debit</td><td>10 - 4 = 6$ (600$). Hisse ≥ 110$ olunca. 110$ üstünde long call’da kazandığınız her 1$’ı short call’da kaybedersiniz.</td></tr>
+          <tr><td><b>Max Loss</b></td><td>Ödenen net debit</td><td>4$ (400$). Expiry’de hisse ≤ 100$ ise — iki call da değersiz expire olur.</td></tr>
+          <tr><td><b>Breakeven</b></td><td>Long strike + net debit</td><td>100 + 4 = 104$. Kâr için hisse 104$ üstünde kapanmalı. Tam 104$’da düz. Break-even civarında exercise/assignment’a bakın.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div style="margin:20px 0; text-align:center;">
+      <div style="background:#E8EEF5; border:1px solid var(--border, #1E2A3A); border-radius:16px; padding:12px; display:inline-block; max-width:100%;">
+        <img src="/images/bullish-call-spread-outcome.jpg" alt="Bull call spread payoff chart: limited profit above short strike, limited loss equal to net debit, break-even at long strike plus premium" style="max-width:100%; height:auto; border-radius:10px; display:block;">
+        <div style="margin-top:10px; font-size:12px; color:#334155; text-align:left; line-height:1.5;">
+          <b>Nasıl okunur:</b> Soldaki kırmızı yatay = hisse long call strike altındayken max zarar (ödenen debit). Çapraz yukarı = strike’lar arasında kâr büyür. Sağdaki düz çizgi = short call strike’ta tavan max kâr. Noktalı mavi = break-even = long call strike + toplam premium.
+        </div>
+      </div>
+    </div>
+
+    <div class="analogy">
+      <b>Sıfırdan kontrol:</b> 400$ riske edip 600$ hedeflersiniz. Break-even 104$. 100$ altında = 400$ zarar. 100$–110$ arası = kısmi kâr. 110$ ve üstü = max 600$. Hisse 200$ olsa da kâr 600$’da durur.
+    </div>
+
+    <h2>Gerçek örnek: XLF (finans ETF)</h2>
+    <p>XLF’nin 45 günde ılımlı yükseleceğini düşünüyoruz. XLF 47.82$, hedef 51$. Geniş ETF, makul bid/ask, çok strike.</p>
+    <ul>
+      <li><b>XLF fiyatı:</b> 47.82$</li>
+      <li><b>Expiry:</b> 45 gün</li>
+      <li><b>48 Call al @ 1.69$</b></li>
+      <li><b>51 Call sat @ 0.38$</b></li>
+      <li><b>Net debit:</b> 1.31$ (131$) — aynı zamanda max zarar</li>
+      <li><b>Break-even:</b> 48$ + 1.31$ = 49.31$</li>
+      <li><b>Max kâr:</b> 3.00$ genişlik − 1.31$ = 1.69$ (169$) eğer XLF ≥ 51$</li>
+    </ul>
+    <div class="note">Doldurmanın mid-price’da olduğunu varsayıyoruz. Limit emir kullanın, mid’den başlayın.</div>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Sonuç</th><th>Ne olur</th></tr></thead>
+        <tbody>
+          <tr><td><b>Positive — XLF to 53$ at expiry</b></td><td>Both calls ITM with 100% intrinsic. Long 48 call worth 5.00$ (53$-48$), short 51 call worth 2.00$ (53$-51$). Spread value = 3.00$. Profit = 3.00$ - 1.31$ = 1.69$ (169$). Note: short call likely assigned before expiry when deep ITM near expiry — that's okay, you exercise long call to cover.</td></tr>
+          <tr><td><b>Negative — XLF to 44$</b></td><td>Both calls OTM → 0$. Spread value 0$. You lose 1.31$ (131$). This trade actually hit ~80% max profit mid-way — should have closed early. Time is risk. Don't be greedy.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2>3 büyük risk (artı theta)</h2>
+    <ul>
+      <li><b>1. Early assignment risk:</b> Short call can be assigned when ITM, risk rises near expiry. Fix: just exercise your long call — offsets short stock, closes position. Usually happens when short call has no extrinsic value left, meaning you're at max profit anyway.</li>
+      <li><b>2. IV Crush:</b> Long options like high IV. If IV drops sharply after you enter (common after earnings, Fed meetings, jobs reports), both legs lose value, but long call loses more. Spread shrinks, you can lose even if direction right.</li>
+      <li><b>3. Liquidity risk:</b> Thin stocks/ETFs = wide bid/ask spreads, low open interest, low volume. Hard to get filled at decent price, especially when volatility jumps.</li>
+      <li><b>4. Time decay — less bad than long call:</b> You're net long premium, so theta works slightly against you. Stock must move quick enough. But decay is less severe than single long call because short call loses value in your favor. Long call decays even if stock flat; short call helps offset. Far OTM long calls decay fastest early.</li>
+    </ul>
+
+    <h2>Implied Volatility — ne zaman kullanılır</h2>
+    <p>Bull call spread is <b>net debit</b>, benefits from <b>rising IV</b>. If IV rises after entry, both legs gain, long usually gains more. If IV drops, both lose, long takes bigger hit. Spread shrinks.</p>
+    <div class="analogy">Best when IV is <b>steady or rising</b> after entry. Dangerous before known event (earnings) — IV crush can wreck trade if move not fast/strong. Pro tip: Enter when IV low but expected to rise. Target: long call IV 30-50%, short call IV 20-40%.</div>
+
+    <h2>Strike seçimi — yeni başlayan kuralları</h2>
+    <p>Spread’i ne kadar bullish olduğunuza göre ayarlayabilirsiniz:</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Görüş</th><th>Example (Stock 500$)</th><th>Takas</th></tr></thead>
+        <tbody>
+          <tr><td><b>Hafif bullish</b></td><td>Buy 500$ call, sell 503$ call (3$ width)</td><td>Düşük maliyet, daha düşük max kâr, max kâra daha yüksek olasılık</td></tr>
+          <tr><td><b>Orta bullish</b></td><td>Buy 500$ call, sell 510$ call (10$ width)</td><td>Dengeli maliyet ve ödül — çoğu kişi buradan başlar</td></tr>
+          <tr><td><b>Agresif bullish</b></td><td>Buy 500$ call, sell 520$ call (20$ width)</td><td>Yüksek maliyet, büyük kâr potansiyeli, daha düşük olasılık</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <ul>
+      <li><b>Narrow spread:</b> cheaper, lower max profit, higher chance of hitting max.</li>
+      <li><b>Wide spread:</b> more expensive, higher max profit, lower chance.</li>
+      <li>Don't go too narrow like 100/101 for 0.40$ — high prob but tiny payoff, commissions eat it.</li>
+    </ul>
+    <div class="note"><b>Beginner sweet spot:</b> I like long call ~3-5% OTM, short leg ~7% OTM. Balances affordability with decent probability.</div>
+
+    <h2>Expiry nasıl seçilir</h2>
+    <p>You're net long options, time not on your side. Theta eats long option daily.</p>
+    <ul>
+      <li><b>1-2 months until expiration</b> is great entry for vertical spreads. Longer than that, you overpay for long option.</li>
+      <li>Gives time to adjust/exit if wrong. With 4 DTE, no time to roll.</li>
+      <li><b>Take profit early:</b> If you lock 80% of max profit with ~2 weeks left, close it. Risk/reward not worth holding. <i>Bears make money, bulls make money, but pigs get slaughtered.</i></li>
+    </ul>
+
+    <h2>Delta seçimi — yeni başlayan rehberi</h2>
+    <p>Delta = how much option price moves per 1$ stock move, and rough probability ITM.</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Leg</th><th>Target Delta</th><th>Why</th></tr></thead>
+        <tbody>
+          <tr><td>Long Call</td><td>0.50 - 0.60</td><td>Higher probability, decent stock sensitivity</td></tr>
+          <tr><td>Short Call</td><td>0.20 - 0.35</td><td>Less likely to finish ITM, caps upside but cheaper</td></tr>
+          <tr><td>Delta Spread</td><td>0.30 - 0.40</td><td>Wide enough to profit, narrow enough realistic</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2>Nasıl yönetilir — kur-unut değil</h2>
+    <ul>
+      <li><b>Take profits before expiry:</b> If at/near max profit, close early. If you hold, long call ITM may be auto-exercised → you buy 100 shares at strike. If short call OTM, you're left long stock you didn't want. If both ITM, exercised + assigned = extra fees vs just closing spread.</li>
+      <li><b>Roll short leg up</b> to higher strike to increase max profit (if stock strong).</li>
+      <li><b>Roll long leg</b> closer to money to regain delta if stock pulls back.</li>
+      <li><b>Roll both legs</b> up/down together to reposition (4-way vertical).</li>
+      <li><b>Roll expiration</b> out later if need more time — roll <b>both legs same time</b> as 4-way. Don't roll one leg only, you get exposed.</li>
+    </ul>
+    <div class="note">Watch commissions. Rolling, especially 4-way trades, gets expensive. Factor fees into P/L.</div>
+
+    <h2>Greeks — bull call spread’te ne önemli</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Greek</th><th>Effect</th><th>Beginner meaning</th></tr></thead>
+        <tbody>
+          <tr><td><b>Delta</b></td><td>Positive</td><td>Long call adds positive delta, short offsets some. Net delta rises as stock rises. You make money when stock up.</td></tr>
+          <tr><td><b>Gamma</b></td><td>Slightly Positive</td><td>Long adds gamma, short subtracts. Net gamma lower than single long call — less sensitive to sharp moves, smoother P/L.</td></tr>
+          <tr><td><b>Theta</b></td><td>Slightly Negative</td><td>Long loses value daily, short gains. Not fully offset — time decay slightly against you.</td></tr>
+          <tr><td><b>Vega</b></td><td>Neutral to Slightly Positive</td><td>Long benefits from IV rise, short hurt. Net vega low — volatility changes minimal impact. Best in low IV rising to high.</td></tr>
+          <tr><td><b>Rho</b></td><td>Neutral</td><td>Long benefits from rising rates, short hurt. Mostly offset. Minimal, especially short-dated.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="analogy">
+      <b>Sıfırdan özet:</b> Buy lower call, sell higher call, same expiry, pay debit. Max profit = width - debit (capped), max loss = debit (defined), breakeven = long strike + debit. Cheaper than long call, less theta pain, but upside capped. Use 1-2 months expiry, take 80% profit early, watch assignment and IV crush.
+    </div>
+
+    <a class="btn" href="/tr/builder/?template=bull_call_spread">Builder’da Bull Call Spread yükle →</a>
+    <a class="btn btn-secondary" href="/tr/level2/">Temel mi? ← Temeller Long Call</a>
+  </div>
+
+  <div class="card">
+    <div class="small">Bearish · defined risk · debit spread</div>
+    <h2 id="bear-put">Bear put spread</h2>
+    <p>Bir <b>bear put spread</b> (put debit spread) birçok kişinin <b>ılımlı bearish</b> görüşü <b>defined risk</b> ile ifade etme yoludur. Daha yüksek strike’tan <b>put alır</b>, daha düşük strike’tan <b>put satarsınız</b>; aynı expiry. <b>Net debit</b> ödersiniz.</p>
+    <p><strong>Sade dille:</strong> hisse düşsün istersiniz ama ödediğiniz tutarı azaltmak için daha ucuz, daha düşük strike’lı put satarsınız. Bu aynı zamanda kazanabileceğiniz tutarı <b>tavanlar</b> — short put, long put’un kazancını sınırlar.</p>
+    <ul>
+      <li><b>Max zarar</b> = ödenen net debit (spread başı ×100)</li>
+      <li><b>Max kâr</b> ≈ (strike genişliği − net debit) × 100, expiry’de hisse short put’ta veya altındaysa</li>
+      <li><b>Break-even</b> ≈ long put strike − ödenen net premium</li>
+      <li>Long strike’ın altında bearish-neutral’siniz; sert yükseliş zarar eder (debit gidebilir)</li>
+    </ul>
+    <div class="analogy">
+      <b>Example:</b> Hisse 100$ civarı. 100$ put alın, 90$ put satın, net debit 4$.<br>
+      Genişlik = 10$. Max zarar = spread başı <span class="loss">400$</span>. Max kâr ≈ (10$ − 4$) × 100 = <span class="profit">600$</span>.<br>
+      Break-even ≈ 100$ − 4$ = <b>96$</b>. Expiry’de 90$ altında yine yalnızca max 600$ — short put sonrası kazancı keser.
+    </div>
+    <img src="/images/bearish-put-spread-outcomes.webp" alt="Bearish put spread payoff diagram: max profit left of short put strike, break-even between strikes, max loss right of long put strike" width="900" height="560" loading="lazy" style="width:100%;height:auto;border-radius:12px;border:1px solid var(--border);margin:14px 0">
+    <p style="font-size:.88rem;color:var(--muted)">Mavi = kâr bölgesi · Kırmızı = zarar. Yeşil X = break-even (long put strike − net premium). Short put strike’ta max kâr düzleşir.</p>
+    <h3>Yeni başlayan bunu neden çalışır</h3>
+    <ul>
+      <li>Yalnızca put almaktan ucuz (short put long put’u finanse eder)</li>
+      <li>Risk ilk günden belli (debit)</li>
+      <li>Bull call spread ile aynı “vertical” fikir; düşüş için ters çevrilmiş</li>
+    </ul>
+    <div class="note">Builder’da yükleyin, gerçek chain debit’ine yaklaştırın, underlying’i short strike’ın altına çekin; düz expiry çizgisinde max kârı görün.</div>
+    <div class="warn"><strong>Risk:</strong> Defined risk sıfır risk değildir. Debitin %100’ünü kaybedebilirsiniz. Short put deep ITM olursa early assignment olabilir. Yalnızca eğitim.</div>
+    <a class="btn" href="/tr/builder/?template=bear_put_spread">Builder’da Bear Put Spread yükle →</a>
+    <div class="analogy" style="margin-top:12px"><b>Ne zaman kullanmayın:</b> Dev bir çöküş bekliyorsanız (long put daha çok ödeyebilir); debit kabul edilebilir max zarar değilse; put kanadı likit değilse.</div>
+  </div>
+
+  <div class="card">
+    <div class="small">Neutral · defined risk · credit structure</div>
+    <h2 id="iron-condor">Iron condor</h2>
+    <p><b>Iron Condor</b>, piyasanın altında bir <b>bull put spread</b> ile üstünde bir <b>bear call spread</b>’i aynı expiry’de birleştirir. <b>Net credit</b> alırsınız. Hisse iki short strike arasında bir <b>bantta</b> kalsın istersiniz ki short opsiyonlar değersiz expire olsun (veya ucuza geri alınsın).</p>
+    <p><strong>Sade dille:</strong> iki yana “kanat” sigortası satar, daha OTM opsiyon alırsınız ki çöküş veya sert yükseliş sınırsız zarar üretmesin. Fiyat ortada sakin kalırsa kâr en büyüktür.</p>
+    <ul>
+      <li><b>Max kâr</b> ≈ alınan net credit; fiyat short put ile short call arasında biterse</li>
+      <li><b>Max zarar</b> ≈ test edilen kanadın genişliği − credit (yine tanımlı)</li>
+      <li><b>Break-even’ler</b> ≈ short put − credit (alt) ve short call + credit (üst)</li>
+      <li>Sezgi: neutral / bant; sert trend ve IV sıçraması fiyatı bir kanada itebilir</li>
+    </ul>
+    <div class="analogy">
+      <b>Example sketch:</b> Short 90$ put / long 80$ put + short 110$ call / long 120$ call. Credit alın. İdeal: hisse expiry’ye kadar kabaca 90$–110$ arasında kalsın; iki short OTM expire etsin.
+    </div>
+    <img src="/images/iron-condor-outcome.webp" alt="Iron condor payoff diagram showing max profit between short strikes B and C, break-evens, and defined max loss on both wings" width="900" height="560" loading="lazy" style="width:100%;height:auto;border-radius:12px;border:1px solid var(--border);margin:14px 0">
+    <h3>Diyagram nasıl okunur</h3>
+    <ul>
+      <li><b>A → B</b> (sol eğim): long put kanadı ve short put — condor’un bear-put yanı</li>
+      <li><b>B → C</b> (düz tepe): short put ile short call arasındaki max kâr bölgesi</li>
+      <li><b>C → D</b> (sağ eğim): short call ve long call — bull-call yanı</li>
+      <li><b>Max kâr</b> = alınan net premium (condor başı credit × 100)</li>
+      <li><b>Max zarar</b> = bir kanadın strike genişliği − net premium (hangi taraf kırılırsa)</li>
+      <li>Yeşil X = alt ve üst break-even</li>
+    </ul>
+    <h3>Yeni başlayan ipuçları</h3>
+    <ul>
+      <li>Önce her vertical’i ayrı anlayın (bull put + bear call), sonra birleştirin</li>
+      <li>Daha geniş short strike = daha çok alan / genelde daha az credit; daha sıkı short = daha çok credit / daha az alan</li>
+      <li>Likidite önemli: dar spread ve makul open interest’li underlying tercih edin</li>
+      <li>Builder’da Iron Condor şablonunu açın; spot’u ortaya ve bir kanadın dışına kaydırın</li>
+    </ul>
+    <div class="warn"><strong>Risk:</strong> Tanımlı max zarar credit’in birkaç katı olabilir. Short bacakta assignment riski vardır. Kanattan gap max zarara hızla yaklaşabilir. Yalnızca eğitim — işlem tavsiyesi değil.</div>
+    <a class="btn" href="/tr/builder/?template=iron_condor">Builder’da Iron Condor yükle →</a>
+  </div>
+
+  <div class="card">
+    <h2 id="practice">Builder’da nasıl alıştırma yapılır</h2>
+    <ol style="padding-left:20px;color:#c8d0dc;font-size:.92rem">
+      <li style="margin:6px 0">Yukarıdaki Yükle düğmesine tıklayın (veya Builder menüsünden şablon seçin).</li>
+      <li style="margin:6px 0">Strike ve premium’u gerçek chain’e yaklaştırın.</li>
+      <li style="margin:6px 0"><b>Days Remaining</b>’i kaydırın — noktalı çizgi düz expiry çizgisine yaklaşır (theta).</li>
+      <li style="margin:6px 0">Grafiğin altında Net Debit/Credit, max kâr/zarar ve Greeks’i okuyun.</li>
+    </ol>
+  </div>
+
+  <div class="warn"><strong>Risk:</strong> Defined-risk “risk yok” değildir. Max zararın tamamını kaybedebilirsiniz; canlı piyasada early assignment, temettü ve likidite önemlidir. Yalnızca eğitim.</div>
+
+  <div class="card" style="text-align:center">
+    <a class="btn" href="/tr/builder/">Tam Builder’ı aç</a>
+    <a class="btn btn-secondary" href="/tr/level2/">← Temeller</a>
+  </div>
+
+<div class="card" id="risk-notes">
+    <h2>Spread’ler yeni başlayanı nerede yakalar</h2>
+    <div class="risk-grid">
+      <div class="risk-card">
+        <h3>IV &amp; debit spreads</h3>
+        <p>IV çok yüksekken debit spread almak, IV düşünce yine incitebilir (iki bacak da ucuzlayabilir). Yüksek IV’de credit spread cazip görünür ama hata payı ister.</p>
+      </div>
+      <div class="risk-card">
+        <h3>Earnings</h3>
+        <p>Underlying short strike’ınızı gap’le aşarsa defined-risk spread bir gecede max zararın tamamını kaybedebilir. Boyutu credit’e göre değil, tam max zarara göre ayarlayın.</p>
+      </div>
+      <div class="risk-card">
+        <h3>Liquidity</h3>
+        <p>Dört bacaklı yapılar (Iron Condor) bid–ask sürtünmesini çoğaltır. Öğrenirken likit underlying seçin.</p>
+      </div>
+    </div>
+    <div class="practice-prompt"><b>Alıştırma:</b> Open <a href="/tr/builder/?template=bear_put_spread">bear put spread</a> and <a href="/tr/builder/?template=iron_condor">iron condor</a>. Drag price into the max-profit zone, then outside a wing — confirm max loss is capped.</div>
+  </div>
+</div><footer class="site-footer">
   <div class="footer-note">Educational only — not financial advice. Options involve risk of loss.</div>
   <div class="footer-links">
     <a href="/">Home</a>
     <a href="/level1/">Basics</a>
-    <a href="/level2/">Fundamentals</a>
+    <a href="/tr/level2/">Fundamentals</a>
     <a href="/level3/">Spreads</a>
     <a href="/level4/">Advanced</a>
     <a href="/strategies/">Strategies</a>
-    <a href="/builder/">Builder</a>
+    <a href="/tr/builder/">Builder</a>
     <a href="/about/">About</a>
     <a href="/contact/">Contact</a>
     <a href="/disclaimer/">Disclaimer</a>
@@ -138,8 +413,6 @@
   }
 })();
 </script>
-
-
 
 
 
