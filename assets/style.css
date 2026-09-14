@@ -419,3 +419,16 @@ html[data-theme="light"] .note{color:#1e40af;background:rgba(37,99,235,.06)}
 .jsm-install-dismiss{
   background:transparent;border:0;color:var(--muted);cursor:pointer;font-size:13px;
 }
+
+.footer-install{margin-top:12px;text-align:center}
+.footer-install-btn{
+  background:transparent;border:1px solid var(--border);color:var(--text);
+  border-radius:999px;padding:7px 14px;font-size:13px;cursor:pointer;
+}
+.footer-install-btn:hover{border-color:var(--accent);color:var(--accent)}
+.jsm-install-help{
+  margin:12px auto 0;max-width:520px;text-align:center;
+  padding:12px 14px;border:1px solid var(--border);border-radius:12px;
+  background:var(--card);color:var(--muted);font-size:13px;line-height:1.45;
+}
+.jsm-install-help p{margin:0 0 8px}
