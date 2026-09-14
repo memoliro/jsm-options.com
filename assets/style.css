@@ -66,6 +66,17 @@ img{max-width:100%;border-radius:10px;border:1px solid var(--border);margin:10px
 footer{text-align:center;padding:24px 16px;font-size:12px;color:var(--muted);border-top:1px solid var(--border);margin-top:24px}
 footer a{color:var(--muted)}footer a:hover{color:#fff}
 .footer-links{margin-top:8px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+.footer-support{margin-top:10px;text-align:center}
+.bmc-link{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:8px 14px;border-radius:999px;
+  background:#ffdd00;color:#0f1419!important;font-weight:700;font-size:13px;
+  text-decoration:none!important;border:1px solid #e6c200;
+}
+.bmc-link:hover{background:#ffe44d;color:#0f1419!important}
+.bmc-card{text-align:center}
+.bmc-card p{margin:8px 0 14px}
+
 .btn,.btn-ghost{display:inline-block;background:var(--accent);color:#fff!important;border:1px solid var(--accent);border-radius:8px;padding:8px 14px;font-weight:600;font-size:.88rem}
 .btn:hover,.btn-ghost:hover{background:#2563eb;border-color:#2563eb}
 .btn-secondary{background:#334155;border-color:#334155;color:var(--text)!important}

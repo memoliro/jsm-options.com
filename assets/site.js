@@ -25,6 +25,8 @@
     { href: '/privacy/', label: 'Privacy' }
   ];
 
+  var BMC_URL = 'https://www.buymeacoffee.com/jsmoptions';
+
   var NAV_TR = {
     '/': 'Ana Sayfa',
     '/level1/': 'Giriş',
@@ -106,10 +108,14 @@
       '<a href="https://jsm-loudness.com/" target="_blank" rel="noopener">JSM Loudness</a>' +
       '</div>'
     );
+    var bmc = lang() === 'tr'
+      ? '<a class="bmc-link" href="' + BMC_URL + '" target="_blank" rel="noopener">☕ Bana bir kahve ısmarla</a>'
+      : '<a class="bmc-link" href="' + BMC_URL + '" target="_blank" rel="noopener">☕ Buy me a coffee</a>';
     footer.innerHTML =
       '<div class="footer-note">' + (lang() === 'tr'
         ? 'Yalnızca eğitim amaçlıdır — yatırım tavsiyesi değildir. Opsiyon işlemleri zarar riski içerir.'
         : 'Educational only — not financial advice. Options involve risk of loss.') + '</div>' +
+      '<div class="footer-support">' + bmc + '</div>' +
       '<div class="footer-links">' +
       FOOTER_LINKS.map(function (item) {
         var pre = prefix();
