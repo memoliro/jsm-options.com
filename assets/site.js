@@ -123,11 +123,7 @@
         }
         return '<a href="' + href + '">' + label + '</a>';
       }).join('\n') +
-      '</div>' +
-      '<div class="footer-install">' +
-      '<button type="button" class="footer-install-btn" id="jsmFooterInstall">' +
-      (lang() === 'tr' ? 'Cihaza yükle' : 'Install to your device') +
-      '</button></div>' + toolsHtml;
+      '</div>' + toolsHtml;
   }
 
   function initTheme() {
@@ -238,64 +234,26 @@
   }
 
 
-  var deferredInstall = null;
-
-  function installHelpText() {
-    var ua = navigator.userAgent || '';
-    var ios = /iPhone|iPad|iPod/i.test(ua);
-    if (lang() === 'tr') {
-      if (ios) return 'iPhone / iPad: Paylaş düğmesi → Ana Ekrana Ekle.';
-      return 'Chrome veya Edge menüsünden “Uygulamayı yükle” / “Install app” seçin. Safari ve bazı tarayıcılarda bu seçenek yoktur.';
+  // PWA installation is intentionally disabled on JSM Options.
+  // Also clean up service workers/caches from older versions of the site so
+  // returning visitors are no longer offered an installable web app.
+  function disablePwa() {
+    if (!('serviceWorker' in navigator)) return;
+    navigator.serviceWorker.getRegistrations().then(function (registrations) {
+      registrations.forEach(function (registration) {
+        try { registration.unregister(); } catch (e) {}
+      });
+    }).catch(function () {});
+    if ('caches' in window) {
+      caches.keys().then(function (keys) {
+        keys.forEach(function (key) {
+          if (/^jsm-options-v/i.test(key)) {
+            try { caches.delete(key); } catch (e) {}
+          }
+        });
+      }).catch(function () {});
     }
-    if (ios) return 'iPhone / iPad: tap Share, then Add to Home Screen.';
-    return 'In Chrome or Edge, open the browser menu and choose Install app. Safari and some browsers do not offer an install prompt.';
   }
-
-  function showInstallHelp() {
-    var old = document.getElementById('jsmInstallHelp');
-    if (old) old.remove();
-    var box = document.createElement('div');
-    box.id = 'jsmInstallHelp';
-    box.className = 'jsm-install-help';
-    box.setAttribute('role', 'status');
-    box.innerHTML = '<p>' + installHelpText() + '</p><button type="button" class="jsm-install-dismiss" id="jsmInstallHelpClose">' +
-      (lang() === 'tr' ? 'Kapat' : 'Close') + '</button>';
-    var footer = document.querySelector('.site-footer');
-    if (footer) footer.appendChild(box);
-    else document.body.appendChild(box);
-    document.getElementById('jsmInstallHelpClose').addEventListener('click', function () { box.remove(); });
-  }
-
-  function bindFooterInstall() {
-    var btn = document.getElementById('jsmFooterInstall');
-    if (!btn) return;
-    if (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) {
-      btn.hidden = true;
-      return;
-    }
-    btn.addEventListener('click', function () {
-      if (deferredInstall && deferredInstall.prompt) {
-        deferredInstall.prompt();
-        deferredInstall.userChoice.then(function () { deferredInstall = null; }).catch(function () {});
-        return;
-      }
-      showInstallHelp();
-    });
-  }
-
-  function registerPwa() {
-    var man = document.querySelector('link[rel="manifest"]');
-    if (man && lang() === 'tr') man.setAttribute('href', '/tr/site.webmanifest');
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('/sw.js').catch(function () {});
-    }
-    window.addEventListener('beforeinstallprompt', function (e) {
-      e.preventDefault();
-      deferredInstall = e;
-    });
-    bindFooterInstall();
-  }
-
 
   function shouldUseRails() {
     var p = location.pathname || '/';
@@ -325,24 +283,16 @@
     toc.innerHTML = '<div class="toc-kicker">' + (lang() === 'tr' ? 'Bu sayfada' : 'On this page') + '</div><nav>' + tocHtml + '</nav>';
     var main = document.createElement('div');
     main.className = 'page-main';
-    var ads = document.createElement('aside');
-    ads.className = 'page-ads';
-    ads.innerHTML = '<div class="page-ads-card"><div class="ads-kicker">' +
-      (lang() === 'tr' ? 'Reklam' : 'Advertising') +
-      '</div><div class="page-ads-slot" data-ad-slot="future">' +
-      (lang() === 'tr' ? 'Reklam alanı' : 'Ad slot') +
-      '</div></div>';
     wrap.parentNode.insertBefore(rails, wrap);
     rails.appendChild(toc);
     rails.appendChild(main);
-    rails.appendChild(ads);
     main.appendChild(wrap);
   }
 
     injectTrGlossary();
     initTheme();
     initNavToggle();
-    registerPwa();
+    disablePwa();
     wrapPageRails();
   }
 
