@@ -296,10 +296,54 @@
     bindFooterInstall();
   }
 
+
+  function shouldUseRails() {
+    var p = location.pathname || '/';
+    if (p.indexOf('/builder') !== -1) return false;
+    if (p.indexOf('/contact') !== -1) return false;
+    return !!document.querySelector('.wrap');
+  }
+
+  function wrapPageRails() {
+    if (!shouldUseRails()) return;
+    if (document.querySelector('.page-rails')) return;
+    var wrap = document.querySelector('.wrap');
+    if (!wrap) return;
+    var hs = Array.prototype.slice.call(wrap.querySelectorAll('h1,h2')).filter(function (h) {
+      return h.textContent && h.textContent.trim().length > 1;
+    }).slice(0, 14);
+    var tocHtml = hs.map(function (h, i) {
+      if (!h.id) h.id = 'sec-' + i;
+      return '<a href="#' + h.id + '">' + h.textContent.trim() + '</a>';
+    }).join('');
+    if (!tocHtml) tocHtml = '<a href="#">' + (lang() === 'tr' ? 'Bu sayfa' : 'This page') + '</a>';
+
+    var rails = document.createElement('div');
+    rails.className = 'page-rails';
+    var toc = document.createElement('aside');
+    toc.className = 'page-toc';
+    toc.innerHTML = '<div class="toc-kicker">' + (lang() === 'tr' ? 'Bu sayfada' : 'On this page') + '</div><nav>' + tocHtml + '</nav>';
+    var main = document.createElement('div');
+    main.className = 'page-main';
+    var ads = document.createElement('aside');
+    ads.className = 'page-ads';
+    ads.innerHTML = '<div class="page-ads-card"><div class="ads-kicker">' +
+      (lang() === 'tr' ? 'Reklam' : 'Advertising') +
+      '</div><div class="page-ads-slot" data-ad-slot="future">' +
+      (lang() === 'tr' ? 'Reklam alanı' : 'Ad slot') +
+      '</div></div>';
+    wrap.parentNode.insertBefore(rails, wrap);
+    rails.appendChild(toc);
+    rails.appendChild(main);
+    rails.appendChild(ads);
+    main.appendChild(wrap);
+  }
+
     injectTrGlossary();
     initTheme();
     initNavToggle();
     registerPwa();
+    wrapPageRails();
   }
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);

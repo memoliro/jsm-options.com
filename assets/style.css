@@ -113,40 +113,45 @@ td{color:#c8d0dc}
 
 /* Light theme for pages using the shared stylesheet */
 html[data-theme="light"]{
-  --bg:#f5f7fb;
+  --bg:#f3f4f6;
   --card:#ffffff;
-  --border:#d7dee9;
-  --text:#172033;
-  --muted:#64748b;
-  --accent:#2563eb;
-  --green:#16a34a;
+  --border:#e5e7eb;
+  --text:#111827;
+  --muted:#6b7280;
+  --accent:#0f766e;
+  --green:#15803d;
   --red:#dc2626;
   --yellow:#ca8a04;
-  --input:#eef2f7;
+  --input:#f9fafb;
 }
 html[data-theme="light"] body{background:var(--bg);color:var(--text)}
 html[data-theme="light"] .site-header,
 html[data-theme="light"] header.site-header,
 html[data-theme="light"] header{
-  background:rgba(255,255,255,.92);
+  background:rgba(255,255,255,.94);
 }
-html[data-theme="light"] .nav a{background:var(--card);color:var(--muted)}
-html[data-theme="light"] .nav a:hover{color:var(--text)}
-html[data-theme="light"] .hero{background:linear-gradient(135deg,#ffffff,#eef4fb)}
+html[data-theme="light"] .nav a{background:#fff;color:#4b5563;border-color:#e5e7eb}
+html[data-theme="light"] .nav a:hover{color:#111827;border-color:#0f766e}
+html[data-theme="light"] .nav a.active{background:#0f766e;color:#fff;border-color:#0f766e}
+html[data-theme="light"] .hero{background:#fff;border-color:#e5e7eb}
+html[data-theme="light"] h1{
+  background:none;-webkit-text-fill-color:#111827;color:#111827;
+}
+html[data-theme="light"] h2{color:#111827}
+html[data-theme="light"] h3{color:#111827}
 html[data-theme="light"] p,
 html[data-theme="light"] li,
-html[data-theme="light"] td{color:#475569}
-html[data-theme="light"] h2{color:#1d4ed8}
-html[data-theme="light"] h3{color:var(--text)}
-html[data-theme="light"] a{color:#1d4ed8}
-html[data-theme="light"] a:hover{color:#1e40af}
-html[data-theme="light"] .analogy{color:#475569}
-html[data-theme="light"] .term{background:#e2e8f0;color:#172033}
-html[data-theme="light"] th{background:#eef2f7;color:#1d4ed8}
-html[data-theme="light"] .btn-secondary{background:#e2e8f0;border-color:#cbd5e1;color:#334155!important}
-html[data-theme="light"] footer a:hover{color:#1d4ed8}
-html[data-theme="light"] .warn{color:#991b1b;background:rgba(220,38,38,.06)}
-html[data-theme="light"] .note{color:#1e40af;background:rgba(37,99,235,.06)}
+html[data-theme="light"] td{color:#374151}
+html[data-theme="light"] a{color:#0f766e}
+html[data-theme="light"] a:hover{color:#115e59}
+html[data-theme="light"] .analogy{color:#374151;background:#f9fafb;border-color:#e5e7eb}
+html[data-theme="light"] .term{background:#f3f4f6;color:#111827}
+html[data-theme="light"] th{background:#f9fafb;color:#111827}
+html[data-theme="light"] .btn-secondary{background:#f3f4f6;border-color:#e5e7eb;color:#111827!important}
+html[data-theme="light"] footer a:hover{color:#0f766e}
+html[data-theme="light"] .warn{color:#991b1b;background:#fef2f2}
+html[data-theme="light"] .note{color:#1e3a5f;background:#f8fafc}
+html[data-theme="light"] .card{box-shadow:0 1px 2px rgba(17,24,39,.04)}
 
 @media(max-width:800px){
   .site-header-inner{gap:8px}
@@ -432,3 +437,45 @@ html[data-theme="light"] .note{color:#1e40af;background:rgba(37,99,235,.06)}
   background:var(--card);color:var(--muted);font-size:13px;line-height:1.45;
 }
 .jsm-install-help p{margin:0 0 8px}
+
+/* Lesson rails: TOC | article | ads */
+.page-rails{
+  max-width:1280px;margin:0 auto;padding:20px 16px 8px;
+  display:grid;grid-template-columns:220px minmax(0,1fr) 220px;gap:22px;
+  align-items:start;
+}
+.page-toc,.page-ads{
+  position:sticky;top:72px;
+}
+.page-toc,.page-ads-card{
+  background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px 14px 16px;
+}
+.page-toc .toc-kicker{
+  font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);font-weight:700;margin-bottom:8px;
+}
+.page-toc a{
+  display:block;padding:7px 8px 7px 10px;margin:2px 0;border-left:2px solid transparent;
+  color:var(--muted);font-size:13px;line-height:1.35;border-radius:0 8px 8px 0;
+}
+.page-toc a:hover,.page-toc a.is-active{
+  color:var(--text);border-left-color:var(--accent);background:var(--input);
+}
+.page-main .wrap{max-width:none;padding:0}
+.page-ads-card .ads-kicker{
+  font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:700;margin-bottom:8px;
+}
+.page-ads-slot{
+  min-height:240px;border:1px dashed var(--border);border-radius:10px;
+  background:var(--input);color:var(--muted);font-size:12px;
+  display:grid;place-items:center;text-align:center;padding:16px;
+}
+@media(max-width:1100px){
+  .page-rails{grid-template-columns:200px minmax(0,1fr); }
+  .page-ads{display:none}
+}
+@media(max-width:800px){
+  .page-rails{grid-template-columns:1fr;padding-top:12px}
+  .page-toc{position:static}
+  .page-toc nav{display:flex;flex-wrap:wrap;gap:4px}
+  .page-toc a{border-left:0;border-radius:999px;background:var(--input);padding:6px 10px}
+}
