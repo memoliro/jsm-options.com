@@ -140,8 +140,9 @@
     }
     var saved = null;
     try { saved = localStorage.getItem('jsm-theme'); } catch (e) {}
+    // Dark mode is the site default. If a visitor explicitly switches
+    // to light mode, keep that preference for future visits.
     if (saved === 'light' || saved === 'dark') applyTheme(saved);
-    else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) applyTheme('light');
     else applyTheme('dark');
     if (toggle) {
       var fresh = toggle.cloneNode(true);
