@@ -25,7 +25,7 @@
     { href: '/privacy/', label: 'Privacy' }
   ];
 
-  var BMC_URL = 'https://www.buymeacoffee.com/jsmoptions';
+  var BMC_URL = 'https://www.buymeacoffee.com/memoliro';
 
   var NAV_TR = {
     '/': 'Ana Sayfa',
