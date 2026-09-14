@@ -407,3 +407,15 @@ html[data-theme="light"] .note{color:#1e40af;background:rgba(37,99,235,.06)}
 .term-glossary dt{font-weight:700;color:var(--text)}
 .term-glossary dd{margin:0;color:var(--muted);font-size:14px}
 @media(max-width:700px){.term-glossary{grid-template-columns:1fr}}
+
+.jsm-install-bar{
+  position:fixed;left:16px;right:16px;bottom:16px;z-index:80;
+  display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:center;
+  padding:12px 14px;border-radius:14px;
+  background:var(--card);border:1px solid var(--border);
+  box-shadow:0 12px 32px rgba(0,0,0,.35);
+  color:var(--text);font-size:14px;
+}
+.jsm-install-dismiss{
+  background:transparent;border:0;color:var(--muted);cursor:pointer;font-size:13px;
+}

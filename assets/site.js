@@ -233,9 +233,40 @@
     footer.parentNode.insertBefore(wrap, footer);
   }
 
+
+  function registerPwa() {
+    var man = document.querySelector('link[rel="manifest"]');
+    if (man && lang() === 'tr') man.setAttribute('href', '/tr/site.webmanifest');
+    if (!('serviceWorker' in navigator)) return;
+    navigator.serviceWorker.register('/sw.js').catch(function () {});
+    window.addEventListener('beforeinstallprompt', function (e) {
+      e.preventDefault();
+      if (sessionStorage.getItem('jsm-install-dismissed') === '1') return;
+      if (document.getElementById('jsmInstallBar')) return;
+      var bar = document.createElement('div');
+      bar.id = 'jsmInstallBar';
+      bar.className = 'jsm-install-bar';
+      var label = lang() === 'tr' ? 'Ana ekrana ekle' : 'Install app';
+      var later = lang() === 'tr' ? 'Şimdi değil' : 'Not now';
+      bar.innerHTML = '<span>' + (lang() === 'tr' ? 'JSM Options’ı cihaza yükleyin' : 'Install JSM Options on this device') + '</span>' +
+        '<button type="button" class="bmc-link" id="jsmInstallBtn">' + label + '</button>' +
+        '<button type="button" class="jsm-install-dismiss" id="jsmInstallDismiss">' + later + '</button>';
+      document.body.appendChild(bar);
+      document.getElementById('jsmInstallBtn').addEventListener('click', function () {
+        e.prompt();
+        bar.remove();
+      });
+      document.getElementById('jsmInstallDismiss').addEventListener('click', function () {
+        sessionStorage.setItem('jsm-install-dismissed', '1');
+        bar.remove();
+      });
+    });
+  }
+
     injectTrGlossary();
     initTheme();
     initNavToggle();
+    registerPwa();
   }
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
