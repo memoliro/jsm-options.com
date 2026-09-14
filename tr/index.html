@@ -49,6 +49,10 @@
 }
 </style>
 <script defer="" src="/assets/site.js?v=20260920"></script>
+
+<style id="what-is-option-home">
+.what-is-option-article{max-width:980px;margin-left:auto;margin-right:auto}.article-card{padding:28px;border:1px solid var(--border);border-radius:18px;background:var(--card);box-shadow:0 10px 30px rgba(0,0,0,.06)}.article-card p{font-size:15px;line-height:1.7;color:var(--muted)}.article-card .lead{font-size:18px;color:var(--text)}.article-card h3{margin:30px 0 10px;font-size:22px;color:var(--text)}.article-card ul{padding-left:22px;color:var(--muted);line-height:1.7}.article-list{display:grid;grid-template-columns:1fr 1fr;gap:9px;padding-left:22px;color:var(--muted);line-height:1.6}.article-list li{padding:9px 10px}.article-card .concept-grid{margin:15px 0}.article-card .concept-card{padding:16px}.article-card .concept-card h4{margin:0 0 6px;font-size:16px}.article-card .concept-card p{margin:0;font-size:13px}.article-card .analogy-box,.article-card .example-box{margin:16px 0;padding:15px 17px;border-radius:11px;background:var(--input);color:var(--text);line-height:1.6}.article-card .example-box{border-left:3px solid var(--accent)}.beginner-table{width:100%;border-collapse:collapse;margin:15px 0 20px;font-size:13px}.beginner-table th,.beginner-table td{border:1px solid var(--border);padding:11px;text-align:left}.beginner-table th{background:var(--input);color:var(--text)}.beginner-table td{color:var(--muted)}.six-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:15px 0}.six-grid div{padding:14px;border:1px solid var(--border);border-radius:12px;background:var(--input)}.six-grid strong{display:block;color:var(--text);margin-bottom:5px}.six-grid span{display:block;color:var(--muted);font-size:12px;line-height:1.45}.key-takeaway{margin:24px 0;padding:18px;border:1px solid var(--accent);border-radius:14px;background:var(--input)}.key-takeaway strong{color:var(--text)}.key-takeaway p{margin:7px 0 0!important}.what-is-option-article .home-note{font-size:11px}.article-card .concept-grid{grid-template-columns:1fr 1fr}@media(max-width:700px){.article-card{padding:20px}.article-list,.article-card .concept-grid,.six-grid{grid-template-columns:1fr}.article-card h3{font-size:20px}.beginner-table{font-size:12px}.beginner-table th,.beginner-table td{padding:8px}}
+</style>
 </head><body><header class="site-header"><div class="site-header-inner"><a aria-label="JSM Options Home" class="logo logo-link" href="/tr/"><div class="logo-icon">JSM</div><div><div style="font-weight:700">JSM Options</div><div class="brand-sub">jsm-options.com · Educational</div></div></a><div class="header-right"><nav aria-label="Primary navigation" class="nav"><a class="active" href="/tr/">Home</a><a href="/tr/level1/">Basics</a><a href="/tr/level2/">Fundamentals</a><a href="/tr/level3/">Spreads</a><a href="/tr/level4/">Advanced</a><a href="/tr/strategies/">Strategies</a><a href="/tr/cheat-sheet/">Cheat sheet</a><a href="/tr/builder/">Builder</a></nav><button aria-expanded="false" aria-label="Open menu" class="nav-toggle" id="navToggle" type="button"><span></span><span></span><span></span></button><button aria-label="Toggle color theme" class="theme-toggle" id="themeToggle" type="button"><span class="theme-icon" id="themeIcon">☼</span><span class="theme-label" id="themeLabel">Dark</span></button></div></div></header><main class="wrap wide">
 <div class="card term-banner">
 <p style="margin:0"><b>Temel terimler</b> — call, put, strike, premium, expiry ve strateji adları bilinçli olarak İngilizce bırakıldı. Uluslararası borsalarda işlem yapmak için bu terimlere alışmalısınız. Türkçe karşılıkları sayfa sonunda vardır.</p>
@@ -64,28 +68,58 @@
 <text fill="#fca5a5" font-family="system-ui,sans-serif" font-size="12" text-anchor="middle" x="230" y="215">Ortada zarar</text><text fill="#86efac" font-family="system-ui,sans-serif" font-size="12" text-anchor="start" x="55" y="75">Kâr</text><text fill="#86efac" font-family="system-ui,sans-serif" font-size="12" text-anchor="start" x="450" y="75">Kâr</text>
 </svg>
 <div class="demo-legend"><span style="color:#ef4444">■ Kırmızı = zarar</span><span style="color:#22c55e">■ Yeşil = kâr</span><span style="opacity:.7">Beyaz çizgi = P/L at expiry</span></div></div></section>
-<section class="home-section beginner-first">
-<div class="section-head">
-<div>
-<div class="eyebrow">1. Adım · Buradan başlayın</div>
-<h2>Opsiyon nedir?</h2>
-<p>Call ve put öğrenmeden önce, opsiyon sözleşmesinin kendisini anlayın.</p>
-</div>
-<a class="btn-secondary" href="/tr/level1/">Başlangıç dersini oku →</a>
-</div>
-<div class="concept-grid">
-<article class="concept-card">
-<h3>Opsiyon bir sözleşmedir</h3>
-<p>Opsiyon; hisse senedi gibi bir dayanak varlıkla bağlantılı finansal bir sözleşmedir. Alıcıya belirli haklar, satıcıya ise belirli yükümlülükler verir.</p>
-<div class="analogy-box"><strong>Rezervasyon gibi düşünün:</strong> bugün bir ücret ödeyerek, belirli bir tarihe kadar üzerinde anlaşılan fiyattan işlem yapma hakkı elde edersiniz.</div>
-</article>
-<article class="concept-card">
-<h3>Her opsiyonun temel şartları vardır</h3>
-<p>Önce şu altı temel unsuru tanıyın: sözleşme, alıcı ve satıcı, haklar ve yükümlülükler, kullanım fiyatı (strike), vade tarihi ve prim.</p>
-<div class="analogy-box"><strong>Başlangıç kısayolu:</strong> Call = alma hakkı · Put = satma hakkı. Bunları, opsiyonun ne olduğunu öğrendikten sonra ayrıntılı inceleyeceğiz.</div>
-</article>
-</div>
-</section><section class="home-section"><div class="section-head"><div><h2>Nereden başlayacağınızı seçin</h2><p>Başlamadan her şeyi bilmeniz gerekmez.</p></div></div><div class="path-grid"><a class="path-card" href="/tr/level1/"><span class="path-num">01 · YENİ BAŞLAYAN</span><h3>Giriş’ten başla</h3><p>Call, put, strike, premium, expiry — önce gereken dil.</p></a><a class="path-card" href="/tr/level2/"><span class="path-num">02 · YAPI TAŞLARI</span><h3>Temelleri öğren</h3><p>Long, short, covered ve koruma pozisyonlarını sayısal örneklerle görün.</p></a><a class="path-card" href="/tr/level3/"><span class="path-num">03 · BİRLEŞİMLER</span><h3>Spreadleri keşfet</h3><p>Vertical spread ve Iron Condor gibi defined-risk birleşimleri anlayın.</p></a><a class="path-card" href="/tr/level4/"><span class="path-num">04 · DERİNE İN</span><h3>İleri seviyeyi incele</h3><p>Calendar spread, LEAPS, daha uzun DTE ve ileri kavramlara geçin.</p></a></div></section>
+<section class="home-section what-is-option-article" id="what-is-an-option">
+<div class="section-head"><div><div class="eyebrow">1. Adım · Buradan başlayın</div><h2>Opsiyon Nedir?</h2><p>Her opsiyon yatırımcısının önce okuması gereken başlangıç dersi.</p></div></div>
+<div class="article-card">
+<p class="lead">Opsiyon işlemlerine tamamen yeniyseniz, ilk anlamanız gereken şey <strong>opsiyonun gerçekte ne olduğudur</strong>.</p>
+<p>Opsiyon bir hisse senedi değildir. Opsiyon işlemi yaptığınızda doğrudan hisse alıp satmazsınız. Bunun yerine, bir kişiye belirli <strong>haklar</strong>, diğer tarafa ise belirli <strong>yükümlülükler</strong> veren bir <strong>finansal sözleşme</strong> alıp satarsınız.</p>
+<p>İlk başta karmaşık görünebilir. Ancak temel fikir oldukça basittir. Her opsiyonun birkaç temel özelliği vardır. Bunları anladığınızda opsiyon zincirini okumak ve Covered Call ile Cash-Secured Put gibi stratejileri öğrenmek çok daha kolay hale gelir.</p>
+<h3>Her Opsiyonda Bilmeniz Gereken 6 Şey</h3>
+<ol class="article-list"><li><strong>Bir sözleşmedir</strong></li><li><strong>Sözleşmenin iki tarafı vardır</strong></li><li><strong>Alıcı bir hak elde eder</strong></li><li><strong>Opsiyonun bir kullanım fiyatı vardır</strong></li><li><strong>Opsiyonun bir vade tarihi vardır</strong></li><li><strong>Opsiyonun bir primi (fiyatı) vardır</strong></li></ol>
+<p>Bunları ezberlemek zorunda değilsiniz. Amaç ne anlama geldiklerini anlamaktır.</p>
+<h3>1. Opsiyon Bir Sözleşmedir</h3>
+<p>Opsiyon bir <strong>finansal sözleşmedir</strong>. Bir şirketin hisselerini aldığınızda o şirketin bir bölümüne sahip olursunuz. Opsiyon aldığınızda ise hisseye sahip olmazsınız. Bunun yerine, hisseyle ilgili belirli haklar veren bir sözleşmeye sahip olursunuz.</p>
+<p>Örneğin bir opsiyon size Apple hisselerini belirli bir fiyattan ve belirli bir tarihe kadar alma hakkı verebilir. Hisse senedine <strong>dayanak varlık</strong> denir.</p>
+<div class="analogy-box"><strong>Şöyle düşünün:</strong><br>Hisse senedi → dayanak varlık<br>Opsiyon → değeri bu varlıkla bağlantılı olan sözleşme</div>
+<h3>2. Her Opsiyonun İki Tarafı Vardır</h3>
+<p>Bir opsiyon sözleşmesinin her zaman iki tarafı vardır: <strong>alıcı</strong> ve <strong>satıcı</strong>. Alıcı opsiyonu elde etmek için para öder. Satıcı bu parayı alır ve bir yükümlülük üstlenir.</p>
+<p>Bu önemlidir çünkü opsiyon işlemi yalnızca sizin "piyasaya karşı" işlem yapmanız değildir. Sözleşmenin diğer tarafında başka bir işlemci vardır.</p>
+<h3>3. Alıcı Bir Hak Elde Eder — Yükümlülük Değil</h3>
+<p>Yeni başlayanlar için en önemli kavramlardan biri budur.</p>
+<p>Bir <strong>opsiyon satın aldığınızda</strong> bir <strong>hak</strong> elde edersiniz. Hisseyi otomatik olarak almak veya satmak zorunda değilsiniz.</p>
+<div class="concept-grid"><div class="concept-card"><h4>Call Opsiyonu</h4><p>Call, alıcıya dayanak hisseyi kullanım fiyatından <strong>alma hakkı</strong> verir.</p></div><div class="concept-card"><h4>Put Opsiyonu</h4><p>Put, alıcıya dayanak hisseyi kullanım fiyatından <strong>satma hakkı</strong> verir.</p></div></div>
+<p>Opsiyon satıcısının durumu farklıdır. Satıcı primi alır ve alıcı opsiyonu kullanırsa sözleşmenin gerektirdiği <strong>yükümlülüğü</strong> yerine getirmek zorunda olabilir.</p>
+<div class="analogy-box"><strong>Hatırlayın:</strong> Opsiyon alıcısı → Hak &nbsp; | &nbsp; Opsiyon satıcısı → Yükümlülük</div>
+<h3>4. Her Opsiyonun Bir Kullanım Fiyatı Vardır</h3>
+<p><strong>Kullanım fiyatı (strike price)</strong>, opsiyon sözleşmesinde belirtilen fiyattır. Dayanak hissenin sözleşmeye göre hangi fiyattan alınabileceğini veya satılabileceğini belirler.</p>
+<p>Örneğin Apple'ın 240$'dan işlem gördüğünü düşünün. <strong>250$ kullanım fiyatlı</strong> bir call satın alabilirsiniz. Bu sözleşme, şartlarına bağlı olarak Apple hisselerini 250$'dan alma hakkı verebilir.</p>
+<div class="analogy-box"><strong>Basit örnek:</strong><br>Call → kullanım fiyatından <strong>ALMA</strong> hakkı<br>Put → kullanım fiyatından <strong>SATMA</strong> hakkı</div>
+<h3>5. Her Opsiyonun Bir Vade Tarihi Vardır</h3>
+<p>Opsiyonlar sonsuza kadar sürmez. Her opsiyonun bir <strong>vade tarihi</strong> vardır. Bu tarih sözleşmenin ne zaman sona ereceğini gösterir.</p>
+<p>Bir opsiyon iki gün, 30 gün, altı ay veya iki yıl sonra sona erebilir. Vade geldiğinde sözleşme artık aktif bir opsiyon değildir.</p>
+<p>Bu, hisse sahibi olmaktan farklıdır. Hisselerin normalde bir vade tarihi yoktur. Opsiyonların vardır.</p>
+<p><strong>Neden önemli?</strong> Zaman, opsiyonun değerinin önemli bir parçasıdır. Vadesine aylar kalan bir opsiyonun, diğer koşullar aynı olduğunda, yarın sona erecek bir opsiyona göre hareket için daha fazla zamanı vardır. İleride <strong>zaman değeri kaybını</strong> ve <strong>Theta</strong> adlı Greek'i öğreneceksiniz.</p>
+<div class="analogy-box"><strong>Başlangıç için önemli:</strong> Her opsiyonun bir son tarihi vardır.</div>
+<h3>6. Her Opsiyonun Bir Primi Vardır</h3>
+<p><strong>Prim (premium)</strong>, opsiyonun fiyatıdır. Alıcının sözleşmenin sağladığı haklar karşılığında satıcıya ödediği tutardır.</p>
+<p>Örneğin bir Apple opsiyonunun primi <strong>15$</strong> olsun. Burada önemli bir ayrıntı vardır: opsiyon fiyatları genellikle hisse başına gösterilir, ancak standart bir opsiyon sözleşmesi genel olarak <strong>100 hisseyi</strong> temsil eder.</p>
+<div class="example-box"><strong>Örnek:</strong><br>15$ prim × 100 hisse = <strong>1.500$</strong> bir standart sözleşme için, komisyon ve ücretler hariç.</div>
+<p>Yani 1.500$ ödeyerek Apple hisselerini satın almıyorsunuz. Opsiyon sözleşmesinin sağladığı haklar için 1.500$ ödüyorsunuz.</p>
+<h3>Her Şeyi Bir Araya Getirelim</h3>
+<p>Apple'ın şu anda <strong>240$</strong> olduğunu düşünelim. Şu özelliklere sahip bir call buldunuz:</p>
+<ul><li><strong>Dayanak varlık:</strong> Apple</li><li><strong>Tür:</strong> Call</li><li><strong>Kullanım fiyatı:</strong> 250$</li><li><strong>Vade:</strong> 30 gün sonra</li><li><strong>Prim:</strong> 15$</li></ul>
+<p>Bu, sözleşme şartlarına göre vade tarihine kadar Apple'ı <strong>250$'dan alma hakkı</strong> veren bir sözleşme satın aldığınız anlamına gelir.</p>
+<p>Prim hisse başına 15$'dır. Standart 100 hisselik bir sözleşmede bu <strong>1.500$</strong> eder.</p>
+<h3>Call ve Put: Hızlı Özet</h3>
+<table class="beginner-table"><thead><tr><th></th><th>Call</th><th>Put</th></tr></thead><tbody><tr><td>Alıcı hangi hakkı elde eder?</td><td><strong>Almak</strong></td><td><strong>Satmak</strong></td></tr><tr><td>Kullanım fiyatı</td><td>Alım için belirlenen fiyat</td><td>Satım için belirlenen fiyat</td></tr><tr><td>Alıcı ne öder?</td><td>Prim</td><td>Prim</td></tr><tr><td>Satıcı ne alır?</td><td>Prim</td><td>Prim</td></tr></tbody></table>
+<p>Başlangıç için şu kısa yolu kullanabilirsiniz: <strong>Call = alma hakkı</strong>, <strong>Put = satma hakkı</strong>. Bunun <strong>opsiyon alıcısını</strong> anlattığını unutmayın; opsiyon satmak farklı bir pozisyon ve yükümlülük oluşturur.</p>
+<h3>6 Temel Özellik Kısaca</h3>
+<div class="six-grid"><div><strong>① Sözleşme</strong><span>Bir dayanak varlıkla bağlantılı finansal sözleşmedir.</span></div><div><strong>② İki Taraf</strong><span>Bir alıcı ve bir satıcı vardır.</span></div><div><strong>③ Haklar ve Yükümlülükler</strong><span>Alıcı hak elde eder; satıcı yükümlülük üstlenir.</span></div><div><strong>④ Kullanım Fiyatı</strong><span>Dayanağın alınacağı veya satılacağı belirlenmiş fiyat.</span></div><div><strong>⑤ Vade</strong><span>Sözleşmenin bir son tarihi vardır.</span></div><div><strong>⑥ Prim</strong><span>Alıcının opsiyon için satıcıya ödediği fiyattır.</span></div></div>
+<div class="key-takeaway"><strong>Neyi hatırlamalısınız?</strong><p>Opsiyonlar sözleşmelerdir. Her sözleşmenin bir alıcısı ve satıcısı vardır. Alıcı hak elde eder, satıcı ise yükümlülük üstlenir. Her opsiyonun kullanım fiyatı, vade tarihi ve primi vardır.</p></div>
+<p>Bu kavramlar oturduğunda, opsiyon zincirinde gördüğünüz rakamlar çok daha anlamlı hale gelecektir. <strong>Sıradaki adımda bu özelliklerin aracı kurum ekranında nasıl göründüğüne ve opsiyon zincirinin nasıl okunacağına bakacağız.</strong></p>
+<p class="home-note">Yalnızca eğitim amaçlıdır — yatırım tavsiyesi değildir. Opsiyon işlemleri risk içerir ve zarara yol açabilir. Örnekler basitleştirilmiştir.</p>
+</div></section>
+<section class="home-section"><div class="section-head"><div><h2>Nereden başlayacağınızı seçin</h2><p>Başlamadan her şeyi bilmeniz gerekmez.</p></div></div><div class="path-grid"><a class="path-card" href="/tr/level1/"><span class="path-num">01 · YENİ BAŞLAYAN</span><h3>Giriş’ten başla</h3><p>Call, put, strike, premium, expiry — önce gereken dil.</p></a><a class="path-card" href="/tr/level2/"><span class="path-num">02 · YAPI TAŞLARI</span><h3>Temelleri öğren</h3><p>Long, short, covered ve koruma pozisyonlarını sayısal örneklerle görün.</p></a><a class="path-card" href="/tr/level3/"><span class="path-num">03 · BİRLEŞİMLER</span><h3>Spreadleri keşfet</h3><p>Vertical spread ve Iron Condor gibi defined-risk birleşimleri anlayın.</p></a><a class="path-card" href="/tr/level4/"><span class="path-num">04 · DERİNE İN</span><h3>İleri seviyeyi incele</h3><p>Calendar spread, LEAPS, daha uzun DTE ve ileri kavramlara geçin.</p></a></div></section>
 
 <section class="home-section"><div class="section-head"><div><h2>Piyasa görüşünüzle başlayın</h2><p>Stratejiler bir beklentiye bağlanınca daha anlamlı olur.</p></div><a href="/tr/strategies/">Tüm stratejiler →</a></div><div class="outlook-grid"><div class="outlook"><b>↗ Bullish</b><p>Dayanağın yükseleceğini beklersiniz.</p></div><div class="outlook"><b>↘ Bearish</b><p>Dayanağın düşeceğini beklersiniz.</p></div><div class="outlook"><b>→ Neutral</b><p>Fiyatın bir bantta kalacağını beklersiniz.</p></div><div class="outlook"><b>⚡ Big Move</b><p>Yönü bilmeden büyük hareket beklersiniz.</p></div></div></section>
 <section class="home-section"><div class="builder-feature"><div><div class="eyebrow">Uygulama kısmı</div><h2>Opsiyonu yalnızca okumayın. Kurun.</h2><p>Strike, premium ve expiry fiyatını değiştirin. Payoff eğrisinin hareketini görün. Öğrendiğiniz kavramı Builder’da inceleyin.</p><a class="btn-primary" href="/tr/builder/">Strategy Builder’ı aç →</a></div><div class="checklist"><div class="check">✓ P/L at expiry</div><div class="check">✓ Break-even</div><div class="check">✓ Long ve short pozisyonlar</div><div class="check">✓ Çok bacaklı yapılar</div><div class="check">✓ Görsel kar/zarar eğrileri</div><div class="check">✓ Eğitim amaçlı, tarayıcıda çalışan araç</div></div></div></section>
