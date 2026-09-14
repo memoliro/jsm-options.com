@@ -1,22 +1,35 @@
-<!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<!doctype html>
+<html lang="tr" data-theme="dark">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
   <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48.png">
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
   <link rel="manifest" href="/site.webmanifest">
 
-  <title>Stratejiler — Yakında | JSM Options</title>
-  <meta name="description" content="Stratejiler sayfası hazırlanıyor. JSM Options Türkçe.">
-  <link rel="canonical" href="https://jsm-options.com/tr/strategies/">
+<title>Opsiyon Stratejileri Kütüphanesi | JSM Options</title>
+<meta name="description" content="26 opsiyon stratejisi: outlook, bacaklar, risk, payoff. Türkçe kütüphane — eğitim amaçlıdır.">
+<link rel="canonical" href="https://jsm-options.com/tr/strategies/">
+<link rel="alternate" hreflang="tr" href="https://jsm-options.com/tr/strategies/">
+<link rel="alternate" hreflang="en" href="https://jsm-options.com/strategies/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="JSM Options">
+<meta property="og:title" content="26 Options Trading Strategies Explained (Bullish, Bearish &amp; Neutral)">
+<meta property="og:description" content="Browse 26 common options strategies with plain-English explanations, market outlook, risk profile, and payoff sketches.">
+<meta property="og:url" content="https://jsm-options.com/tr/strategies/">
   <meta property="og:image" content="https://jsm-options.com/images/og-default.png">
   <meta name="twitter:image" content="https://jsm-options.com/images/og-default.png">
-  <meta property="og:type" content="website">
-  <link rel="stylesheet" href="/assets/style.css?v=20260914">
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-BDL003RCN6"></script>
-  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-BDL003RCN6');</script>
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="26 Options Trading Strategies Explained">
+<meta name="twitter:description" content="Covered call, iron condor, straddle, verticals, and more — plain-English strategy library for learners.">
+<link rel="stylesheet" href="/assets/style.css?v=20260914">
+<style>
+.strategy-toolbar{display:grid;grid-template-columns:1.4fr 1fr;gap:10px;margin:18px 0}.filters{display:flex;gap:7px;flex-wrap:wrap}.filter{padding:8px 12px;border:1px solid var(--border);background:var(--input);color:var(--muted);border-radius:999px;cursor:pointer;font-size:12px}.filter.active{background:#fff;color:#000;border-color:var(--text)}.strategy-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.strategy-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:18px;display:flex;flex-direction:column;min-height:290px;transition:.15s transform,.15s border-color}.strategy-card:hover{transform:translateY(-2px);border-color:#52525b}.strategy-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.strategy-head h2{font-size:20px;margin:0 0 5px}.pill{display:inline-flex;align-items:center;border:1px solid var(--border);border-radius:999px;padding:4px 8px;font-size:10px;color:var(--muted);white-space:nowrap}.pill.bullish{color:#86efac}.pill.bearish{color:#fca5a5}.pill.neutral{color:#d4d4d8}.pill.vol{color:#93c5fd}.pill.hedge{color:#fde68a}.strategy-card p{font-size:13px;color:var(--muted)}.legs{font-size:12px;color:var(--muted);margin:7px 0}.legs b{color:var(--text)}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:auto;padding-top:12px}.stat{background:var(--input);border:1px solid var(--border);border-radius:10px;padding:9px}.stat span{display:block;font-size:9px;color:var(--dim);text-transform:uppercase;letter-spacing:.05em}.stat strong{display:block;font-size:11px;margin-top:3px}.risk{font-size:11px;color:var(--muted);margin-top:9px}.risk strong{color:var(--text)}.empty{display:none;padding:25px;text-align:center;color:var(--muted);border:1px dashed var(--border);border-radius:14px}.mini-note{font-size:12px;color:var(--dim)}
+
+.payoff{margin-top:14px;border:1px solid var(--border);border-radius:12px;background:var(--input);padding:8px 8px 6px}.payoff svg{display:block;width:100%;height:150px}.payoff-note{font-size:9px;color:var(--dim);text-align:center;margin-top:2px}.payoff-label{font-size:9px;fill:#a1a1aa}.payoff-zero{stroke:#71717a;stroke-width:1;stroke-dasharray:3 3}.payoff-axis{stroke:#3f3f46;stroke-width:1}.payoff-line{fill:none;stroke:#22c55e;stroke-width:3;stroke-linejoin:round;stroke-linecap:round}.payoff-fill{fill:#22c55e;opacity:.14}.payoff-line.bearish{stroke:#ef4444}.payoff-fill.bearish{fill:#ef4444}.payoff-line.neutral{stroke:#60a5fa}.payoff-fill.neutral{fill:#60a5fa}.payoff-line.hedge{stroke:#f59e0b}.payoff-fill.hedge{fill:#f59e0b}.strategy-card .stats{margin-top:0}
+@media(max-width:800px){.strategy-grid{grid-template-columns:1fr}.strategy-toolbar{grid-template-columns:1fr}}
+@media(max-width:500px){.stats{grid-template-columns:1fr 1fr}.strategy-head{flex-direction:column}}
+</style>
 
 <style id="jsm-mobile-nav">
 .nav-toggle{display:none;box-sizing:border-box;width:44px;height:44px;min-width:44px;min-height:44px;padding:0;border:1px solid var(--border,#2d3a4f);border-radius:10px;background:var(--card,#1a2332);color:var(--text,#e7ecf3);cursor:pointer;align-items:center;justify-content:center;flex-direction:column;gap:5px;-webkit-tap-highlight-color:transparent;touch-action:manipulation;position:relative;z-index:40}
@@ -59,17 +72,51 @@
 <script src="/assets/site.js?v=20260917" defer></script>
 </head>
 <body>
-<header class="site-header"><div class="site-header-inner"><a class="logo logo-link" href="/" aria-label="JSM Options Home"><div class="logo-icon">JSM</div><div><div style="font-weight:700">JSM Options</div><div class="brand-sub">jsm-options.com · Educational</div></div></a><div class="header-right"><nav class="nav" aria-label="Primary navigation"><a href="/">Home</a><a href="/level1/">Basics</a><a href="/level2/">Fundamentals</a><a href="/level3/">Spreads</a><a href="/level4/">Advanced</a><a href="/strategies/">Strategies</a><a href="/cheat-sheet/">Cheat sheet</a><a href="/builder/">Builder</a></nav><button type="button" class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button><button type="button" class="theme-toggle" id="themeToggle" aria-label="Toggle color theme"><span id="themeIcon" class="theme-icon">☼</span><span id="themeLabel" class="theme-label">Dark</span></button></div></div></header>
-<div class="wrap">
-<nav class="breadcrumbs" aria-label="Breadcrumb"><a href="/tr/">Ana Sayfa</a><span aria-hidden="true">/</span><span aria-current="page">Stratejiler</span></nav>
-  <div class="card coming-soon">
-    <h1>Stratejiler</h1>
-    <p>Bu sayfanın Türkçe içeriği hazırlanıyor. Menü ve altbilgi İngilizce sitedekiyle aynıdır.</p>
-    <p><a class="btn" href="/strategies/">İngilizce sayfa</a>
-    <a class="btn btn-secondary" href="/tr/builder/">TR Builder</a></p>
-    <div class="warn"><strong>Yalnızca eğitim amaçlıdır</strong> — yatırım tavsiyesi değildir.</div>
-  </div>
+<header class="site-header"><div class="site-header-inner"><a class="logo logo-link" href="/tr/" aria-label="JSM Options Home"><div class="logo-icon">JSM</div><div><div style="font-weight:700">JSM Options</div><div class="brand-sub">jsm-options.com · Educational</div></div></a><div class="header-right"><nav class="nav" aria-label="Primary navigation"><a href="/">Home</a><a href="/level1/">Basics</a><a href="/level2/">Fundamentals</a><a href="/level3/">Spreads</a><a href="/level4/">Advanced</a><a href="/strategies/" class="active">Strategies</a><a href="/tr/cheat-sheet/">Cheat sheet</a><a href="/tr/builder/">Builder</a></nav><button type="button" class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button><button type="button" class="theme-toggle" id="themeToggle" aria-label="Toggle color theme"><span id="themeIcon" class="theme-icon">☼</span><span id="themeLabel" class="theme-label">Dark</span></button></div></div></header>
+<main class="wrap wide">
+<div class="card term-banner">
+  <p style="margin:0"><b>Temel terimler</b> — call, put, strike, premium, expiry ve strateji adları bilinçli olarak İngilizce bırakıldı. Uluslararası borsalarda işlem yapmak için bu terimlere alışmalısınız. Türkçe karşılıkları sayfa sonunda vardır.</p>
 </div>
+
+<nav class="breadcrumbs" aria-label="Breadcrumb"><a href="/tr/">Ana Sayfa</a><span aria-hidden="true">/</span><span aria-current="page">Stratejiler</span></nav>
+
+<section class="hero"><span class="badge">Strateji kütüphanesi • 26 yaygın strateji</span><h1>Opsiyon stratejileri, sade anlatım</h1><p>Bu kütüphane, piyasa beklentisini bir stratejiyle bağlar. Her kartta temel fikir, bacaklar, genel risk ve expiry’de ne olduğu vardır.</p><p class="mini-note">Bu sayfa eğitim içindir, işlem tavsiyesi değildir. Expiry’den önceki gerçek sonuçlar time decay, implied volatility, faiz, assignment ve başka etkenlere bağlıdır.</p></section>
+<div class="card">
+<h2 style="margin-top:0">Strateji bulun</h2>
+<div class="strategy-toolbar"><input id="search" type="search" placeholder="Strateji, outlook veya kavram ara…" aria-label="Search strategies"><div class="filters" id="filters"><button class="filter active" data-filter="all">Tümü</button><button class="filter" data-filter="bullish">Bullish</button><button class="filter" data-filter="bearish">Bearish</button><button class="filter" data-filter="neutral">Neutral</button><button class="filter" data-filter="volatile">Volatilite</button><button class="filter" data-filter="hedging">Hedge</button></div></div>
+<div class="mini-note"><span id="count">26</span> strateji gösteriliyor</div>
+</div>
+<div id="grid" class="strategy-grid"></div><div id="empty" class="empty">Aramanıza uyan strateji yok. Başka bir terim deneyin veya “Tümü”nü seçin.</div>
+<section class="card" style="margin-top:18px"><h2 style="margin-top:0">Kütüphane nasıl kullanılır</h2><div class="grid3"><div><h3>1. Outlook ile başlayın</h3><p>Underlying’in yükseleceğini, düşeceğini, bantta kalacağını veya büyük hareket edeceğini seçin.</p></div><div><h3>2. Riski bakın</h3><p>Mekaniğe girmeden önce defined risk ile büyük/sınırsız riski ayırın.</p></div><div><h3>3. Payoff’u deneyin</h3><p><a href="/tr/builder/" style="color:var(--text);text-decoration:underline">Strategy Builder</a>’ı açın; strike, premium ve expiry fiyatını deneyin.</p></div></div></section>
+
+<section class="card" style="margin-top:18px">
+  <h2 style="margin-top:0">Popüler strateji rehberleri</h2>
+  <p style="color:var(--muted);margin:0 0 14px">Sık aranan konular için derin sayfalar — yapı, risk, örnek, Builder.</p>
+  <div class="grid3" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px">
+    <a href="/tr/covered-call/" class="guide-tile" style="display:block;padding:14px 16px;border:1px solid var(--border);border-radius:12px;background:var(--input);text-decoration:none;color:var(--text)">
+      <div style="font-size:11px;color:var(--accent);font-weight:700;text-transform:uppercase;letter-spacing:.06em">Bullish · Income</div>
+      <h3 style="margin:8px 0 6px;font-size:16px">Covered call</h3>
+      <p style="margin:0;font-size:13px;color:var(--muted);line-height:1.45">Hisse tutun, call satın, premium alın.</p>
+    </a>
+    <a href="/tr/cash-secured-put/" class="guide-tile" style="display:block;padding:14px 16px;border:1px solid var(--border);border-radius:12px;background:var(--input);text-decoration:none;color:var(--text)">
+      <div style="font-size:11px;color:var(--accent);font-weight:700;text-transform:uppercase;letter-spacing:.06em">Bullish · Entry</div>
+      <h3 style="margin:8px 0 6px;font-size:16px">Cash-secured put</h3>
+      <p style="margin:0;font-size:13px;color:var(--muted);line-height:1.45">Hisse almaya hazır nakitle put satın.</p>
+    </a>
+    <a href="/tr/iron-condor/" class="guide-tile" style="display:block;padding:14px 16px;border:1px solid var(--border);border-radius:12px;background:var(--input);text-decoration:none;color:var(--text)">
+      <div style="font-size:11px;color:var(--accent);font-weight:700;text-transform:uppercase;letter-spacing:.06em">Neutral · Defined risk</div>
+      <h3 style="margin:8px 0 6px;font-size:16px">Iron condor</h3>
+      <p style="margin:0;font-size:13px;color:var(--muted);line-height:1.45">Bant beklentisine credit yapı.</p>
+    </a>
+    <a href="/tr/wheel/" class="guide-tile" style="display:block;padding:14px 16px;border:1px solid var(--border);border-radius:12px;background:var(--input);text-decoration:none;color:var(--text)">
+      <div style="font-size:11px;color:var(--accent);font-weight:700;text-transform:uppercase;letter-spacing:.06em">Cycle · Income</div>
+      <h3 style="margin:8px 0 6px;font-size:16px">Wheel strategy</h3>
+      <p style="margin:0;font-size:13px;color:var(--muted);line-height:1.45">Assignment’a kadar CSP, sonra Covered Call.</p>
+    </a>
+  </div>
+</section>
+</main>
+
 <footer class="site-footer">
   <div class="footer-note">Educational only — not financial advice. Options involve risk of loss.</div>
   <div class="footer-links">
@@ -79,7 +126,8 @@
     <a href="/level3/">Spreads</a>
     <a href="/level4/">Advanced</a>
     <a href="/strategies/">Strategies</a>
-    <a href="/builder/">Builder</a>
+    <a href="/tr/cheat-sheet/">Cheat sheet</a>
+    <a href="/tr/builder/">Builder</a>
     <a href="/about/">About</a>
     <a href="/contact/">Contact</a>
     <a href="/disclaimer/">Disclaimer</a>
@@ -93,8 +141,111 @@
       <a href="https://jsm-loudness.com/" target="_blank" rel="noopener">JSM Loudness</a>
     </div>
 </footer>
-
-
+<script>
+(function(){const key="jsm-theme",root=document.documentElement,btn=document.getElementById("themeToggle"),icon=document.getElementById("themeIcon"),label=document.getElementById("themeLabel");function apply(t){root.setAttribute("data-theme",t);if(icon)icon.textContent=t==="dark"?"🌙":"☀️";if(label)label.textContent=t==="dark"?"Dark":"Light";if(btn)btn.setAttribute("aria-pressed",t==="light"?"true":"false");if(btn)btn.setAttribute("aria-label",t==="dark"?"Switch to light theme":"Switch to dark theme");}const saved=localStorage.getItem(key);apply(saved||"dark");if(btn)btn.addEventListener("click",()=>{const next=root.getAttribute("data-theme")==="light"?"dark":"light";apply(next);localStorage.setItem(key,next)});})();
+</script>
+<script>
+const strategies=[
+{name:'Long Call',cat:['bullish'],tag:'Bullish',type:'Defined risk • Debit',legs:'1 call alın',desc:'Sade bullish pozisyon. Strike’tan hisse alma hakkı için premium ödersiniz; hisse yeterince yükselirse kâr.',profit:'Sınırsız',loss:'Ödenen premium',decay:'Aleyhine'},
+{name:'Long Put',cat:['bearish'],tag:'Bearish',type:'Defined risk • Debit',legs:'1 put alın',desc:'Defined-risk bearish pozisyon. Strike’tan satma hakkı alırsınız; underlying yeterince düşünce kâr.',profit:'Büyük (sıfıra kadar)',loss:'Ödenen premium',decay:'Aleyhine'},
+{name:'Short Put',cat:['bullish'],tag:'Bullish',type:'Yüksek risk • Credit',legs:'1 put satın',desc:'Assignment olursa strike’tan hisse alma yükümlülüğü karşılığında premium alın. Daha aşağıdan hisse almaya razı olanlar çalışır.',profit:'Alınan premium',loss:'Hisse düşünce büyük',decay:'Lehine'},
+{name:'Short Call',cat:['bearish'],tag:'Bearish',type:'Sınırsız risk • Credit',legs:'1 call satın',desc:'Strike’tan hisse satma yükümlülüğü karşılığında premium. Naked short call teorik sınırsız zarar taşıyabilir.',profit:'Alınan premium',loss:'Sınırsız',decay:'Lehine'},
+{name:'Covered Call',cat:['bullish'],tag:'Bullish / Neutral',type:'Gelir • Hisse + short call',legs:'Hisse + call satın',desc:'Tuttuğunuz hisse üzerine call satıp premium alın. Takas: call strike üstü genelde tavanlanır.',profit:'Premium + strike’a kadar hisse kazancı',loss:'Hisse düşüşü − premium',decay:'Lehine'},
+{name:'Covered Put',cat:['bearish'],tag:'Bearish / Neutral',type:'Hisse + short put',legs:'Short hisse + put satın',desc:'Short hisse + short put ile bearish gelir. Hisse short olduğu için yükselişte risk çok büyüyebilir.',profit:'Sınırlı',loss:'Potansiyel büyük',decay:'Lehine'},
+{name:'Bull Call Spread',cat:['bullish'],tag:'Bullish',type:'Defined risk • Debit',legs:'Call alın + daha yüksek call satın',desc:'Ilımlı bullish vertical. Short call long call maliyetini düşürür, upside’ı da sınırlar.',profit:'Sınırlı',loss:'Ödenen debit',decay:'Aleyhine'},
+{name:'Bear Put Spread',cat:['bearish'],tag:'Bearish',type:'Defined risk • Debit',legs:'Put alın + daha düşük put satın',desc:'Ilımlı bearish vertical. Short put long put’u finanse eder; max kâr tavanlıdır.',profit:'Sınırlı',loss:'Ödenen debit',decay:'Aleyhine'},
+{name:'Bull Put Spread',cat:['bullish'],tag:'Bullish',type:'Defined risk • Credit',legs:'Put satın + daha düşük put alın',desc:'Ilımlı bullish credit spread. Premium alırsınız; düşük strike long put aşağı riski tanımlar.',profit:'Alınan credit',loss:'Sınırlı',decay:'Lehine'},
+{name:'Bear Call Spread',cat:['bearish'],tag:'Bearish',type:'Defined risk • Credit',legs:'Call satın + daha yüksek call alın',desc:'Ilımlı bearish veya bant için credit spread. Yüksek strike long call upside riskini sınırlar.',profit:'Alınan credit',loss:'Sınırlı',decay:'Lehine'},
+{name:'Protective Put',cat:['hedging'],tag:'Hedging',type:'Tanımlı aşağı risk',legs:'Hisse + put alın',desc:'Mevcut hisseye put ekler. Put taban oluşturur; yükseliş katılımı durur.',profit:'Hisse yükselişi',loss:'Put strike altında sınırlı',decay:'Aleyhine'},
+{name:'Collar',cat:['hedging','bullish'],tag:'Hedging / Neutral',type:'Tanımlı bant • Hisse + opsiyon',legs:'Hisse + put alın + call satın',desc:'Protective put + Covered Call. Put aşağı korur; short call maliyetini düşürmeye yardım eder.',profit:'Call strike ile sınırlı',loss:'Put strike ile sınırlı',decay:'Karışık'},
+{name:'Long Straddle',cat:['neutral','volatile'],tag:'Volatility',type:'Defined risk • Debit',legs:'Aynı strike’ta call + put alın',desc:'Yön belirsiz büyük hareket beklentisi. Yeterince büyük hareket birleşik premium’u aşabilir.',profit:'Sınırsız yükseliş',loss:'Ödenen premium’lar',decay:'Aleyhine'},
+{name:'Short Straddle',cat:['neutral'],tag:'Neutral',type:'Yüksek risk • Credit',legs:'Aynı strike’ta call + put satın',desc:'Underlying’in strike civarında kalmasını bekleyen premium satışı. Her iki yönde büyük hareket ciddi zarar üretebilir.',profit:'Alınan credit',loss:'Sınırsız',decay:'Lehine'},
+{name:'Long Strangle',cat:['volatile'],tag:'Volatility',type:'Defined risk • Debit',legs:'OTM call + OTM put alın',desc:'Straddle’a benzer, farklı strike. Genelde daha ucuzdur ama kâra geçmek için daha büyük hareket ister.',profit:'Sınırsız yükseliş',loss:'Ödenen premium’lar',decay:'Aleyhine'},
+{name:'Short Strangle',cat:['neutral'],tag:'Neutral',type:'Yüksek risk • Credit',legs:'OTM call + OTM put satın',desc:'Hisse iki short strike arasında kalsın diye premium alın. Daha geniş bant, daha az ilk credit ve ciddi risk demektir.',profit:'Alınan credit',loss:'Sınırsız',decay:'Lehine'},
+{name:'Iron Butterfly',cat:['neutral'],tag:'Neutral',type:'Defined risk • Credit',legs:'Short call + short put + long kanatlar',desc:'Hedef fiyata odaklanan defined-risk premium. Underlying short strike civarında bitince genelde işe yarar.',profit:'Alınan credit',loss:'Sınırlı',decay:'Lehine'},
+{name:'Butterfly',cat:['neutral'],tag:'Neutral',type:'Defined risk • Debit',legs:'Kanat alın + 2 orta satın + kanat alın',desc:'Expiry’de hedef fiyata kurulu defined-risk. Max değer orta strike civarında.',profit:'Sınırlı',loss:'Ödenen debit',decay:'Karışık'},
+{name:'Short Iron Condor',cat:['neutral'],tag:'Neutral',type:'Defined risk • Credit',legs:'İç put/call satın + dış kanat alın',desc:'Defined-risk bant. Credit alırsınız; underlying short strike’lar arasında kalınca genelde işe yarar.',profit:'Alınan credit',loss:'Sınırlı',decay:'Lehine'},
+{name:'Long Iron Condor',cat:['volatile'],tag:'Volatility',type:'Defined risk • Debit',legs:'İç put/call alın + dış kanat satın',desc:'Merkez bandın dışına yeterince büyük hareketten yararlanabilir; risk ödenen debit ile tavanlıdır.',profit:'Sınırlı',loss:'Ödenen debit',decay:'Aleyhine'},
+{name:'Calendar Spread',cat:['neutral'],tag:'Neutral',type:'Defined risk • Debit',legs:'Aynı strike, farklı expiry',desc:'Aynı strike’ta yakın vadeyi satıp uzak vadeyi alarak zamandan yararlanır. Time decay ve volatilite etkileri için çalışılır.',profit:'Değişken',loss:'Ödenen debit',decay:'Zaman yapısına bağlı'},
+{name:'Call Diagonal Spread',cat:['bullish'],tag:'Bullish / Neutral',type:'Defined risk • Debit',legs:'Farklı strike + expiry, call',desc:'Farklı strike ve expiry’li call ile vertical + calendar fikrini birleştirir. Payoff expiry’den önce belirgin değişebilir.',profit:'Değişken',loss:'Ödenen debit',decay:'Karışık'},
+{name:'Put Diagonal Spread',cat:['bearish'],tag:'Bearish / Neutral',type:'Defined risk • Debit',legs:'Farklı strike + expiry, put',desc:'Farklı strike ve expiry’li put diagonal. Ilımlı bearish görüşü zaman ve IV farkıyla ifade eder.',profit:'Değişken',loss:'Ödenen debit',decay:'Karışık'},
+{name:'LEAPS Call',cat:['bullish'],tag:'Bullish',type:'Uzun vade • Debit',legs:'Uzun vadeli call alın',desc:'Çok daha uzun expiry’li long call. Yakın dönem zamanlama baskısı azalır ama premium ve decay riski durur.',profit:'Sınırsız',loss:'Ödenen premium',decay:'Aleyhine'},
+{name:'LEAPS Put',cat:['bearish'],tag:'Bearish',type:'Uzun vade • Debit',legs:'Uzun vadeli put alın',desc:'Daha uzun vadeli bearish görüş veya hedge parçası için long vadeli put. Max zarar ödenen premium ile sınırlıdır.',profit:'Büyük (sıfıra kadar)',loss:'Ödenen premium',decay:'Aleyhine'},
+{name:"Poor Man's Covered Call",cat:['bullish'],tag:'Bullish / Neutral',type:'Defined risk • Debit',legs:'Uzun vadeli call + short call',desc:'100 hisse yerine uzun vadeli ITM call kullanan hisse-ikame tarzı yapı; gelir için daha kısa call satılabilir.',profit:'Değişken',loss:'Ödenen debit',decay:'Karışık'}
+];
+const grid=document.getElementById('grid'),search=document.getElementById('search'),count=document.getElementById('count'),empty=document.getElementById('empty');let active='all';
+function payoffData(s){
+  const x=[]; for(let i=0;i<=80;i++) x.push(60+i);
+  const C=(v)=>Math.max(v,0);
+  let f;
+  switch(s.name){
+    case 'Long Call': f=S=>C(S-100)-2.5; break;
+    case 'Long Put': f=S=>C(100-S)-2.5; break;
+    case 'Short Put': f=S=>2.5-C(100-S); break;
+    case 'Short Call': f=S=>2.5-C(S-100); break;
+    case 'Covered Call': f=S=>(S-100)+2.5-C(S-105); break;
+    case 'Covered Put': f=S=>(100-S)+2.5-C(95-S); break;
+    case 'Bull Call Spread': f=S=>C(S-100)-C(S-110)-4.5; break;
+    case 'Bear Put Spread': f=S=>C(100-S)-C(90-S)-4.5; break;
+    case 'Bull Put Spread': f=S=>4-C(100-S)+C(90-S); break;
+    case 'Bear Call Spread': f=S=>4-C(S-100)+C(S-110); break;
+    case 'Protective Put': f=S=>(S-100)+C(95-S)-2.5; break;
+    case 'Collar': f=S=>(S-100)+C(95-S)-C(S-105); break;
+    case 'Long Straddle': f=S=>C(S-100)+C(100-S)-5; break;
+    case 'Short Straddle': f=S=>5-C(S-100)-C(100-S); break;
+    case 'Long Strangle': f=S=>C(S-105)+C(95-S)-3.5; break;
+    case 'Short Strangle': f=S=>3.5-C(S-105)-C(95-S); break;
+    case 'Iron Butterfly': f=S=>7-C(S-100)-C(100-S)+C(S-110)+C(90-S); break;
+    case 'Butterfly': f=S=>C(S-90)-2*C(S-100)+C(S-110)-2; break;
+    case 'Short Iron Condor': f=S=>2.5-C(95-S)-C(S-105)+C(90-S)+C(S-110); break;
+    case 'Long Iron Condor': f=S=>C(95-S)+C(S-105)-C(90-S)-C(S-110)-2.5; break;
+    case 'Calendar Spread': f=S=>C(S-100)-C(S-100)-0.8; break;
+    case 'Call Diagonal Spread': f=S=>C(S-100)-C(S-105)-2; break;
+    case 'Put Diagonal Spread': f=S=>C(100-S)-C(95-S)-2; break;
+    case 'LEAPS Call': f=S=>C(S-100)-10; break;
+    case 'LEAPS Put': f=S=>C(100-S)-10; break;
+    case "Poor Man's Covered Call": f=S=>C(S-95)-C(S-105)-5; break;
+    default: f=S=>0;
+  }
+  return x.map(S=>({S,y:f(S)}));
+}
+function payoffChart(s){
+  const pts=payoffData(s), W=420,H=150,pad={l:30,r:8,t:10,b:22};
+  const ys=pts.map(p=>p.y), min=Math.min(...ys), max=Math.max(...ys), span=(max-min)||1;
+  const lo=Math.min(min,-1), hi=Math.max(max,1);
+  const sx=S=>pad.l+(S-60)/(140-60)*(W-pad.l-pad.r);
+  const sy=y=>pad.t+(hi-y)/(hi-lo)*(H-pad.t-pad.b);
+  const path=pts.map((p,i)=>(i?'L':'M')+sx(p.S).toFixed(1)+','+sy(p.y).toFixed(1)).join(' ');
+  const zeroY=sy(0), x0=sx(100);
+  const area=path+' L '+sx(140).toFixed(1)+','+zeroY.toFixed(1)+' L '+sx(60).toFixed(1)+','+zeroY.toFixed(1)+' Z';
+  const chartTone=s.cat.includes('bearish')?'bearish':s.cat.includes('hedging')?'hedge':s.cat.includes('neutral')||s.cat.includes('volatile')?'neutral':'bullish';
+  const id='c'+Math.random().toString(36).slice(2,8);
+  return `<div class="payoff" aria-label="Illustrative profit and loss chart for ${s.name}"><svg viewBox="0 0 ${W} ${H}" role="img"><line class="payoff-axis" x1="${pad.l}" y1="${H-pad.b}" x2="${W-pad.r}" y2="${H-pad.b}"/><line class="payoff-zero" x1="${pad.l}" y1="${zeroY}" x2="${W-pad.r}" y2="${zeroY}"/><line class="payoff-axis" x1="${x0}" y1="${pad.t}" x2="${x0}" y2="${H-pad.b}"/><path class="payoff-fill ${chartTone}" d="${area}"/><path class="payoff-line ${chartTone}" d="${path}"/><text class="payoff-label" x="${pad.l}" y="${H-5}">$60</text><text class="payoff-label" x="${x0-9}" y="${H-5}">$100</text><text class="payoff-label" x="${W-pad.r-20}" y="${H-5}">$140</text><text class="payoff-label" x="4" y="${zeroY+3}">$0</text></svg><div class="payoff-note">Illustrative P/L at expiration • underlying price</div></div>`;
+}
+const builderTpl={
+  'Long Call':'long_call','Long Put':'long_put','Covered Call':'covered_call',
+  'Bull Call Spread':'bull_call_spread','Bear Put Spread':'bear_put_spread',
+  'Long Straddle':'long_straddle','Short Straddle':'short_straddle',
+  'Long Strangle':'long_strangle','Short Strangle':'short_strangle',
+  'Iron Butterfly':'iron_butterfly','Short Iron Condor':'iron_condor',
+  'Calendar Spread':'calendar_call','LEAPS Call':'long_call','LEAPS Put':'long_put',
+  'Butterfly':'long_call_butterfly','Cash Secured Put':'cash_secured_put'
+};
+const guidePage={
+  'Covered Call':'/covered-call/',
+  'Cash Secured Put':'/cash-secured-put/',
+  'Short Iron Condor':'/iron-condor/'
+};
+function builderBtn(s){
+  const t=builderTpl[s.name];
+  const g=guidePage[s.name];
+  const guide=g?`<a class="btn btn-secondary" style="display:inline-block;font-size:12px;padding:7px 12px;margin-left:8px" href="${g}">Rehber →</a>`:'';
+  if(t) return `<p style="margin-top:12px"><a class="btn" style="display:inline-block;font-size:12px;padding:7px 12px" href="/tr/builder/?template=${t}">Builder’da dene →</a>${guide}</p>`;
+  return `<p style="margin-top:12px"><a class="btn btn-secondary" style="display:inline-block;font-size:12px;padding:7px 12px;background:#334155;border-color:#334155;color:var(--text)!important" href="/tr/builder/">Builder’ı aç →</a>${guide}</p>`;
+}
+function render(){const q=search.value.trim().toLowerCase();const rows=strategies.filter(s=>(active==='all'||s.cat.includes(active))&&(!q||(s.name+' '+s.tag+' '+s.type+' '+s.legs+' '+s.desc).toLowerCase().includes(q)));count.textContent=rows.length;grid.innerHTML=rows.map(s=>`<article class="strategy-card"><div class="strategy-head"><div><h2>${s.name}</h2><span class="pill ${s.cat.includes('bullish')?'bullish':s.cat.includes('bearish')?'bearish':s.cat.includes('volatile')?'vol':s.cat.includes('hedging')?'hedge':'neutral'}">${s.tag}</span></div><span class="pill">${s.type}</span></div><div class="legs"><b>Structure:</b> ${s.legs}</div><p>${s.desc}</p>${payoffChart(s)}<div class="stats"><div class="stat"><span>Max kâr</span><strong>${s.profit}</strong></div><div class="stat"><span>Max zarar</span><strong>${s.loss}</strong></div><div class="stat"><span>Time decay</span><strong>${s.decay}</strong></div></div>${builderBtn(s)}</article>`).join('');empty.style.display=rows.length?'none':'block'}
+document.querySelectorAll('.filter').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.filter').forEach(x=>x.classList.remove('active'));b.classList.add('active');active=b.dataset.filter;render()}));search.addEventListener('input',render);render();
+</script>
 <script>
 (function(){
   function initNav(){
@@ -142,7 +293,4 @@
 
 
 
-
-
-</body>
-</html>
+</body></html>
