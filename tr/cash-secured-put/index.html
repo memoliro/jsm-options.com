@@ -1,23 +1,62 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="tr" data-theme="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
-  <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48.png">
-  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-
-  <title>Nakit Teminatlı Put — Yakında | JSM Options</title>
-  <meta name="description" content="Nakit Teminatlı Put sayfası hazırlanıyor. JSM Options Türkçe.">
+  <link rel="icon" type="image/png" sizes="32x32" href="https://jsm-options.com/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="48x48" href="https://jsm-options.com/favicon-48.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="https://jsm-options.com/apple-touch-icon.png">
+  <title>Nakit Teminatlı Put Stratejisi (CSP) — Yeni Başlayanlar | JSM Options</title>
+  <meta name="description" content="Nakit teminatlı put (CSP): atama olursa 100 hisse almak için nakit ayırarak put satmak. Prim, başabaş, assignment ve Builder alıştırması. Yalnızca eğitim amaçlıdır.">
   <link rel="canonical" href="https://jsm-options.com/tr/cash-secured-put/">
+  <link rel="alternate" hreflang="en" href="https://jsm-options.com/cash-secured-put/">
+  <link rel="alternate" hreflang="tr" href="https://jsm-options.com/tr/cash-secured-put/">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="JSM Options">
+  <meta property="og:title" content="Nakit Teminatlı Put Stratejisi (CSP) — Yeni Başlayanlar">
+  <meta property="og:description" content="Nakit teminatlı put (CSP): atama olursa 100 hisse almak için nakit ayırarak put satmak. Prim, başabaş ve assignment.">
+  <meta property="og:url" content="https://jsm-options.com/tr/cash-secured-put/">
   <meta property="og:image" content="https://jsm-options.com/images/og-default.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Nakit Teminatlı Put Stratejisi (CSP) — Yeni Başlayanlar">
+  <meta name="twitter:description" content="Nakit teminatlı put (CSP): atama olursa 100 hisse almak için nakit ayırarak put satmak.">
   <meta name="twitter:image" content="https://jsm-options.com/images/og-default.png">
-  <meta property="og:type" content="website">
-  <link rel="stylesheet" href="/assets/style.css?v=20260920">
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-BDL003RCN6"></script>
-  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-BDL003RCN6');</script>
-
-<style id="jsm-mobile-nav">
+  <link rel="stylesheet" href="https://jsm-options.com/assets/style.css?v=20260920">
+  <script src="https://jsm-options.com/assets/site.js?v=20260920" defer></script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "inLanguage": "tr",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Nakit teminatlı put nedir?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Bir put satarsınız ve atama olursa strike fiyatından 100 hisse almak için yeterli nakiti ayırırsınız. Put değersiz sona ererse primi tutarsınız."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Nakit teminatlı put atamaya uğrarsa ne olur?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Put strike fiyatından 100 hisse alırsınız. Etkin maliyet yaklaşık olarak strike eksi toplanan primdir."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Nakit teminatlı put Wheel ile aynı şey midir?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "CSP, Wheel stratejisinin ilk ayağıdır. Wheel, hisse atandıktan sonra covered call satarak devam eder."
+        }
+      }
+    ]
+  }
+  </script>
+  <style id="jsm-mobile-nav">
 .nav-toggle{display:none;box-sizing:border-box;width:44px;height:44px;min-width:44px;min-height:44px;padding:0;border:1px solid var(--border,#2d3a4f);border-radius:10px;background:var(--card,#1a2332);color:var(--text,#e7ecf3);cursor:pointer;align-items:center;justify-content:center;flex-direction:column;gap:5px;-webkit-tap-highlight-color:transparent;touch-action:manipulation;position:relative;z-index:40}
 .nav-toggle span{display:block;width:18px;height:2px;border-radius:1px;background:currentColor;pointer-events:none}
 .nav-toggle[aria-expanded="true"] span:nth-child(1){transform:translateY(7px) rotate(45deg)}
@@ -27,72 +66,183 @@
   .nav-toggle{display:inline-flex!important}
   .site-header{z-index:100!important;position:sticky;top:0}
   .site-header .nav{
-    display:none!important;
-    position:fixed!important;
-    top:56px!important;left:0!important;right:0!important;
-    width:100%!important;
-    max-height:calc(100vh - 56px)!important;
-    overflow-y:auto!important;
-    -webkit-overflow-scrolling:touch;
-    flex-direction:column!important;
-    align-items:stretch!important;
-    gap:6px!important;
-    padding:12px 16px 20px!important;
-    margin:0!important;
-    background:#0f1419!important;
-    border-bottom:1px solid #2d3a4f!important;
-    box-shadow:0 12px 28px rgba(0,0,0,.45)!important;
-    z-index:9999!important;
+    display:none!important;position:fixed!important;top:56px!important;left:0!important;right:0!important;width:100%!important;
+    max-height:calc(100vh - 56px)!important;overflow-y:auto!important;-webkit-overflow-scrolling:touch;
+    flex-direction:column!important;align-items:stretch!important;gap:6px!important;padding:12px 16px 20px!important;margin:0!important;
+    background:#0f1419!important;border-bottom:1px solid #2d3a4f!important;box-shadow:0 12px 28px rgba(0,0,0,.45)!important;z-index:9999!important;
   }
   html[data-theme="light"] .site-header .nav{background:#ffffff!important;border-bottom-color:#e2e8f0!important}
   .site-header .nav.is-open{display:flex!important}
-  .site-header .nav a{
-    width:100%!important;text-align:left!important;
-    padding:14px!important;font-size:16px!important;
-    min-height:48px!important;display:flex!important;align-items:center!important;
-    border-radius:10px!important;box-sizing:border-box!important;
-  }
+  .site-header .nav a{width:100%!important;text-align:left!important;padding:14px!important;font-size:16px!important;min-height:48px!important;display:flex!important;align-items:center!important;border-radius:10px!important;box-sizing:border-box!important}
 }
-</style>
-
-<script src="/assets/site.js?v=20260920" defer></script>
+  </style>
 </head>
 <body>
-<header class="site-header"><div class="site-header-inner"><a class="logo logo-link" href="/" aria-label="JSM Options Home"><div class="logo-icon">JSM</div><div><div style="font-weight:700">JSM Options</div><div class="brand-sub">jsm-options.com · Educational</div></div></a><div class="header-right"><nav class="nav" aria-label="Primary navigation"><a href="/">Home</a><a href="/level1/">Basics</a><a href="/level2/">Fundamentals</a><a href="/level3/">Spreads</a><a href="/level4/">Advanced</a><a href="/strategies/">Strategies</a><a href="/cheat-sheet/">Cheat sheet</a><a href="/builder/">Builder</a></nav><button type="button" class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button><button type="button" class="theme-toggle" id="themeToggle" aria-label="Toggle color theme"><span id="themeIcon" class="theme-icon">☼</span><span id="themeLabel" class="theme-label">Dark</span></button></div></div></header>
-<div class="wrap">
-<nav class="breadcrumbs" aria-label="Breadcrumb"><a href="/tr/">Ana Sayfa</a><span aria-hidden="true">/</span><span aria-current="page">Nakit Teminatlı Put</span></nav>
-  <div class="card coming-soon">
-    <h1>Nakit Teminatlı Put</h1>
-    <p>Bu sayfanın Türkçe içeriği hazırlanıyor. Menü ve altbilgi İngilizce sitedekiyle aynıdır.</p>
-    <p><a class="btn" href="/cash-secured-put/">İngilizce sayfa</a>
-    <a class="btn btn-secondary" href="/tr/builder/">TR Builder</a></p>
-    <div class="warn"><strong>Yalnızca eğitim amaçlıdır</strong> — yatırım tavsiyesi değildir.</div>
+<header class="site-header">
+  <div class="site-header-inner">
+    <a class="logo logo-link" href="https://jsm-options.com/tr/" aria-label="JSM Options Ana Sayfa">
+      <div class="logo-icon">JSM</div>
+      <div>
+        <div style="font-weight:700">JSM Options</div>
+        <div class="brand-sub">jsm-options.com · Educational</div>
+      </div>
+    </a>
+    <div class="header-right">
+      <nav class="nav" aria-label="Ana menü">
+        <a href="https://jsm-options.com/tr/">Ana Sayfa</a>
+        <a href="https://jsm-options.com/tr/level1/">Giriş</a>
+        <a href="https://jsm-options.com/tr/level2/">Temeller</a>
+        <a href="https://jsm-options.com/tr/level3/">Spreadler</a>
+        <a href="https://jsm-options.com/tr/level4/">İleri</a>
+        <a href="https://jsm-options.com/tr/strategies/">Stratejiler</a>
+        <a href="https://jsm-options.com/tr/cheat-sheet/">Özet</a>
+        <a href="https://jsm-options.com/tr/builder/">Builder</a>
+      </nav>
+      <button type="button" class="nav-toggle" id="navToggle" aria-label="Menüyü aç" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+      <a id="langSwitch" class="lang-switch" href="https://jsm-options.com/cash-secured-put/" aria-label="English">EN</a>
+      <button type="button" class="theme-toggle" id="themeToggle" aria-label="Açık temaya geç">
+        <span id="themeIcon" class="theme-icon">🌙</span>
+        <span id="themeLabel" class="theme-label">Dark</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<div class="page-rails">
+  <aside class="page-toc">
+    <div class="toc-kicker">BU SAYFADA</div>
+    <nav>
+      <a href="#sec-0">Nakit teminatlı put stratejisi (CSP)</a>
+      <a href="#sec-1">Yapı</a>
+      <a href="#sec-2">Getiri mantığı</a>
+      <a href="#sec-3">Ne zaman uyum sağlar / sağlamaz</a>
+      <a href="#sec-4">Wheel ile bağlantı</a>
+      <a href="#guide-faq">Yeni başlayan SSS</a>
+    </nav>
+  </aside>
+  <div class="page-main">
+    <div class="wrap">
+      <nav class="breadcrumbs" aria-label="Sayfa yolu">
+        <a href="https://jsm-options.com/tr/">Ana Sayfa</a>
+        <span aria-hidden="true">/</span>
+        <span aria-current="page">Nakit Teminatlı Put</span>
+      </nav>
+
+      <div class="card">
+        <h1 id="sec-0">Nakit teminatlı put stratejisi (CSP)</h1>
+
+        <p class="kw-targets"><b>Arama odaklı:</b> nakit teminatlı put · cash secured put · CSP opsiyon · nakit teminatlı put satmak · nakit teminatlı put örneği</p>
+
+        <p>Bir <b>nakit teminatlı put</b> (cash-secured put), bir <b>put opsiyonu satmanız</b> ve atama (assignment) olursa strike fiyatından 100 hisse almak için yeterli <b>nakiti</b> ayırmanız demektir. Peşin <b>prim</b> (premium) alırsınız. Hisse strike’ın üzerinde kalırsa put değersiz sona erebilir ve primi tutarsınız. Hisse strike’ın altına düşerse strike’dan <b>hisse alabilirsiniz</b> (atama).</p>
+        <p>Birçok yeni başlayan CSP’yi, <b>hisseyi daha düşük etkin fiyattan almak istemesi</b> ve beklerken prim almak istemesi durumunda kullanır.</p>
+
+        <p style="font-size:.9rem;color:var(--muted)">Uluslararası borsalarda işlem yapmak için call, put, strike, premium, expiry ve assignment gibi terimler bilinçli olarak İngilizce bırakılmıştır. Türkçe karşılıkları sayfa sonunda vardır.</p>
+
+        <h2 id="sec-1">Yapı</h2>
+        <ul>
+          <li><b>Short 1 put</b></li>
+          <li><b>Ayrılan nakit</b> ≈ strike × 100 (aracı kurum gereksinimleri değişebilir)</li>
+        </ul>
+
+        <h2 id="sec-2">Getiri mantığı</h2>
+        <ul>
+          <li><b>Maksimum kâr</b> = alınan prim (put değersiz sona ererse)</li>
+          <li><b>Risk</b> = hisse strike’ın çok altına düşebilir — yine de strike’dan alırsınız (piyasa fiyatına göre zarar büyük olabilir)</li>
+          <li><b>Başabaş (break-even)</b> ≈ strike − hisse başına prim</li>
+          <li>Atama, gizemli bir sonuç değil; <b>100 hisse almanız</b> anlamına gelir</li>
+        </ul>
+
+        <div class="payoff-box" style="background:var(--input);border:1px solid var(--border);border-radius:12px;padding:12px;margin:14px 0">
+          <svg viewBox="0 0 520 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Vade sonunda nakit teminatlı put getirisi: hisse strike üstünde kalırsa kâr primle sınırlı, düşerse zarar" width="100%" height="auto">
+            <line x1="40" y1="150" x2="500" y2="150" stroke="#8b9bb4" stroke-width="1.5" opacity=".55"></line>
+            <line x1="40" y1="30" x2="40" y2="230" stroke="#8b9bb4" stroke-width="1" opacity=".3"></line>
+            <polygon points="40.0,220.0 180.0,150.0 40.0,150.0" fill="#ef4444" opacity="0.3"></polygon>
+            <polygon points="180.0,150.0 260.0,105.0 260.0,150.0" fill="#22c55e" opacity="0.3"></polygon>
+            <polygon points="260.0,105.0 500.0,105.0 500.0,150.0 260.0,150.0" fill="#22c55e" opacity="0.3"></polygon>
+            <path d="M40.0 220.0 L260.0 105.0 L500.0 105.0" fill="none" stroke="#e7ecf3" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"></path>
+            <text x="14" y="36" fill="#8b9bb4" font-size="11" font-family="system-ui,sans-serif">K/Z</text>
+            <text x="250" y="250" fill="#8b9bb4" font-size="11" font-family="system-ui,sans-serif" text-anchor="middle">Vade sonu hisse fiyatı →</text>
+            <text x="330" y="92" fill="#86efac" font-size="12" font-family="system-ui,sans-serif">Maks. kâr = prim</text>
+            <text x="70" y="220" fill="#fca5a5" font-size="12" font-family="system-ui,sans-serif">Hisse düşerse zarar</text>
+            <text x="180" y="140" fill="#facc15" font-size="11" font-family="system-ui,sans-serif" text-anchor="middle">BE</text>
+          </svg>
+          <p style="text-align:center;font-size:.8rem;color:var(--muted);margin:8px 0 0">Yeşil = kâr · Kırmızı = zarar · Sağdaki düz kısım = put sona erer, krediyi tutarsınız</p>
+        </div>
+
+        <div class="analogy">
+          <b>Örnek:</b> Hisse 100 $. 95 $ strike’lı put’u 2,00 $’dan satın ($200 kredi). Nakit teminat ≈ 9.500 $.<br>
+          Vadede 95 $ üstü: yaklaşık 200 $ kalır; hisse yok.<br>
+          95 $’dan atama: etkin maliyet ≈ 95 − 2 = <b>93 $</b> (komisyon öncesi). Artık hisseler sizde; buradan itibaren hisse riskini taşırsınız.
+        </div>
+
+        <h2 id="sec-3">Ne zaman uyum sağlar / sağlamaz</h2>
+        <ul>
+          <li><b>Uyum sağlar:</b> hisseleri gerçekten daha düşük fiyattan almak istiyorsunuz; nakiti ayırabiliyorsunuz; atama olursa hisse riskini kabul ediyorsunuz</li>
+          <li><b>Uyum sağlamaz:</b> hisseleri alamıyorsunuz; nakit başka hedefler için gerekli; yalnızca sahip olmak istemediğiniz bir isimde prim kovalıyorsunuz</li>
+        </ul>
+
+        <h2 id="sec-4">Wheel ile bağlantı</h2>
+        <p>Birçok yatırımcı CSP’leri <a href="https://jsm-options.com/tr/wheel/">Wheel stratejisine</a> bağlar: atama olana kadar put satarsınız, sonra hisseler çağrılana kadar <a href="https://jsm-options.com/tr/covered-call/">covered call</a> satarsınız, sonra baştan başlarsınız.</p>
+
+        <p>
+          <a class="btn" href="https://jsm-options.com/tr/builder/?template=cash_secured_put">Nakit Teminatlı Put’u Builder’da aç →</a>
+          <a class="btn btn-secondary" href="https://jsm-options.com/tr/level4/">İleri ders (CSP, Wheel ve daha fazlası)</a>
+          <a class="btn btn-secondary" href="https://jsm-options.com/tr/level1/#options-chain">Opsiyon zinciri nasıl okunur</a>
+        </p>
+
+        <h2 id="guide-faq">Yeni başlayan SSS</h2>
+        <p><strong>Nakit teminatlı put nedir?</strong><br>Bir put satarsınız ve atama olursa strike’dan 100 hisse almak için yeterli nakiti ayırırsınız. Put değersiz sona ererse primi tutarsınız.</p>
+        <p><strong>Nakit teminatlı put atamaya uğrarsa ne olur?</strong><br>Put strike fiyatından 100 hisse alırsınız. Etkin maliyet yaklaşık strike eksi toplanan primdir.</p>
+        <p><strong>Nakit teminatlı put Wheel ile aynı şey midir?</strong><br>CSP, Wheel’in ilk ayağıdır. Wheel, hisse atandıktan sonra covered call satarak devam eder.</p>
+
+        <h2>Bu sitedeki İngilizce terimler</h2>
+        <p>Uluslararası borsalarda işlem yapmak için bu terimlere alışmalısınız.</p>
+        <ul>
+          <li><b>call</b> — Strike’tan hisse alma hakkı.</li>
+          <li><b>put</b> — Strike’tan hisse satma hakkı.</li>
+          <li><b>strike</b> — Opsiyon kontratında baz alınan fiyat.</li>
+          <li><b>premium</b> — Ödenen veya alınan prim.</li>
+          <li><b>expiry</b> — Vade sonu.</li>
+          <li><b>assignment</b> — Kontrat şartlarından doğan hisse alma yükümlülüğünün gerçekleşmesi.</li>
+          <li><b>Cash-Secured Put</b> — Nakit teminatlı short put; assignment durumunda hisse alma yükümlülüğü vardır.</li>
+          <li><b>Covered Call</b> — Hisse + short call; prim alınır, yükseliş kârı sınırlanır.</li>
+          <li><b>Wheel</b> — CSP ile hisse biriktirip covered call satma döngüsü.</li>
+        </ul>
+
+        <p class="practice-prompt"><b>Sonraki adım:</b> <a href="https://jsm-options.com/tr/cheat-sheet/">opsiyon özetini</a> yazdırın veya bu kurulumu Builder’da açın.</p>
+
+        <div class="warn"><strong>Yalnızca eğitim amaçlıdır:</strong> Yatırım tavsiyesi değildir. Put satmak, piyasa fiyatına göre zararda hisse sahibi olmanıza yol açabilir. Aracı kurum değiliz; hiçbir kurumla bağlı değiliz.</div>
+      </div>
+    </div>
   </div>
 </div>
-<footer class="site-footer">
-  <div class="footer-note">Educational only — not financial advice. Options involve risk of loss.</div>
-  <div class="footer-links">
-    <a href="/">Home</a>
-    <a href="/level1/">Basics</a>
-    <a href="/level2/">Fundamentals</a>
-    <a href="/level3/">Spreads</a>
-    <a href="/level4/">Advanced</a>
-    <a href="/strategies/">Strategies</a>
-    <a href="/builder/">Builder</a>
-    <a href="/about/">About</a>
-    <a href="/contact/">Contact</a>
-    <a href="/disclaimer/">Disclaimer</a>
-    <a href="/privacy/">Privacy</a>
-  </div>
-    <div class="footer-tools" style="margin-top:12px;font-size:12px;opacity:.9">
-      More free tools:
-      <a href="https://lyricprep.com/" target="_blank" rel="noopener">LyricPrep</a> ·
-      <a href="https://jsm-image.com/" target="_blank" rel="noopener">JSM Image</a> ·
-      <a href="https://jsm-video.com/" target="_blank" rel="noopener">JSM Video</a> ·
-      <a href="https://jsm-loudness.com/" target="_blank" rel="noopener">JSM Loudness</a>
-    </div>
-</footer>
 
+<footer class="site-footer">
+  <div class="footer-note">Yalnızca eğitim amaçlıdır — yatırım tavsiyesi değildir. Opsiyon işlemleri zarar riski içerir.</div>
+  <div class="footer-links">
+    <a href="https://jsm-options.com/tr/">Ana Sayfa</a>
+    <a href="https://jsm-options.com/tr/level1/">Giriş</a>
+    <a href="https://jsm-options.com/tr/level2/">Temeller</a>
+    <a href="https://jsm-options.com/tr/level3/">Spreadler</a>
+    <a href="https://jsm-options.com/tr/level4/">İleri</a>
+    <a href="https://jsm-options.com/tr/strategies/">Stratejiler</a>
+    <a href="https://jsm-options.com/tr/cheat-sheet/">Özet</a>
+    <a href="https://jsm-options.com/tr/builder/">Builder</a>
+    <a href="https://jsm-options.com/tr/about/">Hakkında</a>
+    <a href="https://jsm-options.com/tr/contact/">İletişim</a>
+    <a href="https://jsm-options.com/tr/disclaimer/">Sorumluluk</a>
+    <a href="https://jsm-options.com/tr/privacy/">Gizlilik</a>
+  </div>
+  <div class="footer-tools" style="margin-top:12px;font-size:12px;opacity:.9">
+    More free tools:
+    <a href="https://lyricprep.com/" target="_blank" rel="noopener">LyricPrep</a> ·
+    <a href="https://jsm-image.com/" target="_blank" rel="noopener">JSM Image</a> ·
+    <a href="https://jsm-video.com/" target="_blank" rel="noopener">JSM Video</a> ·
+    <a href="https://jsm-loudness.com/" target="_blank" rel="noopener">JSM Loudness</a>
+  </div>
+</footer>
 
 <script>
 (function(){
@@ -102,32 +252,27 @@
     if (!btn || !nav) return;
     if (btn.getAttribute('data-nav-bound') === '1') return;
     btn.setAttribute('data-nav-bound', '1');
-
     btn.addEventListener('click', function (e) {
       e.preventDefault();
       e.stopPropagation();
       var open = !nav.classList.contains('is-open');
       nav.classList.toggle('is-open', open);
       btn.setAttribute('aria-expanded', open ? 'true' : 'false');
-      btn.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+      btn.setAttribute('aria-label', open ? 'Menüyü kapat' : 'Menüyü aç');
     });
-
-    // Close after choosing a link
     nav.addEventListener('click', function (e) {
       if (e.target.closest('a')) {
         nav.classList.remove('is-open');
         btn.setAttribute('aria-expanded', 'false');
-        btn.setAttribute('aria-label', 'Open menu');
+        btn.setAttribute('aria-label', 'Menüyü aç');
       }
     });
-
-    // Close on outside click (use capture delay so button click isn't treated as outside)
     document.addEventListener('click', function (e) {
       if (!nav.classList.contains('is-open')) return;
       if (btn.contains(e.target) || nav.contains(e.target)) return;
       nav.classList.remove('is-open');
       btn.setAttribute('aria-expanded', 'false');
-      btn.setAttribute('aria-label', 'Open menu');
+      btn.setAttribute('aria-label', 'Menüyü aç');
     });
   }
   if (document.readyState === 'loading') {
@@ -137,11 +282,5 @@
   }
 })();
 </script>
-
-
-
-
-
-
 </body>
 </html>
