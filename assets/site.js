@@ -123,37 +123,47 @@
         }
         return '<a href="' + href + '">' + label + '</a>';
       }).join('\n') +
-      '</div>' + toolsHtml + pwaToggleHtml();
+      '</div>' + toolsHtml + installButtonHtml();
   }
 
-  // Installable app (PWA) is OFF by default — most visitors find an
-  // unprompted "install this site" banner off-putting. We only register
-  // the service worker / manifest if someone explicitly opts in below,
-  // and the choice is remembered per-browser via localStorage.
-  var PWA_STORAGE_KEY = 'jsm-pwa-enabled';
+  // Real, native "Install the App" button — no unprompted browser banner.
+  // We register the manifest + service worker quietly in the background
+  // (required for the browser to consider the site installable at all),
+  // then capture the browser's install event ourselves and suppress its
+  // automatic mini-infobar. The install UI only ever appears when someone
+  // clicks our button in the footer.
   var PWA_MANIFEST_HREF = '/site.webmanifest';
   var PWA_SW_HREF = '/sw.js';
+  var deferredInstallPrompt = null;
+  var installBtnEls = [];
 
-  function pwaToggleHtml() {
-    var tr = lang() === 'tr';
-    return '<div class="footer-pwa">' +
-      '<label class="pwa-toggle-label" for="pwaToggle">' +
-      '<input type="checkbox" id="pwaToggle">' +
-      '<span>' + (tr ? 'Çevrimdışı uygulamayı etkinleştir (isteğe bağlı)' : 'Enable installable app / offline mode (optional)') + '</span>' +
-      '</label>' +
-      '<p class="pwa-toggle-hint">' + (tr
-        ? 'Varsayılan olarak kapalıdır — hiçbir şey yüklenmez veya önbelleğe alınmaz, siz açmadıkça.'
-        : 'Off by default — nothing is installed or cached unless you turn this on yourself.') + '</p>' +
-      '</div>';
+  function isIos() {
+    return /iphone|ipad|ipod/i.test(navigator.userAgent || '') && !window.MSStream;
   }
 
-  function getPwaPreference() {
-    try { return localStorage.getItem(PWA_STORAGE_KEY) === '1'; } catch (e) { return false; }
+  function isStandalone() {
+    return (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) ||
+      window.navigator.standalone === true;
   }
 
-  function setPwaPreference(on) {
-    try { localStorage.setItem(PWA_STORAGE_KEY, on ? '1' : '0'); } catch (e) {}
+  function refreshInstallButtons() {
+    installBtnEls.forEach(function (btn) {
+      if (!btn || !btn.isConnected) return;
+      if (isStandalone()) { btn.hidden = true; return; }
+      btn.hidden = !(deferredInstallPrompt || isIos());
+    });
   }
+
+  window.addEventListener('beforeinstallprompt', function (e) {
+    e.preventDefault();
+    deferredInstallPrompt = e;
+    refreshInstallButtons();
+  });
+
+  window.addEventListener('appinstalled', function () {
+    deferredInstallPrompt = null;
+    refreshInstallButtons();
+  });
 
   function setManifestLink(on) {
     var link = document.querySelector('link[rel="manifest"]');
@@ -173,6 +183,51 @@
     setManifestLink(true);
     if (!('serviceWorker' in navigator)) return;
     navigator.serviceWorker.register(PWA_SW_HREF).catch(function () {});
+  }
+  enablePwa();
+
+  function installButtonHtml() {
+    var tr = lang() === 'tr';
+    return '<div class="footer-pwa">' +
+      '<button type="button" id="installAppBtn" class="install-app-btn" hidden>' +
+      '<span class="install-app-icon" aria-hidden="true">⬇</span>' +
+      (tr ? 'Uygulamayı Yükle' : 'Install the App') +
+      '</button>' +
+      '<p class="pwa-toggle-hint" id="installAppHint">' + (tr
+        ? 'Cihazınıza hızlı erişim için ekleyin — tamamen isteğe bağlı.'
+        : 'Adds quick access to your device — totally optional.') + '</p>' +
+      '</div>';
+  }
+
+  function showIosInstallHint(btn) {
+    var hint = document.getElementById('installAppHint');
+    var tr = lang() === 'tr';
+    var msg = tr
+      ? 'Paylaş simgesine, ardından "Ana Ekrana Ekle"ye dokunun.'
+      : 'Tap the Share icon, then "Add to Home Screen".';
+    if (hint) hint.textContent = msg;
+    if (btn) btn.setAttribute('title', msg);
+  }
+
+  function initInstallButton() {
+    var btn = document.getElementById('installAppBtn');
+    if (!btn) return;
+    if (installBtnEls.indexOf(btn) === -1) installBtnEls.push(btn);
+    refreshInstallButtons();
+    btn.addEventListener('click', function () {
+      if (deferredInstallPrompt) {
+        var promptEvent = deferredInstallPrompt;
+        deferredInstallPrompt = null;
+        promptEvent.prompt();
+        promptEvent.userChoice.catch(function () {}).then(refreshInstallButtons);
+        return;
+      }
+      if (isIos()) {
+        showIosInstallHint(btn);
+        return;
+      }
+      refreshInstallButtons();
+    });
   }
 
   function initTheme() {
@@ -284,41 +339,6 @@
   }
 
 
-  // PWA installation stays off unless the visitor opts in via the footer
-  // toggle above. This also cleans up service workers/caches left behind
-  // from older versions of the site (or from a since-reverted opt-in) so
-  // nobody is offered an installable app they didn't ask for.
-  function disablePwa() {
-    setManifestLink(false);
-    if (!('serviceWorker' in navigator)) return;
-    navigator.serviceWorker.getRegistrations().then(function (registrations) {
-      registrations.forEach(function (registration) {
-        try { registration.unregister(); } catch (e) {}
-      });
-    }).catch(function () {});
-    if ('caches' in window) {
-      caches.keys().then(function (keys) {
-        keys.forEach(function (key) {
-          if (/^jsm-options-v/i.test(key)) {
-            try { caches.delete(key); } catch (e) {}
-          }
-        });
-      }).catch(function () {});
-    }
-  }
-
-  function initPwaToggle() {
-    var toggle = document.getElementById('pwaToggle');
-    if (!toggle) return;
-    var on = getPwaPreference();
-    toggle.checked = on;
-    if (on) enablePwa(); else disablePwa();
-    toggle.addEventListener('change', function () {
-      setPwaPreference(toggle.checked);
-      if (toggle.checked) enablePwa(); else disablePwa();
-    });
-  }
-
   function shouldUseRails() {
     var p = location.pathname || '/';
     if (p.indexOf('/builder') !== -1) return false;
@@ -356,7 +376,7 @@
     injectTrGlossary();
     initTheme();
     initNavToggle();
-    initPwaToggle();
+    initInstallButton();
     wrapPageRails();
   }
 

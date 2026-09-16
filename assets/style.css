@@ -331,9 +331,12 @@ html[data-theme="light"] .card{box-shadow:0 1px 2px rgba(17,24,39,.04)}
 .footer-tools a{color:var(--muted,#8b9bb4);text-decoration:none}
 .footer-tools a:hover{color:var(--accent,#3b82f6)}
 .footer-pwa{margin-top:14px;padding-top:12px;border-top:1px solid var(--border,rgba(139,155,180,.2))}
-.pwa-toggle-label{display:inline-flex;align-items:center;gap:8px;font-size:12.5px;color:var(--text,#e6ebf5);cursor:pointer}
-.pwa-toggle-label input[type="checkbox"]{width:15px;height:15px;margin:0;cursor:pointer;accent-color:var(--accent,#3b82f6)}
-.pwa-toggle-hint{margin:4px 0 0;font-size:11.5px;color:var(--muted,#8b9bb4)}
+.install-app-btn{display:inline-flex;align-items:center;gap:8px;padding:9px 18px;border:0;border-radius:999px;background:var(--accent,#3b82f6);color:#fff;font-size:13px;font-weight:600;cursor:pointer;transition:transform .12s ease,opacity .12s ease}
+.install-app-btn:hover{opacity:.9}
+.install-app-btn:active{transform:scale(.97)}
+.install-app-btn[hidden]{display:none}
+.install-app-icon{font-size:14px;line-height:1}
+.pwa-toggle-hint{margin:6px 0 0;font-size:11.5px;color:var(--muted,#8b9bb4)}
 
 /* Sticky lesson TOC */
 .lesson-toc{
