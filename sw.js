@@ -1,10 +1,10 @@
 /* JSM Options — cache static shell; network-first for HTML */
-var CACHE = 'jsm-options-v1';
+var CACHE = 'jsm-options-v2';
 var PRECACHE = [
   '/',
   '/tr/',
-  '/assets/style.css?v=20260914',
-  '/assets/site.js?v=20260918',
+  '/assets/style.css?v=20260921',
+  '/assets/site.js?v=20260921',
   '/icon-192.png',
   '/icon-512.png',
   '/favicon-48.png'
