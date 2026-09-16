@@ -123,7 +123,56 @@
         }
         return '<a href="' + href + '">' + label + '</a>';
       }).join('\n') +
-      '</div>' + toolsHtml;
+      '</div>' + toolsHtml + pwaToggleHtml();
+  }
+
+  // Installable app (PWA) is OFF by default — most visitors find an
+  // unprompted "install this site" banner off-putting. We only register
+  // the service worker / manifest if someone explicitly opts in below,
+  // and the choice is remembered per-browser via localStorage.
+  var PWA_STORAGE_KEY = 'jsm-pwa-enabled';
+  var PWA_MANIFEST_HREF = '/site.webmanifest';
+  var PWA_SW_HREF = '/sw.js';
+
+  function pwaToggleHtml() {
+    var tr = lang() === 'tr';
+    return '<div class="footer-pwa">' +
+      '<label class="pwa-toggle-label" for="pwaToggle">' +
+      '<input type="checkbox" id="pwaToggle">' +
+      '<span>' + (tr ? 'Çevrimdışı uygulamayı etkinleştir (isteğe bağlı)' : 'Enable installable app / offline mode (optional)') + '</span>' +
+      '</label>' +
+      '<p class="pwa-toggle-hint">' + (tr
+        ? 'Varsayılan olarak kapalıdır — hiçbir şey yüklenmez veya önbelleğe alınmaz, siz açmadıkça.'
+        : 'Off by default — nothing is installed or cached unless you turn this on yourself.') + '</p>' +
+      '</div>';
+  }
+
+  function getPwaPreference() {
+    try { return localStorage.getItem(PWA_STORAGE_KEY) === '1'; } catch (e) { return false; }
+  }
+
+  function setPwaPreference(on) {
+    try { localStorage.setItem(PWA_STORAGE_KEY, on ? '1' : '0'); } catch (e) {}
+  }
+
+  function setManifestLink(on) {
+    var link = document.querySelector('link[rel="manifest"]');
+    if (on) {
+      if (!link) {
+        link = document.createElement('link');
+        link.setAttribute('rel', 'manifest');
+        document.head.appendChild(link);
+      }
+      link.setAttribute('href', PWA_MANIFEST_HREF);
+    } else if (link) {
+      link.parentNode.removeChild(link);
+    }
+  }
+
+  function enablePwa() {
+    setManifestLink(true);
+    if (!('serviceWorker' in navigator)) return;
+    navigator.serviceWorker.register(PWA_SW_HREF).catch(function () {});
   }
 
   function initTheme() {
@@ -235,10 +284,12 @@
   }
 
 
-  // PWA installation is intentionally disabled on JSM Options.
-  // Also clean up service workers/caches from older versions of the site so
-  // returning visitors are no longer offered an installable web app.
+  // PWA installation stays off unless the visitor opts in via the footer
+  // toggle above. This also cleans up service workers/caches left behind
+  // from older versions of the site (or from a since-reverted opt-in) so
+  // nobody is offered an installable app they didn't ask for.
   function disablePwa() {
+    setManifestLink(false);
     if (!('serviceWorker' in navigator)) return;
     navigator.serviceWorker.getRegistrations().then(function (registrations) {
       registrations.forEach(function (registration) {
@@ -254,6 +305,18 @@
         });
       }).catch(function () {});
     }
+  }
+
+  function initPwaToggle() {
+    var toggle = document.getElementById('pwaToggle');
+    if (!toggle) return;
+    var on = getPwaPreference();
+    toggle.checked = on;
+    if (on) enablePwa(); else disablePwa();
+    toggle.addEventListener('change', function () {
+      setPwaPreference(toggle.checked);
+      if (toggle.checked) enablePwa(); else disablePwa();
+    });
   }
 
   function shouldUseRails() {
@@ -293,7 +356,7 @@
     injectTrGlossary();
     initTheme();
     initNavToggle();
-    disablePwa();
+    initPwaToggle();
     wrapPageRails();
   }
 
