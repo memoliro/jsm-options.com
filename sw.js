@@ -1,56 +1,62 @@
-const CACHE_NAME = 'jsm-options-v1';
-const CORE_ASSETS = [
+/* JSM Options — cache static shell; network-first for HTML */
+var CACHE = 'jsm-options-v3';
+var PRECACHE = [
   '/',
-  '/index.html',
-  '/manifest.json',
-  '/assets/style.css',
-  '/favicon-32.png',
-  '/favicon-48.png',
-  '/apple-touch-icon.png',
+  '/tr/',
+  '/assets/style.css?v=20260922',
+  '/assets/site.js?v=20260922',
   '/icon-192.png',
   '/icon-512.png',
-  '/offline.html',
+  '/favicon-48.png'
 ];
 
-self.addEventListener('install', (e) => {
+self.addEventListener('install', function (e) {
   e.waitUntil(
-    caches.open(CACHE_NAME).then(c => c.addAll(CORE_ASSETS.map(u => new Request(u, {cache: 'reload'}))).catch(()=>{}))
+    caches.open(CACHE).then(function (cache) {
+      return cache.addAll(PRECACHE.map(function (u) {
+        return new Request(u, { cache: 'reload' });
+      })).catch(function () { /* ignore missing during first install */ });
+    }).then(function () { return self.skipWaiting(); })
   );
-  self.skipWaiting();
 });
 
-self.addEventListener('activate', (e) => {
-  e.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(k => k !== CACHE_NAME).map(k => caches.delete(k)))));
-  self.clients.claim();
+self.addEventListener('activate', function (e) {
+  e.waitUntil(
+    caches.keys().then(function (keys) {
+      return Promise.all(keys.filter(function (k) { return k !== CACHE; }).map(function (k) { return caches.delete(k); }));
+    }).then(function () { return self.clients.claim(); })
+  );
 });
 
-self.addEventListener('fetch', (e) => {
-  const req = e.request;
-  const url = new URL(req.url);
-  if (req.method !== 'GET' || url.origin !== location.origin) return;
+self.addEventListener('fetch', function (e) {
+  var req = e.request;
+  if (req.method !== 'GET') return;
+  var url = new URL(req.url);
+  if (url.origin !== self.location.origin) return;
+  if (url.pathname.indexOf('googletagmanager') !== -1 || url.pathname.indexOf('gtag') !== -1) return;
 
-  if (req.headers.get('accept')?.includes('text/html')) {
+  var isHtml = req.mode === 'navigate' || (req.headers.get('accept') || '').indexOf('text/html') !== -1;
+  if (isHtml) {
     e.respondWith(
-      fetch(req).then(res => {
-        const copy = res.clone();
-        caches.open(CACHE_NAME).then(c => c.put(req, copy));
+      fetch(req).then(function (res) {
+        var copy = res.clone();
+        caches.open(CACHE).then(function (c) { c.put(req, copy); });
         return res;
-      }).catch(async () => {
-        const cached = await caches.match(req);
-        return cached || caches.match('/offline.html');
+      }).catch(function () {
+        return caches.match(req).then(function (hit) { return hit || caches.match('/'); });
       })
     );
     return;
   }
 
   e.respondWith(
-    caches.match(req).then(cached => {
-      if (cached) {
-        e.waitUntil(fetch(req).then(r => { if(r.ok) caches.open(CACHE_NAME).then(c => c.put(req, r)); }).catch(()=>{}));
-        return cached;
-      }
-      return fetch(req).then(res => {
-        if (res.ok) caches.open(CACHE_NAME).then(c => c.put(req, res.clone()));
+    caches.match(req).then(function (hit) {
+      if (hit) return hit;
+      return fetch(req).then(function (res) {
+        if (res && res.status === 200 && res.type === 'basic') {
+          var copy = res.clone();
+          caches.open(CACHE).then(function (c) { c.put(req, copy); });
+        }
         return res;
       });
     })
