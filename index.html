@@ -81,6 +81,19 @@
 .quiz-result p{color:var(--muted);margin:8px 0 16px;font-size:14px;line-height:1.5}
 .quiz-result .btn-secondary{cursor:pointer;font:inherit}
 @media(max-width:700px){.quiz-card{padding:18px}}
+.faq{max-width:900px}
+.faq details{background:var(--card);border:1px solid var(--border);border-radius:12px;margin-bottom:10px;overflow:hidden}
+.faq details[open]{border-color:var(--accent)}
+.faq summary{padding:16px 18px;cursor:pointer;font-weight:700;color:var(--text);list-style:none;display:flex;justify-content:space-between;align-items:center;gap:14px;font-size:15px}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:'+';font-size:20px;color:var(--muted);flex-shrink:0;line-height:1;font-weight:400}
+.faq details[open] summary::after{content:'−';color:var(--accent)}
+.faq .faq-body{padding:0 18px 18px;color:var(--muted);font-size:14px;line-height:1.65;border-top:1px solid var(--border)}
+.faq .faq-body p{margin:12px 0 0}
+.faq .faq-body p:first-child{margin-top:12px}
+.faq .faq-body ul{margin:10px 0 0;padding-left:20px;line-height:1.65}
+.faq .faq-body li{margin-bottom:4px}
+@media(max-width:700px){.faq summary{padding:14px 16px;font-size:14px}.faq .faq-body{padding:0 16px 16px}}
 </style>
 </head><body><header class="site-header"><div class="site-header-inner"><a aria-label="JSM Options Home" class="logo logo-link" href="/"><div class="logo-icon">JSM</div><div><div style="font-weight:700">JSM Options</div><div class="brand-sub">jsm-options.com · Educational</div></div></a><div class="header-right"><nav aria-label="Primary navigation" class="nav"><a class="active" href="/">Home</a><a href="/level1/">Basics</a><a href="/level2/">Fundamentals</a><a href="/level3/">Spreads</a><a href="/level4/">Advanced</a><a href="/strategies/">Strategies</a><a href="/cheat-sheet/">Cheat sheet</a><a href="/builder/">Builder</a></nav><button aria-expanded="false" aria-label="Open menu" class="nav-toggle" id="navToggle" type="button"><span></span><span></span><span></span></button><button aria-label="Toggle color theme" class="theme-toggle" id="themeToggle" type="button"><span class="theme-icon" id="themeIcon">☼</span><span class="theme-label" id="themeLabel">Dark</span></button></div></div></header><main class="wrap wide">
 <section class="home-hero"><div><div class="eyebrow">Free course · Live strategy builder</div><h1>Free options trading course for beginners</h1><p>Start by understanding what an option is, then learn calls, puts, and strategies step by step. Practice what you learn in the live Strategy Builder with payoff graphs and educational Greeks. No account required.</p><div class="hero-actions">
@@ -152,19 +165,90 @@
 
 
 
-  <div class="card">
-    <h2>Beginner FAQ</h2>
-  <div class="card">
-    <h2>Why options exist at all</h2>
-    <p>In real markets, options are used to:</p>
-    <ul>
-      <li><strong>Speculate</strong> with defined risk (long call/put) or defined risk spreads later.</li>
-      <li><strong>Hedge</strong> — e.g. a put as insurance on shares you own.</li>
-      <li><strong>Generate income</strong> — e.g. selling a call against stock you own (covered call), which you will meet in Fundamentals.</li>
-    </ul>
-    <p>None of those uses require gambling your whole account. Size small while you learn.</p>
-  </div>
-  </div>
+<section class="home-section faq-section" id="faq">
+<div class="section-head"><div><div class="eyebrow">Common questions</div><h2>Beginner FAQ</h2><p>The questions almost every new options trader asks first. Click any question to open the answer.</p></div></div>
+<div class="faq">
+
+<details>
+<summary>Why do options exist at all?</summary>
+<div class="faq-body">
+<p>Options aren't just for speculation. In real markets, traders and investors use them to:</p>
+<ul>
+<li><strong>Hedge</strong> — e.g. buying a put as insurance on shares you already own.</li>
+<li><strong>Generate income</strong> — e.g. selling a call against stock you own (a covered call), which you'll meet in Fundamentals.</li>
+<li><strong>Speculate with defined risk</strong> — a long call or put risks only the premium you paid, unlike buying shares on margin.</li>
+</ul>
+<p>None of these uses require risking your whole account. Size small while you learn.</p>
+</div>
+</details>
+
+<details>
+<summary>What's the difference between a "right" and an "obligation"?</summary>
+<div class="faq-body">
+<p>This is the single most important distinction in options. The <strong>buyer</strong> pays a premium and receives a <strong>right</strong> — the choice, but never the requirement, to buy (call) or sell (put) the underlying at the strike price. If the trade doesn't work out, the buyer can simply let the option expire and walk away, losing only the premium paid.</p>
+<p>The <strong>seller</strong> (also called the "writer") receives that premium up front and takes on an <strong>obligation</strong> instead. If the buyer chooses to exercise, the seller must honor the contract — deliver the shares (call) or buy them (put) — whether or not it's convenient. Sellers don't get to change their mind once assigned.</p>
+</div>
+</details>
+
+<details>
+<summary>Who is actually on the other side of my trade?</summary>
+<div class="faq-body">
+<p>It's a common beginner assumption that the underlying company is somehow involved — it isn't. Every option has exactly <strong>two parties</strong>: a buyer and a seller. When you buy a call or put, another trader or market maker is selling it to you, and vice versa.</p>
+<p>The exchange and the Options Clearing Corporation (OCC) sit in the middle to guarantee both sides perform, but the actual obligation always rests with whichever trader is <em>short</em> (sold) the contract — never with the company whose stock underlies it.</p>
+</div>
+</details>
+
+<details>
+<summary>What happens when an option reaches its expiration date?</summary>
+<div class="faq-body">
+<p>One of three things, depending on where the stock ends up relative to the strike:</p>
+<ul>
+<li><strong>Out-of-the-money:</strong> the option simply expires worthless. The buyer loses the premium paid; no further action is needed.</li>
+<li><strong>In-the-money:</strong> most brokers automatically exercise it on the buyer's behalf, converting the contract into a stock position (100 shares per contract).</li>
+<li><strong>Closed early:</strong> the buyer can sell the option before expiration to capture its remaining value instead of exercising it.</li>
+</ul>
+<p>Sellers who are assigned must deliver (call) or purchase (put) the underlying shares at the strike price.</p>
+</div>
+</details>
+
+<details>
+<summary>Do I have to hold an option until it expires?</summary>
+<div class="faq-body">
+<p>No — this is another common misconception. Most options are actively traded and can be bought or sold to close a position at any time before expiration, at the option's current market price. Many traders close well before expiration specifically to avoid assignment risk or last-minute volatility.</p>
+</div>
+</details>
+
+<details>
+<summary>What's the most I can lose as an option buyer?</summary>
+<div class="faq-body">
+<p>As a buyer, your maximum loss is limited to the premium you paid, plus any commissions — nothing more, even if the stock moves dramatically against you. This defined, known-in-advance downside is one reason buying calls and puts is often taught before selling them.</p>
+</div>
+</details>
+
+<details>
+<summary>Is selling (writing) options riskier than buying them?</summary>
+<div class="faq-body">
+<p>It depends on the strategy. Selling a "naked" call — one not backed by owning the underlying shares — carries theoretically <strong>unlimited risk</strong>, since a stock price has no upper limit. Selling a covered call (against shares you already own) or a cash-secured put (backed by enough cash to buy the shares) defines and limits that risk considerably.</p>
+<p>This is why beginners are typically taught covered strategies — like the Covered Call and Cash-Secured Put — well before naked, undefined-risk positions.</p>
+</div>
+</details>
+
+<details>
+<summary>Do I need 100 shares or a lot of money to get started?</summary>
+<div class="faq-body">
+<p>Not to buy a call or put. One contract typically controls 100 shares, but as a buyer you only pay the premium — for example, a $15 premium × 100 shares = $1,500, usually far less than buying 100 shares outright. Covered strategies, like a covered call, do require owning (or buying) those 100 shares first, which needs more capital.</p>
+</div>
+</details>
+
+<details>
+<summary>Is options trading just gambling?</summary>
+<div class="faq-body">
+<p>Options are a tool, not a strategy in themselves — how they're used determines the risk. Buying far out-of-the-money calls with money you can't afford to lose is closer to gambling. Using options to hedge a stock position, generate income against shares you already own, or speculate with a small, clearly defined amount of risk is closer to disciplined trading. The instrument is neutral; position sizing and strategy selection make the difference.</p>
+</div>
+</details>
+
+</div>
+</section>
 
 <section class="home-section quiz-section" id="beginner-quiz">
 <div class="section-head"><div><div class="eyebrow">Quick check</div><h2>Test Your Knowledge</h2><p>Six beginner questions covering what you just read. No account needed — see how much stuck.</p></div></div>
