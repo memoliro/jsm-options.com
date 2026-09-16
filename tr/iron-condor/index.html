@@ -1,148 +1,118 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="tr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
-  <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48.png">
-  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-  <link rel="manifest" href="/site.webmanifest">
-
-  <title>Iron Condor — Yakında | JSM Options</title>
-  <meta name="description" content="Iron Condor sayfası hazırlanıyor. JSM Options Türkçe.">
-  <link rel="canonical" href="https://jsm-options.com/tr/iron-condor/">
-  <meta property="og:image" content="https://jsm-options.com/images/og-default.png">
-  <meta name="twitter:image" content="https://jsm-options.com/images/og-default.png">
-  <meta property="og:type" content="website">
-  <link rel="stylesheet" href="/assets/style.css?v=20260914">
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-BDL003RCN6"></script>
-  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-BDL003RCN6');</script>
-
-<style id="jsm-mobile-nav">
-.nav-toggle{display:none;box-sizing:border-box;width:44px;height:44px;min-width:44px;min-height:44px;padding:0;border:1px solid var(--border,#2d3a4f);border-radius:10px;background:var(--card,#1a2332);color:var(--text,#e7ecf3);cursor:pointer;align-items:center;justify-content:center;flex-direction:column;gap:5px;-webkit-tap-highlight-color:transparent;touch-action:manipulation;position:relative;z-index:40}
-.nav-toggle span{display:block;width:18px;height:2px;border-radius:1px;background:currentColor;pointer-events:none}
-.nav-toggle[aria-expanded="true"] span:nth-child(1){transform:translateY(7px) rotate(45deg)}
-.nav-toggle[aria-expanded="true"] span:nth-child(2){opacity:0}
-.nav-toggle[aria-expanded="true"] span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
-@media (max-width:900px){
-  .nav-toggle{display:inline-flex!important}
-  .site-header{z-index:100!important;position:sticky;top:0}
-  .site-header .nav{
-    display:none!important;
-    position:fixed!important;
-    top:56px!important;left:0!important;right:0!important;
-    width:100%!important;
-    max-height:calc(100vh - 56px)!important;
-    overflow-y:auto!important;
-    -webkit-overflow-scrolling:touch;
-    flex-direction:column!important;
-    align-items:stretch!important;
-    gap:6px!important;
-    padding:12px 16px 20px!important;
-    margin:0!important;
-    background:#0f1419!important;
-    border-bottom:1px solid #2d3a4f!important;
-    box-shadow:0 12px 28px rgba(0,0,0,.45)!important;
-    z-index:9999!important;
-  }
-  html[data-theme="light"] .site-header .nav{background:#ffffff!important;border-bottom-color:#e2e8f0!important}
-  .site-header .nav.is-open{display:flex!important}
-  .site-header .nav a{
-    width:100%!important;text-align:left!important;
-    padding:14px!important;font-size:16px!important;
-    min-height:48px!important;display:flex!important;align-items:center!important;
-    border-radius:10px!important;box-sizing:border-box!important;
-  }
-}
-</style>
-
-<script src="/assets/site.js?v=20260917" defer></script>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Iron Condor Stratejisi Açıklaması (Getiri Grafiği) | JSM Options</title>
+  <meta name="description" content="Iron condor stratejisi: 4 bacaklı, tanımlanmış riskli, yatay / bant aralığı beklentisine uygun credit yapısı. Yapı, getiri mantığı ve yeni başlayan SSS." />
+  <style>
+    :root {
+      --bg: #0b1220;
+      --card: #121a2b;
+      --text: #e8eef8;
+      --muted: #9aa8bd;
+      --accent: #4ec4d4;
+      --border: #243044;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, Segoe UI, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.55;
+    }
+    .wrap { max-width: 820px; margin: 0 auto; padding: 32px 20px 64px; }
+    h1 { color: var(--accent); font-size: 2rem; margin: 0 0 12px; }
+    h2 { color: var(--accent); font-size: 1.25rem; margin-top: 1.6em; }
+    .focus { color: var(--muted); font-size: .95rem; }
+    a { color: var(--accent); }
+    ul { padding-left: 1.2em; }
+    .note, .disclaimer {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px 16px;
+    }
+    .disclaimer { margin-top: 28px; color: var(--muted); font-size: .92rem; }
+    dt { font-weight: 700; margin-top: 10px; }
+    dd { margin: 0 0 8px 0; color: var(--muted); }
+  </style>
 </head>
 <body>
-<header class="site-header"><div class="site-header-inner"><a class="logo logo-link" href="/" aria-label="JSM Options Home"><div class="logo-icon">JSM</div><div><div style="font-weight:700">JSM Options</div><div class="brand-sub">jsm-options.com · Educational</div></div></a><div class="header-right"><nav class="nav" aria-label="Primary navigation"><a href="/">Home</a><a href="/level1/">Basics</a><a href="/level2/">Fundamentals</a><a href="/level3/">Spreads</a><a href="/level4/">Advanced</a><a href="/strategies/">Strategies</a><a href="/cheat-sheet/">Cheat sheet</a><a href="/builder/">Builder</a></nav><button type="button" class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button><button type="button" class="theme-toggle" id="themeToggle" aria-label="Toggle color theme"><span id="themeIcon" class="theme-icon">☼</span><span id="themeLabel" class="theme-label">Dark</span></button></div></div></header>
-<div class="wrap">
-<nav class="breadcrumbs" aria-label="Breadcrumb"><a href="/tr/">Ana Sayfa</a><span aria-hidden="true">/</span><span aria-current="page">Iron Condor</span></nav>
-  <div class="card coming-soon">
-    <h1>Iron Condor</h1>
-    <p>Bu sayfanın Türkçe içeriği hazırlanıyor. Menü ve altbilgi İngilizce sitedekiyle aynıdır.</p>
-    <p><a class="btn" href="/iron-condor/">İngilizce sayfa</a>
-    <a class="btn btn-secondary" href="/tr/builder/">TR Builder</a></p>
-    <div class="warn"><strong>Yalnızca eğitim amaçlıdır</strong> — yatırım tavsiyesi değildir.</div>
-  </div>
-</div>
-<footer class="site-footer">
-  <div class="footer-note">Educational only — not financial advice. Options involve risk of loss.</div>
-  <div class="footer-links">
-    <a href="/">Home</a>
-    <a href="/level1/">Basics</a>
-    <a href="/level2/">Fundamentals</a>
-    <a href="/level3/">Spreads</a>
-    <a href="/level4/">Advanced</a>
-    <a href="/strategies/">Strategies</a>
-    <a href="/builder/">Builder</a>
-    <a href="/about/">About</a>
-    <a href="/contact/">Contact</a>
-    <a href="/disclaimer/">Disclaimer</a>
-    <a href="/privacy/">Privacy</a>
-  </div>
-    <div class="footer-tools" style="margin-top:12px;font-size:12px;opacity:.9">
-      More free tools:
-      <a href="https://lyricprep.com/" target="_blank" rel="noopener">LyricPrep</a> ·
-      <a href="https://jsm-image.com/" target="_blank" rel="noopener">JSM Image</a> ·
-      <a href="https://jsm-video.com/" target="_blank" rel="noopener">JSM Video</a> ·
-      <a href="https://jsm-loudness.com/" target="_blank" rel="noopener">JSM Loudness</a>
-    </div>
-</footer>
+  <article class="wrap">
+    <h1>Yeni başlayanlar için iron condor stratejisi</h1>
+    <p class="focus"><strong>Arama odaklı:</strong> iron condor stratejisi · iron condor getiri · iron condor açıklaması · short iron condor · iron condor yeni başlayan</p>
 
+    <p>Bir <strong>iron condor</strong>, <strong>tanımlanmış riskli</strong>, genellikle <strong>nötr / yatay (range-bound)</strong> bir opsiyon yapısıdır. Piyasanın altında para dışı bir <strong>put spread</strong> ve piyasanın üstünde para dışı bir <strong>call spread</strong> satarsınız; aynı vade, <strong>net credit</strong> (net prim geliri) için.</p>
 
-<script>
-(function(){
-  function initNav(){
-    var btn = document.getElementById('navToggle');
-    var nav = document.querySelector('.site-header .nav');
-    if (!btn || !nav) return;
-    if (btn.getAttribute('data-nav-bound') === '1') return;
-    btn.setAttribute('data-nav-bound', '1');
+    <p>Dayanak varlığın iki short strike arasında kalmasını istersiniz; böylece her iki short opsiyon da değer kaybeder. Kâr, alınan credit ile sınırlıdır; zarar ise her kanattaki long opsiyonlarla sınırlanır.</p>
 
-    btn.addEventListener('click', function (e) {
-      e.preventDefault();
-      e.stopPropagation();
-      var open = !nav.classList.contains('is-open');
-      nav.classList.toggle('is-open', open);
-      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
-      btn.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
-    });
+    <p>Uluslararası borsalarda işlem yapmak için call, put, strike, premium, expiry, assignment, OTM ve credit gibi terimler bilinçli olarak İngilizce bırakılmıştır. Türkçe karşılıkları sayfa sonunda vardır.</p>
 
-    // Close after choosing a link
-    nav.addEventListener('click', function (e) {
-      if (e.target.closest('a')) {
-        nav.classList.remove('is-open');
-        btn.setAttribute('aria-expanded', 'false');
-        btn.setAttribute('aria-label', 'Open menu');
-      }
-    });
+    <h2>Yapı (4 bacak)</h2>
+    <ul>
+      <li><strong>OTM put sat</strong> (put kanadının daha yüksek put strike’ı)</li>
+      <li><strong>Daha uzak OTM put al</strong> (daha düşük put strike) — aşağı yönde riski sınırlar</li>
+      <li><strong>OTM call sat</strong> (call kanadının daha düşük call strike’ı)</li>
+      <li><strong>Daha uzak OTM call al</strong> (daha yüksek call strike) — yukarı yönde riski sınırlar</li>
+    </ul>
 
-    // Close on outside click (use capture delay so button click isn't treated as outside)
-    document.addEventListener('click', function (e) {
-      if (!nav.classList.contains('is-open')) return;
-      if (btn.contains(e.target) || nav.contains(e.target)) return;
-      nav.classList.remove('is-open');
-      btn.setAttribute('aria-expanded', 'false');
-      btn.setAttribute('aria-label', 'Open menu');
-    });
-  }
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initNav);
-  } else {
-    initNav();
-  }
-})();
-</script>
+    <h2>Getiri mantığı</h2>
+    <ul>
+      <li><strong>Maksimum kâr</strong> ≈ fiyat short put ile short call arasında kalırsa net credit</li>
+      <li><strong>Maksimum zarar</strong> ≈ test edilen kanadın genişliği − credit</li>
+      <li><strong>Başabaşlar (break-evens)</strong> ≈ short put − credit (alt) ve short call + credit (üst)</li>
+    </ul>
 
+    <p>Yeşil = kâr · Kırmızı = zarar · Ortadaki düz kısım = her iki short da değersiz sonlanırsa credit sizde kalır.</p>
 
+    <h2>Ne zaman uyum sağlar / sağlamaz</h2>
+    <ul>
+      <li><strong>Uyum sağlar:</strong> sakin bir bant / yatay hareket beklersiniz; tanımlanmış risk istersiniz; credit ile kanat genişliği ilişkisini anlarsınız</li>
+      <li><strong>Uyum sağlamaz:</strong> büyük bir kırılım (breakout) beklersiniz; assignment’ı veya bir kanadın erken testini yönetemezsiniz; likidite zayıftır</li>
+    </ul>
 
+    <h2>Yeni başlayan kontrol listesi</h2>
+    <ul>
+      <li>Dört bacağın da aynı vade ve aynı dayanak olduğunu doğrulayın</li>
+      <li>Her kanadın genişliğini ve alınan net credit’i bilin</li>
+      <li>Maksimum zararın “credit kadar” değil, test edilen kanat genişliği eksi credit olduğunu unutmayın</li>
+      <li>Erken assignment ve bir kanadın test edilmesi mümkün olabilir — özellikle vade yakınken</li>
+    </ul>
 
+    <h2>Yeni başlayan SSS</h2>
+    <p><strong>Iron condor stratejisi nedir?</strong><br />
+    Iron condor, aynı vadede para dışı bir put spread ve para dışı bir call spread satarak net credit toplar. Hisse veya ETF’nin bir bant içinde kalmasını istersiniz.</p>
 
+    <p><strong>Iron condor tanımlanmış risk midir?</strong><br />
+    Evet. Her kanattaki long opsiyon zararı tavanlar. Maksimum zarar yaklaşık olarak test edilen kanat genişliği eksi credit’tir.</p>
 
+    <p><strong>İşlemciler iron condor’u ne zaman kullanır?</strong><br />
+    Yatay / bant aralığı beklediklerinde ve tanımlanmış risk istediklerinde. Güçlü trendler ve volatilite sıçramaları bir kanadı test edebilir.</p>
+
+    <p><strong>Short iron condor nedir?</strong><br />
+    Yaygın “iron condor” ifadesi çoğu zaman short (credit) iron condor’u kasteder: put spread + call spread satılır, net prim alınır. Long iron condor ise debit ödeyerek kanatların dışına hareket bekler; farklı bir yapıdır.</p>
+
+    <p><strong>Sonraki adım:</strong> <a href="https://jsm-options.com/tr/cheat-sheet/">opsiyon özetini</a> yazdırın veya bu kurulumu Builder’da açın.</p>
+
+    <h2>Bu sitedeki İngilizce terimler</h2>
+    <p>Uluslararası borsalarda işlem yapmak için bu terimlere alışmalısınız.</p>
+    <dl>
+      <dt>call</dt><dd>Strike’tan hisse alma hakkı.</dd>
+      <dt>put</dt><dd>Strike’tan hisse satma hakkı.</dd>
+      <dt>strike</dt><dd>Opsiyon kontratında baz alınan fiyat.</dd>
+      <dt>premium / credit</dt><dd>Ödenen veya alınan prim; credit = net alınan prim.</dd>
+      <dt>expiry</dt><dd>Vade sonu.</dd>
+      <dt>assignment</dt><dd>Kontrat şartlarından doğan hisse alma / satma yükümlülüğünün gerçekleşmesi.</dd>
+      <dt>OTM / ATM / ITM</dt><dd>Para dışı / para başı / para içi.</dd>
+      <dt>spread / wing</dt><dd>İki bacaklı dikey yapı; wing = kanat (koruma bacağı).</dd>
+      <dt>defined risk</dt><dd>Tanımlanmış / sınırlı risk; maksimum zarar önceden yaklaşık bilinir.</dd>
+      <dt>Iron Condor</dt><dd>İki kanatlı (4 bacaklı), tanımlanmış riskli, yatay / bant beklentisine uygun credit stratejisi.</dd>
+      <dt>Builder</dt><dd>Bu sitedeki canlı strateji simülatörü.</dd>
+    </dl>
+
+    <p class="disclaimer"><strong>Yalnızca eğitim amaçlıdır:</strong> Tanımlanmış risk “risk yok” demek değildir. Credit’in birkaç katı zarar edebilirsiniz. Yatırım tavsiyesi değildir. JSM Options bir aracı kurum değildir ve hiçbir aracı kurumla bağlı değildir.</p>
+  </article>
 </body>
 </html>
