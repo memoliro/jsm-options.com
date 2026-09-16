@@ -64,6 +64,23 @@
 
 <style id="what-is-option-home">
 .what-is-option-article{max-width:980px;margin-left:auto;margin-right:auto}.article-card{padding:28px;border:1px solid var(--border);border-radius:18px;background:var(--card);box-shadow:0 10px 30px rgba(0,0,0,.06)}.article-card p{font-size:15px;line-height:1.7;color:var(--muted)}.article-card .lead{font-size:18px;color:var(--text)}.article-card h3{margin:30px 0 10px;font-size:22px;color:var(--text)}.article-card ul{padding-left:22px;color:var(--muted);line-height:1.7}.article-list{display:grid;grid-template-columns:1fr 1fr;gap:9px;padding-left:22px;color:var(--muted);line-height:1.6}.article-list li{padding:9px 10px}.article-card .concept-grid{margin:15px 0}.article-card .concept-card{padding:16px}.article-card .concept-card h4{margin:0 0 6px;font-size:16px}.article-card .concept-card p{margin:0;font-size:13px}.article-card .analogy-box,.article-card .example-box{margin:16px 0;padding:15px 17px;border-radius:11px;background:var(--input);color:var(--text);line-height:1.6}.article-card .example-box{border-left:3px solid var(--accent)}.beginner-table{width:100%;border-collapse:collapse;margin:15px 0 20px;font-size:13px}.beginner-table th,.beginner-table td{border:1px solid var(--border);padding:11px;text-align:left}.beginner-table th{background:var(--input);color:var(--text)}.beginner-table td{color:var(--muted)}.six-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:15px 0}.six-grid div{padding:14px;border:1px solid var(--border);border-radius:12px;background:var(--input)}.six-grid strong{display:block;color:var(--text);margin-bottom:5px}.six-grid span{display:block;color:var(--muted);font-size:12px;line-height:1.45}.key-takeaway{margin:24px 0;padding:18px;border:1px solid var(--accent);border-radius:14px;background:var(--input)}.key-takeaway strong{color:var(--text)}.key-takeaway p{margin:7px 0 0!important}.what-is-option-article .home-note{font-size:11px}.article-card .concept-grid{grid-template-columns:1fr 1fr}@media(max-width:700px){.article-card{padding:20px}.article-list,.article-card .concept-grid,.six-grid{grid-template-columns:1fr}.article-card h3{font-size:20px}.beginner-table{font-size:12px}.beginner-table th,.beginner-table td{padding:8px}}
+.quiz-card{padding:26px;border:1px solid var(--border);border-radius:18px;background:var(--card)}
+.quiz-q{padding:16px 0;border-bottom:1px solid var(--border)}
+.quiz-q:first-child{padding-top:0}
+.quiz-q:last-of-type{border-bottom:0}
+.quiz-q-title{margin:0 0 10px;font-weight:700;color:var(--text);font-size:15px;line-height:1.5}
+.quiz-opt{display:flex;align-items:center;gap:9px;padding:9px 10px;border-radius:10px;margin-bottom:5px;cursor:pointer;font-size:14px;color:var(--muted);transition:.12s background}
+.quiz-opt:hover{background:var(--input)}
+.quiz-opt input{accent-color:var(--accent);width:15px;height:15px;flex:none}
+.quiz-explain{margin:10px 0 0;padding:11px 13px;border-radius:10px;background:var(--input);font-size:13px;line-height:1.55;color:var(--text);border-left:3px solid var(--border)}
+.quiz-q.is-correct .quiz-explain{border-left-color:#22c55e}
+.quiz-q.is-incorrect .quiz-explain{border-left-color:#ef4444}
+.quiz-submit{margin-top:20px;border:0;cursor:pointer;font:inherit}
+.quiz-result{margin-top:20px;padding-top:20px;border-top:1px solid var(--border)}
+.quiz-score{font-size:28px;font-weight:800;color:var(--text)}
+.quiz-result p{color:var(--muted);margin:8px 0 16px;font-size:14px;line-height:1.5}
+.quiz-result .btn-secondary{cursor:pointer;font:inherit}
+@media(max-width:700px){.quiz-card{padding:18px}}
 </style>
 </head><body><header class="site-header"><div class="site-header-inner"><a aria-label="JSM Options Home" class="logo logo-link" href="/"><div class="logo-icon">JSM</div><div><div style="font-weight:700">JSM Options</div><div class="brand-sub">jsm-options.com · Educational</div></div></a><div class="header-right"><nav aria-label="Primary navigation" class="nav"><a class="active" href="/">Home</a><a href="/level1/">Basics</a><a href="/level2/">Fundamentals</a><a href="/level3/">Spreads</a><a href="/level4/">Advanced</a><a href="/strategies/">Strategies</a><a href="/cheat-sheet/">Cheat sheet</a><a href="/builder/">Builder</a></nav><button aria-expanded="false" aria-label="Open menu" class="nav-toggle" id="navToggle" type="button"><span></span><span></span><span></span></button><button aria-label="Toggle color theme" class="theme-toggle" id="themeToggle" type="button"><span class="theme-icon" id="themeIcon">☼</span><span class="theme-label" id="themeLabel">Dark</span></button></div></div></header><main class="wrap wide">
 <section class="home-hero"><div><div class="eyebrow">Free course · Live strategy builder</div><h1>Free options trading course for beginners</h1><p>Start by understanding what an option is, then learn calls, puts, and strategies step by step. Practice what you learn in the live Strategy Builder with payoff graphs and educational Greeks. No account required.</p><div class="hero-actions">
@@ -147,6 +164,79 @@
     </ul>
     <p>None of those uses require gambling your whole account. Size small while you learn.</p>
   </div>
+  </div>
+
+<section class="home-section quiz-section" id="beginner-quiz">
+<div class="section-head"><div><div class="eyebrow">Quick check</div><h2>Test Your Knowledge</h2><p>Six beginner questions covering what you just read. No account needed — see how much stuck.</p></div></div>
+<div class="quiz-card">
+<form id="quizForm" novalidate>
+
+<div class="quiz-q" data-name="q1">
+<p class="quiz-q-title">1. When you buy an option, what are you actually buying?</p>
+<label class="quiz-opt"><input type="radio" name="q1" value="a"> Shares of the underlying company</label>
+<label class="quiz-opt"><input type="radio" name="q1" value="b"> A contract that gives you certain rights</label>
+<label class="quiz-opt"><input type="radio" name="q1" value="c"> A loan from your broker</label>
+<label class="quiz-opt"><input type="radio" name="q1" value="d"> A guaranteed profit</label>
+<p class="quiz-explain" hidden></p>
+</div>
+
+<div class="quiz-q" data-name="q2">
+<p class="quiz-q-title">2. A call option gives the buyer the right to:</p>
+<label class="quiz-opt"><input type="radio" name="q2" value="a"> Sell the stock at the strike price</label>
+<label class="quiz-opt"><input type="radio" name="q2" value="b"> Buy the stock at the strike price</label>
+<label class="quiz-opt"><input type="radio" name="q2" value="c"> Cancel the contract for a refund</label>
+<label class="quiz-opt"><input type="radio" name="q2" value="d"> Receive the company's dividends</label>
+<p class="quiz-explain" hidden></p>
+</div>
+
+<div class="quiz-q" data-name="q3">
+<p class="quiz-q-title">3. A put option gives the buyer the right to:</p>
+<label class="quiz-opt"><input type="radio" name="q3" value="a"> Buy the stock at the strike price</label>
+<label class="quiz-opt"><input type="radio" name="q3" value="b"> Sell the stock at the strike price</label>
+<label class="quiz-opt"><input type="radio" name="q3" value="c"> Borrow shares from the seller</label>
+<label class="quiz-opt"><input type="radio" name="q3" value="d"> Extend the expiration date</label>
+<p class="quiz-explain" hidden></p>
+</div>
+
+<div class="quiz-q" data-name="q4">
+<p class="quiz-q-title">4. What is the "strike price"?</p>
+<label class="quiz-opt"><input type="radio" name="q4" value="a"> The current market price of the stock</label>
+<label class="quiz-opt"><input type="radio" name="q4" value="b"> The broker's commission on the trade</label>
+<label class="quiz-opt"><input type="radio" name="q4" value="c"> The price in the contract for buying/selling the underlying</label>
+<label class="quiz-opt"><input type="radio" name="q4" value="d"> The maximum loss allowed on the trade</label>
+<p class="quiz-explain" hidden></p>
+</div>
+
+<div class="quiz-q" data-name="q5">
+<p class="quiz-q-title">5. A contract represents 100 shares and the premium is $15. What does one contract cost, before fees?</p>
+<label class="quiz-opt"><input type="radio" name="q5" value="a"> $15</label>
+<label class="quiz-opt"><input type="radio" name="q5" value="b"> $150</label>
+<label class="quiz-opt"><input type="radio" name="q5" value="c"> $1,500</label>
+<label class="quiz-opt"><input type="radio" name="q5" value="d"> $15,000</label>
+<p class="quiz-explain" hidden></p>
+</div>
+
+<div class="quiz-q" data-name="q6">
+<p class="quiz-q-title">6. In an option contract, who takes on an obligation instead of a right?</p>
+<label class="quiz-opt"><input type="radio" name="q6" value="a"> The buyer</label>
+<label class="quiz-opt"><input type="radio" name="q6" value="b"> The seller</label>
+<label class="quiz-opt"><input type="radio" name="q6" value="c"> Both sides equally</label>
+<label class="quiz-opt"><input type="radio" name="q6" value="d"> Neither side</label>
+<p class="quiz-explain" hidden></p>
+</div>
+
+<button type="submit" class="btn-primary quiz-submit">Check my answers</button>
+</form>
+
+<div class="quiz-result" id="quizResult" hidden>
+<div class="quiz-score" id="quizScore"></div>
+<p id="quizScoreMsg"></p>
+<button type="button" class="btn-secondary" id="quizRetry">Retake the test</button>
+</div>
+
+</div>
+</section>
+
 <p class="home-note">Educational only — not financial advice. Options involve risk and can result in losses. Examples are simplified and do not account for every real-world factor.</p></main>
 <div id="pwaIosModal" class="pwa-ios-modal" role="dialog" aria-modal="true">
   <div class="pwa-ios-card">
@@ -298,6 +388,84 @@
   } else {
     initNav();
   }
+})();
+</script>
+<script>
+(function(){
+  var ANSWERS = {
+    q1: { correct: 'b', explain: 'An option is a financial contract, not stock ownership — it gives the buyer certain rights tied to an underlying asset.' },
+    q2: { correct: 'b', explain: 'A call option gives its buyer the right to buy the underlying stock at the strike price.' },
+    q3: { correct: 'b', explain: 'A put option gives its buyer the right to sell the underlying stock at the strike price.' },
+    q4: { correct: 'c', explain: 'The strike price is the price written into the contract for buying or selling the underlying asset.' },
+    q5: { correct: 'c', explain: 'Premium is quoted per share, and a standard contract covers 100 shares: $15 × 100 = $1,500 before fees.' },
+    q6: { correct: 'b', explain: 'The buyer pays the premium for a right. The seller receives that premium and takes on an obligation instead.' }
+  };
+
+  function init(){
+    var form = document.getElementById('quizForm');
+    if (!form) return;
+    var result = document.getElementById('quizResult');
+    var scoreEl = document.getElementById('quizScore');
+    var msgEl = document.getElementById('quizScoreMsg');
+    var retryBtn = document.getElementById('quizRetry');
+    var submitBtn = form.querySelector('.quiz-submit');
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var names = Object.keys(ANSWERS);
+      var correctCount = 0;
+
+      names.forEach(function (name) {
+        var qWrap = form.querySelector('[data-name="' + name + '"]');
+        if (!qWrap) return;
+        var checked = form.querySelector('input[name="' + name + '"]:checked');
+        var explainEl = qWrap.querySelector('.quiz-explain');
+        var isCorrect = !!checked && checked.value === ANSWERS[name].correct;
+
+        qWrap.classList.remove('is-correct', 'is-incorrect');
+        qWrap.classList.add(isCorrect ? 'is-correct' : 'is-incorrect');
+        if (isCorrect) correctCount++;
+
+        if (explainEl) {
+          var prefix = isCorrect ? 'Correct — ' : (checked ? 'Not quite — ' : 'Skipped — ');
+          explainEl.textContent = prefix + ANSWERS[name].explain;
+          explainEl.hidden = false;
+        }
+
+        Array.prototype.forEach.call(form.querySelectorAll('input[name="' + name + '"]'), function (input) {
+          input.disabled = true;
+        });
+      });
+
+      var total = names.length;
+      var pct = Math.round((correctCount / total) * 100);
+      scoreEl.textContent = correctCount + ' / ' + total + ' (' + pct + '%)';
+      msgEl.textContent = pct === 100
+        ? "Perfect score — you've got the basics down cold."
+        : (pct >= 67
+          ? 'Solid work. Skim the explanations above, then move on to Basics whenever you\u2019re ready.'
+          : "No worries — options take a couple of passes. Re-read \u2018What Is an Option?\u2019 above and try again.");
+
+      result.hidden = false;
+      if (submitBtn) submitBtn.hidden = true;
+      result.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    });
+
+    if (retryBtn) {
+      retryBtn.addEventListener('click', function () {
+        form.reset();
+        Array.prototype.forEach.call(form.querySelectorAll('input'), function (input) { input.disabled = false; });
+        Array.prototype.forEach.call(form.querySelectorAll('.quiz-q'), function (q) { q.classList.remove('is-correct', 'is-incorrect'); });
+        Array.prototype.forEach.call(form.querySelectorAll('.quiz-explain'), function (el) { el.hidden = true; });
+        result.hidden = true;
+        if (submitBtn) submitBtn.hidden = false;
+        form.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      });
+    }
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
 })();
 </script>
 <script src="/pwa-install.js"></script>
