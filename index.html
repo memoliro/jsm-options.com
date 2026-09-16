@@ -13,12 +13,7 @@
 .home-hero{padding:48px 0 30px;display:grid;grid-template-columns:1.15fr .85fr;gap:28px;align-items:center}.home-hero h1{font-size:clamp(38px,5.5vw,68px);line-height:1.02;letter-spacing:-.045em;margin:10px 0 18px;max-width:760px}.home-hero p{font-size:17px;line-height:1.65;color:var(--muted);max-width:680px}.hero-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:24px}.btn-primary,.btn-secondary{display:inline-flex;align-items:center;justify-content:center;padding:12px 17px;border-radius:10px;text-decoration:none;font-weight:700;border:1px solid var(--border)}.btn-primary{background:var(--accent);color:#06110a!important;border-color:var(--accent)}.btn-secondary{background:var(--card);color:var(--text)!important}.eyebrow{font-size:11px;text-transform:uppercase;letter-spacing:.12em;color:var(--accent);font-weight:800}.payoff-demo{border:1px solid var(--border);border-radius:20px;background:linear-gradient(145deg,var(--card),var(--input));padding:18px;box-shadow:0 18px 45px rgba(0,0,0,.12)}.payoff-demo svg{width:100%;height:auto;display:block}.demo-legend{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-top:8px}.home-section{margin:28px 0}.section-head{display:flex;justify-content:space-between;gap:18px;align-items:end;margin-bottom:15px}.section-head h2{margin:0;font-size:25px}.section-head p{margin:5px 0 0;color:var(--muted);font-size:13px}.path-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.path-card{display:block;padding:18px;border:1px solid var(--border);border-radius:15px;background:var(--card);color:var(--text)!important;text-decoration:none!important;transition:.15s transform,.15s border-color}.path-card:hover{transform:translateY(-2px);border-color:var(--accent)}.path-num{font-size:11px;color:var(--dim)}.path-card h3{margin:9px 0 6px;font-size:17px}.path-card p{margin:0;color:var(--muted);font-size:13px;line-height:1.5}.outlook-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.outlook{padding:17px;border:1px solid var(--border);border-radius:15px;background:var(--card)}.outlook b{font-size:15px}.outlook p{margin:6px 0 0;color:var(--muted);font-size:12px;line-height:1.45}.builder-feature{display:grid;grid-template-columns:1fr 1fr;gap:18px;padding:24px;border:1px solid var(--border);border-radius:18px;background:linear-gradient(145deg,var(--card),var(--input))}.builder-feature h2{margin:0 0 8px;font-size:28px}.builder-feature p{color:var(--muted);line-height:1.6}.checklist{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:16px}.check{padding:10px 12px;border-radius:10px;background:var(--input);font-size:12px}.strategy-preview{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.mini-strategy{padding:17px;border:1px solid var(--border);border-radius:14px;background:var(--card)}.mini-strategy .tag{font-size:10px;color:var(--accent);text-transform:uppercase;letter-spacing:.08em;font-weight:800}.mini-strategy h3{margin:7px 0 5px}.mini-strategy p{font-size:12px;color:var(--muted);line-height:1.45;margin:0}.home-note{font-size:11px;color:var(--dim);margin:25px 0}.concept-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}.concept-card{padding:20px;border:1px solid var(--border);border-radius:16px;background:var(--card)}.concept-card h3{margin:0 0 10px;font-size:18px}.concept-card p{margin:0 0 10px;color:var(--muted);font-size:14px;line-height:1.55}.concept-card .analogy-box{margin:12px 0;padding:12px;border-radius:10px;background:var(--input);font-size:13px;line-height:1.5;color:var(--text)}.payoff-mini{margin-top:12px;border:1px solid var(--border);border-radius:12px;padding:10px;background:var(--input)}.payoff-mini svg{width:100%;height:auto;display:block}@media(max-width:700px){.concept-grid{grid-template-columns:1fr}}
 @media(max-width:900px){.home-hero,.builder-feature{grid-template-columns:1fr}.path-grid,.outlook-grid{grid-template-columns:1fr 1fr}.strategy-preview{grid-template-columns:1fr}}@media(max-width:600px){.home-hero{padding-top:30px}.path-grid,.outlook-grid,.checklist{grid-template-columns:1fr}.section-head{display:block}}
 
-/* PWA Install Button */
-#pwaInstallBtn{display:none;align-items:center;gap:8px;padding:12px 17px;border-radius:10px;font-weight:800;border:1px solid var(--border);background:var(--card);color:var(--text);cursor:pointer;transition:.15s transform,.15s background}
-#pwaInstallBtn.show{display:inline-flex}
-#pwaInstallBtn:hover{transform:translateY(-1px);border-color:var(--accent)}
-#pwaInstallBtn.installed{display:none!important}
-#pwaInstallBtn svg{width:16px;height:16px}
+/* PWA Install (footer button only) */
 .pwa-ios-modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.6);z-index:9999;padding:18px}
 .pwa-ios-modal.open{display:flex}
 .pwa-ios-card{max-width:360px;width:100%;background:var(--card,#1a2332);border:1px solid var(--border,#2d3a4f);border-radius:16px;padding:22px;box-shadow:0 20px 50px rgba(0,0,0,.4)}
@@ -72,7 +67,7 @@
 </style>
 </head><body><header class="site-header"><div class="site-header-inner"><a aria-label="JSM Options Home" class="logo logo-link" href="/"><div class="logo-icon">JSM</div><div><div style="font-weight:700">JSM Options</div><div class="brand-sub">jsm-options.com · Educational</div></div></a><div class="header-right"><nav aria-label="Primary navigation" class="nav"><a class="active" href="/">Home</a><a href="/level1/">Basics</a><a href="/level2/">Fundamentals</a><a href="/level3/">Spreads</a><a href="/level4/">Advanced</a><a href="/strategies/">Strategies</a><a href="/cheat-sheet/">Cheat sheet</a><a href="/builder/">Builder</a></nav><button aria-expanded="false" aria-label="Open menu" class="nav-toggle" id="navToggle" type="button"><span></span><span></span><span></span></button><button aria-label="Toggle color theme" class="theme-toggle" id="themeToggle" type="button"><span class="theme-icon" id="themeIcon">☼</span><span class="theme-label" id="themeLabel">Dark</span></button></div></div></header><main class="wrap wide">
 <section class="home-hero"><div><div class="eyebrow">Free course · Live strategy builder</div><h1>Free options trading course for beginners</h1><p>Start by understanding what an option is, then learn calls, puts, and strategies step by step. Practice what you learn in the live Strategy Builder with payoff graphs and educational Greeks. No account required.</p><div class="hero-actions">
-      <button id="pwaInstallBtn" aria-label="Install the App"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12l7 7 7-7"/><path d="M3 19h18"/></svg> Install the App</button><a class="btn-primary" href="/level1/">What is an Option? →</a><a class="btn-secondary" href="/builder/">Open Builder</a></div></div><div class="payoff-demo"><div class="eyebrow">Sample · Long Iron Condor</div>
+      <a class="btn-primary" href="/level1/">What is an Option? →</a><a class="btn-secondary" href="/builder/">Open Builder</a></div></div><div class="payoff-demo"><div class="eyebrow">Sample · Long Iron Condor</div>
 <svg aria-label="Long iron condor payoff at expiry" role="img" viewbox="0 0 520 260" xmlns="http://www.w3.org/2000/svg">
 <line opacity=".55" stroke="#8b9bb4" stroke-width="1.5" x1="40" x2="500" y1="150" y2="150"></line>
 <line opacity=".3" stroke="#8b9bb4" stroke-width="1" x1="40" x2="40" y1="30" y2="230"></line>
@@ -200,7 +195,6 @@
 // --- PWA Install Logic ---
 (function(){
   let deferredPrompt = null;
-  const btn = document.getElementById('pwaInstallBtn');
   const btn2 = document.getElementById('pwaInstallBtn2');
   const footerWrap = document.getElementById('pwaFooterInstall');
   const modal = document.getElementById('pwaIosModal');
@@ -211,11 +205,9 @@
 
   function showButtons(){
     if(isInStandalone) return;
-    if(btn) btn.classList.add('show');
     if(footerWrap) footerWrap.style.display='block';
   }
   function hideButtons(){
-    if(btn) btn.classList.add('installed');
     if(footerWrap) footerWrap.style.display='none';
   }
 
@@ -245,7 +237,6 @@
     if(modal) modal.classList.add('open');
   }
 
-  if(btn) btn.addEventListener('click', triggerInstall);
   if(btn2) btn2.addEventListener('click', triggerInstall);
   if(closeModal) closeModal.addEventListener('click', ()=> modal.classList.remove('open'));
   if(modal) modal.addEventListener('click', (e)=>{ if(e.target===modal) modal.classList.remove('open'); });
