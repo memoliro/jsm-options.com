@@ -1,0 +1,7 @@
+/index.html                          /                               308
+/privacy.html                        /privacy/                       308
+/disclaimer.html                     /disclaimer/                    308
+/about.html                          /about/                         308
+/contact.html                        /contact/                       308
+/*/index.html                        /:splat/                        308
+/*.html                              /:splat/                        308
