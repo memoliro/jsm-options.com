@@ -1,21 +1,292 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://jsm-options.com/</loc><lastmod>2026-09-17</lastmod><changefreq>weekly</changefreq><priority>1.0</priority></url>
-  <url><loc>https://jsm-options.com/level1/</loc><lastmod>2026-09-17</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://jsm-options.com/level2/</loc><lastmod>2026-09-17</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://jsm-options.com/level3/</loc><lastmod>2026-09-17</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://jsm-options.com/level4/</loc><lastmod>2026-09-17</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://jsm-options.com/strategies/</loc><lastmod>2026-09-17</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://jsm-options.com/builder/</loc><lastmod>2026-09-17</lastmod><changefreq>weekly</changefreq><priority>0.95</priority></url>
-  <url><loc>https://jsm-options.com/covered-call/</loc><lastmod>2026-09-17</lastmod><changefreq>monthly</changefreq><priority>0.95</priority></url>
-  <url><loc>https://jsm-options.com/cash-secured-put/</loc><lastmod>2026-09-17</lastmod><changefreq>monthly</changefreq><priority>0.95</priority></url>
-  <url><loc>https://jsm-options.com/iron-condor/</loc><lastmod>2026-09-17</lastmod><changefreq>monthly</changefreq><priority>0.95</priority></url>
-  <url><loc>https://jsm-options.com/wheel/</loc><lastmod>2026-09-17</lastmod><changefreq>monthly</changefreq><priority>0.95</priority></url>
-  <url><loc>https://jsm-options.com/cheat-sheet/</loc><lastmod>2026-09-17</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://jsm-options.com/about/</loc><lastmod>2026-09-17</lastmod><changefreq>yearly</changefreq><priority>0.4</priority></url>
-  <url><loc>https://jsm-options.com/contact/</loc><lastmod>2026-09-17</lastmod><changefreq>yearly</changefreq><priority>0.3</priority></url>
-  <url><loc>https://jsm-options.com/disclaimer/</loc><lastmod>2026-09-17</lastmod><changefreq>yearly</changefreq><priority>0.3</priority></url>
-  <url><loc>https://jsm-options.com/privacy/</loc><lastmod>2026-09-17</lastmod><changefreq>yearly</changefreq><priority>0.3</priority></url>
-  <url><loc>https://jsm-options.com/tr/</loc><lastmod>2026-09-17</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://jsm-options.com/tr/builder/</loc><lastmod>2026-09-17</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <url>
+    <loc>https://jsm-options.com/</loc>
+    <lastmod>2026-09-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://jsm-options.com/"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://jsm-options.com/tr/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://jsm-options.com/"/>
+  </url>
+  <url>
+    <loc>https://jsm-options.com/tr/</loc>
+    <lastmod>2026-09-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://jsm-options.com/"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://jsm-options.com/tr/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://jsm-options.com/"/>
+  </url>
+  <url>
+    <loc>https://jsm-options.com/level1/</loc>
+    <lastmod>2026-09-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://jsm-options.com/level1/"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://jsm-options.com/tr/level1/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://jsm-options.com/level1/"/>
+  </url>
+  <url>
+    <loc>https://jsm-options.com/tr/level1/</loc>
+    <lastmod>2026-09-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://jsm-options.com/level1/"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://jsm-options.com/tr/level1/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://jsm-options.com/level1/"/>
+  </url>
+  <url>
+    <loc>https://jsm-options.com/level2/</loc>
+    <lastmod>2026-09-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://jsm-options.com/level2/"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://jsm-options.com/tr/level2/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://jsm-options.com/level2/"/>
+  </url>
+  <url>
+    <loc>https://jsm-options.com/tr/level2/</loc>
+    <lastmod>2026-09-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://jsm-options.com/level2/"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://jsm-options.com/tr/level2/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://jsm-options.com/level2/"/>
+  </url>
+  <url>
+    <loc>https://jsm-options.com/level3/</loc>
+    <lastmod>2026-09-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://jsm-options.com/level3/"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://jsm-options.com/tr/level3/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://jsm-options.com/level3/"/>
+  </url>
+  <url>
+    <loc>https://jsm-options.com/tr/level3/</loc>
+    <lastmod>2026-09-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://jsm-options.com/level3/"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://jsm-options.com/tr/level3/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://jsm-options.com/level3/"/>
+  </url>
+  <url>
+    <loc>https://jsm-options.com/level4/</loc>
+    <lastmod>2026-09-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://jsm-options.com/level4/"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://jsm-options.com/tr/level4/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://jsm-options.com/level4/"/>
+  </url>
+  <url>
+    <loc>https://jsm-options.com/tr/level4/</loc>
+    <lastmod>2026-09-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://jsm-options.com/level4/"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://jsm-options.com/tr/level4/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://jsm-options.com/level4/"/>
+  </url>
+  <url>
+    <loc>https://jsm-options.com/strategies/</loc>
+    <lastmod>2026-09-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://jsm-options.com/strategies/"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://jsm-options.com/tr/strategies/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://jsm-options.com/strategies/"/>
+  </url>
+  <url>
+    <loc>https://jsm-options.com/tr/strategies/</loc>
+    <lastmod>2026-09-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://jsm-options.com/strategies/"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://jsm-options.com/tr/strategies/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://jsm-options.com/strategies/"/>
+  </url>
+  <url>
+    <loc>https://jsm-options.com/covered-call/</loc>
+    <lastmod>2026-09-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.95</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://jsm-options.com/covered-call/"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://jsm-options.com/tr/covered-call/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://jsm-options.com/covered-call/"/>
+  </url>
+  <url>
+    <loc>https://jsm-options.com/tr/covered-call/</loc>
+    <lastmod>2026-09-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://jsm-options.com/covered-call/"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://jsm-options.com/tr/covered-call/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://jsm-options.com/covered-call/"/>
+  </url>
+  <url>
+    <loc>https://jsm-options.com/cash-secured-put/</loc>
+    <lastmod>2026-09-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.95</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://jsm-options.com/cash-secured-put/"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://jsm-options.com/tr/cash-secured-put/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://jsm-options.com/cash-secured-put/"/>
+  </url>
+  <url>
+    <loc>https://jsm-options.com/tr/cash-secured-put/</loc>
+    <lastmod>2026-09-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://jsm-options.com/cash-secured-put/"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://jsm-options.com/tr/cash-secured-put/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://jsm-options.com/cash-secured-put/"/>
+  </url>
+  <url>
+    <loc>https://jsm-options.com/iron-condor/</loc>
+    <lastmod>2026-09-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.95</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://jsm-options.com/iron-condor/"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://jsm-options.com/tr/iron-condor/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://jsm-options.com/iron-condor/"/>
+  </url>
+  <url>
+    <loc>https://jsm-options.com/tr/iron-condor/</loc>
+    <lastmod>2026-09-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://jsm-options.com/iron-condor/"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://jsm-options.com/tr/iron-condor/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://jsm-options.com/iron-condor/"/>
+  </url>
+  <url>
+    <loc>https://jsm-options.com/wheel/</loc>
+    <lastmod>2026-09-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.95</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://jsm-options.com/wheel/"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://jsm-options.com/tr/wheel/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://jsm-options.com/wheel/"/>
+  </url>
+  <url>
+    <loc>https://jsm-options.com/tr/wheel/</loc>
+    <lastmod>2026-09-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://jsm-options.com/wheel/"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://jsm-options.com/tr/wheel/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://jsm-options.com/wheel/"/>
+  </url>
+  <url>
+    <loc>https://jsm-options.com/builder/</loc>
+    <lastmod>2026-09-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.95</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://jsm-options.com/builder/"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://jsm-options.com/tr/builder/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://jsm-options.com/builder/"/>
+  </url>
+  <url>
+    <loc>https://jsm-options.com/tr/builder/</loc>
+    <lastmod>2026-09-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://jsm-options.com/builder/"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://jsm-options.com/tr/builder/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://jsm-options.com/builder/"/>
+  </url>
+  <url>
+    <loc>https://jsm-options.com/cheat-sheet/</loc>
+    <lastmod>2026-09-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://jsm-options.com/cheat-sheet/"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://jsm-options.com/tr/cheat-sheet/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://jsm-options.com/cheat-sheet/"/>
+  </url>
+  <url>
+    <loc>https://jsm-options.com/tr/cheat-sheet/</loc>
+    <lastmod>2026-09-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://jsm-options.com/cheat-sheet/"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://jsm-options.com/tr/cheat-sheet/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://jsm-options.com/cheat-sheet/"/>
+  </url>
+  <url>
+    <loc>https://jsm-options.com/about/</loc>
+    <lastmod>2026-09-17</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.4</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://jsm-options.com/about/"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://jsm-options.com/tr/about/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://jsm-options.com/about/"/>
+  </url>
+  <url>
+    <loc>https://jsm-options.com/tr/about/</loc>
+    <lastmod>2026-09-17</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://jsm-options.com/about/"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://jsm-options.com/tr/about/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://jsm-options.com/about/"/>
+  </url>
+  <url>
+    <loc>https://jsm-options.com/contact/</loc>
+    <lastmod>2026-09-17</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://jsm-options.com/contact/"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://jsm-options.com/tr/contact/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://jsm-options.com/contact/"/>
+  </url>
+  <url>
+    <loc>https://jsm-options.com/tr/contact/</loc>
+    <lastmod>2026-09-17</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.2</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://jsm-options.com/contact/"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://jsm-options.com/tr/contact/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://jsm-options.com/contact/"/>
+  </url>
+  <url>
+    <loc>https://jsm-options.com/disclaimer/</loc>
+    <lastmod>2026-09-17</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://jsm-options.com/disclaimer/"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://jsm-options.com/tr/disclaimer/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://jsm-options.com/disclaimer/"/>
+  </url>
+  <url>
+    <loc>https://jsm-options.com/tr/disclaimer/</loc>
+    <lastmod>2026-09-17</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.2</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://jsm-options.com/disclaimer/"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://jsm-options.com/tr/disclaimer/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://jsm-options.com/disclaimer/"/>
+  </url>
+  <url>
+    <loc>https://jsm-options.com/privacy/</loc>
+    <lastmod>2026-09-17</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://jsm-options.com/privacy/"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://jsm-options.com/tr/privacy/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://jsm-options.com/privacy/"/>
+  </url>
+  <url>
+    <loc>https://jsm-options.com/tr/privacy/</loc>
+    <lastmod>2026-09-17</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.2</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://jsm-options.com/privacy/"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://jsm-options.com/tr/privacy/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://jsm-options.com/privacy/"/>
+  </url>
 </urlset>
