@@ -22,6 +22,27 @@
 .pwa-ios-card ol{margin:10px 0 0 18px;font-size:13px;line-height:1.6}
 .pwa-ios-card .close{margin-top:14px;width:100%;padding:10px;border-radius:10px;border:1px solid var(--border);background:var(--input,#111a28);color:var(--text);font-weight:700;cursor:pointer}
 
+/* Call Option Porch Story Slideshow */
+.slideshow-section { max-width:900px; margin:28px auto; }
+.slideshow-card { border:1px solid var(--border); border-radius:18px; background:var(--card); padding:24px; box-shadow:0 10px 30px rgba(0,0,0,.06); }
+.slide-item { display:none; }
+.slide-item.active { display:block; }
+.slide-top { display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border); padding-bottom:12px; margin-bottom:16px; }
+.slide-top h3 { margin:0; font-size:20px; color:var(--text); }
+.slide-num { font-size:12px; color:var(--accent); font-weight:800; text-transform:uppercase; }
+.dialogue { padding:12px 16px; border-radius:10px; margin-bottom:10px; font-size:14px; line-height:1.6; }
+.dialogue.alex { background:var(--input); border-left:4px solid var(--accent); color:var(--text); }
+.dialogue.sam { background:var(--input); border-left:4px solid #3b82f6; color:var(--text); }
+.slide-badge { background:var(--input); border:1px solid var(--border); border-radius:10px; padding:12px 14px; margin-top:12px; font-size:13px; color:var(--muted); }
+.slide-badge strong { color:var(--text); }
+.slide-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:12px; }
+.slide-box { padding:14px; border-radius:10px; background:var(--input); border:1px solid var(--border); font-size:13px; }
+.slide-box h4 { margin:0 0 6px; color:var(--text); font-size:15px; }
+.slide-box ul { margin:0; padding-left:18px; color:var(--muted); line-height:1.5; }
+.slide-controls { display:flex; justify-content:space-between; align-items:center; margin-top:20px; padding-top:14px; border-top:1px solid var(--border); }
+.slide-btn { padding:8px 16px; border-radius:8px; border:1px solid var(--border); background:var(--input); color:var(--text); font-weight:700; cursor:pointer; transition:.15s background; }
+.slide-btn:hover { background:var(--border); }
+@media(max-width:600px){ .slide-grid { grid-template-columns:1fr; } }
 </style>
 <style id="jsm-mobile-nav">
 .nav-toggle{display:none;box-sizing:border-box;width:44px;height:44px;min-width:44px;min-height:44px;padding:0;border:1px solid var(--border,#2d3a4f);border-radius:10px;background:var(--card,#1a2332);color:var(--text,#e7ecf3);cursor:pointer;align-items:center;justify-content:center;flex-direction:column;gap:5px;-webkit-tap-highlight-color:transparent;touch-action:manipulation;position:relative;z-index:40}
@@ -160,10 +181,143 @@
 <p class="home-note">Educational only — not financial advice. Options involve risk and can result in losses. Examples are simplified and do not account for every real-world factor.</p>
 </div></section>
 
+<!-- Call Option Porch Story Interactive Slideshow -->
+<section class="home-section slideshow-section" id="porch-slideshow">
+<div class="section-head"><div><div class="eyebrow">Interactive Story</div><h2>Understanding Call Options: The Porch Deal</h2><p>Walk through a 2-person dialogue to see how options work in plain language.</p></div></div>
+<div class="slideshow-card">
+  
+  <!-- Slide 1 -->
+  <div class="slide-item active">
+    <div class="slide-top">
+      <h3>1. The Porch Setup</h3>
+      <span class="slide-num">Slide 1 / 6</span>
+    </div>
+    <div class="dialogue alex">
+      <strong>Alex (Call Buyer):</strong> "I think this neighborhood is about to boom. I want the right to buy your house for $320,000 anytime in the next 90 days. But I’m not promising to buy it — I just want the option."
+    </div>
+    <div class="dialogue sam">
+      <strong>Sam (Call Seller):</strong> "Why would I give you that right?"
+    </div>
+  </div>
 
+  <!-- Slide 2 -->
+  <div class="slide-item">
+    <div class="slide-top">
+      <h3>2. The Terms &amp; Premium</h3>
+      <span class="slide-num">Slide 2 / 6</span>
+    </div>
+    <div class="dialogue alex">
+      <strong>Alex:</strong> "I’ll pay you $5,000 today, cash, non-refundable."
+    </div>
+    <div class="dialogue sam">
+      <strong>Sam:</strong> "Deal!"
+    </div>
+    <div class="slide-badge">
+      💡 <strong>Contract Summary:</strong> Premium = $5,000 | Strike Price = $320,000 | Expiration = 90 Days | Asset = House
+    </div>
+  </div>
 
+  <!-- Slide 3 -->
+  <div class="slide-item">
+    <div class="slide-top">
+      <h3>3. Rights vs. Obligations</h3>
+      <span class="slide-num">Slide 3 / 6</span>
+    </div>
+    <div class="slide-grid">
+      <div class="slide-box">
+        <h4>Alex (Call Buyer)</h4>
+        <ul>
+          <li><strong>Right</strong> to buy at $320,000</li>
+          <li>No obligation to buy</li>
+          <li>Pays $5,000 upfront</li>
+          <li>Max loss = $5,000 premium</li>
+        </ul>
+      </div>
+      <div class="slide-box">
+        <h4>Sam (Call Seller)</h4>
+        <ul>
+          <li><strong>Obligation</strong> to sell if exercised</li>
+          <li>No right to break the contract</li>
+          <li>Keeps $5,000 upfront</li>
+          <li>Max gain = $5,000 premium</li>
+        </ul>
+      </div>
+    </div>
+  </div>
 
+  <!-- Slide 4 -->
+  <div class="slide-item">
+    <div class="slide-top">
+      <h3>4. Scenario A: Neighborhood Booms ($400,000)</h3>
+      <span class="slide-num">Slide 4 / 6</span>
+    </div>
+    <div class="dialogue alex">
+      <strong>Alex:</strong> "The house is worth $400,000! I'm exercising. Here is $320,000."
+    </div>
+    <div class="dialogue sam">
+      <strong>Sam:</strong> "I must sell for $320,000, as agreed."
+    </div>
+    <div class="slide-badge">
+      📈 <strong>Alex's Profit:</strong> $400k (Value) - $320k (Strike) - $5k (Premium) = <strong>+$75,000 Net Gain</strong>
+    </div>
+  </div>
 
+  <!-- Slide 5 -->
+  <div class="slide-item">
+    <div class="slide-top">
+      <h3>5. Scenario B: Neighborhood Drops ($300,000)</h3>
+      <span class="slide-num">Slide 5 / 6</span>
+    </div>
+    <div class="dialogue alex">
+      <strong>Alex:</strong> "Houses fell to $300,000. Why pay $320,000? I'll pass and let the contract expire."
+    </div>
+    <div class="dialogue sam">
+      <strong>Sam:</strong> "Fair enough. I keep the $5,000 premium and keep my house."
+    </div>
+    <div class="slide-badge">
+      📉 <strong>Alex's Loss:</strong> Capped at the <strong>-$5,000 Premium</strong>. Sam keeps $5,000.
+    </div>
+  </div>
+
+  <!-- Slide 6 -->
+  <div class="slide-item">
+    <div class="slide-top">
+      <h3>6. Covered vs. Naked Risk</h3>
+      <span class="slide-num">Slide 6 / 6</span>
+    </div>
+    <div class="dialogue sam">
+      <strong>Sam:</strong> "Since I own the house, my loss is an opportunity loss. But if I sold this call WITHOUT owning the house (a Naked Call), I'd have to buy a house at $400,000 and sell it to you for $320,000. That's a huge danger!"
+    </div>
+    <div class="slide-badge">
+      ⚠️ <strong>Key Takeaway:</strong> Selling uncovered calls carries catastrophic downside risk. Always manage risk carefully.
+    </div>
+  </div>
+
+  <div class="slide-controls">
+    <button type="button" class="slide-btn" onclick="porchPrev()">← Previous</button>
+    <button type="button" class="slide-btn" onclick="porchNext()">Next →</button>
+  </div>
+</div>
+</section>
+
+<script>
+let porchCurrent = 0;
+function porchShow(i) {
+  const slides = document.querySelectorAll('#porch-slideshow .slide-item');
+  if(!slides.length) return;
+  slides.forEach((s, idx) => s.classList.toggle('active', idx === i));
+}
+function porchNext() {
+  const slides = document.querySelectorAll('#porch-slideshow .slide-item');
+  porchCurrent = (porchCurrent + 1) % slides.length;
+  porchShow(porchCurrent);
+}
+function porchPrev() {
+  const slides = document.querySelectorAll('#porch-slideshow .slide-item');
+  porchCurrent = (porchCurrent - 1 + slides.length) % slides.length;
+  porchShow(porchCurrent);
+}
+</script>
 
 <section class="home-section faq-section" id="faq">
 <div class="section-head"><div><div class="eyebrow">Common questions</div><h2>Beginner FAQ</h2><p>The questions almost every new options trader asks first. Click any question to open the answer.</p></div></div>
