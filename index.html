@@ -428,27 +428,35 @@
       });
     }
 
-    document.addEventListener('DOMContentLoaded', function () {
+    function initPorchSlideshow() {
       const nextBtn = document.getElementById('porch-next-btn');
       const prevBtn = document.getElementById('porch-prev-btn');
 
-      if (nextBtn && prevBtn) {
-        nextBtn.addEventListener('click', function () {
-          const slides = document.querySelectorAll('#porch-slideshow .slide-item');
-          porchCurrent = (porchCurrent + 1) % slides.length;
-          porchShow(porchCurrent);
-        });
+      if (!nextBtn || !prevBtn) return;
 
-        prevBtn.addEventListener('click', function () {
-          const slides = document.querySelectorAll('#porch-slideshow .slide-item');
-          porchCurrent = (porchCurrent - 1 + slides.length) % slides.length;
-          porchShow(porchCurrent);
-        });
-      }
-      
-      // Initial render to make sure Slide 1 displays
+      nextBtn.addEventListener('click', function () {
+        const slides = document.querySelectorAll('#porch-slideshow .slide-item');
+        if (!slides.length) return;
+        porchCurrent = (porchCurrent + 1) % slides.length;
+        porchShow(porchCurrent);
+      });
+
+      prevBtn.addEventListener('click', function () {
+        const slides = document.querySelectorAll('#porch-slideshow .slide-item');
+        if (!slides.length) return;
+        porchCurrent = (porchCurrent - 1 + slides.length) % slides.length;
+        porchShow(porchCurrent);
+      });
+
+      // Render the initial active slide
       porchShow(porchCurrent);
-    });
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initPorchSlideshow);
+    } else {
+      initPorchSlideshow();
+    }
   })();
 </script>
 <section class="home-section faq-section" id="faq">
