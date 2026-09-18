@@ -181,7 +181,130 @@
 <p class="home-note">Educational only — not financial advice. Options involve risk and can result in losses. Examples are simplified and do not account for every real-world factor.</p>
 </div></section>
 
-<iframe src="https://docs.google.com/presentation/d/e/2PACX-1vQzve6ShcNxUJ1ommI6_7rSOwe7Kbz2rq1syfERoZcobzxbdQCr33zzwE8SiYXDwVVRAZoQzVNX5u4U/pubembed?start=true&loop=false&delayms=3000" frameborder="0" width="1280" height="749" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true"></iframe>
+<!-- Call Option Porch Story Interactive Slideshow -->
+<section class="home-section slideshow-section" id="porch-deal-slideshow">
+  <div class="section-head">
+    <div>
+      <div class="eyebrow">Interactive Story</div>
+      <h2>Understanding Call Options: The Porch Deal</h2>
+      <p>Walk through a 2-person dialogue to see how call options work in plain language.</p>
+    </div>
+  </div>
+  
+  <div class="slideshow-card" id="porch-slideshow">
+    <div class="slide-top">
+      <h3>The Porch Bargain</h3>
+      <span class="slide-num" id="porch-counter">SLIDE 1/6</span>
+    </div>
+
+    <!-- Slide 1 -->
+    <div class="slide-item active">
+      <div class="dialogue alex">
+        <strong>Alex (Call Buyer):</strong> "Hey Sam, that house you're renovating is listed for $200k. I think the neighborhood is about to boom. Will you sell me the right to buy it for $200k anytime in the next 30 days?"
+      </div>
+      <div class="dialogue sam">
+        <strong>Sam (Call Seller):</strong> "Why should I hold it for you for a month without selling to someone else?"
+      </div>
+      <div class="dialogue alex">
+        <strong>Alex:</strong> "I'll pay you $5,000 upfront today cash. It's yours to keep no matter what happens."
+      </div>
+      <div class="slide-badge">
+        <strong>Concept:</strong> Alex buys a <strong>Call Option</strong>. Strike Price = <strong>$200k</strong> | Expiration = <strong>30 Days</strong> | Premium = <strong>$5,000</strong>.
+      </div>
+    </div>
+
+    <!-- Slide 2 -->
+    <div class="slide-item">
+      <div class="dialogue sam">
+        <strong>Sam:</strong> "Deal! I keep the $5,000 premium today. If you want to buy for $200k before 30 days are up, I must sell to you."
+      </div>
+      <div class="dialogue alex">
+        <strong>Alex:</strong> "And if I change my mind, I don't have to buy the house. I just walk away and lose my $5,000."
+      </div>
+      <div class="slide-badge">
+        <strong>Concept:</strong> <strong>Buyer</strong> gets a <em>Right</em> (no obligation to buy). <strong>Seller</strong> takes on an <em>Obligation</em>.
+      </div>
+    </div>
+
+    <!-- Slide 3 -->
+    <div class="slide-item">
+      <div class="dialogue alex">
+        <strong>Scenario A (Housing Boom):</strong> 20 days later, a tech company opens nearby! The house market value shoots up to <strong>$250,000</strong>.
+      </div>
+      <div class="dialogue alex">
+        <strong>Alex:</strong> "I am exercising my right! Sam, sell me the house for the agreed $200,000 strike price."
+      </div>
+      <div class="dialogue sam">
+        <strong>Sam:</strong> "I'm obligated to sell at $200,000. Even though it's worth $250,000 today."
+      </div>
+      <div class="slide-badge">
+        <strong>Outcome:</strong> Alex buys at $200k + $5k premium ($205k total cost). Net profit = <strong>$45,000</strong> on a $5k initial outlay!
+      </div>
+    </div>
+
+    <!-- Slide 4 -->
+    <div class="slide-item">
+      <div class="dialogue sam">
+        <strong>Scenario B (Market Slump):</strong> 20 days later, a nearby factory closes. House value drops to <strong>$170,000</strong>.
+      </div>
+      <div class="dialogue alex">
+        <strong>Alex:</strong> "Why would I pay $200k for your house when I can buy similar houses on the open market for $170k? I let the contract expire worthless."
+      </div>
+      <div class="dialogue sam">
+        <strong>Sam:</strong> "I keep your $5,000 non-refundable premium, but I still own the house."
+      </div>
+      <div class="slide-badge">
+        <strong>Outcome:</strong> Alex's loss is capped at <strong>$5,000</strong> (the premium paid). Alex doesn't lose $30k from market drop.
+      </div>
+    </div>
+
+    <!-- Slide 5 -->
+    <div class="slide-item">
+      <div class="dialogue alex">
+        <strong>Scenario C (Trading the Contract):</strong> House value rises to $230,000. Alex doesn't have $200k in bank cash to buy the house, but another investor (Jordan) wants the contract!
+      </div>
+      <div class="dialogue alex">
+        <strong>Alex:</strong> "Hey Jordan, buy my $200k lock-in contract for $30,000."
+      </div>
+      <div class="slide-badge">
+        <strong>Concept:</strong> You don't have to buy/sell the actual stock. You can sell the call contract itself before expiration to close out for profit!
+      </div>
+    </div>
+
+    <!-- Slide 6 -->
+    <div class="slide-item">
+      <div class="slide-grid">
+        <div class="slide-box">
+          <h4>Call Buyer (Alex)</h4>
+          <ul>
+            <li>Pays Premium ($5,000)</li>
+            <li>Gets the RIGHT to buy</li>
+            <li>Max Risk: Premium paid</li>
+            <li>Max Reward: Unlimited upside</li>
+          </ul>
+        </div>
+        <div class="slide-box">
+          <h4>Call Seller (Sam)</h4>
+          <ul>
+            <li>Collects Premium ($5,000)</li>
+            <li>Takes OBLIGATION to sell</li>
+            <li>Max Risk: Cap on potential house gain</li>
+            <li>Max Reward: Premium collected</li>
+          </ul>
+        </div>
+      </div>
+      <div class="slide-badge">
+        <strong>Summary:</strong> Call options let buyers gain leverage with capped downside risk, while sellers trade future upside for upfront income.
+      </div>
+    </div>
+
+    <!-- Navigation Controls -->
+    <div class="slide-controls">
+      <button class="slide-btn" id="porch-prev-btn" type="button">← Previous</button>
+      <button class="slide-btn" id="porch-next-btn" type="button">Next →</button>
+    </div>
+  </div>
+</section>
 
 <section class="home-section faq-section" id="faq">
 <div class="section-head"><div><div class="eyebrow">Common questions</div><h2>Beginner FAQ</h2><p>The questions almost every new options trader asks first. Click any question to open the answer.</p></div></div>
@@ -383,6 +506,62 @@
 </div>
 </footer>
 
+<!-- Porch Slideshow Script -->
+<script>
+(function () {
+  let porchCurrent = 0;
+
+  function porchShow(index) {
+    const slides = document.querySelectorAll('#porch-slideshow .slide-item');
+    if (!slides.length) return;
+
+    slides.forEach((slide, idx) => {
+      if (idx === index) {
+        slide.classList.add('active');
+        slide.style.display = 'block';
+      } else {
+        slide.classList.remove('active');
+        slide.style.display = 'none';
+      }
+    });
+
+    const counter = document.getElementById('porch-counter');
+    if (counter) {
+      counter.textContent = `SLIDE ${index + 1}/${slides.length}`;
+    }
+  }
+
+  function initPorchSlideshow() {
+    const nextBtn = document.getElementById('porch-next-btn');
+    const prevBtn = document.getElementById('porch-prev-btn');
+
+    if (!nextBtn || !prevBtn) return;
+
+    nextBtn.addEventListener('click', function () {
+      const slides = document.querySelectorAll('#porch-slideshow .slide-item');
+      if (!slides.length) return;
+      porchCurrent = (porchCurrent + 1) % slides.length;
+      porchShow(porchCurrent);
+    });
+
+    prevBtn.addEventListener('click', function () {
+      const slides = document.querySelectorAll('#porch-slideshow .slide-item');
+      if (!slides.length) return;
+      porchCurrent = (porchCurrent - 1 + slides.length) % slides.length;
+      porchShow(porchCurrent);
+    });
+
+    porchShow(porchCurrent);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initPorchSlideshow);
+  } else {
+    initPorchSlideshow();
+  }
+})();
+</script>
+
 <script>
 // --- PWA Install Logic ---
 (function(){
@@ -403,9 +582,7 @@
     if(footerWrap) footerWrap.style.display='none';
   }
 
-  // Check if already installed
   if(isInStandalone){ hideButtons(); } else { 
-    // show after small delay so page loads
     setTimeout(showButtons, 800);
   }
 
@@ -425,7 +602,6 @@
       deferredPrompt = null;
       return;
     }
-    // No prompt available -> show instructions (iOS or manual)
     if(modal) modal.classList.add('open');
   }
 
@@ -438,7 +614,6 @@
     hideButtons();
   });
 
-  // Register Service Worker
   if('serviceWorker' in navigator){
     window.addEventListener('load', ()=>{
       navigator.serviceWorker.register('/sw.js').then(reg=>{
@@ -467,7 +642,6 @@
       btn.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
     });
 
-    // Close after choosing a link
     nav.addEventListener('click', function (e) {
       if (e.target.closest('a')) {
         nav.classList.remove('is-open');
@@ -476,7 +650,6 @@
       }
     });
 
-    // Close on outside click (use capture delay so button click isn't treated as outside)
     document.addEventListener('click', function (e) {
       if (!nav.classList.contains('is-open')) return;
       if (btn.contains(e.target) || nav.contains(e.target)) return;
