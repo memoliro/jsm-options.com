@@ -82,6 +82,19 @@
 .quiz-result p{color:var(--muted);margin:8px 0 16px;font-size:14px;line-height:1.5}
 .quiz-result .btn-secondary{cursor:pointer;font:inherit}
 @media(max-width:700px){.quiz-card{padding:18px}}
+
+/* Slideshow Component Styling */
+.slideshow-section{margin:28px 0}
+.slideshow-container{position:relative;background:var(--card);border:1px solid var(--border);border-radius:18px;padding:28px;box-shadow:0 10px 30px rgba(0,0,0,.06)}
+.slide{display:none;min-height:220px}
+.slide.active{display:block}
+.slide-num{font-size:12px;font-weight:800;color:var(--accent);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px}
+.slide h3{margin:0 0 12px;font-size:22px;color:var(--text)}
+.slide p{font-size:15px;line-height:1.65;color:var(--muted);margin:0 0 12px}
+.slideshow-controls{display:flex;justify-content:space-between;align-items:center;margin-top:24px;padding-top:18px;border-top:1px solid var(--border)}
+.slide-dots{display:flex;gap:8px}
+.dot{width:10px;height:10px;border-radius:50%;background:var(--border);cursor:pointer;transition:.2s background}
+.dot.active{background:var(--accent)}
 </style>
 </head><body><header class="site-header"><div class="site-header-inner"><a aria-label="JSM Options Home" class="logo logo-link" href="/tr/"><div class="logo-icon">JSM</div><div><div style="font-weight:700">JSM Options</div><div class="brand-sub">jsm-options.com · Educational</div></div></a><div class="header-right"><nav aria-label="Primary navigation" class="nav"><a class="active" href="/tr/">Home</a><a href="/tr/level1/">Basics</a><a href="/tr/level2/">Fundamentals</a><a href="/tr/level3/">Spreads</a><a href="/tr/level4/">Advanced</a><a href="/tr/strategies/">Strategies</a><a href="/tr/cheat-sheet/">Cheat sheet</a><a href="/tr/builder/">Builder</a></nav><button aria-expanded="false" aria-label="Open menu" class="nav-toggle" id="navToggle" type="button"><span></span><span></span><span></span></button><button aria-label="Toggle color theme" class="theme-toggle" id="themeToggle" type="button"><span class="theme-icon" id="themeIcon">☼</span><span class="theme-label" id="themeLabel">Dark</span></button></div></div></header><main class="wrap wide">
 <div class="card term-banner">
@@ -150,6 +163,47 @@
 
 
 </div></section>
+
+<!-- Turkish Translated Slideshow Section -->
+<section class="home-section slideshow-section" id="option-slideshow">
+<div class="section-head"><div><div class="eyebrow">Hızlı Özet</div><h2>Opsiyon Temelleri Slayt Gösterisi</h2><p>Temel opsiyon kavramlarını hızlıca gözden geçirmek için slaytlar arasında gezinin.</p></div></div>
+<div class="slideshow-container">
+  <div class="slide active">
+    <div class="slide-num">Slayt 1 / 4</div>
+    <h3>1. Sözleşme & İki Taraf</h3>
+    <p>Opsiyon, değeri dayanak bir varlığa (örneğin bir hisse senedine) bağlı finansal bir sözleşmedir.</p>
+    <p>Her sözleşmede <strong>Alıcı</strong> (primi ödeyen ve hakkı elde eden) ile <strong>Satıcı</strong> (primi alan ve yükümlülüğü üstlenen) bulunur.</p>
+  </div>
+  <div class="slide">
+    <div class="slide-num">Slayt 2 / 4</div>
+    <h3>2. Call ve Put Opsiyonları</h3>
+    <p><strong>Call Opsiyonu:</strong> Alıcıya dayanak varlığı belirli bir fiyattan <em>satın alma</em> hakkı verir.</p>
+    <p><strong>Put Opsiyonu:</strong> Alıcıya dayanak varlığı belirli bir fiyattan <em>satma</em> hakkı verir.</p>
+  </div>
+  <div class="slide">
+    <div class="slide-num">Slayt 3 / 4</div>
+    <h3>3. Strike Price & Vade (Expiry)</h3>
+    <p><strong>Kullanım Fiyatı (Strike Price):</strong> İşlemin gerçekleşeceği önceden belirlenmiş sabit fiyattır.</p>
+    <p><strong>Vade Tarihi (Expiry):</strong> Sözleşmenin geçerliliğini yitirdiği son tarihtir. Hisselerin aksine opsiyonların süresi kısıtlıdır.</p>
+  </div>
+  <div class="slide">
+    <div class="slide-num">Slayt 4 / 4</div>
+    <h3>4. Prim & Sözleşme Büyüklüğü</h3>
+    <p><strong>Prim (Premium):</strong> Opsiyon alıcısının hakları elde etmek için ödediği birim fiyattır.</p>
+    <p>Standart 1 opsiyon sözleşmesi <strong>100 hisseyi</strong> temsil eder (Topl. Maliyet = Prim × 100).</p>
+  </div>
+  <div class="slideshow-controls">
+    <button type="button" class="btn-secondary" id="prevSlide">← Önceki</button>
+    <div class="slide-dots">
+      <span class="dot active" data-index="0"></span>
+      <span class="dot" data-index="1"></span>
+      <span class="dot" data-index="2"></span>
+      <span class="dot" data-index="3"></span>
+    </div>
+    <button type="button" class="btn-primary" id="nextSlide">Sonraki →</button>
+  </div>
+</div>
+</section>
 
 <section class="home-section faq-section" id="faq">
 <div class="section-head"><div><div class="eyebrow">Sık sorulanlar</div><h2>Yeni Başlayan SSS</h2><p>Her yeni opsiyon yatırımcısının ilk sorduğu sorular. Cevabı görmek için soruya tıklayın.</p></div></div>
@@ -400,6 +454,34 @@
   } else {
     initNav();
   }
+})();
+</script>
+<!-- Slideshow Script -->
+<script>
+(function(){
+  var slides = document.querySelectorAll('.slide');
+  var dots = document.querySelectorAll('.dot');
+  var prevBtn = document.getElementById('prevSlide');
+  var nextBtn = document.getElementById('nextSlide');
+  if (!slides.length) return;
+  var currentIndex = 0;
+
+  function showSlide(index) {
+    if (index < 0) index = slides.length - 1;
+    if (index >= slides.length) index = 0;
+    currentIndex = index;
+    slides.forEach(function(s, i) { s.classList.toggle('active', i === currentIndex); });
+    dots.forEach(function(d, i) { d.classList.toggle('active', i === currentIndex); });
+  }
+
+  if (prevBtn) prevBtn.addEventListener('click', function() { showSlide(currentIndex - 1); });
+  if (nextBtn) nextBtn.addEventListener('click', function() { showSlide(currentIndex + 1); });
+  dots.forEach(function(dot) {
+    dot.addEventListener('click', function() {
+      var idx = parseInt(this.getAttribute('data-index'), 10);
+      showSlide(idx);
+    });
+  });
 })();
 </script>
 <script>
