@@ -22,25 +22,25 @@
 .pwa-ios-card ol{margin:10px 0 0 18px;font-size:13px;line-height:1.6}
 .pwa-ios-card .close{margin-top:14px;width:100%;padding:10px;border-radius:10px;border:1px solid var(--border);background:var(--input,#111a28);color:var(--text);font-weight:700;cursor:pointer}
 
-/* Call Option Porch Story Slideshow */
-.slideshow-section { max-width:900px; margin:28px auto; }
+/* Call Option Porch Story Slideshow - Fixed Alignment & High Contrast Visuals */
+.slideshow-section { width:100%; max-width:980px; margin:28px auto; }
 .slideshow-card { border:1px solid var(--border); border-radius:18px; background:var(--card); padding:24px; box-shadow:0 10px 30px rgba(0,0,0,.06); }
 .slide-item { display:none; }
-.slide-item.active { display:block; }
+.slide-item.active { display:block !important; }
 .slide-top { display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border); padding-bottom:12px; margin-bottom:16px; }
 .slide-top h3 { margin:0; font-size:20px; color:var(--text); }
 .slide-num { font-size:12px; color:var(--accent); font-weight:800; text-transform:uppercase; }
-.dialogue { padding:12px 16px; border-radius:10px; margin-bottom:10px; font-size:14px; line-height:1.6; }
-.dialogue.alex { background:var(--input); border-left:4px solid var(--accent); color:var(--text); }
-.dialogue.sam { background:var(--input); border-left:4px solid #3b82f6; color:var(--text); }
-.slide-badge { background:var(--input); border:1px solid var(--border); border-radius:10px; padding:12px 14px; margin-top:12px; font-size:13px; color:var(--muted); }
+.dialogue { padding:14px 18px; border-radius:12px; margin-bottom:12px; font-size:14px; line-height:1.6; background:var(--input); color:var(--text); }
+.dialogue.alex { border-left:5px solid #10b981; background:rgba(16,185,129,0.08); }
+.dialogue.sam { border-left:5px solid #3b82f6; background:rgba(59,130,246,0.08); }
+.slide-badge { background:var(--input); border:1px solid var(--border); border-radius:10px; padding:14px 16px; margin-top:14px; font-size:13px; color:var(--muted); line-height:1.5; }
 .slide-badge strong { color:var(--text); }
 .slide-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:12px; }
-.slide-box { padding:14px; border-radius:10px; background:var(--input); border:1px solid var(--border); font-size:13px; }
-.slide-box h4 { margin:0 0 6px; color:var(--text); font-size:15px; }
-.slide-box ul { margin:0; padding-left:18px; color:var(--muted); line-height:1.5; }
+.slide-box { padding:16px; border-radius:12px; background:var(--input); border:1px solid var(--border); font-size:13px; }
+.slide-box h4 { margin:0 0 8px; color:var(--text); font-size:15px; }
+.slide-box ul { margin:0; padding-left:18px; color:var(--muted); line-height:1.6; }
 .slide-controls { display:flex; justify-content:space-between; align-items:center; margin-top:20px; padding-top:14px; border-top:1px solid var(--border); }
-.slide-btn { padding:8px 16px; border-radius:8px; border:1px solid var(--border); background:var(--input); color:var(--text); font-weight:700; cursor:pointer; transition:.15s background; }
+.slide-btn { padding:10px 18px; border-radius:8px; border:1px solid var(--border); background:var(--input); color:var(--text); font-weight:700; cursor:pointer; transition:.15s background; }
 .slide-btn:hover { background:var(--border); }
 @media(max-width:600px){ .slide-grid { grid-template-columns:1fr; } }
 </style>
@@ -102,7 +102,7 @@
 .quiz-result p{color:var(--muted);margin:8px 0 16px;font-size:14px;line-height:1.5}
 .quiz-result .btn-secondary{cursor:pointer;font:inherit}
 @media(max-width:700px){.quiz-card{padding:18px}}
-.faq{max-width:900px}
+.faq{max-width:980px;margin-left:auto;margin-right:auto}
 .faq details{background:var(--card);border:1px solid var(--border);border-radius:12px;margin-bottom:10px;overflow:hidden}
 .faq details[open]{border-color:var(--accent)}
 .faq summary{padding:16px 18px;cursor:pointer;font-weight:700;color:var(--text);list-style:none;display:flex;justify-content:space-between;align-items:center;gap:14px;font-size:15px}
@@ -518,10 +518,10 @@
     slides.forEach((slide, idx) => {
       if (idx === index) {
         slide.classList.add('active');
-        slide.style.display = 'block';
+        slide.style.setProperty('display', 'block', 'important');
       } else {
         slide.classList.remove('active');
-        slide.style.display = 'none';
+        slide.style.setProperty('display', 'none', 'important');
       }
     });
 
