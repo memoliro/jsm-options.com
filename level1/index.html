@@ -134,6 +134,160 @@
     <div class="warn"><strong>Beginner trap:</strong> reading a $2.50 quote as “$2.50 total.” It is $250 per contract. Always check the total debit or credit before you click buy or sell.</div>
   </div>
 
+  
+  <div class="card" id="moneyness-guide-example" style="border: 1px solid var(--border);">
+    <span class="badge" style="background: var(--accent, #2563eb); color: white; border: none;">Example · Current Price $100</span>
+    <h2>Options Moneyness Guide - Example</h2>
+    <p style="color: var(--muted); margin-top: 8px;">Example Scenario: <span style="font-family: monospace; font-weight: 700; background: var(--card-2, #1e293b); padding: 2px 8px; border-radius: 6px; color: var(--text);">Current Price = $100</span> <span style="font-family: monospace; font-weight: 700;">| Sample Strikes: $50, $75, $100, $125, $150</span> — <span style="opacity: 0.7;">Educational Example Only</span></p>
+    
+    <div style="margin-top: 18px; background: var(--card-2, rgba(255,255,255,0.03)); border: 1px dashed var(--border); border-radius: 12px; padding: 12px 16px; font-size: 0.92rem; color: var(--muted);">
+      <strong style="color: var(--text);">Sample Underlying:</strong> $100 — This $100 example makes ITM/ATM/OTM easy to see. Replace with any underlying price. All $ values are sample prices for illustration.
+    </div>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 22px;" class="moneyness-grid">
+      <!-- CALL CARD -->
+      <div style="background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 18px; box-shadow: 0 4px 20px rgba(0,0,0,0.1);">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+          <h3 style="margin: 0; font-size: 1.05rem; font-weight: 800; letter-spacing: -0.02em;">For Call Options - Example</h3>
+          <span style="font-size: 10px; font-weight: 800; letter-spacing: 0.08em; padding: 4px 8px; border-radius: 999px; background: var(--accent, #2563eb); color: white;">CALL</span>
+        </div>
+        
+        <div style="display: flex; gap: 12px; height: 520px;">
+          <!-- Brackets -->
+          <div style="width: 86px; display: flex; flex-direction: column; justify-content: space-between; font-size: 10px; font-weight: 700; line-height: 1.25;">
+            <div style="flex: 0.4; display: flex; align-items: center; border-left: 3px solid #fb923c; border-top: 3px solid #fb923c; border-bottom: 3px solid #fb923c; border-radius: 10px 0 0 10px; padding-left: 8px; color: #fb923c;">
+              OTM<br>Delta &lt; 0.45<br><span style="font-family: monospace;">$125, $150</span>
+            </div>
+            <div style="flex: 0.2; display: flex; align-items: center; border-left: 3px solid var(--muted); border-top: 3px solid var(--muted); border-bottom: 3px solid var(--muted); border-radius: 10px 0 0 10px; padding-left: 8px; color: var(--muted);">
+              ATM<br>≈ 0.50<br><span style="font-family: monospace;">$100</span>
+            </div>
+            <div style="flex: 0.4; display: flex; align-items: center; border-left: 3px solid #22c55e; border-top: 3px solid #22c55e; border-bottom: 3px solid #22c55e; border-radius: 10px 0 0 10px; padding-left: 8px; color: #22c55e;">
+              ITM<br>Delta &gt; 0.55<br><span style="font-family: monospace;">$50, $75</span>
+            </div>
+          </div>
+          
+          <!-- Pill Bar -->
+          <div style="flex: 1; display: flex; flex-direction: column; border-radius: 28px; overflow: hidden; border: 1px solid var(--border); position: relative;">
+            <!-- OTM Top -->
+            <div style="flex: 0.4; background: #fb923c; display: flex; flex-direction: column; justify-content: center; padding: 14px 16px; position: relative; color: #1a1a1a;">
+              <div style="font-weight: 800; font-size: 22px; letter-spacing: -0.02em;">OTM</div>
+              <div style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; opacity: 0.9;">Out of the Money</div>
+              <div style="font-family: monospace; font-size: 11px; font-weight: 700; margin-top: 4px; background: rgba(0,0,0,0.15); display: inline-block; padding: 2px 6px; border-radius: 6px; width: fit-content;">Delta &lt; 0.45</div>
+              <div style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 18px; align-items: flex-end;">
+                <div style="display: flex; align-items: center; gap: 8px;"><div style="width: 28px; height: 2px; background: rgba(0,0,0,0.4);"></div><span style="font-family: monospace; font-weight: 800; font-size: 16px;">$150</span></div>
+                <div style="display: flex; align-items: center; gap: 8px;"><div style="width: 28px; height: 2px; background: rgba(0,0,0,0.4);"></div><span style="font-family: monospace; font-weight: 800; font-size: 16px;">$125</span></div>
+              </div>
+            </div>
+            <!-- ATM Middle -->
+            <div style="flex: 0.2; background: #cbd5e1; display: flex; flex-direction: column; justify-content: center; align-items: center; position: relative; border-top: 1px solid rgba(0,0,0,0.1); border-bottom: 1px solid rgba(0,0,0,0.1);">
+              <div style="position: absolute; left: -2px; right: -2px; top: 50%; height: 3px; background: #2563eb; transform: translateY(-50%); z-index: 1;"></div>
+              <div style="position: absolute; left: 50%; top: 50%; width: 14px; height: 14px; background: white; border: 3px solid #2563eb; border-radius: 50%; transform: translate(-50%, -50%); z-index: 2;"></div>
+              <div style="position: absolute; right: 8px; top: 50%; transform: translateY(-50%); z-index: 3; background: #2563eb; color: white; font-family: monospace; font-weight: 800; font-size: 12px; padding: 4px 10px; border-radius: 999px; box-shadow: 0 2px 8px rgba(37,99,235,0.4); white-space: nowrap;">Current Price $100</div>
+              <div style="z-index: 2; text-align: center; color: #0f172a;">
+                <div style="font-weight: 800; font-size: 16px;">ATM</div>
+                <div style="font-size: 10px; font-weight: 700; text-transform: uppercase;">At the Money</div>
+                <div style="font-family: monospace; font-size: 10px; font-weight: 700; margin-top: 2px;">Delta ≈ 0.50</div>
+              </div>
+            </div>
+            <!-- ITM Bottom -->
+            <div style="flex: 0.4; background: #22c55e; display: flex; flex-direction: column; justify-content: center; padding: 14px 16px; position: relative; color: #052e16;">
+              <div style="font-weight: 800; font-size: 22px; letter-spacing: -0.02em;">ITM</div>
+              <div style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em;">In the Money</div>
+              <div style="font-family: monospace; font-size: 11px; font-weight: 700; margin-top: 4px; background: rgba(0,0,0,0.12); display: inline-block; padding: 2px 6px; border-radius: 6px; width: fit-content;">Delta &gt; 0.55</div>
+              <div style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 18px; align-items: flex-end;">
+                <div style="display: flex; align-items: center; gap: 8px;"><div style="width: 28px; height: 2px; background: rgba(0,0,0,0.35);"></div><span style="font-family: monospace; font-weight: 800; font-size: 16px;">$75</span></div>
+                <div style="display: flex; align-items: center; gap: 8px;"><div style="width: 28px; height: 2px; background: rgba(0,0,0,0.35);"></div><span style="font-family: monospace; font-weight: 800; font-size: 16px;">$50</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div style="margin-top: 12px; font-size: 11px; color: var(--muted); background: var(--card-2, rgba(0,0,0,0.2)); padding: 8px 12px; border-radius: 10px; border: 1px solid var(--border);">
+          <strong>Call:</strong> Strike &lt; Current Price = ITM (has intrinsic value)
+        </div>
+      </div>
+
+      <!-- PUT CARD -->
+      <div style="background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 18px; box-shadow: 0 4px 20px rgba(0,0,0,0.1);">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+          <h3 style="margin: 0; font-size: 1.05rem; font-weight: 800; letter-spacing: -0.02em;">For Put Options - Example</h3>
+          <span style="font-size: 10px; font-weight: 800; letter-spacing: 0.08em; padding: 4px 8px; border-radius: 999px; background: #16a34a; color: white;">PUT</span>
+        </div>
+        
+        <div style="display: flex; gap: 12px; height: 520px;">
+          <!-- Brackets -->
+          <div style="width: 86px; display: flex; flex-direction: column; justify-content: space-between; font-size: 10px; font-weight: 700; line-height: 1.25;">
+            <div style="flex: 0.4; display: flex; align-items: center; border-left: 3px solid #22c55e; border-top: 3px solid #22c55e; border-bottom: 3px solid #22c55e; border-radius: 10px 0 0 10px; padding-left: 8px; color: #22c55e;">
+              ITM<br>Delta &lt; -0.55<br><span style="font-family: monospace;">$125, $150</span>
+            </div>
+            <div style="flex: 0.2; display: flex; align-items: center; border-left: 3px solid var(--muted); border-top: 3px solid var(--muted); border-bottom: 3px solid var(--muted); border-radius: 10px 0 0 10px; padding-left: 8px; color: var(--muted);">
+              ATM<br>≈ -0.50<br><span style="font-family: monospace;">$100</span>
+            </div>
+            <div style="flex: 0.4; display: flex; align-items: center; border-left: 3px solid #fb923c; border-top: 3px solid #fb923c; border-bottom: 3px solid #fb923c; border-radius: 10px 0 0 10px; padding-left: 8px; color: #fb923c;">
+              OTM<br>Delta &gt; -0.45<br><span style="font-family: monospace;">$50, $75</span>
+            </div>
+          </div>
+          
+          <!-- Pill Bar -->
+          <div style="flex: 1; display: flex; flex-direction: column; border-radius: 28px; overflow: hidden; border: 1px solid var(--border); position: relative;">
+            <!-- ITM Top -->
+            <div style="flex: 0.4; background: #22c55e; display: flex; flex-direction: column; justify-content: center; padding: 14px 16px; position: relative; color: #052e16;">
+              <div style="font-weight: 800; font-size: 22px;">ITM</div>
+              <div style="font-size: 11px; font-weight: 700; text-transform: uppercase;">In the Money</div>
+              <div style="font-family: monospace; font-size: 11px; font-weight: 700; margin-top: 4px; background: rgba(0,0,0,0.12); display: inline-block; padding: 2px 6px; border-radius: 6px; width: fit-content;">Delta &lt; -0.55</div>
+              <div style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 18px; align-items: flex-end;">
+                <div style="display: flex; align-items: center; gap: 8px;"><div style="width: 28px; height: 2px; background: rgba(0,0,0,0.35);"></div><span style="font-family: monospace; font-weight: 800; font-size: 16px;">$150</span></div>
+                <div style="display: flex; align-items: center; gap: 8px;"><div style="width: 28px; height: 2px; background: rgba(0,0,0,0.35);"></div><span style="font-family: monospace; font-weight: 800; font-size: 16px;">$125</span></div>
+              </div>
+            </div>
+            <!-- ATM Middle -->
+            <div style="flex: 0.2; background: #cbd5e1; display: flex; flex-direction: column; justify-content: center; align-items: center; position: relative; border-top: 1px solid rgba(0,0,0,0.1); border-bottom: 1px solid rgba(0,0,0,0.1);">
+              <div style="position: absolute; left: -2px; right: -2px; top: 50%; height: 3px; background: #2563eb; transform: translateY(-50%); z-index: 1;"></div>
+              <div style="position: absolute; left: 50%; top: 50%; width: 14px; height: 14px; background: white; border: 3px solid #2563eb; border-radius: 50%; transform: translate(-50%, -50%); z-index: 2;"></div>
+              <div style="position: absolute; right: 8px; top: 50%; transform: translateY(-50%); z-index: 3; background: #2563eb; color: white; font-family: monospace; font-weight: 800; font-size: 12px; padding: 4px 10px; border-radius: 999px; box-shadow: 0 2px 8px rgba(37,99,235,0.4); white-space: nowrap;">Current Price $100</div>
+              <div style="z-index: 2; text-align: center; color: #0f172a;">
+                <div style="font-weight: 800; font-size: 16px;">ATM</div>
+                <div style="font-size: 10px; font-weight: 700; text-transform: uppercase;">At the Money</div>
+                <div style="font-family: monospace; font-size: 10px; font-weight: 700; margin-top: 2px;">Delta ≈ -0.50</div>
+              </div>
+            </div>
+            <!-- OTM Bottom -->
+            <div style="flex: 0.4; background: #fb923c; display: flex; flex-direction: column; justify-content: center; padding: 14px 16px; position: relative; color: #1a1a1a;">
+              <div style="font-weight: 800; font-size: 22px;">OTM</div>
+              <div style="font-size: 11px; font-weight: 700; text-transform: uppercase;">Out of the Money</div>
+              <div style="font-family: monospace; font-size: 11px; font-weight: 700; margin-top: 4px; background: rgba(0,0,0,0.15); display: inline-block; padding: 2px 6px; border-radius: 6px; width: fit-content;">Delta &gt; -0.45</div>
+              <div style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 18px; align-items: flex-end;">
+                <div style="display: flex; align-items: center; gap: 8px;"><div style="width: 28px; height: 2px; background: rgba(0,0,0,0.4);"></div><span style="font-family: monospace; font-weight: 800; font-size: 16px;">$75</span></div>
+                <div style="display: flex; align-items: center; gap: 8px;"><div style="width: 28px; height: 2px; background: rgba(0,0,0,0.4);"></div><span style="font-family: monospace; font-weight: 800; font-size: 16px;">$50</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div style="margin-top: 12px; font-size: 11px; color: var(--muted); background: var(--card-2, rgba(0,0,0,0.2)); padding: 8px 12px; border-radius: 10px; border: 1px solid var(--border);">
+          <strong>Put:</strong> Strike &gt; Current Price = ITM (has intrinsic value)
+        </div>
+      </div>
+    </div>
+
+    <div style="display: flex; gap: 12px; flex-wrap: wrap; margin-top: 20px; justify-content: center; font-size: 11px; font-weight: 700;">
+      <span style="display: flex; align-items: center; gap: 6px;"><span style="width: 10px; height: 10px; border-radius: 50%; background: #22c55e; display: inline-block;"></span> ITM = In the Money (Intrinsic Value)</span>
+      <span style="display: flex; align-items: center; gap: 6px;"><span style="width: 10px; height: 10px; border-radius: 50%; background: #94a3b8; display: inline-block;"></span> ATM = At the Money</span>
+      <span style="display: flex; align-items: center; gap: 6px;"><span style="width: 10px; height: 10px; border-radius: 50%; background: #fb923c; display: inline-block;"></span> OTM = Out of the Money (Time Value Only)</span>
+    </div>
+
+    <div style="margin-top: 18px; background: #fef3c7; border: 1px solid #f59e0b; border-radius: 12px; padding: 12px 16px; color: #92400e; font-size: 0.88rem; line-height: 1.5;">
+      <span style="font-weight: 800;">ℹ️ Note:</span> This is an illustrative example. Actual Delta, premium, and moneyness depend on implied volatility, time to expiration (DTE), and other factors. Delta ranges shown are typical for ~60 DTE.
+    </div>
+
+    <style>
+      @media (max-width: 900px) {
+        .moneyness-grid { grid-template-columns: 1fr !important; }
+      }
+      [data-theme="dark"] #moneyness-guide-example { --card-2: #1e293b; }
+      [data-theme="light"] #moneyness-guide-example .moneyness-grid > div > div > div:nth-child(2) { background: #e2e8f0 !important; }
+    </style>
+  </div>
+
+
   <div class="card">
     <h2>Intrinsic value vs extrinsic (time) value</h2>
     <p>Every option premium is made of two parts. Understanding them explains why a call can lose money even when the stock drifts up a little.</p>
@@ -214,17 +368,6 @@
     <div class="note" style="margin-top:14px">
       <strong>Why this matters:</strong> When you <b>buy</b> an option, time decay works <em>against</em> you — extrinsic tends to shrink each day. When you <b>sell</b> (write) an option, that same decay can work <em>in your favor</em> (you will see this with covered calls on the <a href="/level2/">Fundamentals</a> page). Volatility changes can also raise or lower extrinsic value quickly, even if the stock price barely moves.
     </div>
-  </div>
-
-  <div class="card">
-    <h2>In, at, or out of the money</h2>
-    <p><span class="term">Moneyness</span> is shorthand for where the stock sits relative to the strike:</p>
-    <ul>
-      <li><strong>ITM (in the money)</strong> — call: stock above strike. Put: stock below strike. Already has intrinsic value.</li>
-      <li><strong>ATM (at the money)</strong> — stock near the strike. Mostly time value.</li>
-      <li><strong>OTM (out of the money)</strong> — call: stock below strike. Put: stock above strike. No intrinsic value; needs a move to become valuable at expiration.</li>
-    </ul>
-    <p>OTM options are cheaper and need a bigger move. ITM options cost more and behave more like owning (or shorting) the stock. Neither is “always better” — they are different tools.</p>
   </div>
 
   <div class="card">
