@@ -288,6 +288,163 @@
   </div>
 
 
+  
+  <div class="card" id="delta-affect-interactive" style="border: 1px solid var(--border); overflow: visible;">
+    <span class="badge" style="background: #16a34a; color: white; border: none;">Interactive · Delta Example · $100 Stock</span>
+    <h2>How Delta Moves a Call Value - Example</h2>
+    <p style="color: var(--muted); margin-top: 8px; line-height: 1.6;">Formula: <span style="font-family:monospace; font-weight:800; background:#2563eb; color:white; padding:2px 8px; border-radius:6px; border:1px solid #1e40af;">Call Change = Stock Change × Delta</span> — Drag the stock price and see the call move</p>
+
+    <div style="margin-top: 20px; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px;" class="delta-inputs">
+      <div style="background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 12px;">
+        <label style="font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); display: block; margin-bottom: 6px;">Stock Price (Base)</label>
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span style="font-weight: 800;">$</span>
+          <input type="number" id="baseStock-en" value="100" step="1" style="width: 100%; background: var(--card-2); border: 1px solid var(--border); border-radius: 8px; padding: 8px 10px; font-family: monospace; font-weight: 700; color: var(--text);">
+        </div>
+      </div>
+      <div style="background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 12px;">
+        <label style="font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); display: block; margin-bottom: 6px;">Delta (0 to 1)</label>
+        <input type="number" id="deltaInput-en" value="0.50" min="0" max="1" step="0.05" style="width: 100%; background: var(--card-2); border: 1px solid var(--border); border-radius: 8px; padding: 8px 10px; font-family: monospace; font-weight: 700; color: var(--text);">
+      </div>
+      <div style="background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 12px;">
+        <label style="font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); display: block; margin-bottom: 6px;">Call Price at Base</label>
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span style="font-weight: 800;">$</span>
+          <input type="number" id="baseCall-en" value="4.00" step="0.25" style="width: 100%; background: var(--card-2); border: 1px solid var(--border); border-radius: 8px; padding: 8px 10px; font-family: monospace; font-weight: 700; color: var(--text);">
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top: 20px; background: var(--card-2); border: 1px solid var(--border); border-radius: 16px; padding: 16px;">
+      <label style="font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); display: block; margin-bottom: 10px;">Try Stock Price: <span id="sliderValue-en" style="font-family: monospace; font-weight: 900; color: var(--text); font-size: 16px; background: #ffffff; color: #1e3a8a; padding: 2px 10px; border-radius: 999px; border: 2px solid #2563eb;">$100</span></label>
+      <input type="range" id="stockSlider-en" min="70" max="130" value="100" step="1" style="width: 100%; accent-color: #2563eb; height: 8px;">
+      <div style="display: flex; justify-content: space-between; font-size: 11px; font-family: monospace; color: var(--muted); margin-top: 6px;">
+        <span>$70</span><span>$100</span><span>$130</span>
+      </div>
+    </div>
+
+    <div style="margin-top: 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+      <div style="background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 16px; text-align: center;">
+        <div style="font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); margin-bottom: 8px;">New Call Price</div>
+        <div id="newCall-en" style="font-family: monospace; font-weight: 900; font-size: 28px; color: #2563eb; letter-spacing: -0.02em;">$4.00</div>
+        <div id="callChange-en" style="margin-top: 6px; font-size: 12px; font-family: monospace; font-weight: 700; background: var(--card-2); display: inline-block; padding: 3px 8px; border-radius: 999px; color: var(--muted);">No change</div>
+      </div>
+      <div style="background: var(--card); border: 2px solid #2563eb; border-radius: 16px; padding: 16px; text-align: center; box-shadow: 0 0 0 4px rgba(37,99,235,0.1);">
+        <div style="font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em; color: #2563eb; margin-bottom: 8px;">Formula Check</div>
+        <div style="font-family: monospace; font-size: 13px; font-weight: 800; color: var(--text); line-height: 1.4;">
+          <span id="stockDiff-en">$0</span> × <span id="deltaShow-en">0.50</span> = <span id="callDiff-en" style="background: #2563eb; color: white; padding: 2px 8px; border-radius: 6px;">$0.00</span>
+        </div>
+        <div style="font-size: 11px; color: var(--muted); margin-top: 6px;">Stock Change × Delta = Call Change</div>
+      </div>
+    </div>
+
+    <div style="margin-top: 16px; display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+      <div style="background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 14px;">
+        <div style="font-size: 11px; font-weight: 700; color: var(--muted); margin-bottom: 4px;">Stock: 100 shares P/L</div>
+        <div id="stockPL-en" style="font-family: monospace; font-weight: 900; font-size: 18px; color: var(--text);">$0.00</div>
+        <div style="font-size: 11px; color: var(--muted); margin-top: 2px;">(New - Base) × 100</div>
+      </div>
+      <div style="background: #f0fdf4; border: 1px solid #22c55e; border-radius: 14px; padding: 14px;">
+        <div style="font-size: 11px; font-weight: 700; color: #15803d; margin-bottom: 4px;">1 Call Contract P/L (×100)</div>
+        <div id="callPL-en" style="font-family: monospace; font-weight: 900; font-size: 18px; color: #15803d;">$0.00</div>
+        <div style="font-size: 11px; color: #16a34a; margin-top: 2px;">(New Call - Base Call) × 100</div>
+      </div>
+    </div>
+
+    <div style="margin-top: 16px; background: #fef3c7; border: 1px solid #f59e0b; border-radius: 12px; padding: 10px 14px; color: #92400e; font-size: 0.85rem; line-height: 1.5;">
+      <span style="font-weight: 800;">ℹ️ Note:</span> This is an illustrative example with 60 DTE, Delta ≈ 0.50 ATM. Real Delta changes with stock move, IV, and time.
+    </div>
+
+    <style>
+      @media (max-width: 700px) {
+        .delta-inputs { grid-template-columns: 1fr !important; }
+      }
+      #delta-affect-interactive input[type="number"] {
+        color-scheme: light dark;
+      }
+      [data-theme="dark"] #delta-affect-interactive input[type="number"] {
+        background: #1e293b !important;
+        color: #e2e8f0 !important;
+        border-color: #334155 !important;
+      }
+    </style>
+
+    <script>
+      (function() {
+        const lang = 'en';
+        const baseStockEl = document.getElementById('baseStock-' + lang);
+        const deltaEl = document.getElementById('deltaInput-' + lang);
+        const baseCallEl = document.getElementById('baseCall-' + lang);
+        const sliderEl = document.getElementById('stockSlider-' + lang);
+        const sliderValueEl = document.getElementById('sliderValue-' + lang);
+        const newCallEl = document.getElementById('newCall-' + lang);
+        const callChangeEl = document.getElementById('callChange-' + lang);
+        const stockDiffEl = document.getElementById('stockDiff-' + lang);
+        const deltaShowEl = document.getElementById('deltaShow-' + lang);
+        const callDiffEl = document.getElementById('callDiff-' + lang);
+        const stockPLEl = document.getElementById('stockPL-' + lang);
+        const callPLEl = document.getElementById('callPL-' + lang);
+
+        if (!baseStockEl || !sliderEl) return;
+
+        function fmt(n) {
+          return (n >= 0 ? '+' : '') + n.toFixed(2);
+        }
+        function fmtMoney(n) {
+          const sign = n > 0 ? '+' : n < 0 ? '' : '';
+          return sign + '$' + n.toFixed(2);
+        }
+
+        function update() {
+          const baseStock = parseFloat(baseStockEl.value) || 100;
+          const delta = parseFloat(deltaEl.value) || 0.5;
+          const baseCall = parseFloat(baseCallEl.value) || 4;
+          const newStock = parseFloat(sliderEl.value) || baseStock;
+
+          const stockChange = newStock - baseStock;
+          const callChange = stockChange * delta;
+          const newCall = baseCall + callChange;
+
+          const stockPL = stockChange * 100;
+          const callPL = callChange * 100;
+
+          sliderValueEl.textContent = '$' + newStock;
+          newCallEl.textContent = '$' + newCall.toFixed(2);
+          callChangeEl.textContent = (stockChange === 0 ? 'No change' : fmtMoney(callChange) + ' change');
+          callChangeEl.style.background = stockChange === 0 ? 'var(--card-2)' : (callChange >= 0 ? '#dcfce7' : '#fee2e2');
+          callChangeEl.style.color = stockChange === 0 ? 'var(--muted)' : (callChange >= 0 ? '#15803d' : '#dc2626');
+
+          stockDiffEl.textContent = fmtMoney(stockChange);
+          deltaShowEl.textContent = delta.toFixed(2);
+          callDiffEl.textContent = fmtMoney(callChange);
+
+          stockPLEl.textContent = fmtMoney(stockPL);
+          stockPLEl.style.color = stockPL === 0 ? 'var(--text)' : (stockPL >= 0 ? '#16a34a' : '#dc2626');
+
+          callPLEl.textContent = fmtMoney(callPL);
+          callPLEl.style.color = callPL === 0 ? '#15803d' : (callPL >= 0 ? '#15803d' : '#dc2626');
+
+          // Sync slider background
+          const pct = ((newStock - 70) / 60) * 100;
+          sliderEl.style.background = 'linear-gradient(to right, #2563eb 0%, #2563eb ' + pct + '%, var(--border) ' + pct + '%, var(--border) 100%)';
+        }
+
+        baseStockEl.addEventListener('input', update);
+        deltaEl.addEventListener('input', update);
+        baseCallEl.addEventListener('input', update);
+        sliderEl.addEventListener('input', update);
+
+        // Init
+        update();
+
+        // Respect site theme changes
+        const observer = new MutationObserver(update);
+        observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+      })();
+    </script>
+  </div>
+
+
   <div class="card">
     <h2>Intrinsic value vs extrinsic (time) value</h2>
     <p>Every option premium is made of two parts. Understanding them explains why a call can lose money even when the stock drifts up a little.</p>
