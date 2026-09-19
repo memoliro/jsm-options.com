@@ -291,7 +291,13 @@
   
   <div class="card" id="delta-affect-interactive" style="border: 1px solid var(--border); overflow: visible;">
     <span class="badge" style="background: #16a34a; color: white; border: none;">Interactive · Delta Example · $100 Stock</span>
-    <h2>How Delta Moves a Call Value - Example</h2>
+    <h2 style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+      <a href="/delta-affect/" style="display: inline-flex; align-items: center; gap: 10px; text-decoration: none; color: var(--text); background: var(--card); border: 2px solid var(--border); padding: 8px 16px; border-radius: 12px; transition: all 0.2s; box-shadow: 0 2px 8px rgba(0,0,0,0.05);" onmouseover="this.style.borderColor='#2563eb'; this.style.transform='translateY(-1px)'; this.style.boxShadow='0 4px 16px rgba(37,99,235,0.15)'" onmouseout="this.style.borderColor='var(--border)'; this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 8px rgba(0,0,0,0.05)'">
+        How Delta Moves a Call Value - Example
+        <span style="display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; background: #2563eb; color: white; border-radius: 8px; font-size: 14px;">→</span>
+      </a>
+      <span style="font-size: 11px; font-weight: 700; background: #eff6ff; color: #2563eb; border: 1px solid #dbeafe; padding: 4px 10px; border-radius: 999px; text-transform: uppercase; letter-spacing: 0.06em;">Full Interactive →</span>
+    </h2>
     <p style="color: var(--muted); margin-top: 8px; line-height: 1.6;">Formula: <span style="font-family:monospace; font-weight:800; background:#2563eb; color:white; padding:2px 8px; border-radius:6px; border:1px solid #1e40af;">Call Change = Stock Change × Delta</span> — Drag the stock price and see the call move</p>
 
     <div style="margin-top: 20px; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px;" class="delta-inputs">
