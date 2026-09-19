@@ -373,5 +373,343 @@ Error generating stack: `+o.message+`
 })();
 </script>
 
+
+
+<!---- BEGIN ABSOLUTE BEGINNER QUIZ - paste this whole block before </body> in index_en_cloude.html ---->
+<section id="delta-beginner-quiz" aria-label="Delta Quiz for Absolute Beginners">
+<style>
+  #delta-beginner-quiz{
+    --quiz-bg:#0f172a;
+    --quiz-card:#151f38;
+    --quiz-border:rgba(255,255,255,.08);
+    --quiz-text:#e2e8f0;
+    --quiz-muted:#94a3b8;
+    --quiz-accent:#38bdf8;
+    --quiz-accent-2:#22d3ee;
+    --quiz-good:#22c55e;
+    --quiz-bad:#ef4444;
+    --quiz-radius:18px;
+    max-width: 860px;
+    margin: 48px auto;
+    padding: 0 16px;
+    font-family: ui-sans-system, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+    color: var(--quiz-text);
+  }
+  #delta-beginner-quiz .quiz-card{
+    background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02)), var(--quiz-card);
+    border: 1px solid var(--quiz-border);
+    border-radius: var(--quiz-radius);
+    overflow:hidden;
+    box-shadow: 0 10px 30px rgba(0,0,0,.35);
+  }
+  #delta-beginner-quiz .quiz-header{
+    padding: 28px 28px 18px;
+    border-bottom: 1px solid var(--quiz-border);
+  }
+  #delta-beginner-quiz .quiz-badge{
+    display:inline-flex; gap:8px; align-items:center;
+    font-size:12px; letter-spacing:.08em; text-transform:uppercase;
+    color: var(--quiz-accent);
+    background: rgba(56,189,248,.12);
+    border: 1px solid rgba(56,189,248,.25);
+    padding: 6px 10px; border-radius: 999px;
+    margin-bottom: 14px;
+  }
+  #delta-beginner-quiz h2{
+    margin:0 0 8px; font-size: clamp(22px, 3vw, 28px); line-height:1.15; font-weight:800;
+  }
+  #delta-beginner-quiz .quiz-sub{
+    color: var(--quiz-muted); font-size: 15px; line-height:1.5; margin:0;
+  }
+  #delta-beginner-quiz .quiz-progress{
+    height: 6px; background: rgba(255,255,255,.06);
+  }
+  #delta-beginner-quiz .quiz-progress > i{
+    display:block; height:100%; width:0%;
+    background: linear-gradient(90deg, var(--quiz-accent), var(--quiz-accent-2));
+    transition: width .45s ease;
+  }
+  #delta-beginner-quiz .quiz-body{ padding: 22px 28px 28px; }
+  #delta-beginner-quiz .q-meta{
+    display:flex; justify-content:space-between; align-items:center;
+    font-size:13px; color: var(--quiz-muted); margin-bottom: 14px;
+  }
+  #delta-beginner-quiz .q-title{
+    font-size: 18px; font-weight:650; line-height:1.35; margin: 0 0 18px;
+  }
+  #delta-beginner-quiz .q-options{ display:grid; gap:10px; }
+  #delta-beginner-quiz .q-opt{
+    text-align:left; width:100%;
+    background: rgba(255,255,255,.03);
+    border: 1px solid var(--quiz-border);
+    border-radius: 12px;
+    padding: 14px 16px;
+    color: var(--quiz-text);
+    font-size: 15px; line-height:1.4;
+    cursor:pointer;
+    transition: all .18s ease;
+  }
+  #delta-beginner-quiz .q-opt:hover{ border-color: rgba(56,189,248,.4); background: rgba(56,189,248,.08); }
+  #delta-beginner-quiz .q-opt:disabled{ cursor:default; opacity:.9; }
+  #delta-beginner-quiz .q-opt.is-correct{
+    border-color: rgba(34,197,94,.5); background: rgba(34,197,94,.12);
+  }
+  #delta-beginner-quiz .q-opt.is-wrong{
+    border-color: rgba(239,68,68,.5); background: rgba(239,68,68,.1);
+  }
+  #delta-beginner-quiz .q-explain{
+    margin-top:16px; padding:14px 16px;
+    border-radius:12px; font-size:14px; line-height:1.5;
+    border:1px solid var(--quiz-border);
+    display:none;
+  }
+  #delta-beginner-quiz .q-explain.show{ display:block; }
+  #delta-beginner-quiz .q-explain.good{ background: rgba(34,197,94,.1); border-color: rgba(34,197,94,.25); }
+  #delta-beginner-quiz .q-explain.bad{ background: rgba(239,68,68,.08); border-color: rgba(239,68,68,.2); }
+  #delta-beginner-quiz .quiz-actions{ margin-top:18px; display:flex; gap:10px; }
+  #delta-beginner-quiz .btn{
+    appearance:none; border:0; border-radius:999px; padding: 10px 18px;
+    font-weight:650; font-size:14px; cursor:pointer;
+    transition: transform .12s ease, opacity .2s;
+  }
+  #delta-beginner-quiz .btn:active{ transform: scale(.98); }
+  #delta-beginner-quiz .btn-primary{
+    background: linear-gradient(90deg, var(--quiz-accent), var(--quiz-accent-2));
+    color:#05202a;
+  }
+  #delta-beginner-quiz .btn-ghost{
+    background: rgba(255,255,255,.06); color: var(--quiz-text);
+    border:1px solid var(--quiz-border);
+  }
+  #delta-beginner-quiz .quiz-result{
+    text-align:center; padding: 28px;
+  }
+  #delta-beginner-quiz .quiz-result h3{ font-size:26px; margin:0 0 10px; }
+  #delta-beginner-quiz .quiz-result p{ color: var(--quiz-muted); margin:0 0 18px; line-height:1.5; }
+  #delta-beginner-quiz .score-ring{
+    width:96px; height:96px; border-radius:50%; display:grid; place-items:center;
+    margin: 8px auto 18px; font-weight:800; font-size:28px;
+    background: conic-gradient(var(--quiz-accent) var(--score-pct), rgba(255,255,255,.08) 0);
+    border:1px solid var(--quiz-border);
+  }
+  #delta-beginner-quiz .score-ring > span{
+    width:78px; height:78px; border-radius:50%; display:grid; place-items:center;
+    background: var(--quiz-card);
+  }
+  #delta-beginner-quiz [data-theme="light"] &,
+  :root[data-theme="light"] #delta-beginner-quiz{
+    --quiz-bg:#f8fafc; --quiz-card:#ffffff; --quiz-text:#0f172a;
+    --quiz-muted:#64748b; --quiz-border:rgba(15,23,42,.08);
+  }
+</style>
+
+<div class="quiz-card">
+  <div class="quiz-header">
+    <div class="quiz-badge">✅ For Absolute Beginners • No math fear</div>
+    <h2>Quick Check: Did you get how Delta moves a Call?</h2>
+    <p class="quiz-sub">
+      Covers exactly what you just saw in the interactive lesson — the formula
+      <strong style="color:var(--quiz-text)">Call change = Stock change × Delta</strong>,
+      the 0 to 1 range for calls, and the 0.5 / 0.25 examples.
+      No tricks, just 8 short questions.
+    </p>
+  </div>
+  <div class="quiz-progress"><i id="quizProgressBar"></i></div>
+  <div class="quiz-body" id="quizBody">
+    <!-- JS injects questions here -->
+  </div>
+</div>
+
+<script>
+(function(){
+  const QUESTIONS = [
+    {
+      q: "1) In super simple words, what does Delta tell us?",
+      opts: [
+        "How many shares the company has",
+        "How much the CALL price moves when the STOCK moves $1",
+        "When the option expires"
+      ],
+      correct: 1,
+      whyGood: "Exactly! Delta is the translator. If delta is 0.5 and stock +$1, call ≈ +$0.50. That's the core idea from the slider you dragged.",
+      whyBad: "Not quite. Delta is the translator: Stock move × Delta = Call move. Try the slider again: move stock $1, watch call move by delta."
+    },
+    {
+      q: "2) For a CALL option, Delta is always...",
+      opts: [
+        "Between 0 and 1 (positive)",
+        "Between -1 and 0 (negative)",
+        "Always exactly 1"
+      ],
+      correct: 0,
+      whyGood: "Yes! Calls are positive 0 to 1. 0 = almost no reaction, 1 = moves almost like the stock.",
+      whyBad: "For CALLS, delta is 0 to 1 and positive. PUTS are negative. So a call goes up when stock goes up."
+    },
+    {
+      q: "3) The golden formula from this lesson?",
+      opts: [
+        "Call change = Stock change × Delta",
+        "Call change = Stock change + Delta",
+        "Call change = Delta ÷ Stock change"
+      ],
+      correct: 0,
+      whyGood: "Perfect — that's the one formula to remember. You saw it live in the interactive box.",
+      whyBad: "The lesson shows: Call change = Stock change × Delta. Multiplication, not addition."
+    },
+    {
+      q: "4) Quick math: Delta = 0.50, stock goes UP $2. How much does the call go up (approx)?",
+      opts: [
+        "About $1.00",
+        "About $2.00",
+        "About $0.25"
+      ],
+      correct: 0,
+      whyGood: "Yes! $2 × 0.50 = $1. That's the 0.50 example from the lesson.",
+      whyBad: "Multiply: $2 × 0.50 = $1.00. That's the classic 50-cent delta example."
+    },
+    {
+      q: "5) Delta = 0.25, stock goes UP $4. Call goes up?",
+      opts: [
+        "About $1.00",
+        "About $4.00",
+        "About $0.00"
+      ],
+      correct: 0,
+      whyGood: "Right! $4 × 0.25 = $1. A small delta means the call reacts less.",
+      whyBad: "$4 × 0.25 = $1. Smaller delta = smaller reaction."
+    },
+    {
+      q: "6) A deep IN-THE-MONEY call (stock way above strike) has Delta close to...",
+      opts: [
+        "Close to 1.0 (moves almost like stock)",
+        "Close to 0",
+        "Close to -1"
+      ],
+      correct: 0,
+      whyGood: "Yes! Deep ITM call ≈ 1. It acts almost like owning the stock.",
+      whyBad: "Deep ITM = almost sure to finish in-the-money, so delta near 1 for calls."
+    },
+    {
+      q: "7) A far OUT-OF-THE-MONEY call (stock way below strike) has Delta close to...",
+      opts: [
+        "Close to 0 (almost no reaction)",
+        "Close to 1.0",
+        "Close to 0.5 always"
+      ],
+      correct: 0,
+      whyGood: "Correct! Far OTM ≈ 0. Stock moves a little, call barely moves.",
+      whyBad: "Far OTM = very unlikely to end ITM, so delta near 0."
+    },
+    {
+      q: "8) If the stock price keeps going UP, what happens to a call's Delta?",
+      opts: [
+        "It goes up toward 1.0",
+        "It goes down toward 0",
+        "It never changes"
+      ],
+      correct: 0,
+      whyGood: "Exactly! As stock rises, the call becomes more ITM, so delta climbs toward 1. That's why delta is not fixed forever.",
+      whyBad: "It goes UP toward 1.0. As call becomes more ITM, it behaves more like the stock."
+    }
+  ];
+
+  const body = document.getElementById('quizBody');
+  const progressBar = document.getElementById('quizProgressBar');
+  let idx = 0;
+  let score = 0;
+  let answered = false;
+
+  function render(){
+    const pct = (idx / QUESTIONS.length) * 100;
+    progressBar.style.width = pct + "%";
+    progressBar.parentElement.style.setProperty('--score-pct', pct+'%');
+
+    if(idx >= QUESTIONS.length){
+      showResult();
+      return;
+    }
+    const cur = QUESTIONS[idx];
+    answered = false;
+    body.innerHTML = `
+      <div class="q-meta">
+        <span>Question ${idx+1} of ${QUESTIONS.length}</span>
+        <span>Score: ${score}</span>
+      </div>
+      <h3 class="q-title">${cur.q}</h3>
+      <div class="q-options">
+        ${cur.opts.map((o,i)=>`<button class="q-opt" data-i="${i}">${o}</button>`).join('')}
+      </div>
+      <div id="qExplain" class="q-explain"></div>
+      <div class="quiz-actions">
+        <button id="nextBtn" class="btn btn-primary" style="display:none">Next →</button>
+      </div>
+    `;
+
+    body.querySelectorAll('.q-opt').forEach(btn=>{
+      btn.addEventListener('click', onPick);
+    });
+    document.getElementById('nextBtn').addEventListener('click', ()=>{
+      idx++; render();
+    });
+  }
+
+  function onPick(e){
+    if(answered) return;
+    answered = true;
+    const cur = QUESTIONS[idx];
+    const pick = Number(e.currentTarget.dataset.i);
+    const isCorrect = pick === cur.correct;
+    if(isCorrect) score++;
+
+    const opts = body.querySelectorAll('.q-opt');
+    opts.forEach((b,i)=>{
+      b.disabled = true;
+      if(i===cur.correct) b.classList.add('is-correct');
+      if(i===pick && !isCorrect) b.classList.add('is-wrong');
+    });
+
+    const ex = document.getElementById('qExplain');
+    ex.className = 'q-explain show ' + (isCorrect ? 'good' : 'bad');
+    ex.innerHTML = (isCorrect ? '✅ ' : '❌ ') + (isCorrect ? cur.whyGood : cur.whyBad);
+
+    const nextBtn = document.getElementById('nextBtn');
+    nextBtn.style.display = 'inline-block';
+    if(idx === QUESTIONS.length -1) nextBtn.textContent = 'See result →';
+
+    // update progress with partial
+    progressBar.style.width = ((idx+ (isCorrect?1:0.5)) / QUESTIONS.length *100) + '%';
+  }
+
+  function showResult(){
+    const pct = Math.round(score/QUESTIONS.length*100);
+    let msg = "";
+    if(pct===100) msg = "Perfect! You totally got the core idea: Call change = Stock change × Delta.";
+    else if(pct>=75) msg = "Great job! You understand the main idea. Replay the slider once to lock in the 0.25 and 0.50 examples.";
+    else if(pct>=50) msg = "Nice start! Remember: delta is 0 to 1 for calls, and it tells how much call moves when stock moves $1.";
+    else msg = "You're getting there. The key is simple: if delta is 0.5, call moves half as much as stock. Drag the interactive again, then retry.";
+
+    body.innerHTML = `
+      <div class="quiz-result">
+        <div class="score-ring" style="--score-pct:${pct}%"><span>${score}/${QUESTIONS.length}</span></div>
+        <h3>${pct===100?'🎉 Perfect!': pct>=75?'👏 Strong!': pct>=50?'💪 Keep going':'🌱 Good start'}</h3>
+        <p>${msg}<br><small style="color:var(--quiz-muted)">You learned: Delta 0→1, Formula: Call change = Stock change × Delta, ITM ≈1, OTM ≈0, Delta rises when stock rises.</small></p>
+        <div style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap">
+          <button class="btn btn-primary" id="retryBtn">Try again</button>
+          <button class="btn btn-ghost" id="reviewBtn">Review from start</button>
+        </div>
+      </div>
+    `;
+    progressBar.style.width = '100%';
+    document.getElementById('retryBtn').addEventListener('click', ()=>{ idx=0; score=0; render(); });
+    document.getElementById('reviewBtn').addEventListener('click', ()=>{ idx=0; score=0; render(); window.scrollTo({top: document.getElementById('delta-beginner-quiz').offsetTop - 20, behavior:'smooth'}); });
+  }
+
+  render();
+})();
+</script>
+</section>
+<!---- END QUIZ ---->
+
+
 </body>
 </html>
