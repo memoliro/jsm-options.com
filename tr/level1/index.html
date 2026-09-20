@@ -452,89 +452,477 @@
   </div>
 
 
-  <div class="card">
-    <h2>Intrinsic değer vs extrinsic (zaman) değer</h2>
-    <p>Her opsiyon Premium'u iki parçadan oluşur. Bunları anlamak, hisse biraz yukarı sürüklense bile bir Call'ın neden para kaybedebileceğini açıklar.</p>
+  
+  <div class="card" id="theta-decay-card">
+    <span class="badge">Temel kavram · Theta decay — saat</span>
+    <h2>⏳ Theta decay: zaman için ödediğiniz kira</h2>
+    <p>Her opsiyon fiyatı bir <span class="term">extrinsic (time) value</span> içerir. Hisse fiyatı hiç hareket etmese bile, bu değer her gün <b>erir</b>. Bu erime <span class="term">Theta</span> olarak adlandırılır.</p>
 
-    <p><strong>Intrinsic değer</strong> — opsiyonu <em>hemen şimdi</em> kullanırsanız ne kadar değerli olduğu (“yerleşik” kısım).</p>
-    <ul>
-      <li><b>Call:</b> max(hisse fiyatı − Strike, 0)</li>
-      <li><b>Put:</b> max(Strike − hisse fiyatı, 0)</li>
-    </ul>
-    <p>Bu sayı sıfırsa, opsiyonun <em>hiç</em> Intrinsic değeri yoktur (Out of the Money veya At the Money'dir).</p>
+    <style>
+      #theta-decay-card{ --t-accent:#6ea8fe; --t-red:#ff6b7a; --t-green:#22c55e; --t-yellow:#facc15; }
+      #theta-decay-card .theta-grid{display:grid;grid-template-columns:340px 1fr;gap:18px;margin-top:18px}
+      @media(max-width:900px){#theta-decay-card .theta-grid{grid-template-columns:1fr}}
+      #theta-decay-card .theta-controls{background:var(--card-2,rgba(255,255,255,0.04));border:1px solid var(--border,#2d3a4f);border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:18px}
+      #theta-decay-card .t-label-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+      #theta-decay-card .t-label{font-size:13px;font-weight:600;color:var(--muted,#8a97ab)}
+      #theta-decay-card .t-input{width:100%;background:var(--bg,#0f1419);border:1px solid var(--border,#2d3a4f);color:var(--text,#e7ecf3);border-radius:10px;padding:10px 12px;font-size:14px;font-weight:600;font-family:inherit}
+      #theta-decay-card .t-input:focus{outline:none;border-color:var(--t-accent);box-shadow:0 0 0 3px rgba(110,168,254,.18)}
+      #theta-decay-card .t-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+      #theta-decay-card .t-help{font-size:12px;color:var(--muted,#8a97ab);line-height:1.5}
+      #theta-decay-card input[type=range]{-webkit-appearance:none;width:100%;height:6px;background:var(--border,#2d3a4f);border-radius:999px}
+      #theta-decay-card input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:var(--text,#e7ecf3);border:3px solid var(--bg,#0f1419);box-shadow:0 0 0 1px var(--border);cursor:grab}
+      #theta-decay-card .t-metrics{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+      #theta-decay-card .t-metric{background:var(--bg,#0f1419);border:1px solid var(--border,#2d3a4f);border-radius:12px;padding:12px}
+      #theta-decay-card .t-metric b{display:block;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:4px;font-weight:700}
+      #theta-decay-card .t-metric .v{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:18px;font-weight:700}
+      #theta-decay-card .t-metric .s{font-size:11px;color:var(--muted);margin-top:2px;font-family:ui-monospace,monospace}
+      #theta-decay-card .t-metric.neg{border-color:rgba(255,107,122,.28);background:linear-gradient(180deg,rgba(255,107,122,.10),var(--bg))}
+      #theta-decay-card .t-metric.neg .v{color:var(--t-red)}
+      #theta-decay-card .t-metric.pos{border-color:rgba(110,168,254,.32);background:linear-gradient(180deg,rgba(110,168,254,.10),var(--bg))}
+      #theta-decay-card .t-chart{background:var(--bg,#0f1419);border:1px solid var(--border);border-radius:12px;padding:14px;overflow:hidden}
+      #theta-decay-card .t-legend{display:flex;gap:14px;font-size:11px;color:var(--muted);font-family:ui-monospace,monospace;margin-bottom:10px;flex-wrap:wrap}
+      #theta-decay-card .t-legend i{width:14px;height:3px;border-radius:2px;display:inline-block;vertical-align:middle;margin-right:5px}
+      #theta-decay-card canvas{width:100%;height:190px;display:block}
+      #theta-decay-card .t-coins{display:flex;gap:5px;margin-top:12px;padding:10px;background:var(--card-2,rgba(255,255,255,0.04));border:1px solid var(--border);border-radius:10px}
+      #theta-decay-card .t-coin{flex:1;height:10px;background:var(--t-green);border-radius:3px;transition:all .35s ease;box-shadow:0 0 8px rgba(34,197,94,.25)}
+      #theta-decay-card .t-coin.gone{background:var(--border);box-shadow:none;opacity:.35;transform:scaleY(.5)}
+      #theta-decay-card .t-examples{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:18px}
+      @media(max-width:700px){#theta-decay-card .t-examples{grid-template-columns:1fr}}
+      #theta-decay-card .t-ex{background:var(--card-2,rgba(255,255,255,0.04));border:1px solid var(--border);border-radius:12px;padding:14px}
+      #theta-decay-card .t-ex.bad{border-color:rgba(255,107,122,.22);background:linear-gradient(180deg,rgba(255,107,122,.06),transparent)}
+      #theta-decay-card .t-ex.good{border-color:rgba(34,197,94,.22);background:linear-gradient(180deg,rgba(34,197,94,.06),transparent)}
+      #theta-decay-card .t-ex h4{margin:0 0 6px;font-size:13px;font-weight:700}
+      #theta-decay-card .t-ex p{margin:0;font-size:13px;line-height:1.6;color:var(--muted)}
+      #theta-decay-card .t-ex p strong{color:var(--text)}
+      #theta-decay-card .t-tag{display:inline-flex;align-items:center;padding:2px 7px;border-radius:999px;font-size:11px;font-weight:700;border:1px solid var(--border);font-family:ui-monospace,monospace}
+      #theta-decay-card .t-formula{margin-top:16px;display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-family:ui-monospace,monospace;font-size:13px}
+      #theta-decay-card .t-formula .pill{background:var(--bg);border:1px solid var(--border);padding:6px 10px;border-radius:999px;display:inline-flex;gap:6px;align-items:center}
+    </style>
 
-    <p><strong>Extrinsic değer</strong> (aynı zamanda <strong>time value</strong> olarak da adlandırılır) — Premium içindeki diğer her şey:</p>
-    <div class="analogy" style="margin-top:8px">
-      <b>Premium = Intrinsic + Extrinsic</b><br>
-      Extrinsic “umut ve zaman” kısmıdır: Expiration'a kadar kalan günler, piyasanın hissenin ne kadar hareket etmesini beklediği ve o opsiyona olan arz/talep.
+    <div class="theta-grid">
+      <div class="theta-controls">
+        <div>
+          <div class="t-label-row"><span class="t-label">Hisse $100 (düzenlenebilir) / Strike</span></div>
+          <div class="t-row">
+            <input id="tStock" class="t-input" type="number" value="100" step="1" min="1" title="Hisse fiyatı">
+            <input id="tStrike" class="t-input" type="number" value="100" step="1" title="Strike fiyatı">
+          </div>
+          <div class="t-help" style="margin-top:6px">Varsayılan ATM: <b id="tStockLabel">$100</b> hisse, <b id="tStrikeLabel">$100</b> Strike</div>
+        </div>
+        <div>
+          <div class="t-label-row"><span class="t-label">60 DTE Call = $4 ×100</span><span id="tTotalCost" class="t-tag">$400 toplam</span></div>
+          <div class="t-row">
+            <input id="tPrem" class="t-input" type="number" value="4" step="0.05" min="0.05" title="Premium hisse başı">
+            <input id="tDte" class="t-input" type="number" value="60" step="1" min="7" max="180" title="DTE">
+          </div>
+          <div class="t-help">Premium kotasyonu hisse başınadır. Nakit = Premium ×100. Bu başlangıçta ATM ise tamamen extrinsic değerdir.</div>
+        </div>
+        <div>
+          <div class="t-label-row"><span class="t-label">Geçen günler</span><span id="tDaysBadge" class="t-tag">0 gün</span></div>
+          <input id="tDays" type="range" min="0" max="60" step="1" value="0">
+          <div class="t-label-row" style="margin-top:6px"><span class="t-help">Bugün (DTE <span id="tDteMaxLabel">60</span>)</span><span class="t-help">expiration DTE 0</span></div>
+        </div>
+        <div>
+          <div class="t-label-row"><span class="t-label">Theta günlük</span><span id="tThetaBadge" class="t-tag" style="color:var(--t-red);border-color:rgba(255,107,122,.3);background:rgba(255,107,122,.1)">-0.07</span></div>
+          <input id="tTheta" type="range" min="-0.15" max="-0.01" step="0.01" value="-0.07">
+          <div class="t-help">Long Theta negatiftir. Gerçek günlük erime expiration'a yakın hızlanır.</div>
+        </div>
+        <div class="t-formula">
+          <span class="pill"><span style="color:var(--t-green)">Price</span> ≈ <span id="fInit">$4.00</span> + <span id="fTheta" style="color:var(--t-red)">-0.07</span> × <span id="fDays" style="color:var(--t-yellow)">0d</span></span>
+          <span class="pill" style="border-color:rgba(34,197,94,.3);background:rgba(34,197,94,.08)"><span id="fResult" style="color:var(--t-green);font-weight:700">$4.00</span></span>
+        </div>
+      </div>
+      <div>
+        <div class="t-metrics">
+          <div class="t-metric pos"><b>Güncel Fiyat</b><div class="v" id="mPrice">$4.00</div><div class="s" id="mPriceSub">$400 / kontrat</div></div>
+          <div class="t-metric neg"><b>Toplam erime</b><div class="v" id="mDecay">-$0.00</div><div class="s" id="mDecayPct">0% kayıp</div></div>
+          <div class="t-metric"><b>Bugün Theta</b><div class="v" id="mTheta">-0.07</div><div class="s">gerçek erime bugün</div></div>
+          <div class="t-metric"><b>Kalan süre</b><div class="v" id="mDte">60 DTE</div><div class="s" id="mCal">60 gün</div></div>
+        </div>
+        <div class="t-chart" style="margin-top:12px">
+          <div class="t-legend"><span><i style="background:var(--t-accent)"></i>Gerçek (hızlanan)</span><span><i style="background:transparent;border-top:2px dashed var(--muted)"></i>Doğrusal tahmin</span><span style="margin-left:auto">Hisse sabit <span id="legendStock">$100</span></span></div>
+          <canvas id="tChart" width="640" height="190"></canvas>
+          <div class="t-coins" id="tCoins"></div>
+        </div>
+        <div class="t-examples">
+          <div class="t-ex bad">
+            <h4>❌ 1. Alıcı aleyhine</h4>
+            <p><strong>Long</strong> 1 <strong>Call</strong> alırsınız: <strong><span class="t-ex-prem">$4.00</span> ×100 = <span class="t-ex-cost">$400</span></strong> Debit, hisse <strong>$100</strong>, 60 DTE.</p>
+            <p style="margin-top:8px">Hisse 30 gün boyunca <strong>$100</strong>’da kalır. Hareket yok. Call şimdi <strong id="exBuyNow">$2.10</strong> — sadece zamandan <strong id="exBuyLost">$190</strong> kayıp. <em>Hareket + hız</em> gerekir.</p>
+            <p style="margin-top:8px"><span class="t-tag" style="color:var(--t-red)">Alıcı dersi</span> Zaman sizin maliyetinizdir.</p>
+          </div>
+          <div class="t-ex good">
+            <h4>✅ 2. Satıcı lehine (CSP)</h4>
+            <p><strong>Short</strong> Cash-Secured Put satarsınız: Strike <strong id="exSellStrike">$95</strong>, tahsilat <strong id="exSellPrem">$1.50</strong> ×100 = <strong>$150</strong> Credit. Hisse <strong>$100</strong>.</p>
+            <p style="margin-top:8px">Hisse 30 gün ≥ $95 kalırsa, Put <strong id="exSellNow">$0.40</strong>’a erir. Geri alır, <strong id="exSellKeep">$110</strong> tutarsınız. Theta size ödedi.</p>
+            <p style="margin-top:8px"><span class="t-tag" style="color:var(--t-green);background:rgba(34,197,94,.1);border-color:rgba(34,197,94,.25)">Satıcı avantajı</span> Zaman sizin dostunuzdur — ama Assignment riski devam eder.</p>
+          </div>
+        </div>
+      </div>
     </div>
-
-    <h3 style="margin-top:18px;font-size:1.05rem">Çalışılmış örnek (Call)</h3>
-    <p>Hisse <b>108$</b>. <b>100$</b> Call’a bakıyorsunuz. Kotasyon <b>10$</b>.</p>
-    <ul>
-      <li>Intrinsic = 108$ − 100$ = <b>8$</b></li>
-      <li>Extrinsic (time value) = 10$ − 8$ = <b>2$</b></li>
-    </ul>
-    <p>Zaten var olan değer için 8$ ve hissenin daha fazla hareket etme şansı (ve saatte kalan zaman) için 2$ ödüyorsunuz.</p>
-
-    <h3 style="margin-top:18px;font-size:1.05rem">Put için aynı fikir</h3>
-    <p>Hisse <b>92$</b>. <b>100$</b> Put kotasyonu <b>11$</b>.</p>
-    <ul>
-      <li>Intrinsic = 100$ − 92$ = <b>8$</b></li>
-      <li>Extrinsic = 11$ − 8$ = <b>3$</b></li>
-    </ul>
-
-    <h3 style="margin-top:18px;font-size:1.05rem">Expiration yaklaştıkça ne olur?</h3>
-    <p>Extrinsic değer son tarih yaklaştıkça sıfıra doğru <b>erime</b> eğilimindedir (diğer her şey eşitken). Bu erime <span class="term">time decay</span> olarak adlandırılır. Expiration’da:</p>
-    <ul>
-      <li>Bir opsiyon sadece Intrinsic değerine eşittir (veya hala Out of the Money ise sıfırdır).</li>
-      <li>Ödediğiniz herhangi bir Extrinsic, hisse bunu telafi edecek kadar hareket etmedikçe gider.</li>
-    </ul>
-    <div class="analogy">
-      <b>Hisse Expiration’da hala 108$ ise:</b> 100$ Call yaklaşık <b>8$</b> değerindedir (sadece Intrinsic). 2$’lık time value sıfıra erimiştir.<br>
-      <b>Hisse Expiration’da 100$ veya altında ise:</b> Call tipik olarak <b>0$</b> değerindedir — 10$’lık Premium’un tamamı kaybedilir.
-    </div>
-
-    <div style="margin-top:14px;overflow-x:auto">
-      <table style="width:100%;border-collapse:collapse;font-size:.88rem">
-        <thead>
-          <tr>
-            <th style="border:1px solid var(--border);padding:8px;text-align:left;background:var(--input)">Situation (call, strike $100)</th>
-            <th style="border:1px solid var(--border);padding:8px;text-align:left;background:var(--input)">Intrinsic</th>
-            <th style="border:1px solid var(--border);padding:8px;text-align:left;background:var(--input)">Extrinsic</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td style="border:1px solid var(--border);padding:8px">Stock $108, premium $10, 30 days left</td>
-            <td style="border:1px solid var(--border);padding:8px">$8</td>
-            <td style="border:1px solid var(--border);padding:8px">$2</td>
-          </tr>
-          <tr>
-            <td style="border:1px solid var(--border);padding:8px">Stock $108, same call, 1 day left</td>
-            <td style="border:1px solid var(--border);padding:8px">$8</td>
-            <td style="border:1px solid var(--border);padding:8px">Often near $0–$0.50</td>
-          </tr>
-          <tr>
-            <td style="border:1px solid var(--border);padding:8px">Stock $95, premium $2, 30 days left</td>
-            <td style="border:1px solid var(--border);padding:8px">$0 (OTM)</td>
-            <td style="border:1px solid var(--border);padding:8px">$2 (all time value)</td>
-          </tr>
-          <tr>
-            <td style="border:1px solid var(--border);padding:8px">Stock $95 at expiration</td>
-            <td style="border:1px solid var(--border);padding:8px">$0</td>
-            <td style="border:1px solid var(--border);padding:8px">$0</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <div class="note" style="margin-top:14px">
-      <strong>Neden önemli:</strong> Bir opsiyon <b>satın aldığınızda</b>, time decay <em>aleyhinize</em> çalışır — Extrinsic her gün küçülme eğilimindedir. Bir opsiyon <b>sattığınızda</b> (yazdığınızda), aynı çürüme <em>lehinize</em> çalışabilir (bunu <a href="/level2/">Temel Bilgiler</a> sayfasındaki Covered Call’larda göreceksiniz). Volatilite değişiklikleri de hisse fiyatı neredeyse hiç hareket etmese bile Extrinsic değeri hızla yükseltebilir veya düşürebilir.
-    </div>
+    <div class="note" style="margin-top:18px"><strong>Theta nasıl okunur:</strong> Theta <span class="term">-$0.07</span> demek, bu $4.00’lık opsiyonun her şey aynı kalırsa günde ~$0.07 erimesi demektir. 10 günde ≈ $0.70 gider. Erime başta yavaş, son 14 günde hızlıdır — bu yüzden haftalık opsiyonlar buz küpü tutmak gibidir.</div>
+    <script>
+    (function(){
+      const $ = id => document.getElementById(id);
+      const root = document.getElementById('theta-decay-card');
+      if(!root || !$('tStock')) return;
+      const els = {
+        stock: $('tStock'), strike: $('tStrike'), prem: $('tPrem'), dte: $('tDte'),
+        days: $('tDays'), theta: $('tTheta'),
+        stockLabel: $('tStockLabel'), strikeLabel: $('tStrikeLabel'),
+        totalCost: $('tTotalCost'), daysBadge: $('tDaysBadge'), thetaBadge: $('tThetaBadge'),
+        dteMaxLabel: $('tDteMaxLabel'),
+        fInit: $('fInit'), fTheta: $('fTheta'), fDays: $('fDays'), fResult: $('fResult'),
+        mPrice: $('mPrice'), mPriceSub: $('mPriceSub'), mDecay: $('mDecay'), mDecayPct: $('mDecayPct'),
+        mTheta: $('mTheta'), mDte: $('mDte'), mCal: $('mCal'),
+        chart: $('tChart'), coins: $('tCoins'),
+        legendStock: $('legendStock'),
+        exPrem: root.querySelector('.t-ex-prem'), exCost: root.querySelector('.t-ex-cost'),
+        exBuyNow: $('exBuyNow'), exBuyLost: $('exBuyLost'),
+        exSellStrike: $('exSellStrike'), exSellPrem: $('exSellPrem'), exSellNow: $('exSellNow'), exSellKeep: $('exSellKeep')
+      };
+      let state = { stock:100, strike:100, prem:4.00, dteTotal:60, daysPassed:0, theta:-0.07 };
+      const fmt = n => (n<0?'-':'')+'$'+Math.abs(n).toFixed(2);
+      const fmt2 = n => '$'+n.toFixed(2);
+      function getActualPrice(dte, initial, total){
+        if(dte<=0) return 0;
+        const ratio = Math.max(0, dte/total);
+        let curve = Math.pow(ratio, 0.62);
+        if(dte<14) curve *= 0.7 + 0.3*(dte/14);
+        if(dte<7) curve *= 0.65 + 0.35*(dte/7);
+        return initial * curve;
+      }
+      function effTheta(dte, initial, total){
+        const p1 = getActualPrice(dte, initial, total);
+        const p0 = getActualPrice(Math.max(0,dte-1), initial, total);
+        return p0 - p1;
+      }
+      function drawChart(){
+        const ctx = els.chart.getContext('2d');
+        const W=els.chart.width, H=els.chart.height;
+        const pad={l:44,r:10,t:10,b:22};
+        ctx.clearRect(0,0,W,H);
+        const total=state.dteTotal;
+        const prices=[], linear=[];
+        for(let d=0; d<=total; d++){
+          const dte=total-d;
+          prices.push(getActualPrice(dte, state.prem, total));
+          linear.push(Math.max(0.02, state.prem + state.theta*d));
+        }
+        const maxY=Math.max(...prices, ...linear, state.prem)*1.18;
+        const xFor = day => pad.l + (day/total)*(W-pad.l-pad.r);
+        const yFor = p => pad.t + (1 - p/maxY)*(H-pad.t-pad.b);
+        ctx.strokeStyle='rgba(45,58,79,0.9)'; ctx.lineWidth=1;
+        for(let i=0;i<=4;i++){
+          const y=pad.t + (i/4)*(H-pad.t-pad.b);
+          ctx.beginPath(); ctx.moveTo(pad.l,y); ctx.lineTo(W-pad.r,y); ctx.stroke();
+          ctx.fillStyle='#8a97ab'; ctx.font='10px ui-monospace,monospace'; ctx.textAlign='right';
+          ctx.fillText('$'+(maxY - (i/4)*maxY).toFixed(1), pad.l-6, y+3);
+        }
+        ctx.fillStyle='#8a97ab'; ctx.textAlign='center';
+        [0, Math.round(total/2), total].forEach(d=> ctx.fillText(d+'g', xFor(d), H-4));
+        ctx.setLineDash([6,6]); ctx.strokeStyle='#5a6a85'; ctx.lineWidth=1.3;
+        ctx.beginPath(); linear.forEach((p,i)=>{ const x=xFor(i), y=yFor(p); i?ctx.lineTo(x,y):ctx.moveTo(x,y); }); ctx.stroke(); ctx.setLineDash([]);
+        const grad=ctx.createLinearGradient(0,0,0,H); grad.addColorStop(0,'rgba(110,168,254,0.28)'); grad.addColorStop(1,'rgba(110,168,254,0)');
+        ctx.fillStyle=grad; ctx.beginPath();
+        prices.forEach((p,i)=>{ const x=xFor(i), y=yFor(p); i?ctx.lineTo(x,y):ctx.moveTo(x,y); });
+        ctx.lineTo(xFor(total), H-pad.b); ctx.lineTo(xFor(0), H-pad.b); ctx.closePath(); ctx.fill();
+        ctx.strokeStyle='#6ea8fe'; ctx.lineWidth=2.4; ctx.beginPath();
+        prices.forEach((p,i)=>{ const x=xFor(i), y=yFor(p); i?ctx.lineTo(x,y):ctx.moveTo(x,y); }); ctx.stroke();
+        const curX=xFor(state.daysPassed), curY=yFor(prices[state.daysPassed]);
+        ctx.strokeStyle='rgba(231,236,243,0.18)'; ctx.beginPath(); ctx.moveTo(curX,pad.t); ctx.lineTo(curX,H-pad.b); ctx.stroke();
+        ctx.fillStyle='#e7ecf3'; ctx.beginPath(); ctx.arc(curX,curY,4.5,0,Math.PI*2); ctx.fill();
+        ctx.strokeStyle='#0f1419'; ctx.lineWidth=2; ctx.stroke();
+      }
+      function renderCoins(price){
+        els.coins.innerHTML='';
+        const segs=18; const pct=state.prem>0?price/state.prem:0; const alive=Math.round(pct*segs);
+        for(let i=0;i<segs;i++){ const d=document.createElement('div'); d.className='t-coin'+(i>=alive?' gone':''); els.coins.appendChild(d); }
+      }
+      function update(){
+        const dteLeft = state.dteTotal - state.daysPassed;
+        const actual = getActualPrice(dteLeft, state.prem, state.dteTotal);
+        const decay = state.prem - actual;
+        const eff = effTheta(dteLeft, state.prem, state.dteTotal);
+        els.stockLabel.textContent='$'+state.stock;
+        els.strikeLabel.textContent='$'+state.strike;
+        els.totalCost.textContent=fmt2(state.prem*100)+' toplam';
+        els.daysBadge.textContent=state.daysPassed+' gün';
+        els.thetaBadge.textContent=state.theta.toFixed(2);
+        els.dteMaxLabel.textContent=state.dteTotal;
+        els.fInit.textContent=fmt2(state.prem);
+        els.fTheta.textContent=state.theta.toFixed(2);
+        els.fDays.textContent=state.daysPassed+'g';
+        els.fResult.textContent=fmt(actual);
+        els.mPrice.textContent=fmt(actual);
+        els.mPriceSub.textContent=fmt2(actual*100)+' / kontrat';
+        els.mDecay.textContent='-'+fmt2(decay).slice(1);
+        els.mDecayPct.textContent=((decay/state.prem)*100).toFixed(0)+'% kayıp';
+        els.mTheta.textContent=eff.toFixed(2);
+        els.mDte.textContent=dteLeft+' DTE';
+        els.mCal.textContent=dteLeft+' gün';
+        els.legendStock.textContent='$'+state.stock;
+        if(els.exPrem){ els.exPrem.textContent=fmt2(state.prem); els.exCost.textContent=fmt2(state.prem*100); }
+        const half = Math.min(30, state.dteTotal);
+        const halfPrice = getActualPrice(state.dteTotal-half, state.prem, state.dteTotal);
+        els.exBuyNow.textContent=fmt(halfPrice);
+        els.exBuyLost.textContent=fmt2((state.prem-halfPrice)*100);
+        const sellStrike = Math.round(state.stock*0.95);
+        const sellPrem = 1.50;
+        const sellDte = state.dteTotal - Math.min(30, state.daysPassed + 15);
+        const sellNowPrice = Math.max(0.05, sellPrem * Math.pow(Math.max(0,sellDte)/state.dteTotal, 0.7));
+        els.exSellStrike.textContent='$'+sellStrike;
+        els.exSellPrem.textContent=fmt2(sellPrem);
+        els.exSellNow.textContent=fmt(sellNowPrice);
+        els.exSellKeep.textContent=fmt2((sellPrem - sellNowPrice)*100);
+        els.days.max = state.dteTotal;
+        drawChart();
+        renderCoins(actual);
+      }
+      els.stock.addEventListener('input', e=>{ state.stock=parseFloat(e.target.value)||100; update(); });
+      els.strike.addEventListener('input', e=>{ state.strike=parseFloat(e.target.value)||100; update(); });
+      els.prem.addEventListener('input', e=>{ state.prem=parseFloat(e.target.value)||0.1; update(); });
+      els.dte.addEventListener('input', e=>{ state.dteTotal=parseInt(e.target.value)||60; els.days.max=state.dteTotal; if(state.daysPassed>state.dteTotal) state.daysPassed=state.dteTotal; update(); });
+      els.days.addEventListener('input', e=>{ state.daysPassed=parseInt(e.target.value)||0; update(); });
+      els.theta.addEventListener('input', e=>{ state.theta=parseFloat(e.target.value); update(); });
+      update();
+      window.addEventListener('resize', drawChart);
+    })();
+    </script>
   </div>
 
-  <div class="card">
+
+
+  <div class="card" id="intrinsic-visualizer">
+    <span class="badge">İnteraktif · Intrinsic vs extrinsic</span>
+    <h2>Intrinsic vs extrinsic (zaman) değeri — görselleştirici</h2>
+    <p>Her Premium, <b>Premium = Intrinsic + extrinsic</b> şeklindedir. Hisse fiyatını sürükleyin ve iki parçanın gerçek zamanlı nasıl değiştiğini izleyin. <span class="term">Intrinsic</span> hemen şimdi kullanırsanız elde edeceğiniz değerdir. <span class="term">extrinsic</span> ise zaman + volatilite umududur — expiration'da $0'a erir.</p>
+
+    <style>
+      #intrinsic-visualizer{ --t-accent:#6ea8fe; --t-green:#22c55e; --t-yellow:#facc15; --t-red:#ff6b7a; }
+      #intrinsic-visualizer .iv-grid{display:grid;grid-template-columns:360px 1fr;gap:18px;margin-top:18px}
+      @media(max-width:950px){#intrinsic-visualizer .iv-grid{grid-template-columns:1fr}}
+      #intrinsic-visualizer .iv-controls{background:var(--card-2,rgba(255,255,255,0.04));border:1px solid var(--border,#2d3a4f);border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:16px}
+      #intrinsic-visualizer .iv-label-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+      #intrinsic-visualizer .iv-label{font-size:13px;font-weight:600;color:var(--muted,#8a97ab)}
+      #intrinsic-visualizer .iv-input{width:100%;background:var(--bg,#0f1419);border:1px solid var(--border,#2d3a4f);color:var(--text,#e7ecf3);border-radius:10px;padding:10px 12px;font-size:14px;font-weight:600;font-family:inherit}
+      #intrinsic-visualizer .iv-input:focus{outline:none;border-color:var(--t-accent);box-shadow:0 0 0 3px rgba(110,168,254,.18)}
+      #intrinsic-visualizer .iv-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+      #intrinsic-visualizer .iv-help{font-size:12px;color:var(--muted);line-height:1.5}
+      #intrinsic-visualizer input[type=range]{-webkit-appearance:none;width:100%;height:6px;background:var(--border,#2d3a4f);border-radius:999px}
+      #intrinsic-visualizer input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:var(--text,#e7ecf3);border:3px solid var(--bg,#0f1419);box-shadow:0 0 0 1px var(--border);cursor:grab}
+      #intrinsic-visualizer .iv-tabs{display:flex;background:var(--bg,#0f1419);border:1px solid var(--border);border-radius:10px;padding:3px;gap:3px}
+      #intrinsic-visualizer .iv-tabs button{flex:1;padding:8px 10px;border-radius:7px;border:0;background:transparent;color:var(--muted);font-size:13px;font-weight:600;cursor:pointer;transition:.15s}
+      #intrinsic-visualizer .iv-tabs button.active{background:var(--card-2,rgba(255,255,255,0.08));color:var(--text);border:1px solid var(--border);box-shadow:0 1px 4px rgba(0,0,0,.2)}
+      #intrinsic-visualizer .iv-metrics{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+      #intrinsic-visualizer .iv-metric{background:var(--bg,#0f1419);border:1px solid var(--border);border-radius:12px;padding:12px}
+      #intrinsic-visualizer .iv-metric b{display:block;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:4px;font-weight:700}
+      #intrinsic-visualizer .iv-metric .v{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:18px;font-weight:700}
+      #intrinsic-visualizer .iv-metric .s{font-size:11px;color:var(--muted);margin-top:2px;font-family:ui-monospace,monospace}
+      #intrinsic-visualizer .iv-tag{display:inline-flex;align-items:center;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:700;border:1px solid var(--border);font-family:ui-monospace,monospace}
+      #intrinsic-visualizer .iv-bar-wrap{background:var(--bg,#0f1419);border:1px solid var(--border);border-radius:14px;padding:16px;margin-top:12px}
+      #intrinsic-visualizer .iv-bar{height:36px;border-radius:10px;display:flex;overflow:hidden;border:1px solid var(--border);position:relative}
+      #intrinsic-visualizer .iv-bar .intrinsic{background:linear-gradient(180deg,#22c55e,#16a34a);display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:12px;transition:width .35s ease;min-width:0}
+      #intrinsic-visualizer .iv-bar .extrinsic{background:repeating-linear-gradient(45deg,rgba(250,204,21,.22) 0 10px,rgba(250,204,21,.12) 10px 20px),linear-gradient(180deg,rgba(250,204,21,.25),rgba(250,204,21,.12));border-left:1px dashed var(--border);display:flex;align-items:center;justify-content:center;color:var(--text);font-weight:700;font-size:12px;transition:width .35s ease;min-width:0}
+      #intrinsic-visualizer .iv-stock-track{position:relative;height:72px;background:var(--bg,#0f1419);border:1px solid var(--border);border-radius:12px;margin-top:12px;overflow:hidden}
+      #intrinsic-visualizer .iv-stock-line{position:absolute;top:50%;left:0;right:0;height:2px;background:var(--border);transform:translateY(-50%)}
+      #intrinsic-visualizer .iv-strike{position:absolute;top:0;bottom:0;width:2px;background:var(--t-accent);left:50%;transform:translateX(-50%)}
+      #intrinsic-visualizer .iv-strike-label{position:absolute;top:4px;left:50%;transform:translateX(-50%);background:var(--t-accent);color:white;padding:2px 6px;border-radius:6px;font-size:10px;font-weight:700;font-family:ui-monospace,monospace}
+      #intrinsic-visualizer .iv-stock-dot{position:absolute;top:50%;width:18px;height:18px;border-radius:50%;background:var(--text);border:3px solid var(--bg);box-shadow:0 0 0 1px var(--border),0 2px 8px rgba(0,0,0,.4);transform:translate(-50%,-50%);transition:left .25s ease}
+      #intrinsic-visualizer .iv-moneyness{display:flex;gap:8px;margin-top:12px}
+      #intrinsic-visualizer .iv-moneyness span{flex:1;text-align:center;padding:8px;border-radius:8px;border:1px solid var(--border);font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);transition:.2s}
+      #intrinsic-visualizer .iv-moneyness span.active{color:var(--text);border-color:var(--t-accent);background:rgba(110,168,254,.12);box-shadow:0 0 0 3px rgba(110,168,254,.12)}
+      #intrinsic-visualizer .iv-moneyness span.itm.active{border-color:var(--t-green);background:rgba(34,197,94,.12);box-shadow:0 0 0 3px rgba(34,197,94,.12)}
+      #intrinsic-visualizer .iv-delta{display:flex;align-items:center;gap:10px;margin-top:12px;padding:10px;background:var(--card-2,rgba(255,255,255,0.04));border:1px solid var(--border);border-radius:10px}
+      #intrinsic-visualizer .iv-delta-bar{flex:1;height:8px;background:var(--border);border-radius:999px;position:relative;overflow:hidden}
+      #intrinsic-visualizer .iv-delta-fill{position:absolute;top:0;bottom:0;left:50%;background:linear-gradient(90deg,var(--t-accent),var(--t-green));border-radius:999px;transition:all .3s ease}
+      #intrinsic-visualizer canvas{width:100%;height:160px;display:block;margin-top:12px}
+    </style>
+
+    <div class="iv-grid">
+      <div class="iv-controls">
+        <div>
+          <div class="iv-label-row"><span class="iv-label">Pozisyon</span><span class="iv-tag" id="ivPosTag">LONG CALL</span></div>
+          <div class="iv-tabs" id="ivTabs">
+            <button data-pos="long_call" class="active">Long Call</button>
+            <button data-pos="short_put">Short Put (CSP)</button>
+          </div>
+          <div class="iv-help" style="margin-top:8px" id="ivPosHelp">Long Call: Premium ödersiniz. Hisse extrinsic'i karşılayacak kadar yükselirse kâr edersiniz.</div>
+        </div>
+        <div>
+          <div class="iv-label-row"><span class="iv-label">Hisse $100 / Strike $100 / DTE 60</span></div>
+          <div class="iv-row">
+            <input id="ivStock" class="iv-input" type="number" value="100" step="1" min="1">
+            <input id="ivStrike" class="iv-input" type="number" value="100" step="1">
+          </div>
+          <div class="iv-row" style="margin-top:8px">
+            <input id="ivDte" class="iv-input" type="number" value="60" step="1" min="1" max="180">
+            <input id="ivPremBase" class="iv-input" type="number" value="4" step="0.1" title="Base ATM extrinsic">
+          </div>
+          <div class="iv-help">Base extrinsic = 60 DTE'de ATM time value. Model Moneyness & DTE'ye göre ayarlanır.</div>
+        </div>
+        <div>
+          <div class="iv-label-row"><span class="iv-label">Hisse fiyatı kaydırıcısı (ITM/OTM'e sürükleyin)</span><span class="iv-tag" id="ivStockBadge">$100</span></div>
+          <input id="ivStockSlider" type="range" min="70" max="130" step="1" value="100">
+          <div class="iv-label-row" style="margin-top:6px"><span class="iv-help">$70 derin OTM Call</span><span class="iv-help">ATM $100</span><span class="iv-help">$130 derin ITM Call</span></div>
+          <div class="iv-stock-track" id="ivTrack">
+            <div class="iv-stock-line"></div>
+            <div class="iv-strike"><div class="iv-strike-label">STRIKE $100</div></div>
+            <div class="iv-stock-dot" id="ivDot" style="left:50%"></div>
+          </div>
+          <div class="iv-moneyness" id="ivMoneyness">
+            <span data-m="otm">OTM</span><span data-m="atm" class="active">ATM</span><span data-m="itm">ITM</span>
+          </div>
+          <div class="iv-delta">
+            <span class="iv-label" style="font-size:11px">Delta</span>
+            <div class="iv-delta-bar"><div class="iv-delta-fill" id="ivDeltaFill" style="left:50%;width:0%"></div></div>
+            <span class="iv-tag" id="ivDeltaBadge">0.50</span>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="iv-metrics">
+          <div class="iv-metric"><b>Intrinsic</b><div class="v" id="ivIntrinsic">$0.00</div><div class="s" id="ivIntrinsicSub">max(S-K,0) = $0</div></div>
+          <div class="iv-metric"><b>extrinsic (Time)</b><div class="v" id="ivExtrinsic" style="color:var(--t-yellow)">$4.00</div><div class="s" id="ivExtrinsicSub">100% time value</div></div>
+          <div class="iv-metric" style="border-color:rgba(110,168,254,.3)"><b>Premium (hisse başı)</b><div class="v" id="ivPremium">$4.00</div><div class="s" id="ivPremiumSub">$400 / kontrat ×100</div></div>
+          <div class="iv-metric"><b>expiration'da (yatay kalırsa)</b><div class="v" id="ivExpiry">$0.00</div><div class="s" id="ivExpirySub">P&L: -$400</div></div>
+        </div>
+        <div class="iv-bar-wrap">
+          <div class="iv-label-row"><span class="iv-label">Premium = Intrinsic + extrinsic</span><span class="iv-tag" id="ivBreakdownTag">0% / 100%</span></div>
+          <div class="iv-bar" id="ivBar">
+            <div class="intrinsic" id="ivBarInt" style="width:0%">$0.00</div>
+            <div class="extrinsic" id="ivBarExt" style="width:100%">$4.00 extrinsic</div>
+          </div>
+          <canvas id="ivChart" width="640" height="160"></canvas>
+          <div class="iv-help" style="margin-top:8px">Hisseyi sürükleyin → ITM olduğunda Intrinsic büyür. Extrinsic ATM'de zirve yapar ve ITM/OTM'de + DTE düştüğünde küçülür. Premium = yeşil + sarı.</div>
+        </div>
+        <div class="note" style="margin-top:12px" id="ivExplain">
+          <strong>ATM ($100):</strong> Call $4.00 — tamamen extrinsic. Henüz Intrinsic yok. Bu $4, ödediğiniz süredir. Hisse $100'da expiration'a kadar kalırsa $0'a gider.
+        </div>
+      </div>
+    </div>
+
+    <script>
+    (function(){
+      const root = document.getElementById('intrinsic-visualizer');
+      if(!root) return;
+      const $ = id => document.getElementById(id);
+      const els = {
+        tabs: $('ivTabs'), stock: $('ivStock'), strike: $('ivStrike'), dte: $('ivDte'), premBase: $('ivPremBase'),
+        slider: $('ivStockSlider'), badge: $('ivStockBadge'), dot: $('ivDot'),
+        moneyness: $('ivMoneyness'), deltaFill: $('ivDeltaFill'), deltaBadge: $('ivDeltaBadge'),
+        intrinsic: $('ivIntrinsic'), intrinsicSub: $('ivIntrinsicSub'),
+        extrinsic: $('ivExtrinsic'), extrinsicSub: $('ivExtrinsicSub'),
+        premium: $('ivPremium'), premiumSub: $('ivPremiumSub'),
+        expiry: $('ivExpiry'), expirySub: $('ivExpirySub'),
+        barInt: $('ivBarInt'), barExt: $('ivBarExt'), breakdown: $('ivBreakdownTag'),
+        chart: $('ivChart'), explain: $('ivExplain'),
+        posTag: $('ivPosTag'), posHelp: $('ivPosHelp')
+      };
+      let state = { stock:100, strike:100, dte:60, baseExt:4, pos:'long_call' };
+      const fmt = n => (n<0?'-':'')+'$'+Math.abs(n).toFixed(2);
+      const fmt2 = n => '$'+n.toFixed(2);
+      function calc(S,K,dte,base){
+        const dist = (S-K)/K;
+        const atmFactor = Math.exp(-Math.pow(dist*4.5,2));
+        let extrinsic = base * (0.28 + 0.72*atmFactor) * Math.sqrt(dte/60);
+        if(Math.abs(dist)>0.15) extrinsic *= 0.6;
+        extrinsic = Math.max(0.05, extrinsic);
+        const intrinsicCall = Math.max(0, S-K);
+        const intrinsicPut = Math.max(0, K-S);
+        const intrinsic = state.pos==='long_call' ? intrinsicCall : intrinsicPut;
+        const premium = intrinsic + extrinsic;
+        const deltaCall = 1/(1+Math.exp(-(S-K)/(K*0.04)));
+        const deltaPut = deltaCall - 1;
+        const delta = state.pos==='long_call' ? deltaCall : deltaPut;
+        let m='atm';
+        if(state.pos==='long_call'){ if(S > K+1) m='itm'; else if(S < K-1) m='otm'; } else { if(S < K-1) m='itm'; else if(S > K+1) m='otm'; }
+        return { intrinsic, extrinsic, premium, delta, moneyness:m, atmFactor, intrinsicCall, intrinsicPut };
+      }
+      function drawChart(){
+        const ctx = els.chart.getContext('2d');
+        const W=els.chart.width, H=els.chart.height;
+        const pad={l:40,r:8,t:10,b:20};
+        ctx.clearRect(0,0,W,H);
+        const prices=[];
+        for(let S=70; S<=130; S++){
+          const r = calc(S, state.strike, state.dte, state.baseExt);
+          prices.push({S, premium:r.premium, intrinsic:r.intrinsic, extrinsic:r.extrinsic});
+        }
+        const maxP = Math.max(...prices.map(p=>p.premium))*1.15;
+        const xFor = S => pad.l + ((S-70)/60)*(W-pad.l-pad.r);
+        const yFor = p => pad.t + (1 - p/maxP)*(H-pad.t-pad.b);
+        ctx.strokeStyle='rgba(45,58,79,0.7)'; ctx.lineWidth=1;
+        for(let i=0;i<=3;i++){ const y=pad.t + (i/3)*(H-pad.t-pad.b); ctx.beginPath(); ctx.moveTo(pad.l,y); ctx.lineTo(W-pad.r,y); ctx.stroke(); }
+        ctx.fillStyle='rgba(34,197,94,0.18)'; ctx.beginPath();
+        prices.forEach((p,i)=>{ const x=xFor(p.S), y=yFor(p.intrinsic); i?ctx.lineTo(x,y):ctx.moveTo(x,y); });
+        ctx.lineTo(xFor(130), H-pad.b); ctx.lineTo(xFor(70), H-pad.b); ctx.closePath(); ctx.fill();
+        ctx.strokeStyle='#6ea8fe'; ctx.lineWidth=2.2; ctx.beginPath();
+        prices.forEach((p,i)=>{ const x=xFor(p.S), y=yFor(p.premium); i?ctx.lineTo(x,y):ctx.moveTo(x,y); }); ctx.stroke();
+        ctx.setLineDash([5,5]); ctx.strokeStyle='#22c55e'; ctx.lineWidth=1.2; ctx.beginPath();
+        prices.forEach((p,i)=>{ const x=xFor(p.S), y=yFor(p.intrinsic); i?ctx.lineTo(x,y):ctx.moveTo(x,y); }); ctx.stroke(); ctx.setLineDash([]);
+        const cur = calc(state.stock, state.strike, state.dte, state.baseExt);
+        const curX = xFor(state.stock);
+        ctx.strokeStyle='rgba(231,236,243,0.2)'; ctx.beginPath(); ctx.moveTo(curX,pad.t); ctx.lineTo(curX,H-pad.b); ctx.stroke();
+        ctx.fillStyle='#e7ecf3'; ctx.beginPath(); ctx.arc(curX, yFor(cur.premium), 4, 0, Math.PI*2); ctx.fill();
+      }
+      function update(){
+        const S=state.stock, K=state.strike;
+        const r = calc(S,K,state.dte,state.baseExt);
+        els.badge.textContent = fmt2(S);
+        const pct = (S-70)/60; els.dot.style.left = (pct*100)+'%';
+        els.moneyness.querySelectorAll('span').forEach(sp=>{ sp.classList.toggle('active', sp.dataset.m===r.moneyness); sp.classList.toggle('itm', r.moneyness==='itm'); sp.classList.toggle('otm', r.moneyness==='otm'); });
+        const d = r.delta;
+        if(state.pos==='long_call'){ const w = Math.abs(d)*50; els.deltaFill.style.left = '50%'; els.deltaFill.style.width = w+'%'; els.deltaFill.style.background = 'linear-gradient(90deg,#6ea8fe,#22c55e)'; } else { const w = Math.abs(d)*50; els.deltaFill.style.left = (50-w)+'%'; els.deltaFill.style.width = w+'%'; els.deltaFill.style.background = 'linear-gradient(90deg,#ff6b7a,#6ea8fe)'; }
+        els.deltaBadge.textContent = d.toFixed(2);
+        els.intrinsic.textContent = fmt(r.intrinsic);
+        els.intrinsicSub.textContent = state.pos==='long_call' ? `max(${S}-${K},0) = ${fmt2(r.intrinsicCall)}` : `max(${K}-${S},0) = ${fmt2(r.intrinsicPut)}`;
+        els.extrinsic.textContent = fmt(r.extrinsic);
+        els.extrinsicSub.textContent = `${(r.extrinsic/r.premium*100).toFixed(0)}% time value • ATM factor ${r.atmFactor.toFixed(2)}`;
+        els.premium.textContent = fmt(r.premium);
+        els.premiumSub.textContent = `${fmt2(r.premium*100)} / kontrat ×100`;
+        if(state.pos==='long_call'){ const expiryVal = r.intrinsic; const pnl = expiryVal - r.premium; els.expiry.textContent = fmt(expiryVal); els.expirySub.textContent = `expiration'da yatay kalırsa P&L: ${fmt(pnl*100)}`; } else { const expiryVal = r.intrinsic; const pnl = r.premium - expiryVal; els.expiry.textContent = fmt(expiryVal); els.expirySub.textContent = `Satıcı P&L: ${fmt(pnl*100)} tutar`; }
+        const intPct = r.premium>0 ? (r.intrinsic/r.premium*100) : 0;
+        const extPct = 100-intPct;
+        els.barInt.style.width = intPct+'%'; els.barExt.style.width = extPct+'%';
+        els.barInt.textContent = intPct>15 ? fmt(r.intrinsic) : ''; els.barExt.textContent = extPct>18 ? fmt(r.extrinsic)+' extrinsic' : '';
+        els.breakdown.textContent = `${intPct.toFixed(0)}% Intrinsic / ${extPct.toFixed(0)}% extrinsic`;
+        let expl='';
+        if(r.moneyness==='atm'){ expl = `<strong>ATM ($${S}):</strong> ${state.pos==='long_call'?'Call':'Put'} ${fmt(r.premium)} — %${extPct.toFixed(0)} extrinsic. Henüz Intrinsic yok. Bu ${fmt(r.extrinsic)} ödediğiniz süredir.`; } else if(r.moneyness==='itm'){ expl = `<strong>ITM ($${S} vs $${K} Strike):</strong> Intrinsic ${fmt(r.intrinsic)} + extrinsic ${fmt(r.extrinsic)} = ${fmt(r.premium)}. Derin ITM → Intrinsic baskın, Delta ≈ ${d.toFixed(2)}, hisse gibi davranır.`; } else { expl = `<strong>OTM ($${S} vs $${K} Strike):</strong> Intrinsic $0.00 + extrinsic ${fmt(r.extrinsic)} = ${fmt(r.premium)}. Tamamen time value — daha ucuz ama daha büyük hareket gerekir. Delta ≈ ${d.toFixed(2)}.`; }
+        els.explain.innerHTML = expl;
+        drawChart();
+      }
+      els.tabs.addEventListener('click', e=>{
+        const b=e.target.closest('button'); if(!b) return;
+        els.tabs.querySelectorAll('button').forEach(x=>x.classList.remove('active')); b.classList.add('active');
+        state.pos=b.dataset.pos;
+        els.posTag.textContent=b.dataset.pos==='long_call'?'LONG CALL':'SHORT PUT (CSP)';
+        els.posHelp.textContent = state.pos==='long_call' ? 'Long Call: Premium ödersiniz. Hisse extrinsic\'i karşılayacak kadar yükselirse kâr edersiniz.' : 'Short Put (CSP): Premium tahsil edersiniz. Hisse Strike üzerinde kalırsa kâr edersiniz; extrinsic lehinize erir.';
+        update();
+      });
+      function syncFromInputs(){
+        state.stock=parseFloat(els.stock.value)||100;
+        state.strike=parseFloat(els.strike.value)||100;
+        state.dte=parseInt($('ivDte').value)||60;
+        state.baseExt=parseFloat($('ivPremBase').value)||4;
+        $('ivStockSlider').min = Math.round(state.strike*0.7);
+        $('ivStockSlider').max = Math.round(state.strike*1.3);
+        $('ivStockSlider').value = state.stock;
+        update();
+      }
+      $('ivStock').addEventListener('input', syncFromInputs);
+      $('ivStrike').addEventListener('input', syncFromInputs);
+      $('ivDte').addEventListener('input', syncFromInputs);
+      $('ivPremBase').addEventListener('input', syncFromInputs);
+      $('ivStockSlider').addEventListener('input', e=>{ state.stock=parseInt(e.target.value); $('ivStock').value=state.stock; update(); });
+      syncFromInputs();
+      window.addEventListener('resize', drawChart);
+    })();
+    </script>
+  </div>
+
+
+<div class="card">
     <h2>Payoff grafiği (Long Call)</h2>
     <img src="/images/tr_call_option_payoff_infographic.webp" alt="Long call payoff diagram showing loss limited to premium and profit rising above strike" width="900" height="500" loading="lazy">
     <p>Expiration’da, Strike’ın altında tipik olarak ödenen Premium’u kaybedersiniz. Strike’ın üzerinde, değer kabaca hisse ile bire bir yükselir. Kabaca Break-Even ≈ <b>Strike + ödenen Premium</b>.</p>
