@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="tr" data-theme="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -7,18 +7,18 @@
   <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48.png">
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
 
-  <title>What Is an Option? Calls &amp; Puts Explained for Beginners</title>
-  <meta name="description" content="What is a stock option? Learn calls and puts with simple analogies, key terms, the ×100 multiplier, intrinsic vs time value, moneyness, and a long-call payoff picture. Free beginner lesson.">
+  <title>Opsiyon Nedir? Yeni Başlayanlar İçin Call &amp; Put Açıklaması</title>
+  <meta name="description" content="Hisse opsiyonu nedir? Call ve Put'ı basit benzetmelerle, temel terimlerle, ×100 çarpanıyla, Intrinsic ve extrinsic değer, Moneyness ve bir Long Call Payoff grafiği ile öğrenin. Ücretsiz başlangıç dersi.">
   <link rel="canonical" href="https://jsm-options.com/level1/">
   <meta property="og:type" content="article">
   <meta property="og:site_name" content="JSM Options">
-  <meta property="og:title" content="What Is an Option? Calls &amp; Puts Explained for Beginners">
-  <meta property="og:description" content="Learn calls and puts with simple analogies, key terms, and a basic long-call payoff picture. Free beginner lesson.">
+  <meta property="og:title" content="Opsiyon Nedir? Yeni Başlayanlar İçin Call &amp; Put Açıklaması">
+  <meta property="og:description" content="Call ve Put'ı basit benzetmeler, temel terimler ve basit bir Long Call Payoff grafiği ile öğrenin. Ücretsiz başlangıç dersi.">
   <meta property="og:url" content="https://jsm-options.com/level1/">
   <meta property="og:image" content="https://jsm-options.com/images/og-default.png">
   <meta name="twitter:image" content="https://jsm-options.com/images/og-default.png">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="What Is an Option? Calls &amp; Puts Explained for Beginners">
+  <meta name="twitter:title" content="Opsiyon Nedir? Yeni Başlayanlar İçin Call &amp; Put Açıklaması">
   <meta name="twitter:description" content="Learn calls and puts with simple analogies, key terms, and a basic long-call payoff picture.">
   <link rel="stylesheet" href="/assets/style.css?v=20260920">
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-BDL003RCN6"></script>
@@ -65,73 +65,73 @@
 <script src="/assets/site.js?v=20260920" defer></script>
 </head>
 <body>
-<header class="site-header"><div class="site-header-inner"><a class="logo logo-link" href="/" aria-label="JSM Options Home"><div class="logo-icon">JSM</div><div><div style="font-weight:700">JSM Options</div><div class="brand-sub">jsm-options.com · Educational</div></div></a><div class="header-right"><nav class="nav" aria-label="Primary navigation"><a href="/">Home</a><a href="/level1/" class="active">Basics</a><a href="/level2/">Fundamentals</a><a href="/level3/">Spreads</a><a href="/level4/">Advanced</a><a href="/strategies/">Strategies</a><a href="/cheat-sheet/">Cheat sheet</a><a href="/builder/">Builder</a></nav><button type="button" class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button><button type="button" class="theme-toggle" id="themeToggle" aria-label="Toggle color theme"><span id="themeIcon" class="theme-icon">☼</span><span id="themeLabel" class="theme-label">Dark</span></button></div></div></header>
+<header class="site-header"><div class="site-header-inner"><a class="logo logo-link" href="/" aria-label="JSM Options ana sayfa"><div class="logo-icon">JSM</div><div><div style="font-weight:700">JSM Options</div><div class="brand-sub">jsm-options.com · Educational</div></div></a><div class="header-right"><nav class="nav" aria-label="Ana menü"><a href="/">Ana Sayfa</a><a href="/level1/" class="active">Temeller</a><a href="/level2/">Temel Bilgiler</a><a href="/level3/">Spread</a><a href="/level4/">İleri Seviye</a><a href="/strategies/">Stratejiler</a><a href="/cheat-sheet/">Özet Tablo</a><a href="/builder/">Builder</a></nav><button type="button" class="nav-toggle" id="navToggle" aria-label="Menüyü aç" aria-expanded="false"><span></span><span></span><span></span></button><button type="button" class="theme-toggle" id="themeToggle" aria-label="Tema değiştir"><span id="themeIcon" class="theme-icon">☼</span><span id="themeLabel" class="theme-label">Dark</span></button></div></div></header>
 
 <div class="wrap">
-<nav class="breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span aria-hidden="true">/</span><span aria-current="page">Basics</span></nav>
+<nav class="breadcrumbs" aria-label="Breadcrumb"><a href="/">Ana Sayfa</a><span aria-hidden="true">/</span><span aria-current="page">Temeller</span></nav>
 
   <div class="card">
-    <span class="badge">Basics · No jargon overload</span>
-    <h1>What is an option? It’s a reservation ticket.</h1>
-    <p>If you’ve paid to <b>reserve</b> sneakers, a console, concert tickets, or a house, you already get the idea. A stock option is the same kind of contract — a paid right, with a deadline, on an underlying asset.</p>
+    <span class="badge">Temeller · Jargon yok</span>
+    <h1>Opsiyon nedir? Bu bir rezervasyon biletidir.</h1>
+    <p>Hiç <b>rezerve</b> etmek için ödeme yaptıysanız — sneaker, konsol, konser bileti veya ev — fikri zaten anlıyorsunuz. Hisse opsiyonu da aynı tür bir kontrattır — belirli bir Underlying varlık üzerinde, son tarihi olan ücretli bir hak.</p>
     <img src="/images/sneaker_store_reservation.webp" alt="Sneaker store reservation analogy for a call option" width="900" height="500" loading="eager">
   </div>
 
   <div class="note" role="note">
-    <strong>Mindset:</strong> Options are not a get-rich-quick path. Treat this as a skill you build slowly. <strong>Less is more</strong> — learn the vocabulary and one simple long option before you size up or sell options. Never risk money you cannot afford to lose.
+    <strong>Zihniyet:</strong> Opsiyonlar hızlı zengin olma yolu değildir. Bunu yavaşça geliştirdiğiniz bir beceri olarak görün. <strong>Az, çoktur</strong> — pozisyon büyütmeden veya opsiyon satmadan önce kelime dağarcığını ve tek bir basit Long opsiyonu öğrenin. Asla kaybetmeyi göze alamayacağınız parayı riske atmayın.
   </div>
 
   <div class="card">
-    <h2>Story 1: The $100 sneakers (a Call)</h2>
-    <p>Limited sneakers cost <span class="term">$100</span>. You only have $5 today. You pay $5 to reserve the <em>right</em> to buy at $100 within 30 days.</p>
-    <p>That $5 is the <span class="term">Premium</span>. $100 is the <span class="term">Strike</span>. 30 days is the <span class="term">Expiry</span>. The sneakers are the <span class="term">Underlying</span>.</p>
+    <h2>Hikaye 1: 100$'lık sneaker'lar (bir Call)</h2>
+    <p>Limitli sneaker'lar <span class="term">100$</span> tutuyor. Bugün sadece 5$'ınız var. 30 gün içinde 100$'a satın alma <em>hakkını</em> rezerve etmek için 5$ ödüyorsunuz.</p>
+    <p>Bu 5$ <span class="term">Premium</span> oluyor. 100$ <span class="term">Strike</span>. 30 gün <span class="term">Expiry</span>. Sneaker'lar ise <span class="term">Underlying</span>.</p>
     <div class="analogy">
-      <b>Outcomes</b>
+      <b>Sonuçlar</b>
       <ul>
-        <li>Sneakers go to $150 → you still buy at $100. Economic gain about <span class="profit">$45</span> after the $5 fee ($50 intrinsic − $5 premium).</li>
-        <li>They fall to $70 → you walk away. Loss only the <span class="loss">$5</span> premium.</li>
+        <li>Sneaker'lar 150$'a çıkar → yine de 100$'a alırsınız. 5$ ücret sonrası ekonomik kazanç yaklaşık <span class="profit">45$</span> (50$ Intrinsic − 5$ Premium).</li>
+        <li>70$'a düşer → vazgeçersiniz. Kayıp sadece <span class="loss">5$</span> Premium.</li>
       </ul>
-      <p>That contract is a <b>Call</b>. <span class="term">CALL = right to BUY</span>.</p>
+      <p>Bu kontrat bir <b>Call</b>. <span class="term">CALL = ALMA hakkı</span>.</p>
     </div>
     <img src="/images/options_trading_terms_infographic.webp" alt="Options terms: underlying, strike, premium, expiry, call vs put" width="900" height="500" loading="lazy">
   </div>
 
   <div class="card">
-    <h2>Story 2: House — Call vs Put</h2>
+    <h2>Hikaye 2: Ev — Call vs Put</h2>
     <img src="/images/call_vs_put_house_poster.webp" alt="House analogy comparing a call option (right to buy) and a put option (right to sell)" width="900" height="500" loading="lazy">
-    <p><b>Call:</b> you pay a fee now to lock the right to <b>buy</b> later at a set price — useful if you expect the price to go <b>up</b>.</p>
-    <p><b>Put:</b> you pay a fee to lock the right to <b>sell</b> at a set price — useful if you expect the price to go <b>down</b>, or as insurance on something you already own.</p>
+    <p><b>Call:</b> daha sonra belirlenmiş bir fiyattan <b>alma</b> hakkını kilitlemek için şimdi bir ücret ödersiniz — fiyatın <b>yukarı</b> gitmesini bekliyorsanız kullanışlıdır.</p>
+    <p><b>Put:</b> belirli bir fiyattan <b>satma</b> hakkını kilitlemek için ücret ödersiniz — fiyatın <b>aşağı</b> gitmesini bekliyorsanız veya zaten sahip olduğunuz bir şey için sigorta olarak kullanışlıdır.</p>
     <div class="analogy">
-      <b>Key idea:</b> Buying an option is a <b>right</b>, not an obligation. You can walk away. On a long (bought) option, maximum loss is the premium you paid (plus fees) — you cannot lose more than that on the option itself.
+      <b>Temel fikir:</b> Bir opsiyon satın almak bir <b>hak</b>tır, yükümlülük değil. Vazgeçebilirsiniz. Long (satın alınmış) bir opsiyonda, maksimum kayıp ödediğiniz Premium'dur (artı ücretler) — opsiyonun kendisinde bundan fazlasını kaybedemezsiniz.
     </div>
   </div>
 
   <div class="card">
-    <h2>Story 3: Concert tickets (time runs out)</h2>
-    <p>Face value $200, show in 30 days. You pay $20 for the right to buy at $200. If resale hits $400, that right is valuable. If resale is $100, you let it expire and lose only the <span class="loss">$20</span>.</p>
-    <p><span class="term">Expiry</span> is the hard deadline. After expiration, an option that finishes out of the money is typically worth zero. Time is not free — every day that passes can reduce the “extra” value of the option beyond pure intrinsic value.</p>
+    <h2>Hikaye 3: Konser biletleri (zaman tükenir)</h2>
+    <p>Nominal değer 200$, gösteri 30 gün sonra. 200$'a satın alma hakkı için 20$ ödersiniz. Yeniden satış 400$'a çıkarsa, bu hak değerlidir. Yeniden satış 100$ ise, Expiry olmasına izin verir ve sadece <span class="loss">20$</span> kaybedersiniz.</p>
+    <p><span class="term">Expiry</span> kesin son tarihtir. Expiration sonrası, Out of the Money biten bir opsiyon tipik olarak sıfır değerindedir. Zaman bedava değildir — geçen her gün, opsiyonun saf Intrinsic değerinin ötesindeki “ekstra” değerini azaltabilir.</p>
   </div>
 
   <div class="card">
-    <h2>Five core words</h2>
+    <h2>Beş temel kelime</h2>
     <ul>
-      <li><span class="term">Underlying</span> — the asset the option is written on (stock, ETF, index… or sneakers in the story).</li>
-      <li><span class="term">Strike</span> — the agreed buy (call) or sell (put) price.</li>
-      <li><span class="term">Premium</span> — the price of the option, quoted <em>per share</em>.</li>
-      <li><span class="term">Expiry / DTE</span> — when the right ends; DTE = days to expiration.</li>
-      <li><span class="term">Call vs Put</span> — call = right to buy; put = right to sell.</li>
+      <li><span class="term">Underlying</span> — opsiyonun yazıldığı varlık (hisse, ETF, endeks… veya hikayedeki sneaker).</li>
+      <li><span class="term">Strike</span> — üzerinde anlaşılan alım (Call) veya satım (Put) fiyatı.</li>
+      <li><span class="term">Premium</span> — opsiyonun fiyatı, <em>hisse başına</em> kote edilir.</li>
+      <li><span class="term">Expiry / DTE</span> — hakkın bittiği zaman; DTE = expiration'a kadar gün sayısı.</li>
+      <li><span class="term">Call vs Put</span> — Call = alma hakkı; Put = satma hakkı.</li>
     </ul>
-    <p><span class="term">Long</span> = you <b>buy</b> the option. <span class="term">Short</span> = you <b>sell</b> (write) the option. This page focuses on long options — the side with defined risk equal to the premium.</p>
+    <p><span class="term">Long</span> = opsiyonu <b>satın alırsınız</b>. <span class="term">Short</span> = opsiyonu <b>satarsınız</b> (yazarsınız). Bu sayfa Long opsiyonlara odaklanır — riski Premium ile tanımlı taraf.</p>
   </div>
 
   <div class="card">
-    <h2>Why everything is ×100</h2>
-    <p>One standard U.S. equity option contract usually covers <b>100 shares</b>. Brokers quote premiums per share, so you must multiply by 100 to get real cash.</p>
+    <h2>Neden her şey ×100</h2>
+    <p>Bir standart ABD hisse opsiyon kontratı genellikle <b>100 hisseyi</b> kapsar. Aracılar Premium'u hisse başına kote eder, bu yüzden gerçek nakdi bulmak için 100 ile çarpmanız gerekir.</p>
     <div class="analogy">
-      Premium quoted at <b>$3.00</b> → one contract costs about <b>$300</b> (plus commissions).<br>
-      If that option later trades at $5.00, the position is worth about <b>$500</b>. Your P/L is on the full ×100 amount — not the $3 or $5 alone.
+      Premium <b>3,00$</b> olarak kote edildi → bir kontrat yaklaşık <b>300$</b> tutar (komisyonlar hariç).<br>
+      Bu opsiyon daha sonra 5,00$’dan işlem görürse, pozisyon yaklaşık <b>500$</b> değerindedir. K/Z’niz tam ×100 tutar üzerindendir — sadece 3$ veya 5$ üzerinden değil.
     </div>
-    <div class="warn"><strong>Beginner trap:</strong> reading a $2.50 quote as “$2.50 total.” It is $250 per contract. Always check the total debit or credit before you click buy or sell.</div>
+    <div class="warn"><strong>Yeni başlayan tuzağı:</strong> 2,50$’lık kotasyonu “toplam 2,50$” olarak okumak. Kontrat başına 250$’dır. Al veya sat’a tıklamadan önce her zaman toplam Debit veya Credit’i kontrol edin.</div>
   </div>
 
   
@@ -334,7 +334,7 @@
       <div style="background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 16px; text-align: center;">
         <div style="font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); margin-bottom: 8px;">Yeni Call Fiyatı</div>
         <div id="newCall-tr" style="font-family: monospace; font-weight: 900; font-size: 28px; color: #2563eb; letter-spacing: -0.02em;">$4.00</div>
-        <div id="callChange-tr" style="margin-top: 6px; font-size: 12px; font-family: monospace; font-weight: 700; background: var(--card-2); display: inline-block; padding: 3px 8px; border-radius: 999px; color: var(--muted);">No change</div>
+        <div id="callChange-tr" style="margin-top: 6px; font-size: 12px; font-family: monospace; font-weight: 700; background: var(--card-2); display: inline-block; padding: 3px 8px; border-radius: 999px; color: var(--muted);">Değişim yok</div>
       </div>
       <div style="background: var(--card); border: 2px solid #2563eb; border-radius: 16px; padding: 16px; text-align: center; box-shadow: 0 0 0 4px rgba(37,99,235,0.1);">
         <div style="font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em; color: #2563eb; margin-bottom: 8px;">Formula Check</div>
@@ -417,7 +417,7 @@
 
           sliderValueEl.textContent = '$' + newStock;
           newCallEl.textContent = '$' + newCall.toFixed(2);
-          callChangeEl.textContent = (stockChange === 0 ? 'No change' : fmtMoney(callChange) + ' change');
+          callChangeEl.textContent = (stockChange === 0 ? 'Değişim yok' : fmtMoney(callChange) + ' değişim');
           callChangeEl.style.background = stockChange === 0 ? 'var(--card-2)' : (callChange >= 0 ? '#dcfce7' : '#fee2e2');
           callChangeEl.style.color = stockChange === 0 ? 'var(--muted)' : (callChange >= 0 ? '#15803d' : '#dc2626');
 
@@ -453,46 +453,46 @@
 
 
   <div class="card">
-    <h2>Intrinsic value vs extrinsic (time) value</h2>
-    <p>Every option premium is made of two parts. Understanding them explains why a call can lose money even when the stock drifts up a little.</p>
+    <h2>Intrinsic değer vs extrinsic (zaman) değer</h2>
+    <p>Her opsiyon Premium'u iki parçadan oluşur. Bunları anlamak, hisse biraz yukarı sürüklense bile bir Call'ın neden para kaybedebileceğini açıklar.</p>
 
-    <p><strong>Intrinsic value</strong> — what the option is worth if you exercised it <em>right now</em> (the “built-in” part).</p>
+    <p><strong>Intrinsic değer</strong> — opsiyonu <em>hemen şimdi</em> kullanırsanız ne kadar değerli olduğu (“yerleşik” kısım).</p>
     <ul>
-      <li><b>Call:</b> max(stock price − strike, 0)</li>
-      <li><b>Put:</b> max(strike − stock price, 0)</li>
+      <li><b>Call:</b> max(hisse fiyatı − Strike, 0)</li>
+      <li><b>Put:</b> max(Strike − hisse fiyatı, 0)</li>
     </ul>
-    <p>If that number is zero, the option has <em>no</em> intrinsic value (it is out of the money or at the money).</p>
+    <p>Bu sayı sıfırsa, opsiyonun <em>hiç</em> Intrinsic değeri yoktur (Out of the Money veya At the Money'dir).</p>
 
-    <p><strong>Extrinsic value</strong> (also called <strong>time value</strong>) — everything else in the premium:</p>
+    <p><strong>Extrinsic değer</strong> (aynı zamanda <strong>time value</strong> olarak da adlandırılır) — Premium içindeki diğer her şey:</p>
     <div class="analogy" style="margin-top:8px">
       <b>Premium = Intrinsic + Extrinsic</b><br>
-      Extrinsic is the “hope and time” part: days left until expiration, how much the market expects the stock to move, and supply/demand for that option.
+      Extrinsic “umut ve zaman” kısmıdır: Expiration'a kadar kalan günler, piyasanın hissenin ne kadar hareket etmesini beklediği ve o opsiyona olan arz/talep.
     </div>
 
-    <h3 style="margin-top:18px;font-size:1.05rem">Worked example (call)</h3>
-    <p>Stock is <b>$108</b>. You look at the <b>$100</b> call. It is quoted at <b>$10</b>.</p>
+    <h3 style="margin-top:18px;font-size:1.05rem">Çalışılmış örnek (Call)</h3>
+    <p>Hisse <b>108$</b>. <b>100$</b> Call’a bakıyorsunuz. Kotasyon <b>10$</b>.</p>
     <ul>
-      <li>Intrinsic = $108 − $100 = <b>$8</b></li>
-      <li>Extrinsic (time value) = $10 − $8 = <b>$2</b></li>
+      <li>Intrinsic = 108$ − 100$ = <b>8$</b></li>
+      <li>Extrinsic (time value) = 10$ − 8$ = <b>2$</b></li>
     </ul>
-    <p>You are paying $8 for value that already exists, plus $2 for the chance the stock moves more (and for the time left on the clock).</p>
+    <p>Zaten var olan değer için 8$ ve hissenin daha fazla hareket etme şansı (ve saatte kalan zaman) için 2$ ödüyorsunuz.</p>
 
-    <h3 style="margin-top:18px;font-size:1.05rem">Same idea for a put</h3>
-    <p>Stock is <b>$92</b>. The <b>$100</b> put is quoted at <b>$11</b>.</p>
+    <h3 style="margin-top:18px;font-size:1.05rem">Put için aynı fikir</h3>
+    <p>Hisse <b>92$</b>. <b>100$</b> Put kotasyonu <b>11$</b>.</p>
     <ul>
-      <li>Intrinsic = $100 − $92 = <b>$8</b></li>
-      <li>Extrinsic = $11 − $8 = <b>$3</b></li>
+      <li>Intrinsic = 100$ − 92$ = <b>8$</b></li>
+      <li>Extrinsic = 11$ − 8$ = <b>3$</b></li>
     </ul>
 
-    <h3 style="margin-top:18px;font-size:1.05rem">What happens as expiration approaches?</h3>
-    <p>Extrinsic value tends to <b>melt away</b> toward zero as the deadline nears (all else equal). That melting is <span class="term">time decay</span>. At expiration:</p>
+    <h3 style="margin-top:18px;font-size:1.05rem">Expiration yaklaştıkça ne olur?</h3>
+    <p>Extrinsic değer son tarih yaklaştıkça sıfıra doğru <b>erime</b> eğilimindedir (diğer her şey eşitken). Bu erime <span class="term">time decay</span> olarak adlandırılır. Expiration’da:</p>
     <ul>
-      <li>An option is worth only its intrinsic value (or zero if still out of the money).</li>
-      <li>Any extrinsic you paid is gone unless the stock moved enough to make up for it.</li>
+      <li>Bir opsiyon sadece Intrinsic değerine eşittir (veya hala Out of the Money ise sıfırdır).</li>
+      <li>Ödediğiniz herhangi bir Extrinsic, hisse bunu telafi edecek kadar hareket etmedikçe gider.</li>
     </ul>
     <div class="analogy">
-      <b>If the stock is still $108 at expiration:</b> the $100 call is worth about <b>$8</b> (intrinsic only). The $2 of time value has decayed to zero.<br>
-      <b>If the stock is $100 or below at expiration:</b> the call is typically worth <b>$0</b> — all $10 of premium is lost.
+      <b>Hisse Expiration’da hala 108$ ise:</b> 100$ Call yaklaşık <b>8$</b> değerindedir (sadece Intrinsic). 2$’lık time value sıfıra erimiştir.<br>
+      <b>Hisse Expiration’da 100$ veya altında ise:</b> Call tipik olarak <b>0$</b> değerindedir — 10$’lık Premium’un tamamı kaybedilir.
     </div>
 
     <div style="margin-top:14px;overflow-x:auto">
@@ -530,27 +530,27 @@
     </div>
 
     <div class="note" style="margin-top:14px">
-      <strong>Why this matters:</strong> When you <b>buy</b> an option, time decay works <em>against</em> you — extrinsic tends to shrink each day. When you <b>sell</b> (write) an option, that same decay can work <em>in your favor</em> (you will see this with covered calls on the <a href="/level2/">Fundamentals</a> page). Volatility changes can also raise or lower extrinsic value quickly, even if the stock price barely moves.
+      <strong>Neden önemli:</strong> Bir opsiyon <b>satın aldığınızda</b>, time decay <em>aleyhinize</em> çalışır — Extrinsic her gün küçülme eğilimindedir. Bir opsiyon <b>sattığınızda</b> (yazdığınızda), aynı çürüme <em>lehinize</em> çalışabilir (bunu <a href="/level2/">Temel Bilgiler</a> sayfasındaki Covered Call’larda göreceksiniz). Volatilite değişiklikleri de hisse fiyatı neredeyse hiç hareket etmese bile Extrinsic değeri hızla yükseltebilir veya düşürebilir.
     </div>
   </div>
 
   <div class="card">
-    <h2>Payoff picture (long call)</h2>
+    <h2>Payoff grafiği (Long Call)</h2>
     <img src="/images/call_option_payoff_infographic.webp" alt="Long call payoff diagram showing loss limited to premium and profit rising above strike" width="900" height="500" loading="lazy">
-    <p>At expiration, below the strike you typically lose the premium paid. Above the strike, value rises roughly dollar-for-dollar with the stock. Rough break-even ≈ <b>strike + premium paid</b>.</p>
+    <p>Expiration’da, Strike’ın altında tipik olarak ödenen Premium’u kaybedersiniz. Strike’ın üzerinde, değer kabaca hisse ile bire bir yükselir. Kabaca Break-Even ≈ <b>Strike + ödenen Premium</b>.</p>
     <div class="analogy">
-      <b>Example:</b> $100 strike + $3 premium → about <b>$103</b> at expiry to break even (before commissions).<br>
-      One contract = 100 shares, so $3 ≈ <b>$300</b> cash at risk.
+      <b>Örnek:</b> 100$ Strike + 3$ Premium → Break-Even için Expiry’de yaklaşık <b>103$</b> (komisyonlar öncesi).<br>
+      Bir kontrat = 100 hisse, yani 3$ ≈ riskteki nakit <b>300$</b>.
     </div>
-    <div class="note">In the <a href="/builder/?template=long_call">Builder</a>, the solid line is P/L at expiry; the dotted line includes time value before expiry. Green = profit, red = loss.</div>
+    <div class="note"><a href="/builder/?template=long_call">Builder</a> içinde, düz çizgi Expiry’deki K/Z’dir; kesikli çizgi Expiry öncesi time value içerir. Yeşil = kâr, kırmızı = zarar.</div>
   </div>
 
   <div class="card">
-    <h2>Long put in one minute</h2>
-    <p>A <b>long put</b> is the bearish twin of the long call: you pay a premium for the right to <b>sell</b> 100 shares at the strike. You profit if the stock falls enough to cover the premium. Maximum loss is still only the premium paid.</p>
+    <h2>Bir dakikada Long Put</h2>
+    <p>Bir <b>Long Put</b>, Long Call’ın Bearish ikizidir: Strike’ta 100 hisseyi <b>satma</b> hakkı için Premium ödersiniz. Hisse Premium’u karşılayacak kadar düşerse kâr edersiniz. Maksimum kayıp yine sadece ödenen Premium’dur.</p>
 
     <div class="analogy">
-      <b>Car / home insurance analogy:</b> You pay a premium so that <em>if</em> something bad happens (a crash, a fire — or here, a sharp drop in the stock), you have a defined right that can offset the damage. If nothing bad happens, the premium is the cost of peace of mind. A put is not identical to an insurance policy, but the “pay for protection / limited loss of the premium” idea is the same. Puts can also be used to speculate that price will fall — still with max loss ≈ the premium if you only buy the put.
+      <b>Araba / ev sigortası benzetmesi:</b> Kötü bir şey olursa (kaza, yangın — veya burada hissede keskin düşüş) hasarı dengeleyebilecek tanımlı bir hakkınız olsun diye Premium ödersiniz. Kötü bir şey olmazsa, Premium iç huzurunun bedelidir. Bir Put bir sigorta poliçesi ile aynı değildir, ancak “koruma için öde / Premium’un sınırlı kaybı” fikri aynıdır. Put’lar fiyatın düşeceği üzerine spekülasyon yapmak için de kullanılabilir — sadece Put satın alırsanız yine maksimum kayıp ≈ Premium’dur.
     </div>
 
     <h3 style="margin:18px 0 10px;font-size:1.05rem">Payoff picture (long put)</h3>
@@ -558,7 +558,7 @@
       <svg viewBox="0 0 640 340" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Long put payoff: insurance-style protection, profit if stock falls, max loss equals premium paid" width="100%" height="auto">
         <!-- title band -->
         <rect x="0" y="0" width="640" height="44" fill="#1a2332" rx="8"/>
-        <text x="320" y="28" text-anchor="middle" fill="#e7ecf3" font-size="16" font-weight="700" font-family="system-ui,sans-serif">Long put — like insurance on a stock price</text>
+        <text x="320" y="28" text-anchor="middle" fill="#e7ecf3" font-size="16" font-weight="700" font-family="system-ui,sans-serif">Long Put — hisse fiyatı sigortası gibi</text>
 
         <!-- insurance callout -->
         <rect x="24" y="56" width="592" height="52" rx="10" fill="#0f1419" stroke="#3b82f6" stroke-width="1.5"/>
@@ -593,100 +593,100 @@
     </div>
 
     <div class="analogy">
-      <b>Example:</b> Stock $100. Buy $95 put for $2.50 → $250 debit (one contract).<br>
-      At expiration if stock is $80: intrinsic = $15 → profit ≈ ($15 − $2.50) × 100 = <span class="profit">+$1,250</span>.<br>
-      If stock stays above $95: put expires worthless → loss = <span class="loss">$250</span> (the “insurance premium”).
+      <b>Örnek:</b> Hisse 100$. 95$ Put’ı 2,50$’a al → 250$ Debit (bir kontrat).<br>
+      Expiration’da hisse 80$ ise: Intrinsic = 15$ → kâr ≈ (15$ − 2,50$) × 100 = <span class="profit">+1.250$</span>.<br>
+      Hisse 95$’ın üzerinde kalırsa: Put değersiz sona erer → kayıp = <span class="loss">250$</span> (“sigorta primi”).
     </div>
-    <p>Break-even at expiration for a long put ≈ <b>strike − premium paid</b> (here ≈ $92.50).</p>
-    <div class="note">In the <a href="/builder/?template=long_put">Builder</a>, load a long put, drag the underlying price, and compare the solid expiry line with the dotted line (time value still left).</div>
+    <p>Long Put için Expiration’da Break-Even ≈ <b>Strike − ödenen Premium</b> (burada ≈ 92,50$).</p>
+    <div class="note"><a href="/builder/?template=long_put">Builder</a> içinde, bir Long Put yükleyin, Underlying fiyatı sürükleyin ve düz Expiry çizgisini kesikli çizgiyle (hala kalan time value) karşılaştırın.</div>
   </div>
 
 
   <div class="card" id="options-chain">
-    <h2>How to read an options chain</h2>
-    <p>An <b>options chain</b> is the table your broker shows for one stock or ETF: <b>calls on one side, puts on the other</b>, with <b>strikes down the middle</b>, for a chosen <b>expiration date</b>. Prices update during market hours; after the close you often see the last recorded quotes.</p>
-    <p>JSM Options is an <b>educational site only</b>. We are <b>not affiliated with, endorsed by, or connected to</b> any broker, exchange, or data provider. Screenshots and examples below are for learning how chains are typically organized — layouts differ by platform.</p>
+    <h2>Opsiyon zinciri nasıl okunur</h2>
+    <p>Bir <b>options chain</b>, aracınızın bir hisse veya ETF için gösterdiği tablodur: <b>bir tarafta Call’lar, diğer tarafta Put’lar</b>, <b>ortada Strike’lar</b>, seçilen bir <b>Expiration tarihi</b> için. Fiyatlar piyasa saatlerinde güncellenir; kapanıştan sonra genellikle son kaydedilen kotasyonları görürsünüz.</p>
+    <p>JSM Options yalnızca <b>eğitim amaçlı bir sitedir</b>. Herhangi bir aracı, borsa veya veri sağlayıcı ile <b>bağlı değiliz, onaylı değiliz veya bağlantılı değiliz</b>. Aşağıdaki ekran görüntüleri ve örnekler, zincirlerin tipik olarak nasıl organize edildiğini öğrenmek içindir — düzenler platforma göre değişir.</p>
 
     <img src="/images/options-chain-example.webp" alt="Example options chain layout: calls on the left, strikes in the center, puts on the right, with bid ask last delta gamma and expiration tabs" width="1200" height="560" loading="lazy" style="width:100%;height:auto;border-radius:12px;border:1px solid var(--border);margin:12px 0">
-    <p style="font-size:.82rem;color:var(--muted);margin:0 0 12px">Example layout only (illustrative). Your broker’s labels, colors, and columns may differ. Not a recommendation to trade this or any symbol.</p>
+    <p style="font-size:.82rem;color:var(--muted);margin:0 0 12px">Sadece örnek düzen (açıklayıcı). Aracınızın etiketleri, renkleri ve sütunları farklı olabilir. Bu veya herhangi bir sembolü işlemek için bir öneri değildir.</p>
 
-    <h3>What you are looking at</h3>
+    <h3>Neye bakıyorsunuz</h3>
     <ul>
-      <li><b>Underlying &amp; last price</b> — the stock/ETF the options refer to (and often today’s % change).</li>
-      <li><b>Expiration tabs</b> — each tab is a different expiry (e.g. weekly or monthly). “Days” shows approximate time left.</li>
-      <li><b>Calls (usually left)</b> — right to <b>buy</b> 100 shares at the strike.</li>
-      <li><b>Puts (usually right)</b> — right to <b>sell</b> 100 shares at the strike.</li>
-      <li><b>Strike column (center)</b> — the fixed price in the option contract.</li>
+      <li><b>Underlying &amp; last price</b> — opsiyonların atıfta bulunduğu hisse/ETF (ve genellikle bugünkü % değişim).</li>
+      <li><b>Expiration sekmeleri</b> — her sekme farklı bir Expiry’dir (örn. haftalık veya aylık). “Günler” yaklaşık kalan süreyi gösterir.</li>
+      <li><b>Call’lar (genellikle solda)</b> — Strike’ta 100 hisseyi <b>alma</b> hakkı.</li>
+      <li><b>Put’lar (genellikle sağda)</b> — Strike’ta 100 hisseyi <b>satma</b> hakkı.</li>
+      <li><b>Strike sütunu (ortada)</b> — opsiyon kontratındaki sabit fiyat.</li>
     </ul>
 
-    <h3>Columns you will see most often</h3>
+    <h3>En sık göreceğiniz sütunlar</h3>
     <ul>
-      <li><b>Bid</b> — highest price buyers are currently offering. If you <b>sell</b> an option, you often start near the bid.</li>
-      <li><b>Ask</b> — lowest price sellers are asking. If you <b>buy</b> an option, you often pay near the ask.</li>
-      <li><b>Last</b> — last trade price (can be stale if the option is quiet).</li>
-      <li><b>Delta</b> — rough sensitivity to a $1 move in the stock (calls positive, puts negative). Beginners: treat it as “how stock-like is this option?”</li>
-      <li><b>Gamma</b> — how fast delta can change. More relevant as you go deeper; safe to note and move on at first.</li>
-      <li><b>IV (implied volatility)</b> — often shown for the expiration or per strike. Higher IV → options tend to be more expensive, all else equal.</li>
+      <li><b>Bid</b> — alıcıların şu anda teklif ettiği en yüksek fiyat. Bir opsiyon <b>satarsanız</b>, genellikle Bid’e yakın başlarsınız.</li>
+      <li><b>Ask</b> — satıcıların istediği en düşük fiyat. Bir opsiyon <b>satın alırsanız</b>, genellikle Ask’e yakın ödersiniz.</li>
+      <li><b>Last</b> — son işlem fiyatı (opsiyon sakinse eski olabilir).</li>
+      <li><b>Delta</b> — hissede 1$’lık harekete karşı kabaca duyarlılık (Call’lar pozitif, Put’lar negatif). Yeni başlayanlar: bunu “bu opsiyon ne kadar hisse gibi?” olarak görün.</li>
+      <li><b>Gamma</b> — Delta’nın ne kadar hızlı değişebileceği. Daha derine indikçe daha alakalı; başta not edip geçmek güvenlidir.</li>
+      <li><b>IV (implied volatility)</b> — genellikle Expiration için veya Strike başına gösterilir. Daha yüksek IV → diğer her şey eşitken opsiyonlar daha pahalı olma eğilimindedir.</li>
     </ul>
 
     <div class="analogy">
-      <b>Mid-price tip:</b> (bid + ask) ÷ 2 is a common “fair-ish” reference. Wide bid–ask spreads mean higher friction — harder to get a good fill, especially on low-volume strikes.
+      <b>Orta fiyat ipucu:</b> (Bid + Ask) ÷ 2 yaygın “az çok adil” bir referanstır. Geniş Bid-Ask Spread’leri daha yüksek sürtünme demektir — iyi bir dolum almak daha zordur, özellikle düşük hacimli Strike’larda.
     </div>
 
-    <h3>Contract size (the ×100 reminder)</h3>
-    <p>Listed equity options usually control <b>100 shares</b> per contract. A put with ask <b>$1.09</b> costs about <b>$109</b> to buy one contract (before commissions), not $1.09. Always multiply premium by 100 when estimating cash.</p>
+    <h3>Kontrat boyutu (×100 hatırlatması)</h3>
+    <p>Listelenen hisse opsiyonları genellikle kontrat başına <b>100 hisseyi</b> kontrol eder. Ask’i <b>1,09$</b> olan bir Put, bir kontrat satın almak için yaklaşık <b>109$</b> tutar (komisyonlar öncesi), 1,09$ değil. Nakit tahmin ederken her zaman Premium’u 100 ile çarpın.</p>
 
-    <h3>How orders are typically placed (general)</h3>
-    <p>Steps are similar across brokers; exact buttons and names vary. This is a <b>generic outline</b>, not instructions for any specific firm:</p>
+    <h3>Emirler tipik olarak nasıl verilir (genel)</h3>
+    <p>Adımlar aracılar arasında benzerdir; tam düğmeler ve isimler değişir. Bu <b>genel bir taslaktır</b>, belirli bir firma için talimat değildir:</p>
     <ol style="padding-left:20px">
-      <li style="margin:6px 0"><b>Choose the underlying</b> (stock or ETF) and open its options chain.</li>
-      <li style="margin:6px 0"><b>Pick an expiration</b> (how much time you want).</li>
-      <li style="margin:6px 0"><b>Pick call or put</b> and a <b>strike</b>.</li>
-      <li style="margin:6px 0"><b>Action:</b> <i>Buy to open</i> (you are long) or <i>Sell to open</i> (you are short — higher risk if naked).</li>
-      <li style="margin:6px 0"><b>Quantity</b> in contracts (1 contract ≈ 100 shares of exposure).</li>
-      <li style="margin:6px 0"><b>Order type:</b> while learning, prefer a <b>limit</b> order (you set the max price to pay or min price to receive) over a market order.</li>
-      <li style="margin:6px 0"><b>Review</b> estimated debit/credit, fees, and buying power impact → submit only if you understand the max loss.</li>
+      <li style="margin:6px 0"><b>Underlying’i seçin</b> (hisse veya ETF) ve options chain’ini açın.</li>
+      <li style="margin:6px 0"><b>Bir Expiration seçin</b> (ne kadar süre istediğiniz).</li>
+      <li style="margin:6px 0"><b>Call veya Put</b> ve bir <b>Strike</b> seçin.</li>
+      <li style="margin:6px 0"><b>İşlem:</b> <i>Buy to open</i> (Long’sunuz) veya <i>Sell to open</i> (Short’sunuz — çıplaksa daha yüksek risk).</li>
+      <li style="margin:6px 0"><b>Miktar</b> kontrat cinsinden (1 kontrat ≈ 100 hisse maruziyeti).</li>
+      <li style="margin:6px 0"><b>Emir tipi:</b> öğrenirken, piyasa emri yerine <b>limit</b> emri tercih edin (ödenecek maksimum fiyatı veya alınacak minimum fiyatı siz belirlersiniz).</li>
+      <li style="margin:6px 0"><b>Gözden geçirin</b> tahmini Debit/Credit, ücretler ve satın alma gücü etkisi → yalnızca maksimum kaybı anlıyorsanız gönderin.</li>
     </ol>
 
     <div class="analogy">
-      <b>Buying a call example (illustrative):</b> Select a call strike → Buy to open → 1 contract → limit near the ask (or mid if you are patient) → confirm total ≈ premium × 100 + fees.
+      <b>Call satın alma örneği (açıklayıcı):</b> Bir Call Strike’ı seçin → Buy to open → 1 kontrat → Ask’e yakın limit (sabırlıysanız orta) → toplam ≈ Premium × 100 + ücretleri onaylayın.
     </div>
 
-    <h3>Connect the chain to this site</h3>
-    <p>After you understand a quote, you can copy the <b>strike</b> and a realistic <b>premium</b> (e.g. mid) into the <a href="/builder/">Strategy Builder</a> and see payoff and educational Greeks. The Builder is a simulator — not live brokerage data and not an order ticket.</p>
+    <h3>Zinciri bu siteye bağlayın</h3>
+    <p>Bir kotasyonu anladıktan sonra, <b>Strike</b> ve gerçekçi bir <b>Premium</b>’u (örn. orta) <a href="/builder/">Builder</a>’a kopyalayabilir ve Payoff ve eğitim amaçlı Greeks’i görebilirsiniz. Builder bir simülatördür — canlı aracı verisi değildir ve emir bileti değildir.</p>
 
     <div class="warn">
-      <strong>Important:</strong> JSM Options is not a broker and does not place orders. We are not affiliated with any brokerage, exchange, or institution. Options can expire worthless and losses can exceed your expectations if you sell naked options. Educational only — not financial advice.
+      <strong>Önemli:</strong> JSM Options bir aracı değildir ve emir vermez. Herhangi bir aracılık, borsa veya kurumla bağlantımız yoktur. Opsiyonlar değersiz sona erebilir ve çıplak opsiyon satarsanız kayıplar beklentilerinizi aşabilir. Yalnızca eğitim amaçlı — finansal tavsiye değildir.
     </div>
   </div>
 
   <div class="card">
-    <h2>What “assignment” means (quick)</h2>
-    <p>If you <b>sell</b> (short) an option, the buyer may exercise. Then you can be <span class="term">assigned</span>: forced to buy or sell the shares at the strike. That is why short calls without owning the shares (naked calls) can be very risky.</p>
-    <p>This Basics page stays on the <b>long</b> side — you own the right. Selling options comes later, with clearer rules and risk limits (for example, a covered call against shares you already own).</p>
+    <h2>“Assignment” ne anlama gelir (hızlı)</h2>
+    <p>Bir opsiyonu <b>satarsanız</b> (Short), alıcı kullanabilir (exercise). O zaman <span class="term">assigned</span> olabilirsiniz: hisseleri Strike’ta almaya veya satmaya zorlanırsınız. Bu yüzden hisselere sahip olmadan Short Call’lar (çıplak Call’lar) çok riskli olabilir.</p>
+    <p>Bu Temeller sayfası <b>Long</b> tarafta kalır — hakka siz sahipsiniz. Opsiyon satmak daha sonra, daha net kurallar ve risk limitleriyle gelir (örneğin, zaten sahip olduğunuz hisselere karşı bir Covered Call).</p>
   </div>
 
 
   <div class="card">
-    <p style="margin-bottom:12px;color:var(--muted);font-size:.92rem">Short answers to the questions most people ask first.</p>
+    <p style="margin-bottom:12px;color:var(--muted);font-size:.92rem">İnsanların ilk sorduğu sorulara kısa cevaplar.</p>
 
-    <p><strong>Is an option the same as owning the stock?</strong><br>
-    No. A long call gives exposure that can <em>behave</em> a bit like stock if it is deep in the money, but you do not receive dividends the same way, rights expire, and small moves plus time decay can still produce a loss.</p>
+    <p><strong>Opsiyon hisseye sahip olmakla aynı mı?</strong><br>
+    Hayır. Bir Long Call, deep In the Money ise biraz hisse gibi <em>davranabilen</em> bir maruziyet sağlar, ancak temettüleri aynı şekilde almazsınız, haklar Expiry olur ve küçük hareketler artı time decay yine de kayba neden olabilir.</p>
 
-    <p style="margin-top:14px"><strong>Can I lose more than I paid for a long call or long put?</strong><br>
-    On the option itself, no — maximum loss is the premium (plus fees). That is why many beginners start with long options: the worst case is known upfront.</p>
+    <p style="margin-top:14px"><strong>Long Call veya Long Put için ödediğimden fazlasını kaybedebilir miyim?</strong><br>
+    Opsiyonun kendisinde, hayır — maksimum kayıp Premium’dur (artı ücretler). Bu yüzden birçok yeni başlayan Long opsiyonlarla başlar: en kötü durum önceden bilinir.</p>
 
-    <p style="margin-top:14px"><strong>Why did my call drop when the stock barely moved?</strong><br>
-    You likely paid some <b>extrinsic (time) value</b>. Each day that value can shrink (time decay), and implied volatility can fall too. A small favorable stock move may not be enough to offset both. The stock has to move <em>enough</em>, and often <em>soon enough</em>.</p>
+    <p style="margin-top:14px"><strong>Hisse neredeyse hiç hareket etmediğinde Call’ım neden düştü?</strong><br>
+    Muhtemelen bir miktar <b>Extrinsic (time) value</b> ödediniz. Her gün bu değer küçülebilir (time decay) ve implied volatility de düşebilir. Küçük bir olumlu hisse hareketi her ikisini de dengelemeye yetmeyebilir. Hissenin <em>yeterince</em> ve genellikle <em>yeterince yakında</em> hareket etmesi gerekir.</p>
 
-    <p style="margin-top:14px"><strong>What is the difference between intrinsic and extrinsic value?</strong><br>
-    <b>Intrinsic</b> is the value if exercised right now (for a call: stock minus strike, if positive). <b>Extrinsic</b> (time value) is the rest of the premium — time left and expected movement. At expiration, extrinsic goes to zero; only intrinsic remains.</p>
+    <p style="margin-top:14px"><strong>Intrinsic ve Extrinsic değer arasındaki fark nedir?</strong><br>
+    <b>Intrinsic</b>, hemen şimdi kullanılırsa değeridir (Call için: hisse eksi Strike, pozitifse). <b>Extrinsic</b> (time value) Premium’un geri kalanıdır — kalan zaman ve beklenen hareket. Expiration’da Extrinsic sıfıra gider; sadece Intrinsic kalır.</p>
 
-    <p style="margin-top:14px"><strong>Do I have to wait until expiration?</strong><br>
-    No. You can sell the option in the market any time before expiration (when the market is open and there is a buyer). Many people close early to lock a gain or cut a loss.</p>
+    <p style="margin-top:14px"><strong>Expiration’a kadar beklemek zorunda mıyım?</strong><br>
+    Hayır. Opsiyonu Expiration’dan önce herhangi bir zamanda piyasada satabilirsiniz (piyasa açıkken ve alıcı varsa). Birçok insan kazancı kilitlemek veya zararı kesmek için erken kapatır.</p>
 
-    <p style="margin-top:14px"><strong>Is this a way to get rich quickly?</strong><br>
-    No. Options amplify outcomes in both directions. Sustainable progress looks like small size, one idea at a time, and learning from each trade — not all-in bets.</p>
+    <p style="margin-top:14px"><strong>Bu hızlı zengin olma yolu mu?</strong><br>
+    Hayır. Opsiyonlar sonuçları her iki yönde de büyütür. Sürdürülebilir ilerleme, küçük boyut, bir seferde bir fikir ve her işlemden öğrenme gibi görünür — hepsini riske atan bahisler değil.</p>
   </div>
 
   <div class="warn"><strong>Common beginner mistakes:</strong> treating the premium quote as total cash (forgetting ×100); buying far out-of-the-money options and hoping for a miracle move; ignoring expiration; selling naked calls before understanding assignment risk; sizing so large that one loss ends the experiment.</div>
@@ -717,7 +717,7 @@
     <a href="/privacy/">Privacy</a>
   </div>
     <div class="footer-tools" style="margin-top:12px;font-size:12px;opacity:.9">
-      More free tools:
+      Daha fazla ücretsiz araç:
       <a href="https://lyricprep.com/" target="_blank" rel="noopener">LyricPrep</a> ·
       <a href="https://jsm-image.com/" target="_blank" rel="noopener">JSM Image</a> ·
       <a href="https://jsm-video.com/" target="_blank" rel="noopener">JSM Video</a> ·
