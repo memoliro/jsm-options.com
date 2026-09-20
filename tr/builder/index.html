@@ -595,12 +595,12 @@
       <div class="legs-with-summary">
         <div>
           <div class="legs-header">
-            <span>Side</span>
-            <span>Type</span>
+            <span>Taraf</span>
+            <span>Tip</span>
             <span>Strike</span>
             <span>DTE</span>
-            <span>Qty</span>
-            <span>Premium / Cost</span>
+            <span>Adet</span>
+            <span>Premium / Maliyet</span>
             <span></span>
           </div>
           <div id="legsList"></div>
@@ -609,7 +609,7 @@
             <button class="btn-secondary btn-sm" onclick="clearLegs()">Tümünü temizle</button>
           </div>
           <p style="font-size:0.7rem;color:var(--muted);margin-top:8px;">
-            Debit = you pay · Credit = you receive · <strong>Options:</strong> Qty = contracts (×100) · <strong>Stock:</strong> Adet = pay sayısı, Maliyet = giriş fiyatı (kullanım ve vade yok sayılır)
+            Debit = ödersiniz · Credit = alırsınız · <strong>Options:</strong> Qty = kontrat (×100) · <strong>Stock:</strong> Adet = pay sayısı, Maliyet = giriş fiyatı (kullanım ve vade yok sayılır)
           </p>
         </div>
         <div class="legs-summary-col">
@@ -731,22 +731,22 @@
         <div class="greek-card">
           <div class="g-name">Δ Delta</div>
           <div class="g-val" id="gDelta">—</div>
-          <div class="g-impact" id="gDeltaImpact">Price sensitivity: how much P/L changes if the stock moves $1.</div>
+          <div class="g-impact" id="gDeltaImpact">Fiyat duyarlılığı: hisse 1$ hareket ederse K/Z ne kadar değişir.</div>
         </div>
         <div class="greek-card">
           <div class="g-name">Γ Gamma</div>
           <div class="g-val" id="gGamma">—</div>
-          <div class="g-impact" id="gGammaImpact">Convexity: how fast Delta changes when the stock moves.</div>
+          <div class="g-impact" id="gGammaImpact">Konveksite: hisse hareket ettiğinde Delta ne kadar hızlı değişir.</div>
         </div>
         <div class="greek-card">
           <div class="g-name">Θ Theta</div>
           <div class="g-val" id="gTheta">—</div>
-          <div class="g-impact" id="gThetaImpact">Time decay: expected P/L change per day if nothing else moves.</div>
+          <div class="g-impact" id="gThetaImpact">Zaman kaybı: başka hiçbir şey hareket etmezse günlük beklenen K/Z değişimi.</div>
         </div>
         <div class="greek-card">
           <div class="g-name">ν Vega</div>
           <div class="g-val" id="gVega">—</div>
-          <div class="g-impact" id="gVegaImpact">Volatility sensitivity: P/L change if IV rises by 1 percentage point.</div>
+          <div class="g-impact" id="gVegaImpact">Volatilite duyarlılığı: IV 1 puan yükselirse K/Z değişimi.</div>
         </div>
       </div>
       <div class="edu-tip" id="eduTip" style="margin-top:10px;">
@@ -1175,7 +1175,7 @@
     function renderLegs() {
       const container = document.getElementById('legsList');
       if (!legs.length) {
-        container.innerHTML = '<p style="color:var(--muted);font-size:0.82rem;">No legs.</p>';
+        container.innerHTML = '<p style="color:var(--muted);font-size:0.82rem;">Bacak yok.</p>';
         return;
       }
       container.innerHTML = legs.map(function(l) {
@@ -1422,7 +1422,7 @@
               segment: { borderColor: function(ctx) { return segmentColor(ctx, gS, rS); } }
             },
             {
-              label: 'Theoretical (time left)',
+              label: 'Teorik (kalan süre)',
               data: data.theoretical,
               borderColor: gD,
               borderWidth: 2,
@@ -1442,7 +1442,7 @@
             legend: { display: false },
             tooltip: {
               callbacks: {
-                title: function(items) { return 'Stock: $' + Number(items[0].label).toFixed(2); },
+                title: function(items) { return 'Hisse: $' + Number(items[0].label).toFixed(2); },
                 label: function(ctx) { return ctx.dataset.label + ': $' + ctx.parsed.y.toFixed(0); }
               }
             }
@@ -1455,7 +1455,7 @@
               grid: { color: tc.grid }
             },
             y: {
-              title: { display: true, text: 'P/L ($)', color: tc.text },
+              title: { display: true, text: 'K/Z ($)', color: tc.text },
               ticks: { color: tc.text, callback: function(v) { return '$' + v.toFixed(0); } },
               grid: { color: tc.grid }
             }
@@ -1565,21 +1565,21 @@
       const th = g.theta;
       const vg = g.vega;
       document.getElementById('gDeltaImpact').textContent =
-        d > 5 ? 'Bullish bias: position gains if stock rises ~$' + Math.abs(d).toFixed(0) + ' per $1 up.'
-        : d < -5 ? 'Bearish bias: position gains if stock falls ~$' + Math.abs(d).toFixed(0) + ' per $1 down.'
-        : 'Near delta-neutral: small stock moves have limited directional impact.';
+        d > 5 ? 'Bullish eğilim: hisse ~$' + Math.abs(d).toFixed(0) + ' yükselirse pozisyon 1$ başına kazanç sağlar.'
+        : d < -5 ? 'Bearish eğilim: hisse ~$' + Math.abs(d).toFixed(0) + ' düşerse pozisyon 1$ başına kazanç sağlar.'
+        : 'Neredeyse Delta-neutral: küçük hisse hareketlerinin yönsel etkisi sınırlıdır.';
       document.getElementById('gGammaImpact').textContent =
         Math.abs(g.gamma) > 1
-          ? 'High gamma: Delta will shift quickly as the stock moves — P/L can accelerate.'
-          : 'Low gamma: Delta is relatively stable for small price moves.';
+          ? 'Yüksek Gamma: hisse hareket ettikçe Delta hızla kayacak — K/Z hızlanabilir.'
+          : 'Düşük Gamma: küçük fiyat hareketleri için Delta nispeten stabildir.';
       document.getElementById('gThetaImpact').textContent =
-        th < -5 ? 'Time works against you: about $' + Math.abs(th).toFixed(0) + ' expected decay per day.'
-        : th > 5 ? 'Time works for you: about $' + Math.abs(th).toFixed(0) + ' expected gain per day from decay.'
-        : 'Little daily time decay at current settings.';
+        th < -5 ? 'Zaman aleyhinize işliyor: günde yaklaşık $' + Math.abs(th).toFixed(0) + ' beklenen kayıp.'
+        : th > 5 ? 'Zaman lehinize işliyor: zaman kaybından günde yaklaşık $' + Math.abs(th).toFixed(0) + ' beklenen kazanç.'
+        : 'Mevcut ayarlarda günlük zaman kaybı az.';
       document.getElementById('gVegaImpact').textContent =
-        vg > 5 ? 'Long volatility: +1% IV adds ~$' + Math.abs(vg).toFixed(0) + ' to position value.'
-        : vg < -5 ? 'Short volatility: +1% IV costs ~$' + Math.abs(vg).toFixed(0) + '; you benefit if IV falls.'
-        : 'Low vega: IV changes have limited effect right now.';
+        vg > 5 ? 'Long volatilite: +%1 IV pozisyon değerine ~$' + Math.abs(vg).toFixed(0) + ' ekler.'
+        : vg < -5 ? 'Short volatilite: +%1 IV ~$' + Math.abs(vg).toFixed(0) + ' maliyet getirir; IV düşerse fayda sağlarsınız.'
+        : 'Düşük Vega: IV değişikliklerinin şu an etkisi sınırlı.';
     }
 
     function onDaysChange() {
