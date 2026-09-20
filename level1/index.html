@@ -693,89 +693,324 @@
   </div>
 
 
-<div class="card">
-    <h2>Intrinsic value vs extrinsic (time) value</h2>
-    <p>Every option premium is made of two parts. Understanding them explains why a call can lose money even when the stock drifts up a little.</p>
 
-    <p><strong>Intrinsic value</strong> — what the option is worth if you exercised it <em>right now</em> (the “built-in” part).</p>
-    <ul>
-      <li><b>Call:</b> max(stock price − strike, 0)</li>
-      <li><b>Put:</b> max(strike − stock price, 0)</li>
-    </ul>
-    <p>If that number is zero, the option has <em>no</em> intrinsic value (it is out of the money or at the money).</p>
+  <div class="card" id="intrinsic-visualizer">
+    <span class="badge">Interactive · Intrinsic vs extrinsic</span>
+    <h2>Intrinsic vs extrinsic (time) value — visualizer</h2>
+    <p>Every premium is <b>Premium = Intrinsic + Extrinsic</b>. Drag the stock price and watch the two parts change in real time. <span class="term">Intrinsic</span> is what you’d have if you exercised now. <span class="term">Extrinsic</span> is time + volatility hope — it melts to $0 at expiry.</p>
 
-    <p><strong>Extrinsic value</strong> (also called <strong>time value</strong>) — everything else in the premium:</p>
-    <div class="analogy" style="margin-top:8px">
-      <b>Premium = Intrinsic + Extrinsic</b><br>
-      Extrinsic is the “hope and time” part: days left until expiration, how much the market expects the stock to move, and supply/demand for that option.
+    <style>
+      #intrinsic-visualizer{ --t-accent:#6ea8fe; --t-green:#22c55e; --t-yellow:#facc15; --t-red:#ff6b7a; --t-blue:#38bdf8; }
+      #intrinsic-visualizer .iv-grid{display:grid;grid-template-columns:360px 1fr;gap:18px;margin-top:18px}
+      @media(max-width:950px){#intrinsic-visualizer .iv-grid{grid-template-columns:1fr}}
+      #intrinsic-visualizer .iv-controls{background:var(--card-2,rgba(255,255,255,0.04));border:1px solid var(--border,#2d3a4f);border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:16px}
+      #intrinsic-visualizer .iv-label-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+      #intrinsic-visualizer .iv-label{font-size:13px;font-weight:600;color:var(--muted,#8a97ab)}
+      #intrinsic-visualizer .iv-input{width:100%;background:var(--bg,#0f1419);border:1px solid var(--border,#2d3a4f);color:var(--text,#e7ecf3);border-radius:10px;padding:10px 12px;font-size:14px;font-weight:600;font-family:inherit}
+      #intrinsic-visualizer .iv-input:focus{outline:none;border-color:var(--t-accent);box-shadow:0 0 0 3px rgba(110,168,254,.18)}
+      #intrinsic-visualizer .iv-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+      #intrinsic-visualizer .iv-help{font-size:12px;color:var(--muted);line-height:1.5}
+      #intrinsic-visualizer input[type=range]{-webkit-appearance:none;width:100%;height:6px;background:var(--border,#2d3a4f);border-radius:999px}
+      #intrinsic-visualizer input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:var(--text,#e7ecf3);border:3px solid var(--bg,#0f1419);box-shadow:0 0 0 1px var(--border);cursor:grab}
+      #intrinsic-visualizer .iv-tabs{display:flex;background:var(--bg,#0f1419);border:1px solid var(--border);border-radius:10px;padding:3px;gap:3px}
+      #intrinsic-visualizer .iv-tabs button{flex:1;padding:8px 10px;border-radius:7px;border:0;background:transparent;color:var(--muted);font-size:13px;font-weight:600;cursor:pointer;transition:.15s}
+      #intrinsic-visualizer .iv-tabs button.active{background:var(--card-2,rgba(255,255,255,0.08));color:var(--text);border:1px solid var(--border);box-shadow:0 1px 4px rgba(0,0,0,.2)}
+      #intrinsic-visualizer .iv-metrics{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+      #intrinsic-visualizer .iv-metric{background:var(--bg,#0f1419);border:1px solid var(--border);border-radius:12px;padding:12px}
+      #intrinsic-visualizer .iv-metric b{display:block;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:4px;font-weight:700}
+      #intrinsic-visualizer .iv-metric .v{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:18px;font-weight:700}
+      #intrinsic-visualizer .iv-metric .s{font-size:11px;color:var(--muted);margin-top:2px;font-family:ui-monospace,monospace}
+      #intrinsic-visualizer .iv-tag{display:inline-flex;align-items:center;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:700;border:1px solid var(--border);font-family:ui-monospace,monospace}
+      #intrinsic-visualizer .iv-bar-wrap{background:var(--bg,#0f1419);border:1px solid var(--border);border-radius:14px;padding:16px;margin-top:12px}
+      #intrinsic-visualizer .iv-bar{height:36px;border-radius:10px;display:flex;overflow:hidden;border:1px solid var(--border);position:relative}
+      #intrinsic-visualizer .iv-bar .intrinsic{background:linear-gradient(180deg,#22c55e,#16a34a);display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:12px;transition:width .35s ease;min-width:0}
+      #intrinsic-visualizer .iv-bar .extrinsic{background:repeating-linear-gradient(45deg,rgba(250,204,21,.22) 0 10px,rgba(250,204,21,.12) 10px 20px),linear-gradient(180deg,rgba(250,204,21,.25),rgba(250,204,21,.12));border-left:1px dashed var(--border);display:flex;align-items:center;justify-content:center;color:var(--text);font-weight:700;font-size:12px;transition:width .35s ease;min-width:0}
+      #intrinsic-visualizer .iv-stock-track{position:relative;height:72px;background:var(--bg,#0f1419);border:1px solid var(--border);border-radius:12px;margin-top:12px;overflow:hidden}
+      #intrinsic-visualizer .iv-stock-line{position:absolute;top:50%;left:0;right:0;height:2px;background:var(--border);transform:translateY(-50%)}
+      #intrinsic-visualizer .iv-strike{position:absolute;top:0;bottom:0;width:2px;background:var(--t-accent);left:50%;transform:translateX(-50%)}
+      #intrinsic-visualizer .iv-strike-label{position:absolute;top:4px;left:50%;transform:translateX(-50%);background:var(--t-accent);color:white;padding:2px 6px;border-radius:6px;font-size:10px;font-weight:700;font-family:ui-monospace,monospace}
+      #intrinsic-visualizer .iv-stock-dot{position:absolute;top:50%;width:18px;height:18px;border-radius:50%;background:var(--text);border:3px solid var(--bg);box-shadow:0 0 0 1px var(--border),0 2px 8px rgba(0,0,0,.4);transform:translate(-50%,-50%);transition:left .25s ease}
+      #intrinsic-visualizer .iv-moneyness{display:flex;gap:8px;margin-top:12px}
+      #intrinsic-visualizer .iv-moneyness span{flex:1;text-align:center;padding:8px;border-radius:8px;border:1px solid var(--border);font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);transition:.2s}
+      #intrinsic-visualizer .iv-moneyness span.active{color:var(--text);border-color:var(--t-accent);background:rgba(110,168,254,.12);box-shadow:0 0 0 3px rgba(110,168,254,.12)}
+      #intrinsic-visualizer .iv-moneyness span.itm.active{border-color:var(--t-green);background:rgba(34,197,94,.12);box-shadow:0 0 0 3px rgba(34,197,94,.12)}
+      #intrinsic-visualizer .iv-moneyness span.otm.active{border-color:var(--muted);background:var(--bg)}
+      #intrinsic-visualizer .iv-delta{display:flex;align-items:center;gap:10px;margin-top:12px;padding:10px;background:var(--card-2,rgba(255,255,255,0.04));border:1px solid var(--border);border-radius:10px}
+      #intrinsic-visualizer .iv-delta-bar{flex:1;height:8px;background:var(--border);border-radius:999px;position:relative;overflow:hidden}
+      #intrinsic-visualizer .iv-delta-fill{position:absolute;top:0;bottom:0;left:50%;background:linear-gradient(90deg,var(--t-accent),var(--t-green));border-radius:999px;transition:all .3s ease}
+      #intrinsic-visualizer canvas{width:100%;height:160px;display:block;margin-top:12px}
+    </style>
+
+    <div class="iv-grid">
+      <!-- Controls -->
+      <div class="iv-controls">
+        <div>
+          <div class="iv-label-row"><span class="iv-label">Position</span><span class="iv-tag" id="ivPosTag">LONG CALL</span></div>
+          <div class="iv-tabs" id="ivTabs">
+            <button data-pos="long_call" class="active">Long Call</button>
+            <button data-pos="short_put">Short Put (CSP)</button>
+          </div>
+          <div class="iv-help" style="margin-top:8px" id="ivPosHelp">Long call: you pay premium. You profit if stock goes up enough to cover extrinsic.</div>
+        </div>
+
+        <div>
+          <div class="iv-label-row"><span class="iv-label">Stock $100 / Strike $100 / DTE 60</span></div>
+          <div class="iv-row">
+            <input id="ivStock" class="iv-input" type="number" value="100" step="1" min="1">
+            <input id="ivStrike" class="iv-input" type="number" value="100" step="1">
+          </div>
+          <div class="iv-row" style="margin-top:8px">
+            <input id="ivDte" class="iv-input" type="number" value="60" step="1" min="1" max="180">
+            <input id="ivPremBase" class="iv-input" type="number" value="4" step="0.1" title="Base ATM extrinsic">
+          </div>
+          <div class="iv-help">Base extrinsic = ATM time value at 60 DTE. Model adjusts for moneyness & DTE.</div>
+        </div>
+
+        <div>
+          <div class="iv-label-row"><span class="iv-label">Stock price slider (drag to ITM/OTM)</span><span class="iv-tag" id="ivStockBadge">$100</span></div>
+          <input id="ivStockSlider" type="range" min="70" max="130" step="1" value="100">
+          <div class="iv-label-row" style="margin-top:6px"><span class="iv-help">$70 deep OTM call</span><span class="iv-help">ATM $100</span><span class="iv-help">$130 deep ITM call</span></div>
+          <div class="iv-stock-track" id="ivTrack">
+            <div class="iv-stock-line"></div>
+            <div class="iv-strike"><div class="iv-strike-label">STRIKE $100</div></div>
+            <div class="iv-stock-dot" id="ivDot" style="left:50%"></div>
+          </div>
+          <div class="iv-moneyness" id="ivMoneyness">
+            <span data-m="otm">OTM</span><span data-m="atm" class="active">ATM</span><span data-m="itm">ITM</span>
+          </div>
+          <div class="iv-delta">
+            <span class="iv-label" style="font-size:11px">Delta</span>
+            <div class="iv-delta-bar"><div class="iv-delta-fill" id="ivDeltaFill" style="left:50%;width:0%"></div></div>
+            <span class="iv-tag" id="ivDeltaBadge">0.50</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Visuals -->
+      <div>
+        <div class="iv-metrics">
+          <div class="iv-metric"><b>Intrinsic</b><div class="v" id="ivIntrinsic">$0.00</div><div class="s" id="ivIntrinsicSub">max(S-K,0) = $0</div></div>
+          <div class="iv-metric"><b>Extrinsic (Time)</b><div class="v" id="ivExtrinsic" style="color:var(--t-yellow)">$4.00</div><div class="s" id="ivExtrinsicSub">100% time value</div></div>
+          <div class="iv-metric" style="border-color:rgba(110,168,254,.3)"><b>Premium (per share)</b><div class="v" id="ivPremium">$4.00</div><div class="s" id="ivPremiumSub">$400 / contract ×100</div></div>
+          <div class="iv-metric"><b>At Expiry (if flat)</b><div class="v" id="ivExpiry">$0.00</div><div class="s" id="ivExpirySub">P&L: -$400</div></div>
+        </div>
+
+        <div class="iv-bar-wrap">
+          <div class="iv-label-row"><span class="iv-label">Premium = Intrinsic + Extrinsic</span><span class="iv-tag" id="ivBreakdownTag">0% / 100%</span></div>
+          <div class="iv-bar" id="ivBar">
+            <div class="intrinsic" id="ivBarInt" style="width:0%">$0.00</div>
+            <div class="extrinsic" id="ivBarExt" style="width:100%">$4.00 extrinsic</div>
+          </div>
+          <canvas id="ivChart" width="640" height="160"></canvas>
+          <div class="iv-help" style="margin-top:8px">Drag stock → intrinsic grows when ITM. Extrinsic peaks ATM and shrinks ITM/OTM + when DTE drops. Premium = green + yellow.</div>
+        </div>
+
+        <div class="note" style="margin-top:12px" id="ivExplain">
+          <strong>ATM ($100):</strong> Call is $4.00 — all extrinsic. No intrinsic yet. This $4 is time you are paying for. If stock stays $100 to expiry, it goes to $0.
+        </div>
+      </div>
     </div>
 
-    <h3 style="margin-top:18px;font-size:1.05rem">Worked example (call)</h3>
-    <p>Stock is <b>$108</b>. You look at the <b>$100</b> call. It is quoted at <b>$10</b>.</p>
-    <ul>
-      <li>Intrinsic = $108 − $100 = <b>$8</b></li>
-      <li>Extrinsic (time value) = $10 − $8 = <b>$2</b></li>
-    </ul>
-    <p>You are paying $8 for value that already exists, plus $2 for the chance the stock moves more (and for the time left on the clock).</p>
+    <script>
+    (function(){
+      const root = document.getElementById('intrinsic-visualizer');
+      if(!root) return;
+      const $ = id => document.getElementById(id);
+      const els = {
+        tabs: $('ivTabs'), stock: $('ivStock'), strike: $('ivStrike'), dte: $('ivDte'), premBase: $('ivPremBase'),
+        slider: $('ivStockSlider'), badge: $('ivStockBadge'), dot: $('ivDot'), track: $('ivTrack'),
+        moneyness: $('ivMoneyness'), deltaFill: $('ivDeltaFill'), deltaBadge: $('ivDeltaBadge'),
+        intrinsic: $('ivIntrinsic'), intrinsicSub: $('ivIntrinsicSub'),
+        extrinsic: $('ivExtrinsic'), extrinsicSub: $('ivExtrinsicSub'),
+        premium: $('ivPremium'), premiumSub: $('ivPremiumSub'),
+        expiry: $('ivExpiry'), expirySub: $('ivExpirySub'),
+        barInt: $('ivBarInt'), barExt: $('ivBarExt'), breakdown: $('ivBreakdownTag'),
+        chart: $('ivChart'), explain: $('ivExplain'),
+        posTag: $('ivPosTag'), posHelp: $('ivPosHelp')
+      };
+      let state = { stock:100, strike:100, dte:60, baseExt:4, pos:'long_call' };
 
-    <h3 style="margin-top:18px;font-size:1.05rem">Same idea for a put</h3>
-    <p>Stock is <b>$92</b>. The <b>$100</b> put is quoted at <b>$11</b>.</p>
-    <ul>
-      <li>Intrinsic = $100 − $92 = <b>$8</b></li>
-      <li>Extrinsic = $11 − $8 = <b>$3</b></li>
-    </ul>
+      function fmt(n){ return (n<0?'-':'')+'$'+Math.abs(n).toFixed(2); }
+      function fmt2(n){ return '$'+n.toFixed(2); }
 
-    <h3 style="margin-top:18px;font-size:1.05rem">What happens as expiration approaches?</h3>
-    <p>Extrinsic value tends to <b>melt away</b> toward zero as the deadline nears (all else equal). That melting is <span class="term">time decay</span>. At expiration:</p>
-    <ul>
-      <li>An option is worth only its intrinsic value (or zero if still out of the money).</li>
-      <li>Any extrinsic you paid is gone unless the stock moved enough to make up for it.</li>
-    </ul>
-    <div class="analogy">
-      <b>If the stock is still $108 at expiration:</b> the $100 call is worth about <b>$8</b> (intrinsic only). The $2 of time value has decayed to zero.<br>
-      <b>If the stock is $100 or below at expiration:</b> the call is typically worth <b>$0</b> — all $10 of premium is lost.
-    </div>
+      function calc(S,K,dte,base){
+        // moneyness distance
+        const dist = (S-K)/K;
+        // ATM factor: peaks at 1 ATM, decays ITM/OTM
+        const atmFactor = Math.exp(-Math.pow(dist*4.5,2));
+        // extrinsic model: base * (0.25 + 0.75*atmFactor) * sqrt(dte/60) * vol damp
+        // for ITM deep, extrinsic smaller, for OTM deep also smaller but not zero
+        let extrinsic = base * (0.28 + 0.72*atmFactor) * Math.sqrt(dte/60);
+        // OTM extra decay
+        if(Math.abs(dist)>0.15) extrinsic *= 0.6;
+        extrinsic = Math.max(0.05, extrinsic);
+        const intrinsicCall = Math.max(0, S-K);
+        const intrinsicPut = Math.max(0, K-S);
+        const intrinsic = state.pos==='long_call' ? intrinsicCall : intrinsicPut;
+        const premium = intrinsic + extrinsic;
+        // delta call: logistic
+        const deltaCall = 1/(1+Math.exp(-(S-K)/(K*0.04)));
+        const deltaPut = deltaCall - 1;
+        const delta = state.pos==='long_call' ? deltaCall : deltaPut;
+        // moneyness
+        let m = 'atm';
+        if(state.pos==='long_call'){
+          if(S > K+1) m='itm'; else if(S < K-1) m='otm';
+        } else {
+          if(S < K-1) m='itm'; else if(S > K+1) m='otm';
+        }
+        return { intrinsic, extrinsic, premium, delta, moneyness:m, atmFactor, intrinsicCall, intrinsicPut };
+      }
 
-    <div style="margin-top:14px;overflow-x:auto">
-      <table style="width:100%;border-collapse:collapse;font-size:.88rem">
-        <thead>
-          <tr>
-            <th style="border:1px solid var(--border);padding:8px;text-align:left;background:var(--input)">Situation (call, strike $100)</th>
-            <th style="border:1px solid var(--border);padding:8px;text-align:left;background:var(--input)">Intrinsic</th>
-            <th style="border:1px solid var(--border);padding:8px;text-align:left;background:var(--input)">Extrinsic</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td style="border:1px solid var(--border);padding:8px">Stock $108, premium $10, 30 days left</td>
-            <td style="border:1px solid var(--border);padding:8px">$8</td>
-            <td style="border:1px solid var(--border);padding:8px">$2</td>
-          </tr>
-          <tr>
-            <td style="border:1px solid var(--border);padding:8px">Stock $108, same call, 1 day left</td>
-            <td style="border:1px solid var(--border);padding:8px">$8</td>
-            <td style="border:1px solid var(--border);padding:8px">Often near $0–$0.50</td>
-          </tr>
-          <tr>
-            <td style="border:1px solid var(--border);padding:8px">Stock $95, premium $2, 30 days left</td>
-            <td style="border:1px solid var(--border);padding:8px">$0 (OTM)</td>
-            <td style="border:1px solid var(--border);padding:8px">$2 (all time value)</td>
-          </tr>
-          <tr>
-            <td style="border:1px solid var(--border);padding:8px">Stock $95 at expiration</td>
-            <td style="border:1px solid var(--border);padding:8px">$0</td>
-            <td style="border:1px solid var(--border);padding:8px">$0</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+      function drawChart(){
+        const ctx = els.chart.getContext('2d');
+        const W=els.chart.width, H=els.chart.height;
+        const pad={l:40,r:8,t:10,b:20};
+        ctx.clearRect(0,0,W,H);
+        // draw premium vs stock price curve 70-130
+        const prices=[];
+        for(let S=70; S<=130; S++){
+          const r = calc(S, state.strike, state.dte, state.baseExt);
+          prices.push({S, premium:r.premium, intrinsic:r.intrinsic, extrinsic:r.extrinsic});
+        }
+        const maxP = Math.max(...prices.map(p=>p.premium))*1.15;
+        const xFor = S => pad.l + ((S-70)/60)*(W-pad.l-pad.r);
+        const yFor = p => pad.t + (1 - p/maxP)*(H-pad.t-pad.b);
+        // grid
+        ctx.strokeStyle='rgba(45,58,79,0.7)'; ctx.lineWidth=1;
+        for(let i=0;i<=3;i++){
+          const y=pad.t + (i/3)*(H-pad.t-pad.b);
+          ctx.beginPath(); ctx.moveTo(pad.l,y); ctx.lineTo(W-pad.r,y); ctx.stroke();
+        }
+        // intrinsic area
+        ctx.fillStyle='rgba(34,197,94,0.18)';
+        ctx.beginPath();
+        prices.forEach((p,i)=>{
+          const x=xFor(p.S), y=yFor(p.intrinsic);
+          i?ctx.lineTo(x,y):ctx.moveTo(x,y);
+        });
+        ctx.lineTo(xFor(130), H-pad.b); ctx.lineTo(xFor(70), H-pad.b); ctx.closePath(); ctx.fill();
+        // premium line
+        ctx.strokeStyle='#6ea8fe'; ctx.lineWidth=2.2; ctx.beginPath();
+        prices.forEach((p,i)=>{ const x=xFor(p.S), y=yFor(p.premium); i?ctx.lineTo(x,y):ctx.moveTo(x,y); }); ctx.stroke();
+        // intrinsic line dashed
+        ctx.setLineDash([5,5]); ctx.strokeStyle='#22c55e'; ctx.lineWidth=1.2; ctx.beginPath();
+        prices.forEach((p,i)=>{ const x=xFor(p.S), y=yFor(p.intrinsic); i?ctx.lineTo(x,y):ctx.moveTo(x,y); }); ctx.stroke(); ctx.setLineDash([]);
+        // current marker
+        const cur = calc(state.stock, state.strike, state.dte, state.baseExt);
+        const curX = xFor(state.stock);
+        ctx.strokeStyle='rgba(231,236,243,0.2)'; ctx.beginPath(); ctx.moveTo(curX,pad.t); ctx.lineTo(curX,H-pad.b); ctx.stroke();
+        ctx.fillStyle='#e7ecf3'; ctx.beginPath(); ctx.arc(curX, yFor(cur.premium), 4, 0, Math.PI*2); ctx.fill();
+      }
 
-    <div class="note" style="margin-top:14px">
-      <strong>Why this matters:</strong> When you <b>buy</b> an option, time decay works <em>against</em> you — extrinsic tends to shrink each day. When you <b>sell</b> (write) an option, that same decay can work <em>in your favor</em> (you will see this with covered calls on the <a href="/level2/">Fundamentals</a> page). Volatility changes can also raise or lower extrinsic value quickly, even if the stock price barely moves.
-    </div>
+      function update(){
+        const S=state.stock, K=state.strike;
+        const r = calc(S,K,state.dte,state.baseExt);
+        // badges
+        els.badge.textContent = fmt2(S);
+        const pct = (S-70)/60; els.dot.style.left = (pct*100)+'%';
+        // moneyness highlight
+        els.moneyness.querySelectorAll('span').forEach(sp=>{
+          sp.classList.toggle('active', sp.dataset.m===r.moneyness);
+          sp.classList.toggle('itm', r.moneyness==='itm');
+          sp.classList.toggle('otm', r.moneyness==='otm');
+        });
+        // delta visual
+        const d = r.delta;
+        if(state.pos==='long_call'){
+          // delta 0-1: left 50% is 0, right 100% is 1
+          const w = Math.abs(d)*50; // 0.5 => 25% width from center
+          els.deltaFill.style.left = '50%';
+          els.deltaFill.style.width = w+'%';
+          els.deltaFill.style.background = 'linear-gradient(90deg,#6ea8fe,#22c55e)';
+        } else {
+          // put delta -1 to 0
+          const w = Math.abs(d)*50;
+          els.deltaFill.style.left = (50-w)+'%';
+          els.deltaFill.style.width = w+'%';
+          els.deltaFill.style.background = 'linear-gradient(90deg,#ff6b7a,#6ea8fe)';
+        }
+        els.deltaBadge.textContent = d.toFixed(2);
+
+        // metrics
+        els.intrinsic.textContent = fmt(r.intrinsic);
+        els.intrinsicSub.textContent = state.pos==='long_call' ? `max(${S}-${K},0) = ${fmt2(r.intrinsicCall)}` : `max(${K}-${S},0) = ${fmt2(r.intrinsicPut)}`;
+        els.extrinsic.textContent = fmt(r.extrinsic);
+        els.extrinsicSub.textContent = `${(r.extrinsic/r.premium*100).toFixed(0)}% time value • ATM factor ${r.atmFactor.toFixed(2)}`;
+        els.premium.textContent = fmt(r.premium);
+        els.premiumSub.textContent = `${fmt2(r.premium*100)} / contract ×100`;
+        // expiry P&L
+        if(state.pos==='long_call'){
+          const expiryVal = r.intrinsic;
+          const pnl = expiryVal - r.premium;
+          els.expiry.textContent = fmt(expiryVal);
+          els.expirySub.textContent = `P&L if flat to expiry: ${fmt(pnl*100)} (${pnl>=0?'win':'lose'})`;
+        } else {
+          const expiryVal = r.intrinsic;
+          const pnl = r.premium - expiryVal; // short put collects premium, loses intrinsic if ITM
+          els.expiry.textContent = fmt(expiryVal);
+          els.expirySub.textContent = `Seller P&L if held: ${fmt(pnl*100)} keep`;
+        }
+        // bar
+        const intPct = r.premium>0 ? (r.intrinsic/r.premium*100) : 0;
+        const extPct = 100-intPct;
+        els.barInt.style.width = intPct+'%';
+        els.barExt.style.width = extPct+'%';
+        els.barInt.textContent = intPct>15 ? fmt(r.intrinsic) : '';
+        els.barExt.textContent = extPct>18 ? fmt(r.extrinsic)+' ext' : '';
+        els.breakdown.textContent = `${intPct.toFixed(0)}% int / ${extPct.toFixed(0)}% ext`;
+
+        // explain
+        let expl='';
+        if(r.moneyness==='atm'){
+          expl = `<strong>ATM ($${S}):</strong> ${state.pos==='long_call'?'Call':'Put'} is ${fmt(r.premium)} — ${extPct.toFixed(0)}% extrinsic. No intrinsic yet. This ${fmt(r.extrinsic)} is pure time you are ${state.pos==='long_call'?'paying':'collecting'}.`;
+        } else if(r.moneyness==='itm'){
+          expl = `<strong>ITM ($${S} vs $${K} strike):</strong> Intrinsic ${fmt(r.intrinsic)} + Extrinsic ${fmt(r.extrinsic)} = ${fmt(r.premium)}. Deep ITM → intrinsic dominates, delta ≈ ${d.toFixed(2)}, behaves like stock.`;
+        } else {
+          expl = `<strong>OTM ($${S} vs $${K} strike):</strong> Intrinsic $0.00 + Extrinsic ${fmt(r.extrinsic)} = ${fmt(r.premium)}. All time value — cheaper, but needs bigger move. Delta ≈ ${d.toFixed(2)}.`;
+        }
+        els.explain.innerHTML = expl;
+
+        drawChart();
+      }
+
+      // events
+      els.tabs.addEventListener('click', e=>{
+        const b=e.target.closest('button'); if(!b) return;
+        els.tabs.querySelectorAll('button').forEach(x=>x.classList.remove('active'));
+        b.classList.add('active');
+        state.pos=b.dataset.pos;
+        els.posTag.textContent=b.dataset.pos==='long_call'?'LONG CALL':'SHORT PUT (CSP)';
+        els.posHelp.textContent = state.pos==='long_call' ? 'Long call: you pay premium. You profit if stock goes up enough to cover extrinsic.' : 'Short put (CSP): you collect premium. You profit if stock stays above strike; extrinsic decays in your favor.';
+        update();
+      });
+      function syncFromInputs(){
+        state.stock=parseFloat(els.stock.value)||100;
+        state.strike=parseFloat(els.strike.value)||100;
+        state.dte=parseInt($('ivDte').value)||60;
+        state.baseExt=parseFloat($('ivPremBase').value)||4;
+        $('ivStockSlider').min = Math.round(state.strike*0.7);
+        $('ivStockSlider').max = Math.round(state.strike*1.3);
+        $('ivStockSlider').value = state.stock;
+        update();
+      }
+      $('ivStock').addEventListener('input', syncFromInputs);
+      $('ivStrike').addEventListener('input', syncFromInputs);
+      $('ivDte').addEventListener('input', syncFromInputs);
+      $('ivPremBase').addEventListener('input', syncFromInputs);
+      els.slider.addEventListener('input', e=>{
+        state.stock=parseInt(e.target.value);
+        $('ivStock').value=state.stock;
+        update();
+      });
+      syncFromInputs();
+      window.addEventListener('resize', ()=>{ /* chart redraw */ drawChart(); });
+    })();
+    </script>
   </div>
 
-  <div class="card">
+
+<div class="card">
     <h2>Payoff picture (long call)</h2>
     <img src="/images/call_option_payoff_infographic.webp" alt="Long call payoff diagram showing loss limited to premium and profit rising above strike" width="900" height="500" loading="lazy">
     <p>At expiration, below the strike you typically lose the premium paid. Above the strike, value rises roughly dollar-for-dollar with the stock. Rough break-even ≈ <b>strike + premium paid</b>.</p>
