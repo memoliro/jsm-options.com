@@ -451,7 +451,249 @@
   </div>
 
 
-  <div class="card">
+  
+  <div class="card" id="theta-decay-card">
+    <span class="badge">Core concept · Theta decay — the clock</span>
+    <h2>⏳ Theta decay: the rent you pay for time</h2>
+    <p>Every option price has <span class="term">extrinsic (time) value</span>. Even if the stock stays perfectly flat, that time value <b>melts every day</b>. That melt is <span class="term">theta</span>.</p>
+
+    <style>
+      /* Scoped only to this card - no logo/nav changes */
+      #theta-decay-card{ --t-accent:#6ea8fe; --t-red:#ff6b7a; --t-green:#22c55e; --t-yellow:#facc15; }
+      #theta-decay-card .theta-grid{display:grid;grid-template-columns:340px 1fr;gap:18px;margin-top:18px}
+      @media(max-width:900px){#theta-decay-card .theta-grid{grid-template-columns:1fr}}
+      #theta-decay-card .theta-controls{background:var(--card-2,rgba(255,255,255,0.04));border:1px solid var(--border,#2d3a4f);border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:18px}
+      #theta-decay-card .t-label-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+      #theta-decay-card .t-label{font-size:13px;font-weight:600;color:var(--muted,#8a97ab)}
+      #theta-decay-card .t-input{width:100%;background:var(--bg,#0f1419);border:1px solid var(--border,#2d3a4f);color:var(--text,#e7ecf3);border-radius:10px;padding:10px 12px;font-size:14px;font-weight:600;font-family:inherit}
+      #theta-decay-card .t-input:focus{outline:none;border-color:var(--t-accent);box-shadow:0 0 0 3px rgba(110,168,254,.18)}
+      #theta-decay-card .t-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+      #theta-decay-card .t-help{font-size:12px;color:var(--muted,#8a97ab);line-height:1.5}
+      #theta-decay-card input[type=range]{-webkit-appearance:none;width:100%;height:6px;background:var(--border,#2d3a4f);border-radius:999px}
+      #theta-decay-card input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:var(--text,#e7ecf3);border:3px solid var(--bg,#0f1419);box-shadow:0 0 0 1px var(--border);cursor:grab}
+      #theta-decay-card .t-metrics{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+      #theta-decay-card .t-metric{background:var(--bg,#0f1419);border:1px solid var(--border,#2d3a4f);border-radius:12px;padding:12px}
+      #theta-decay-card .t-metric b{display:block;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:4px;font-weight:700}
+      #theta-decay-card .t-metric .v{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:18px;font-weight:700;letter-spacing:-0.02em}
+      #theta-decay-card .t-metric .s{font-size:11px;color:var(--muted);margin-top:2px;font-family:ui-monospace,monospace}
+      #theta-decay-card .t-metric.neg{border-color:rgba(255,107,122,.28);background:linear-gradient(180deg,rgba(255,107,122,.10),var(--bg))}
+      #theta-decay-card .t-metric.neg .v{color:var(--t-red)}
+      #theta-decay-card .t-metric.pos{border-color:rgba(110,168,254,.32);background:linear-gradient(180deg,rgba(110,168,254,.10),var(--bg))}
+      #theta-decay-card .t-chart{background:var(--bg,#0f1419);border:1px solid var(--border);border-radius:12px;padding:14px;overflow:hidden}
+      #theta-decay-card .t-legend{display:flex;gap:14px;font-size:11px;color:var(--muted);font-family:ui-monospace,monospace;margin-bottom:10px;flex-wrap:wrap}
+      #theta-decay-card .t-legend i{width:14px;height:3px;border-radius:2px;display:inline-block;vertical-align:middle;margin-right:5px}
+      #theta-decay-card canvas{width:100%;height:190px;display:block}
+      #theta-decay-card .t-coins{display:flex;gap:5px;margin-top:12px;padding:10px;background:var(--card-2,rgba(255,255,255,0.04));border:1px solid var(--border);border-radius:10px}
+      #theta-decay-card .t-coin{flex:1;height:10px;background:var(--t-green);border-radius:3px;transition:all .35s ease;box-shadow:0 0 8px rgba(34,197,94,.25)}
+      #theta-decay-card .t-coin.gone{background:var(--border);box-shadow:none;opacity:.35;transform:scaleY(.5)}
+      #theta-decay-card .t-examples{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:18px}
+      @media(max-width:700px){#theta-decay-card .t-examples{grid-template-columns:1fr}}
+      #theta-decay-card .t-ex{background:var(--card-2,rgba(255,255,255,0.04));border:1px solid var(--border);border-radius:12px;padding:14px}
+      #theta-decay-card .t-ex.bad{border-color:rgba(255,107,122,.22);background:linear-gradient(180deg,rgba(255,107,122,.06),transparent)}
+      #theta-decay-card .t-ex.good{border-color:rgba(34,197,94,.22);background:linear-gradient(180deg,rgba(34,197,94,.06),transparent)}
+      #theta-decay-card .t-ex h4{margin:0 0 6px;font-size:13px;font-weight:700;letter-spacing:-0.01em}
+      #theta-decay-card .t-ex p{margin:0;font-size:13px;line-height:1.6;color:var(--muted)}
+      #theta-decay-card .t-ex p strong{color:var(--text)}
+      #theta-decay-card .t-tag{display:inline-flex;align-items:center;padding:2px 7px;border-radius:999px;font-size:11px;font-weight:700;letter-spacing:.02em;border:1px solid var(--border);font-family:ui-monospace,monospace}
+      #theta-decay-card .t-formula{margin-top:16px;display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-family:ui-monospace,monospace;font-size:13px}
+      #theta-decay-card .t-formula .pill{background:var(--bg);border:1px solid var(--border);padding:6px 10px;border-radius:999px;display:inline-flex;gap:6px;align-items:center}
+    </style>
+
+    <div class="theta-grid">
+      <div class="theta-controls">
+        <div>
+          <div class="t-label-row"><span class="t-label">Stock $100 (editable) / Strike</span></div>
+          <div class="t-row">
+            <input id="tStock" class="t-input" type="number" value="100" step="1" min="1" title="Stock price">
+            <input id="tStrike" class="t-input" type="number" value="100" step="1" title="Strike price">
+          </div>
+          <div class="t-help" style="margin-top:6px">Default ATM: <b id="tStockLabel">$100</b> stock, <b id="tStrikeLabel">$100</b> strike</div>
+        </div>
+        <div>
+          <div class="t-label-row"><span class="t-label">60 DTE Call = $4 ×100</span><span id="tTotalCost" class="t-tag">$400 total</span></div>
+          <div class="t-row">
+            <input id="tPrem" class="t-input" type="number" value="4" step="0.05" min="0.05" title="Premium per share">
+            <input id="tDte" class="t-input" type="number" value="60" step="1" min="7" max="180" title="DTE">
+          </div>
+          <div class="t-help">Premium quote is per share. Cash needed = premium ×100. This starts as all extrinsic if ATM.</div>
+        </div>
+        <div>
+          <div class="t-label-row"><span class="t-label">Days passed</span><span id="tDaysBadge" class="t-tag">0 days</span></div>
+          <input id="tDays" type="range" min="0" max="60" step="1" value="0">
+          <div class="t-label-row" style="margin-top:6px"><span class="t-help">Today (DTE <span id="tDteMaxLabel">60</span>)</span><span class="t-help">Expiry DTE 0</span></div>
+        </div>
+        <div>
+          <div class="t-label-row"><span class="t-label">Theta per day</span><span id="tThetaBadge" class="t-tag" style="color:var(--t-red);border-color:rgba(255,107,122,.3);background:rgba(255,107,122,.1)">-0.07</span></div>
+          <input id="tTheta" type="range" min="-0.15" max="-0.01" step="0.01" value="-0.07">
+          <div class="t-help">Long theta is negative. Actual daily decay accelerates near expiry.</div>
+        </div>
+        <div class="t-formula">
+          <span class="pill"><span style="color:var(--t-green)">Price</span> ≈ <span id="fInit">$4.00</span> + <span id="fTheta" style="color:var(--t-red)">-0.07</span> × <span id="fDays" style="color:var(--t-yellow)">0d</span></span>
+          <span class="pill" style="border-color:rgba(34,197,94,.3);background:rgba(34,197,94,.08)"><span id="fResult" style="color:var(--t-green);font-weight:700">$4.00</span></span>
+        </div>
+      </div>
+      <div>
+        <div class="t-metrics">
+          <div class="t-metric pos"><b>Current Price</b><div class="v" id="mPrice">$4.00</div><div class="s" id="mPriceSub">$400 / contract</div></div>
+          <div class="t-metric neg"><b>Total Decay</b><div class="v" id="mDecay">-$0.00</div><div class="s" id="mDecayPct">0% lost</div></div>
+          <div class="t-metric"><b>Theta Today</b><div class="v" id="mTheta">-0.07</div><div class="s">real decay today</div></div>
+          <div class="t-metric"><b>Time Left</b><div class="v" id="mDte">60 DTE</div><div class="s" id="mCal">60 days</div></div>
+        </div>
+        <div class="t-chart" style="margin-top:12px">
+          <div class="t-legend"><span><i style="background:var(--t-accent)"></i>Actual (accelerates)</span><span><i style="background:transparent;border-top:2px dashed var(--muted)"></i>Linear est.</span><span style="margin-left:auto">Stock flat <span id="legendStock">$100</span></span></div>
+          <canvas id="tChart" width="640" height="190"></canvas>
+          <div class="t-coins" id="tCoins"></div>
+        </div>
+        <div class="t-examples">
+          <div class="t-ex bad">
+            <h4>❌ 1. Against buyers</h4>
+            <p>You <strong>buy</strong> 1 call: <strong><span class="t-ex-prem">$4.00</span> ×100 = <span class="t-ex-cost">$400</span></strong> debit, stock <strong>$100</strong>, 60 DTE.</p>
+            <p style="margin-top:8px">Stock stays at <strong>$100</strong> for 30 days. No move. Call is now <strong id="exBuyNow">$2.10</strong> — lost <strong id="exBuyLost">$190</strong> to time alone. You need <em>move + speed</em> to beat theta.</p>
+            <p style="margin-top:8px"><span class="t-tag" style="color:var(--t-red)">Buyer lesson</span> Time is your cost.</p>
+          </div>
+          <div class="t-ex good">
+            <h4>✅ 2. For sellers (CSP)</h4>
+            <p>You <strong>sell</strong> cash-secured put: Strike <strong id="exSellStrike">$95</strong>, you collect <strong id="exSellPrem">$1.50</strong> ×100 = <strong>$150</strong>. Stock <strong>$100</strong>.</p>
+            <p style="margin-top:8px">If stock stays ≥ $95 for 30 days, put decays to <strong id="exSellNow">$0.40</strong>. Buy back, keep <strong id="exSellKeep">$110</strong>. Theta paid you.</p>
+            <p style="margin-top:8px"><span class="t-tag" style="color:var(--t-green);background:rgba(34,197,94,.1);border-color:rgba(34,197,94,.25)">Seller edge</span> Time is your friend — but assignment risk remains.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="note" style="margin-top:18px"><strong>How to read theta:</strong> Theta <span class="term">-$0.07</span> means this $4.00 option loses ~$0.07 per day if nothing else changes. In 10 days ≈ $0.70 gone. Decay is slow at first, then fast in last 14 days — that's why buying weeklies is like holding an ice cube.</div>
+
+    <script>
+    (function(){
+      const $ = id => document.getElementById(id);
+      const root = document.getElementById('theta-decay-card');
+      if(!root || !$('tStock')) return;
+      const els = {
+        stock: $('tStock'), strike: $('tStrike'), prem: $('tPrem'), dte: $('tDte'),
+        days: $('tDays'), theta: $('tTheta'),
+        stockLabel: $('tStockLabel'), strikeLabel: $('tStrikeLabel'),
+        totalCost: $('tTotalCost'), daysBadge: $('tDaysBadge'), thetaBadge: $('tThetaBadge'),
+        dteMaxLabel: $('tDteMaxLabel'),
+        fInit: $('fInit'), fTheta: $('fTheta'), fDays: $('fDays'), fResult: $('fResult'),
+        mPrice: $('mPrice'), mPriceSub: $('mPriceSub'), mDecay: $('mDecay'), mDecayPct: $('mDecayPct'),
+        mTheta: $('mTheta'), mDte: $('mDte'), mCal: $('mCal'),
+        chart: $('tChart'), coins: $('tCoins'),
+        legendStock: $('legendStock'),
+        exPrem: root.querySelector('.t-ex-prem'), exCost: root.querySelector('.t-ex-cost'),
+        exBuyNow: $('exBuyNow'), exBuyLost: $('exBuyLost'),
+        exSellStrike: $('exSellStrike'), exSellPrem: $('exSellPrem'), exSellNow: $('exSellNow'), exSellKeep: $('exSellKeep')
+      };
+      let state = { stock:100, strike:100, prem:4.00, dteTotal:60, daysPassed:0, theta:-0.07 };
+      const fmt = n => (n<0?'-':'')+'$'+Math.abs(n).toFixed(2);
+      const fmt2 = n => '$'+n.toFixed(2);
+      function getActualPrice(dte, initial, total){
+        if(dte<=0) return 0;
+        const ratio = Math.max(0, dte/total);
+        let curve = Math.pow(ratio, 0.62);
+        if(dte<14) curve *= 0.7 + 0.3*(dte/14);
+        if(dte<7) curve *= 0.65 + 0.35*(dte/7);
+        return initial * curve;
+      }
+      function effTheta(dte, initial, total){
+        const p1 = getActualPrice(dte, initial, total);
+        const p0 = getActualPrice(Math.max(0,dte-1), initial, total);
+        return p0 - p1;
+      }
+      function drawChart(){
+        const ctx = els.chart.getContext('2d');
+        const W=els.chart.width, H=els.chart.height;
+        const pad={l:44,r:10,t:10,b:22};
+        ctx.clearRect(0,0,W,H);
+        const total=state.dteTotal;
+        const prices=[], linear=[];
+        for(let d=0; d<=total; d++){
+          const dte=total-d;
+          prices.push(getActualPrice(dte, state.prem, total));
+          linear.push(Math.max(0.02, state.prem + state.theta*d));
+        }
+        const maxY=Math.max(...prices, ...linear, state.prem)*1.18;
+        const xFor = day => pad.l + (day/total)*(W-pad.l-pad.r);
+        const yFor = p => pad.t + (1 - p/maxY)*(H-pad.t-pad.b);
+        ctx.strokeStyle='rgba(45,58,79,0.9)'; ctx.lineWidth=1;
+        for(let i=0;i<=4;i++){
+          const y=pad.t + (i/4)*(H-pad.t-pad.b);
+          ctx.beginPath(); ctx.moveTo(pad.l,y); ctx.lineTo(W-pad.r,y); ctx.stroke();
+          ctx.fillStyle='#8a97ab'; ctx.font='10px ui-monospace,monospace'; ctx.textAlign='right';
+          ctx.fillText('$'+(maxY - (i/4)*maxY).toFixed(1), pad.l-6, y+3);
+        }
+        ctx.fillStyle='#8a97ab'; ctx.textAlign='center';
+        [0, Math.round(total/2), total].forEach(d=> ctx.fillText(d+'d', xFor(d), H-4));
+        ctx.setLineDash([6,6]); ctx.strokeStyle='#5a6a85'; ctx.lineWidth=1.3;
+        ctx.beginPath(); linear.forEach((p,i)=>{ const x=xFor(i), y=yFor(p); i?ctx.lineTo(x,y):ctx.moveTo(x,y); }); ctx.stroke(); ctx.setLineDash([]);
+        const grad=ctx.createLinearGradient(0,0,0,H); grad.addColorStop(0,'rgba(110,168,254,0.28)'); grad.addColorStop(1,'rgba(110,168,254,0)');
+        ctx.fillStyle=grad; ctx.beginPath();
+        prices.forEach((p,i)=>{ const x=xFor(i), y=yFor(p); i?ctx.lineTo(x,y):ctx.moveTo(x,y); });
+        ctx.lineTo(xFor(total), H-pad.b); ctx.lineTo(xFor(0), H-pad.b); ctx.closePath(); ctx.fill();
+        ctx.strokeStyle='#6ea8fe'; ctx.lineWidth=2.4; ctx.beginPath();
+        prices.forEach((p,i)=>{ const x=xFor(i), y=yFor(p); i?ctx.lineTo(x,y):ctx.moveTo(x,y); }); ctx.stroke();
+        const curX=xFor(state.daysPassed), curY=yFor(prices[state.daysPassed]);
+        ctx.strokeStyle='rgba(231,236,243,0.18)'; ctx.beginPath(); ctx.moveTo(curX,pad.t); ctx.lineTo(curX,H-pad.b); ctx.stroke();
+        ctx.fillStyle='#e7ecf3'; ctx.beginPath(); ctx.arc(curX,curY,4.5,0,Math.PI*2); ctx.fill();
+        ctx.strokeStyle='#0f1419'; ctx.lineWidth=2; ctx.stroke();
+      }
+      function renderCoins(price){
+        els.coins.innerHTML='';
+        const segs=18; const pct=state.prem>0?price/state.prem:0; const alive=Math.round(pct*segs);
+        for(let i=0;i<segs;i++){ const d=document.createElement('div'); d.className='t-coin'+(i>=alive?' gone':''); els.coins.appendChild(d); }
+      }
+      function update(){
+        const dteLeft = state.dteTotal - state.daysPassed;
+        const actual = getActualPrice(dteLeft, state.prem, state.dteTotal);
+        const decay = state.prem - actual;
+        const eff = effTheta(dteLeft, state.prem, state.dteTotal);
+        els.stockLabel.textContent='$'+state.stock;
+        els.strikeLabel.textContent='$'+state.strike;
+        els.totalCost.textContent=fmt2(state.prem*100)+' total';
+        els.daysBadge.textContent=state.daysPassed+' days';
+        els.thetaBadge.textContent=state.theta.toFixed(2);
+        els.dteMaxLabel.textContent=state.dteTotal;
+        els.fInit.textContent=fmt2(state.prem);
+        els.fTheta.textContent=state.theta.toFixed(2);
+        els.fDays.textContent=state.daysPassed+'d';
+        els.fResult.textContent=fmt(actual);
+        els.mPrice.textContent=fmt(actual);
+        els.mPriceSub.textContent=fmt2(actual*100)+' / contract';
+        els.mDecay.textContent='-'+fmt2(decay).slice(1);
+        els.mDecayPct.textContent=((decay/state.prem)*100).toFixed(0)+'% lost';
+        els.mTheta.textContent=eff.toFixed(2);
+        els.mDte.textContent=dteLeft+' DTE';
+        els.mCal.textContent=dteLeft+' days to expiry';
+        els.legendStock.textContent='$'+state.stock;
+        if(els.exPrem){ els.exPrem.textContent=fmt2(state.prem); els.exCost.textContent=fmt2(state.prem*100); }
+        const half = Math.min(30, state.dteTotal);
+        const halfPrice = getActualPrice(state.dteTotal-half, state.prem, state.dteTotal);
+        els.exBuyNow.textContent=fmt(halfPrice);
+        els.exBuyLost.textContent=fmt2((state.prem-halfPrice)*100);
+        const sellStrike = Math.round(state.stock*0.95);
+        const sellPrem = 1.50;
+        const sellDte = state.dteTotal - Math.min(30, state.daysPassed + 15);
+        const sellNowPrice = Math.max(0.05, sellPrem * Math.pow(Math.max(0,sellDte)/state.dteTotal, 0.7));
+        els.exSellStrike.textContent='$'+sellStrike;
+        els.exSellPrem.textContent=fmt2(sellPrem);
+        els.exSellNow.textContent=fmt(sellNowPrice);
+        els.exSellKeep.textContent=fmt2((sellPrem - sellNowPrice)*100);
+        els.days.max = state.dteTotal;
+        drawChart();
+        renderCoins(actual);
+      }
+      els.stock.addEventListener('input', e=>{ state.stock=parseFloat(e.target.value)||100; update(); });
+      els.strike.addEventListener('input', e=>{ state.strike=parseFloat(e.target.value)||100; update(); });
+      els.prem.addEventListener('input', e=>{ state.prem=parseFloat(e.target.value)||0.1; update(); });
+      els.dte.addEventListener('input', e=>{ state.dteTotal=parseInt(e.target.value)||60; els.days.max=state.dteTotal; if(state.daysPassed>state.dteTotal) state.daysPassed=state.dteTotal; update(); });
+      els.days.addEventListener('input', e=>{ state.daysPassed=parseInt(e.target.value)||0; update(); });
+      els.theta.addEventListener('input', e=>{ state.theta=parseFloat(e.target.value); update(); });
+      update();
+      window.addEventListener('resize', drawChart);
+    })();
+    </script>
+  </div>
+
+
+<div class="card">
     <h2>Intrinsic value vs extrinsic (time) value</h2>
     <p>Every option premium is made of two parts. Understanding them explains why a call can lose money even when the stock drifts up a little.</p>
 
