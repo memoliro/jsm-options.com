@@ -368,12 +368,12 @@
   <!-- ========== LEAPS ========== -->
   <div class="card">
     <div class="small">Uzun vadeli opsiyonlar</div>
-    <h2 id="leaps">LEAPS</h2>
+    <h2 id="leaps">LEAPS (Uzun Vadeli Opsiyonlar) Nedir?</h2>
     <p><b>LEAPS</b>, expiry’si çoğu zaman <b>bir yıl veya daha uzun</b> opsiyonlardır. Long LEAPS call, tanımlı max zararlı (premium) uzun vadeli bullish görüştür. Tez yanlışsa veya zaman biterse yine sıfıra inebilir.</p>
     <ul>
       <li>100 hisse almaktan daha az nakit ister ama <b>“daha ucuz risk”</b> değildir — premium’un <b>%100’ü</b> gidebilir</li>
       <li>Theta 30 günlük opsiyona göre erken dönemde daha yavaştır ama yine erir</li>
-      <li>Bazıları LEAPS call üzerine daha kısa call satar (diagonal / “poor man’s covered call”) — daha çok parça</li>
+      <li>Bazıları LEAPS call üzerine daha kısa call satar (diagonal / “poor man’s covered call yada PMCC”) — yani; 1 çok uzun vadeli (365+ gün), ve ITM ( delta >0.70 ) Call alıp, daha kısa vadeli (45 - 60 gün), ve OTM ( delta < 0.20 ) call satarsınız. Sattığınız call vadesi dolmadan, veya %50 kar'a geçtiğinde, ROLL-out yaparsınız.Roll-out: vadesi yaklaşan opsiyonu kapatıp daha uzun vade ile açmak demek.</li>
     </ul>
     <div class="payoff-box">
       <svg viewBox="0 0 520 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Long LEAPS call payoff at expiry">
@@ -388,7 +388,7 @@
       <div class="payoff-legend"><span class="lg">Yeşil = kâr</span><span class="lr">Kırmızı = zarar</span></div>
       <p class="payoff-caption">Expiry’de long call / LEAPS: düz max zarar (premium), hisse strike üstündeyse yükselen kâr.</p>
     </div>
-    <h2 id="leaps">LEAPS (Uzun Vadeli Opsiyonlar) Nedir?</h2>
+    
     <li>Geniş Zaman Ufku: Standart opsiyon sözleşmeleri genellikle birkaç hafta veya ay vadeli olurken, LEAPS sözleşmelerinin vadeleri 1 yıldan başlayıp 3 yıla kadar uzanabilir.</li>
     <li>Maliyet Avantajı: Doğrudan hisse senedi satın almak yerine, çok daha düşük bir sermaye (opsiyon primi) ödeyerek uzun vadede o hissenin yükselişine ya da düşüşüne yüksek kaldıraçla ortak olmanızı sağlar.</li>  
     <li>Zaman Erimesi (Theta) Avantajı: Kısa vadeli opsiyonlarda en büyük düşman olan zaman erimesi (Theta), LEAPS sözleşmelerinde vadenin çok uzun olmasından dolayı ilk aylarda son derece yavaş işler. Bu da yatırımcıya esneklik ve zaman kazandırır.</li>
