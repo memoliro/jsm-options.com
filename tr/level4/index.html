@@ -7,7 +7,7 @@
   <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48.png">
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
 
-  <title>CSP, Wheel, Calendar ve LEAPS | İleri</title>
+  <title>CSP, Wheel, Calendar ve LEAPS | Farklı stratejiler</title>
   <meta name="description" content="Cash-secured put, Wheel, Covered Call, calendar, LEAPS, Iron Condor. Türkçe İleri — eğitim amaçlıdır.">
   <link rel="canonical" href="https://jsm-options.com/tr/level4/">
 <link rel="alternate" hreflang="tr" href="https://jsm-options.com/tr/level4/">
@@ -294,7 +294,7 @@
 
   <!-- ========== CREDIT / DEBIT SPREADS ========== -->
   <div class="card">
-    <div class="small">Defined-risk vertical’ler</div>
+    <div class="small">Tanımlı-risk vertical’ler</div>
     <h2 id="spreads">Debit spread vs credit spread</h2>
     <p><b>Vertical spread</b>, aynı tür (call veya put) ve aynı expiry’de iki farklı strike’tır. Biri alınır, biri satılır. Risk <b>tanımlıdır</b> — girişte max zararı bilirsiniz (ücret hariç).</p>
 
@@ -371,7 +371,7 @@
     <h2 id="leaps">LEAPS</h2>
     <p><b>LEAPS</b>, expiry’si çoğu zaman <b>bir yıl veya daha uzun</b> opsiyonlardır. Long LEAPS call, tanımlı max zararlı (premium) uzun vadeli bullish görüştür. Tez yanlışsa veya zaman biterse yine sıfıra inebilir.</p>
     <ul>
-      <li>100 hisse almaktan daha az nakit ister ama “daha ucuz risk” değildir — premium’un %100’ü gidebilir</li>
+      <li>100 hisse almaktan daha az nakit ister ama <b>“daha ucuz risk”</b> değildir — premium’un <b>%100’ü</b> gidebilir</li>
       <li>Theta 30 günlük opsiyona göre erken dönemde daha yavaştır ama yine erir</li>
       <li>Bazıları LEAPS call üzerine daha kısa call satar (diagonal / “poor man’s covered call”) — daha çok parça</li>
     </ul>
@@ -388,12 +388,16 @@
       <div class="payoff-legend"><span class="lg">Yeşil = kâr</span><span class="lr">Kırmızı = zarar</span></div>
       <p class="payoff-caption">Expiry’de long call / LEAPS: düz max zarar (premium), hisse strike üstündeyse yükselen kâr.</p>
     </div>
+    <li>Geniş Zaman Ufku: Standart opsiyon sözleşmeleri genellikle birkaç hafta veya ay vadeli olurken, LEAPS sözleşmelerinin vadeleri 1 yıldan başlayıp 3 yıla kadar uzanabilir.</li>
+    <li>Maliyet Avantajı: Doğrudan hisse senedi satın almak yerine, çok daha düşük bir sermaye (opsiyon primi) ödeyerek uzun vadede o hissenin yükselişine ya da düşüşüne yüksek kaldıraçla ortak olmanızı sağlar.</li>  
+    <li>Zaman Erimesi (Theta) Avantajı: Kısa vadeli opsiyonlarda en büyük düşman olan zaman erimesi (Theta), LEAPS sözleşmelerinde vadenin çok uzun olmasından dolayı ilk aylarda son derece yavaş işler. Bu da yatırımcıya esneklik ve zaman kazandırır.</li>
+    <h2 id="leaps">LEAPS (Uzun Vadeli Opsiyonlar) Nedir?</h2>
     <a class="btn" href="/tr/builder/?template=long_call">Long Call’dan başla (DTE’yi uzun tut) →</a>
   </div>
 
   <!-- ========== IRON CONDOR ========== -->
   <div class="card">
-    <div class="small">Neutral · defined risk</div>
+    <div class="small">Neutral · Tanımlı risk</div>
     <h2 id="iron-condor">Iron Condor (özet)</h2>
     <p><b>Iron Condor</b>, bull put spread ile bear call spread’i birleştirir. Net credit alırsınız; hisse short strike’lar arasında bir <b>bantta</b> kalsın istersiniz. İki yanda da long opsiyon olduğu için risk tavanlıdır.</p>
     <ul>
@@ -439,7 +443,7 @@
       </div>
       <div class="risk-card">
         <h3>Assignment</h3>
-        <p>Short put → hisse <b>alabilirsiniz</b>. Hisse üzerine short call → hisse <b>satılabilir</b>. Pin risk ve early exercise vardır; defined-risk spread de expiry yakınında izlenir.</p>
+        <p>Short put → hisse <b>alabilirsiniz</b>. Hisse üzerine short call → hisse <b>satılabilir</b>. Pin risk ve early exercise vardır; Tanımlı-risk spread de expiry yakınında izlenir.</p>
       </div>
     </div>
     <div class="practice-prompt"><b>Alıştırma:</b> <a href="/tr/builder/?template=cash_secured_put">CSP</a>, sonra <a href="/tr/builder/?template=covered_call">Covered Call</a> yükleyin. Fiyatı assignment bölgelerinden geçirin; düz çizgide max kâr / max zararı okuyun.</div>
