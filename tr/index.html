@@ -105,7 +105,7 @@
 <p>Opsiyon bir hisse senedi değildir. Opsiyon işlemi yaptığınızda doğrudan hisse alıp satmazsınız. Bunun yerine, bir kişiye belirli <strong>haklar</strong>, diğer tarafa ise belirli <strong>yükümlülükler</strong> veren bir <strong>finansal sözleşme</strong> alıp satarsınız.</p>
 <p>İlk başta karmaşık görünebilir. Ancak temel fikir oldukça basittir. Her opsiyonun birkaç temel özelliği vardır. Bunları anladığınızda opsiyon zincirini okumak ve Covered Call ile Cash-Secured Put gibi stratejileri öğrenmek çok daha kolay hale gelir.</p>
 <h3>Her Opsiyonda Bilmeniz Gereken 6 Şey</h3>
-<ol class="article-list"><li><strong>Bir sözleşmedir</strong></li><li><strong>Sözleşmenin iki tarafı vardır</strong></li><li><strong>Alıcı bir hak elde eder</strong></li><li><strong>Opsiyonun bir kullanım fiyatı vardır</strong></li><li><strong>Opsiyonun bir vade tarihi vardır</strong></li><li><strong>Opsiyonun bir primi (fiyatı) vardır</strong></li></ol>
+<ol class="article-list"><li><strong>Bir sözleşmedir</strong></li><li><strong>Sözleşmenin iki tarafı vardır</strong></li><li><strong>Alıcı bir hak elde eder</strong></li><li><strong>Opsiyonun bir strike fiyatı vardır</strong></li><li><strong>Opsiyonun bir vade tarihi vardır</strong></li><li><strong>Opsiyonun bir primi (fiyatı) vardır</strong></li></ol>
 <p>Bunları ezberlemek zorunda değilsiniz. Amaç ne anlama geldiklerini anlamaktır.</p>
 <h3>1. Opsiyon Bir Sözleşmedir</h3>
 <p>Opsiyon bir <strong>finansal sözleşmedir</strong>. Bir şirketin hisselerini aldığınızda o şirketin bir bölümüne sahip olursunuz. Opsiyon aldığınızda ise hisseye sahip olmazsınız. Bunun yerine, hisseyle ilgili belirli haklar veren bir sözleşmeye sahip olursunuz.</p>
@@ -117,13 +117,13 @@
 <h3>3. Alıcı Bir Hak Elde Eder — Yükümlülük Değil</h3>
 <p>Yeni başlayanlar için en önemli kavramlardan biri budur.</p>
 <p>Bir <strong>opsiyon satın aldığınızda</strong> bir <strong>hak</strong> elde edersiniz. Hisseyi otomatik olarak almak veya satmak zorunda değilsiniz.</p>
-<div class="concept-grid"><div class="concept-card"><h4>Call Opsiyonu</h4><p>Call, alıcıya dayanak hisseyi kullanım fiyatından <strong>alma hakkı</strong> verir.</p></div><div class="concept-card"><h4>Put Opsiyonu</h4><p>Put, alıcıya dayanak hisseyi kullanım fiyatından <strong>satma hakkı</strong> verir.</p></div></div>
+<div class="concept-grid"><div class="concept-card"><h4>Call Opsiyonu</h4><p>Call, alıcıya dayanak hisseyi strike fiyatından <strong>alma hakkı</strong> verir.</p></div><div class="concept-card"><h4>Put Opsiyonu</h4><p>Put, alıcıya dayanak hisseyi strike fiyatından <strong>satma hakkı</strong> verir.</p></div></div>
 <p>Opsiyon satıcısının durumu farklıdır. Satıcı primi alır ve alıcı opsiyonu kullanırsa sözleşmenin gerektirdiği <strong>yükümlülüğü</strong> yerine getirmek zorunda olabilir.</p>
 <div class="analogy-box"><strong>Hatırlayın:</strong> Opsiyon alıcısı → Hak &nbsp; | &nbsp; Opsiyon satıcısı → Yükümlülük</div>
-<h3>4. Her Opsiyonun Bir Kullanım Fiyatı Vardır</h3>
-<p><strong>Kullanım fiyatı (strike price)</strong>, opsiyon sözleşmesinde belirtilen fiyattır. Dayanak hissenin sözleşmeye göre hangi fiyattan alınabileceğini veya satılabileceğini belirler.</p>
-<p>Örneğin Apple'ın 240$'dan işlem gördüğünü düşünün. <strong>250$ kullanım fiyatlı</strong> bir call satın alabilirsiniz. Bu sözleşme, şartlarına bağlı olarak Apple hisselerini 250$'dan alma hakkı verebilir.</p>
-<div class="analogy-box"><strong>Basit örnek:</strong><br>Call → kullanım fiyatından <strong>ALMA</strong> hakkı<br>Put → kullanım fiyatından <strong>SATMA</strong> hakkı</div>
+<h3>4. Her Opsiyonun Bir Strike Fiyatı Vardır</h3>
+<p><strong>Strike price (Strike fiyatı)</strong>, opsiyon sözleşmesinde belirtilen fiyattır. Dayanak hissenin sözleşmeye göre hangi fiyattan alınabileceğini veya satılabileceğini belirler.</p>
+<p>Örneğin Apple'ın 240$'dan işlem gördüğünü düşünün. <strong>250$ strike fiyatlı</strong> bir call satın alabilirsiniz. Bu sözleşme, şartlarına bağlı olarak Apple hisselerini 250$'dan alma hakkı verebilir.</p>
+<div class="analogy-box"><strong>Basit örnek:</strong><br>Call → strike fiyatından <strong>ALMA</strong> hakkı<br>Put → strike fiyatından <strong>SATMA</strong> hakkı</div>
 <h3>5. Her Opsiyonun Bir Vade Tarihi Vardır</h3>
 <p>Opsiyonlar sonsuza kadar sürmez. Her opsiyonun bir <strong>vade tarihi</strong> vardır. Bu tarih sözleşmenin ne zaman sona ereceğini gösterir.</p>
 <p>Bir opsiyon iki gün, 30 gün, altı ay veya iki yıl sonra sona erebilir. Vade geldiğinde sözleşme artık aktif bir opsiyon değildir.</p>
@@ -137,15 +137,15 @@
 <p>Yani 1.500$ ödeyerek Apple hisselerini satın almıyorsunuz. Opsiyon sözleşmesinin sağladığı haklar için 1.500$ ödüyorsunuz.</p>
 <h3>Her Şeyi Bir Araya Getirelim</h3>
 <p>Apple'ın şu anda <strong>240$</strong> olduğunu düşünelim. Şu özelliklere sahip bir call buldunuz:</p>
-<ul><li><strong>Dayanak varlık:</strong> Apple</li><li><strong>Tür:</strong> Call</li><li><strong>Kullanım fiyatı:</strong> 250$</li><li><strong>Vade:</strong> 30 gün sonra</li><li><strong>Prim:</strong> 15$</li></ul>
+<ul><li><strong>Dayanak varlık:</strong> Apple</li><li><strong>Tür:</strong> Call</li><li><strong>Strike fiyatı:</strong> 250$</li><li><strong>Vade:</strong> 30 gün sonra</li><li><strong>Prim:</strong> 15$</li></ul>
 <p>Bu, sözleşme şartlarına göre vade tarihine kadar Apple'ı <strong>250$'dan alma hakkı</strong> veren bir sözleşme satın aldığınız anlamına gelir.</p>
 <p>Prim hisse başına 15$'dır. Standart 100 hisselik bir sözleşmede bu <strong>1.500$</strong> eder.</p>
 <h3>Call ve Put: Hızlı Özet</h3>
-<table class="beginner-table"><thead><tr><th></th><th>Call</th><th>Put</th></tr></thead><tbody><tr><td>Alıcı hangi hakkı elde eder?</td><td><strong>Almak</strong></td><td><strong>Satmak</strong></td></tr><tr><td>Kullanım fiyatı</td><td>Alım için belirlenen fiyat</td><td>Satım için belirlenen fiyat</td></tr><tr><td>Alıcı ne öder?</td><td>Prim</td><td>Prim</td></tr><tr><td>Satıcı ne alır?</td><td>Prim</td><td>Prim</td></tr></tbody></table>
+<table class="beginner-table"><thead><tr><th></th><th>Call</th><th>Put</th></tr></thead><tbody><tr><td>Alıcı hangi hakkı elde eder?</td><td><strong>Almak</strong></td><td><strong>Satmak</strong></td></tr><tr><td>Strike fiyatı</td><td>Alım için belirlenen fiyat</td><td>Satım için belirlenen fiyat</td></tr><tr><td>Alıcı ne öder?</td><td>Prim</td><td>Prim</td></tr><tr><td>Satıcı ne alır?</td><td>Prim</td><td>Prim</td></tr></tbody></table>
 <p>Başlangıç için şu kısa yolu kullanabilirsiniz: <strong>Call = alma hakkı</strong>, <strong>Put = satma hakkı</strong>. Bunun <strong>opsiyon alıcısını</strong> anlattığını unutmayın; opsiyon satmak farklı bir pozisyon ve yükümlülük oluşturur.</p>
 <h3>6 Temel Özellik Kısaca</h3>
-<div class="six-grid"><div><strong>① Sözleşme</strong><span>Bir dayanak varlıkla bağlantılı finansal sözleşmedir.</span></div><div><strong>② İki Taraf</strong><span>Bir alıcı ve bir satıcı vardır.</span></div><div><strong>③ Haklar ve Yükümlülükler</strong><span>Alıcı hak elde eder; satıcı yükümlülük üstlenir.</span></div><div><strong>④ Kullanım Fiyatı</strong><span>Dayanağın alınacağı veya satılacağı belirlenmiş fiyat.</span></div><div><strong>⑤ Vade</strong><span>Sözleşmenin bir son tarihi vardır.</span></div><div><strong>⑥ Prim</strong><span>Alıcının opsiyon için satıcıya ödediği fiyattır.</span></div></div>
-<div class="key-takeaway"><strong>Neyi hatırlamalısınız?</strong><p>Opsiyonlar sözleşmelerdir. Her sözleşmenin bir alıcısı ve satıcısı vardır. Alıcı hak elde eder, satıcı ise yükümlülük üstlenir. Her opsiyonun kullanım fiyatı, vade tarihi ve primi vardır.</p></div>
+<div class="six-grid"><div><strong>① Sözleşme</strong><span>Bir dayanak varlıkla bağlantılı finansal sözleşmedir.</span></div><div><strong>② İki Taraf</strong><span>Bir alıcı ve bir satıcı vardır.</span></div><div><strong>③ Haklar ve Yükümlülükler</strong><span>Alıcı hak elde eder; satıcı yükümlülük üstlenir.</span></div><div><strong>④ Strike Fiyatı</strong><span>Dayanağın alınacağı veya satılacağı belirlenmiş fiyat.</span></div><div><strong>⑤ Vade</strong><span>Sözleşmenin bir son tarihi vardır.</span></div><div><strong>⑥ Prim</strong><span>Alıcının opsiyon için satıcıya ödediği fiyattır.</span></div></div>
+<div class="key-takeaway"><strong>Neyi hatırlamalısınız?</strong><p>Opsiyonlar sözleşmelerdir. Her sözleşmenin bir alıcısı ve satıcısı vardır. Alıcı hak elde eder, satıcı ise yükümlülük üstlenir. Her opsiyonun strike fiyatı, vade tarihi ve primi vardır.</p></div>
 <p>Bu kavramlar oturduğunda, opsiyon zincirinde gördüğünüz rakamlar çok daha anlamlı hale gelecektir. <strong>Sıradaki adımda bu özelliklerin aracı kurum ekranında nasıl göründüğüne ve opsiyon zincirinin nasıl okunacağına bakacağız.</strong></p>
 
 
@@ -196,7 +196,7 @@
 <details>
 <summary>"Hak" ile "yükümlülük" arasındaki fark nedir?</summary>
 <div class="faq-body">
-<p>Bu, opsiyonlardaki en önemli ayrımdır. <strong>Alıcı</strong> bir prim öder ve karşılığında bir <strong>hak</strong> elde eder — kullanım fiyatından hisseyi alma (call) veya satma (put) seçeneği, ama asla zorunluluğu değil. İşlem istediğiniz gibi gitmezse, alıcı opsiyonun vadesinin dolmasına izin vererek sadece ödediği primi kaybeder.</p>
+<p>Bu, opsiyonlardaki en önemli ayrımdır. <strong>Alıcı</strong> bir prim öder ve karşılığında bir <strong>hak</strong> elde eder — strike fiyatından hisseyi alma (call) veya satma (put) seçeneği, ama asla zorunluluğu değil. İşlem istediğiniz gibi gitmezse, alıcı opsiyonun vadesinin dolmasına izin vererek sadece ödediği primi kaybeder.</p>
 <p><strong>Satıcı</strong> (writer olarak da bilinir) ise bu primi peşin alır ve karşılığında bir <strong>yükümlülük</strong> üstlenir. Alıcı opsiyonu kullanmayı seçerse, satıcı sözleşmeyi yerine getirmek zorundadır — hisseleri teslim etmek (call) veya satın almak (put) — bu kendisi için uygun olsun ya da olmasın. Atama (assignment) gerçekleştiğinde satıcının fikrini değiştirme şansı yoktur.</p>
 </div>
 </details>
@@ -212,13 +212,13 @@
 <details>
 <summary>Bir opsiyon vade tarihine ulaştığında ne olur?</summary>
 <div class="faq-body">
-<p>Hissenin kullanım fiyatına göre nerede bittiğine bağlı olarak üç şeyden biri gerçekleşir:</p>
+<p>Hissenin strike fiyatına göre nerede bittiğine bağlı olarak üç şeyden biri gerçekleşir:</p>
 <ul>
 <li><strong>Out-of-the-money:</strong> opsiyon değersiz olarak sona erer. Alıcı yalnızca ödediği primi kaybeder; başka bir işlem gerekmez.</li>
 <li><strong>In-the-money:</strong> çoğu aracı kurum, alıcı adına opsiyonu otomatik olarak kullanır ve bunu bir hisse pozisyonuna dönüştürür (sözleşme başına 100 hisse).</li>
 <li><strong>Erken kapatma:</strong> alıcı, opsiyonu kullanmak yerine vade dolmadan satarak kalan değerini nakde çevirebilir.</li>
 </ul>
-<p>Atama alan satıcılar, kullanım fiyatından hisseleri teslim etmek (call) veya satın almak (put) zorundadır.</p>
+<p>Atama alan satıcılar, strike fiyatından hisseleri teslim etmek (call) veya satın almak (put) zorundadır.</p>
 </div>
 </details>
 
@@ -277,8 +277,8 @@
 
 <div class="quiz-q" data-name="q2">
 <p class="quiz-q-title">2. Bir call opsiyonu alıcıya hangi hakkı verir?</p>
-<label class="quiz-opt"><input type="radio" name="q2" value="a"> Hisseyi kullanım fiyatından satma</label>
-<label class="quiz-opt"><input type="radio" name="q2" value="b"> Hisseyi kullanım fiyatından alma</label>
+<label class="quiz-opt"><input type="radio" name="q2" value="a"> Hisseyi strike fiyatından satma</label>
+<label class="quiz-opt"><input type="radio" name="q2" value="b"> Hisseyi strike fiyatından alma</label>
 <label class="quiz-opt"><input type="radio" name="q2" value="c"> Sözleşmeyi iptal edip para iadesi alma</label>
 <label class="quiz-opt"><input type="radio" name="q2" value="d"> Şirketin temettülerini alma</label>
 <p class="quiz-explain" hidden></p>
@@ -286,15 +286,15 @@
 
 <div class="quiz-q" data-name="q3">
 <p class="quiz-q-title">3. Bir put opsiyonu alıcıya hangi hakkı verir?</p>
-<label class="quiz-opt"><input type="radio" name="q3" value="a"> Hisseyi kullanım fiyatından alma</label>
-<label class="quiz-opt"><input type="radio" name="q3" value="b"> Hisseyi kullanım fiyatından satma</label>
+<label class="quiz-opt"><input type="radio" name="q3" value="a"> Hisseyi strike fiyatından alma</label>
+<label class="quiz-opt"><input type="radio" name="q3" value="b"> Hisseyi strike fiyatından satma</label>
 <label class="quiz-opt"><input type="radio" name="q3" value="c"> Satıcıdan hisse ödünç alma</label>
 <label class="quiz-opt"><input type="radio" name="q3" value="d"> Vade tarihini uzatma</label>
 <p class="quiz-explain" hidden></p>
 </div>
 
 <div class="quiz-q" data-name="q4">
-<p class="quiz-q-title">4. "Kullanım fiyatı (strike price)" nedir?</p>
+<p class="quiz-q-title">4. "Strike fiyatı (strike price)" nedir?</p>
 <label class="quiz-opt"><input type="radio" name="q4" value="a"> Hissenin güncel piyasa fiyatı</label>
 <label class="quiz-opt"><input type="radio" name="q4" value="b"> Aracı kurumun aldığı komisyon</label>
 <label class="quiz-opt"><input type="radio" name="q4" value="c"> Dayanak varlığın alınıp satılacağı, sözleşmede belirlenen fiyat</label>
@@ -431,9 +431,9 @@
 (function(){
   var ANSWERS = {
     q1: { correct: 'b', explain: 'Bir opsiyon, hisse sahipliği değil finansal bir sözleşmedir — alıcıya bir dayanak varlıkla ilgili belirli haklar verir.' },
-    q2: { correct: 'b', explain: 'Bir call opsiyonu, alıcısına hisseyi kullanım fiyatından alma hakkı verir.' },
-    q3: { correct: 'b', explain: 'Bir put opsiyonu, alıcısına hisseyi kullanım fiyatından satma hakkı verir.' },
-    q4: { correct: 'c', explain: 'Kullanım fiyatı, dayanak varlığın alınıp satılacağı, sözleşmeye yazılan fiyattır.' },
+    q2: { correct: 'b', explain: 'Bir call opsiyonu, alıcısına hisseyi strike fiyatından alma hakkı verir.' },
+    q3: { correct: 'b', explain: 'Bir put opsiyonu, alıcısına hisseyi strike fiyatından satma hakkı verir.' },
+    q4: { correct: 'c', explain: 'strike fiyatı, dayanak varlığın alınıp satılacağı, sözleşmeye yazılan fiyattır.' },
     q5: { correct: 'c', explain: 'Prim hisse başına belirtilir ve standart bir sözleşme 100 hisseyi kapsar: 15$ × 100 = komisyonlar hariç 1.500$.' },
     q6: { correct: 'b', explain: 'Alıcı bir hak için prim öder. Satıcı ise bu primi alır ve karşılığında bir yükümlülük üstlenir.' }
   };
