@@ -92,7 +92,7 @@
 
 <div class="wrap">
 <nav class="breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span aria-hidden="true">/</span><span aria-current="page">Advanced</span></nav>
-<nav class="lesson-toc" aria-label="On this page"><strong>On this page</strong><div class="lesson-toc-links"><a href="#dte">45+ DTE</a><a href="#csp">CSP</a><a href="#wheel">Wheel</a><a href="#covered-call">Covered call</a><a href="#spreads">Debit/credit</a><a href="#calendar">Calendar</a><a href="#leaps">LEAPS</a><a href="#iron-condor">Iron condor</a><a href="#risk-notes">Risk notes</a></div></nav>
+<nav class="lesson-toc" aria-label="On this page"><strong>On this page</strong><div class="lesson-toc-links"><a href="#dte">45+ DTE</a><a href="#csp">CSP</a><a href="#wheel">Wheel</a><a href="#covered-call">Covered call</a><a href="#spreads">Debit/credit</a><a href="#calendar">Calendar</a><a href="#"></a><a href="#iron-condor">Iron condor</a><a href="#risk-notes">Risk notes</a></div></nav>
 
 
   <div class="hero">
@@ -362,12 +362,13 @@
   <!-- ========== LEAPS ========== -->
   <div class="card">
     <div class="small">Long-dated options</div>
-    <h2 id="leaps">LEAPS</h2>
+    <h2 id="leaps">What are LEAPS (Long-Term Options)?</h2>
+    
     <p><b>LEAPS</b> are options with expirations often <b>one year or more</b> out. A long LEAPS call is a long-term bullish view with a defined max loss (the premium). It can still go to zero if the thesis is wrong or time runs out.</p>
     <ul>
       <li>Uses less cash than buying 100 shares, but is not “cheaper risk” — 100% of the premium can be lost</li>
       <li>Theta is slower early than on a 30-day option, but it still decays</li>
-      <li>Some traders sell shorter calls against a LEAPS call (diagonal / “poor man’s covered call” style) — more moving parts</li>
+      <li>Some investors sell shorter-term calls against a LEAPS call (diagonal / “poor man’s covered call” or PMCC) — meaning; you buy 1 very long-term (365+ days), In-the-Money (delta > 0.75) Call, and sell a shorter-term (45 - 60 days), Out-of-the-Money (delta < 0.25) call. Before your short call expires, or when it reaches a 50% profit, you ROLL-out.Roll-out: means closing the option that is approaching expiration and reopening it with a further expiration date. The goal here is to benefit from Theta, which means making money from time decay while waiting out the maturity of the long-term Call. Remember, <b>'Less is More'.</b></li>
     </ul>
     <div class="payoff-box">
       <svg viewBox="0 0 520 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Long LEAPS call payoff at expiry">
@@ -381,7 +382,13 @@
 </svg>
       <div class="payoff-legend"><span class="lg">Green = profit</span><span class="lr">Red = loss</span></div>
       <p class="payoff-caption">Long call / LEAPS at expiry: flat max loss (premium), then rising profit if stock is above strike.</p>
+      
     </div>
+    <ul>
+      <li>Broad Time Horizon: While standard option contracts typically have expirations of a few weeks or months, LEAPS contracts can have maturities ranging from 1 year up to 3 years.</li>
+      <li>Cost Advantage: Instead of buying the underlying stock directly, it allows you to participate in the long-term rise or fall of that stock with high leverage by paying a much lower capital (option premium).</li>
+      <li>Time Decay (Theta) Advantage: Time decay (Theta), which is the biggest enemy in short-term options, moves extremely slowly during the first months of LEAPS contracts due to their very long maturity. This grants the investor flexibility and time.</li>
+    </ul>
     <a class="btn" href="/builder/?template=long_call">Start from Long Call (set DTE long) →</a>
   </div>
 
