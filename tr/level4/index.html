@@ -373,7 +373,7 @@
     <ul>
       <li>100 hisse almaktan daha az nakit ister ama <b>“daha ucuz risk”</b> değildir — premium’un <b>%100’ü</b> gidebilir</li>
       <li>Theta 30 günlük opsiyona göre erken dönemde daha yavaştır ama yine erir</li>
-      <li>Bazıları LEAPS call üzerine daha kısa call satar (diagonal / “poor man’s covered call yada PMCC”) — yani; 1 çok uzun vadeli (365+ gün), ve ITM ( delta >0.70 ) Call alıp, daha kısa vadeli (45 - 60 gün), ve OTM ( delta < 0.20 ) call satarsınız. Sattığınız call vadesi dolmadan, veya %50 kar'a geçtiğinde, ROLL-out yaparsınız.Roll-out: vadesi yaklaşan opsiyonu kapatıp daha uzun vade ile açmak demek.</li>
+      <li>Bazıları LEAPS call üzerine daha kısa call satar (diagonal / “poor man’s covered call yada PMCC”) — yani; 1 çok uzun vadeli (365+ gün), ve ITM ( delta >0.75 ) Call alıp, daha kısa vadeli (45 - 60 gün), ve OTM ( delta < 0.25 ) call satarsınız. Sattığınız call vadesi dolmadan, veya %50 kar'a geçtiğinde, ROLL-out yaparsınız.Roll-out: vadesi yaklaşan opsiyonu kapatıp daha uzun vade ile tekrar açmak demek. Burada amac Theta'dan faydalanmak, yani uzun vadeli Call'un vadesini beklerken zamandan para kazanmak. Unutmayın <b>"Less is More"</b></li>
     </ul>
     <div class="payoff-box">
       <svg viewBox="0 0 520 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Long LEAPS call payoff at expiry">
