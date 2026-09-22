@@ -483,6 +483,22 @@
       .site-header .nav a{width:100%;text-align:left;padding:14px 14px;font-size:16px;border-radius:10px;min-height:48px;display:flex;align-items:center;box-sizing:border-box}
     }
     @media(max-width:600px){.site-header .brand-sub{display:none}.theme-toggle .theme-label,#themeLabel{display:none}}.theme-toggle .theme-label,#themeLabel{display:none}}
+    .chart-toolbar{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-left:auto;}
+    .chart-toolbar .btn-sm{padding:5px 9px;font-size:0.74rem;}
+    .btn-toggle-on{background:var(--accent)!important;color:#fff!important;}
+    .compare-metrics{display:none;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px;}
+    .compare-metrics.on{display:grid;}
+    .compare-col{background:#0f172a;border:1px solid var(--border);border-radius:8px;padding:8px 10px;font-size:0.75rem;}
+    [data-theme="light"] .compare-col{background:var(--input);}
+    .compare-col h3{font-size:0.78rem;margin-bottom:4px;color:#93c5fd;}
+    .compare-col.b h3{color:#c4b5fd;}
+    .gesture-hint{font-size:0.7rem;color:var(--muted);margin-top:6px;}
+    #chartContainer{touch-action:none;user-select:none;-webkit-user-select:none;}
+    .legs-card-b{display:none;}
+    body.compare-on .legs-card-b{display:block;}
+    .slot-tag{font-size:0.68rem;font-weight:700;padding:2px 7px;border-radius:999px;background:#1e3a5f;color:#93c5fd;}
+    .slot-tag.b{background:#3b2a5e;color:#ddd6fe;}
+    h2{justify-content:space-between;}
 </style>
 
 <style id="jsm-mobile-nav">
@@ -597,7 +613,7 @@
   <div class="main-grid">
     <!-- Current Legs, with the strategy's static metrics moved alongside it -->
     <div class="card">
-      <h2>Current Legs</h2>
+      <h2>Current Legs <span class="slot-tag">A</span></h2>
       <div class="legs-with-summary">
         <div>
           <div class="legs-header">
@@ -645,19 +661,85 @@
       </div>
     </div>
 
+    <div class="card legs-card-b" id="compareLegsCard">
+      <h2>Compare Legs <span class="slot-tag b">B</span></h2>
+      <div class="top-bar" style="margin-bottom:10px;">
+        <div class="field wide">
+          <label>Strategy B template</label>
+          <select id="strategyTemplateB" onchange="applyTemplateB()">
+            <option value="">— Select a template —</option>
+          </select>
+        </div>
+      </div>
+      <div class="legs-with-summary">
+        <div>
+          <div class="legs-header">
+            <span>Side</span>
+            <span>Type</span>
+            <span>Strike</span>
+            <span>DTE</span>
+            <span>Qty</span>
+            <span>Premium / Cost</span>
+            <span></span>
+          </div>
+          <div id="legsListB"></div>
+          <div class="btn-row">
+            <button class="btn-primary btn-sm" onclick="addEmptyLegB()">+ Add Leg</button>
+            <button class="btn-secondary btn-sm" onclick="clearLegsB()">Clear B</button>
+          </div>
+        </div>
+        <div class="legs-summary-col">
+          <div class="pl-box">
+            <div style="font-size:0.7rem;color:var(--muted);">B P/L (theoretical)</div>
+            <div id="plValueB" class="pl-value pl-positive">$0</div>
+          </div>
+          <div class="metrics">
+            <div class="metric">
+              <div class="label">Net Debit/Credit</div>
+              <div class="val" id="netPremiumB">$0</div>
+            </div>
+            <div class="metric">
+              <div class="label">Max Profit</div>
+              <div class="val" id="maxProfitB">—</div>
+            </div>
+            <div class="metric">
+              <div class="label">Max Loss</div>
+              <div class="val" id="maxLossB">—</div>
+            </div>
+            <div class="metric">
+              <div class="label">Breakeven(s)</div>
+              <div class="val" id="breakevensB">—</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- Payoff Graph — full width, the primary chart. The solid "at expiry"
          line is fixed to the trade's own strikes/entry price, so it holds
          still as days pass; only the dashed "today" line and the crosshair
          move as price/time change. -->
     <div class="card">
-      <h2>Payoff Graph</h2>
+      <h2>Payoff Graph
+        <span class="chart-toolbar">
+          <button type="button" class="btn-secondary btn-sm" id="compareToggleBtn" onclick="toggleCompareMode()">Compare two strategies</button>
+          <button type="button" class="btn-secondary btn-sm" onclick="exportPayoffImage()">Export PNG</button>
+          <button type="button" class="btn-secondary btn-sm" onclick="resetChartGestures()">Reset view</button>
+        </span>
+      </h2>
       <div id="chartContainer">
         <canvas id="payoffChart"></canvas>
       </div>
       <div class="legend-note">
-        <span><span class="dot green"></span> Green = P/L ≥ 0</span>
-        <span><span class="dot red"></span> Red = P/L &lt; 0</span>
-        <span><span class="dot dotted"></span> Dotted = with time left · Solid = at expiry · Gray line = price · Yellow line = P/L</span>
+        <span><span class="dot green"></span> A expiry (green / red)</span>
+        <span><span class="dot dotted"></span> A with time left</span>
+        <span><span class="dot" style="background:#a78bfa;"></span> B expiry (compare)</span>
+        <span><span class="dot dotted" style="background:repeating-linear-gradient(90deg,#c4b5fd 0 3px,transparent 3px 6px);"></span> B with time left</span>
+      </div>
+      <p class="gesture-hint">Phone / tablet: drag to move price · pinch to zoom the payoff axis · double-tap to reset · two-finger drag to pan.</p>
+      <div class="compare-metrics" id="compareMetrics">
+        <div class="compare-col a" id="compareColA"></div>
+        <div class="compare-col b" id="compareColB"></div>
       </div>
 
       <!-- Days Remaining / Underlying still drive the math (and stay in
@@ -839,6 +921,11 @@
     let crosshairPL = 0;
     let maxDTE = 90;
     let nextId = 1;
+    let compareMode = false;
+    let legsB = [];
+    let nextIdB = 10001;
+    let chartZoom = null;
+    let chartGesturesBound = false;
 
     function normCDF(x) {
       const a1 = 0.254829592, a2 = -0.284496736, a3 = 1.421413741;
@@ -925,9 +1012,8 @@
       }];
     }
 
-    function applyTemplate() {
-      const key = document.getElementById('strategyTemplate').value;
-      if (!key) return;
+    function makeTemplateLegs(key) {
+      if (!key) return null;
       const S = parseFloat(document.getElementById('spot').value) || 100;
       const K = Math.round(S);
       const iv = parseFloat(document.getElementById('iv').value) || 25;
@@ -1058,7 +1144,12 @@
         ]
       };
 
-      const t = templates[key];
+      return templates[key] || null;
+    }
+
+    function applyTemplate() {
+      const key = document.getElementById('strategyTemplate').value;
+      const t = makeTemplateLegs(key);
       if (!t) return;
       legs = t.map(leg => ({ ...leg, id: nextId++ }));
       if (chart) { try { chart.destroy(); } catch (e) {} chart = null; }
@@ -1315,18 +1406,19 @@
       };
     }
 
-    function positionValueAt(S, daysLeft, useExpiryOnly) {
+    function positionValueAt(S, daysLeft, useExpiryOnly, legsArr) {
+      const list = legsArr || legs;
       let total = 0;
       const params = getParams();
       // Multi-expiry (calendar / diagonal): residual time is relative to the nearest option.
       // "At expiry" = nearest-dated options expire (T=0); longer-dated keep (leg.dte - minDte) days.
       const optionDtes = [];
-      for (let i = 0; i < legs.length; i++) {
-        if (legs[i].type !== 'stock') optionDtes.push(legs[i].dte);
+      for (let i = 0; i < list.length; i++) {
+        if (list[i].type !== 'stock') optionDtes.push(list[i].dte);
       }
       const minDte = optionDtes.length ? Math.min.apply(null, optionDtes) : 0;
 
-      for (const leg of legs) {
+      for (const leg of list) {
         let valPerShare;
         if (leg.type === 'stock') {
           valPerShare = S;
@@ -1346,16 +1438,16 @@
       return total;
     }
 
-    function initialCost() {
-      return legs.reduce(function(sum, l) { return sum + legCash(l); }, 0);
+    function initialCost(legsArr) {
+      return (legsArr || legs).reduce(function(sum, l) { return sum + legCash(l); }, 0);
     }
 
-    function plAt(S, daysLeft) {
-      return positionValueAt(S, daysLeft, false) - initialCost();
+    function plAt(S, daysLeft, legsArr) {
+      return positionValueAt(S, daysLeft, false, legsArr) - initialCost(legsArr);
     }
 
-    function expiryPayoff(S) {
-      return positionValueAt(S, 0, true) - initialCost();
+    function expiryPayoff(S, legsArr) {
+      return positionValueAt(S, 0, true, legsArr) - initialCost(legsArr);
     }
 
     function segmentColor(ctx, pos, neg) {
@@ -1366,16 +1458,24 @@
       return (y0 + y1) >= 0 ? pos : neg;
     }
 
+    function collectStrikes(list) {
+      return (list || []).filter(function(l) { return l.type !== 'stock'; }).map(function(l) { return l.strike; });
+    }
+
     function buildChartData() {
-      if (!legs.length) return { labels: [], expiry: [], theoretical: [] };
+      if (!legs.length) return { labels: [], expiry: [], theoretical: [], expiryB: [], theoreticalB: [] };
       const params = getParams();
       const S = params.S;
       const anchor = (typeof chartRefSpot === 'number' && chartRefSpot > 0) ? chartRefSpot : S;
       const daysLeft = params.daysLeft;
-      const strikes = legs.filter(function(l) { return l.type !== 'stock'; }).map(function(l) { return l.strike; });
+      const strikes = collectStrikes(legs).concat(compareMode ? collectStrikes(legsB) : []);
       const base = strikes.length ? strikes : [anchor];
-      const lo = Math.min(anchor * 0.65, Math.min.apply(null, base) * 0.65);
-      const hi = Math.max(anchor * 1.45, Math.max.apply(null, base) * 1.45);
+      let lo = Math.min(anchor * 0.65, Math.min.apply(null, base) * 0.65);
+      let hi = Math.max(anchor * 1.45, Math.max.apply(null, base) * 1.45);
+      if (chartZoom && chartZoom.min > 0 && chartZoom.max > chartZoom.min) {
+        lo = chartZoom.min;
+        hi = chartZoom.max;
+      }
       const priceSet = {};
       const steps = 160;
       for (let i = 0; i <= steps; i++) {
@@ -1384,18 +1484,26 @@
       }
       for (let s = 0; s < base.length; s++) {
         const k = base[s];
-        priceSet[k.toFixed(6)] = k;
-        priceSet[(k - 0.01).toFixed(6)] = Math.max(0.01, k - 0.01);
-        priceSet[(k + 0.01).toFixed(6)] = k + 0.01;
+        if (k >= lo && k <= hi) {
+          priceSet[k.toFixed(6)] = k;
+          priceSet[(k - 0.01).toFixed(6)] = Math.max(0.01, k - 0.01);
+          priceSet[(k + 0.01).toFixed(6)] = k + 0.01;
+        }
       }
       const labels = Object.keys(priceSet).map(Number).sort(function(a, b) { return a - b; });
       const expiry = [];
       const theoretical = [];
+      const expiryB = [];
+      const theoreticalB = [];
       for (let i = 0; i < labels.length; i++) {
-        expiry.push(expiryPayoff(labels[i]));
-        theoretical.push(plAt(labels[i], daysLeft));
+        expiry.push(expiryPayoff(labels[i], legs));
+        theoretical.push(plAt(labels[i], daysLeft, legs));
+        if (compareMode && legsB.length) {
+          expiryB.push(expiryPayoff(labels[i], legsB));
+          theoreticalB.push(plAt(labels[i], daysLeft, legsB));
+        }
       }
-      return { labels: labels, expiry: expiry, theoretical: theoretical };
+      return { labels: labels, expiry: expiry, theoretical: theoretical, expiryB: expiryB, theoreticalB: theoreticalB };
     }
 
 
@@ -1443,55 +1551,94 @@
       }
     };
 
-    function updateChart() {
-      const data = buildChartData();
-      const ctx = document.getElementById('payoffChart').getContext('2d');
+    function payoffDatasets(data) {
       const gS = 'rgba(34,197,94,0.95)', rS = 'rgba(239,68,68,0.95)';
       const gD = 'rgba(34,197,94,0.65)', rD = 'rgba(239,68,68,0.65)';
-      const tc = chartThemeColors();
+      const bS = 'rgba(167,139,250,0.95)', bD = 'rgba(167,139,250,0.62)';
+      const sets = [
+        {
+          label: compareMode ? 'A · Payoff at expiry' : 'Payoff at Expiry',
+          data: data.expiry,
+          borderColor: gS,
+          borderWidth: 2.5,
+          pointRadius: 0,
+          tension: 0,
+          fill: false,
+          segment: { borderColor: function(ctx) { return segmentColor(ctx, gS, rS); } }
+        },
+        {
+          label: compareMode ? 'A · Time left' : 'Theoretical (time left)',
+          data: data.theoretical,
+          borderColor: gD,
+          borderWidth: 2,
+          borderDash: [6, 4],
+          pointRadius: 0,
+          tension: 0,
+          fill: false,
+          segment: { borderColor: function(ctx) { return segmentColor(ctx, gD, rD); } }
+        }
+      ];
+      if (compareMode && data.expiryB && data.expiryB.length) {
+        sets.push({
+          label: 'B · Payoff at expiry',
+          data: data.expiryB,
+          borderColor: bS,
+          borderWidth: 2.5,
+          pointRadius: 0,
+          tension: 0,
+          fill: false
+        });
+        sets.push({
+          label: 'B · Time left',
+          data: data.theoreticalB,
+          borderColor: bD,
+          borderWidth: 2,
+          borderDash: [5, 4],
+          pointRadius: 0,
+          tension: 0,
+          fill: false
+        });
+      }
+      return sets;
+    }
 
-      if (chart) {
+    function updateChart() {
+      const data = buildChartData();
+      const canvas = document.getElementById('payoffChart');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      const tc = chartThemeColors();
+      const wantSets = (compareMode && data.expiryB && data.expiryB.length) ? 4 : 2;
+
+      if (chart && chart.data.datasets.length === wantSets) {
         chart.data.labels = data.labels;
-        chart.data.datasets[0].data = data.expiry;
-        chart.data.datasets[1].data = data.theoretical;
+        chart.data.datasets = payoffDatasets(data);
+        if (chartZoom) {
+          chart.options.scales.x.min = chartZoom.min;
+          chart.options.scales.x.max = chartZoom.max;
+        } else {
+          delete chart.options.scales.x.min;
+          delete chart.options.scales.x.max;
+        }
         chart.update('none');
+        bindChartGestures();
         return;
       }
+
+      if (chart) { try { chart.destroy(); } catch (e) {} chart = null; }
 
       chart = new Chart(ctx, {
         type: 'line',
         data: {
           labels: data.labels,
-          datasets: [
-            {
-              label: 'Payoff at Expiry',
-              data: data.expiry,
-              borderColor: gS,
-              borderWidth: 2.5,
-              pointRadius: 0,
-              tension: 0,
-              fill: false,
-              segment: { borderColor: function(ctx) { return segmentColor(ctx, gS, rS); } }
-            },
-            {
-              label: 'Theoretical (time left)',
-              data: data.theoretical,
-              borderColor: gD,
-              borderWidth: 2,
-              borderDash: [6, 4],
-              pointRadius: 0,
-              tension: 0,
-              fill: false,
-              segment: { borderColor: function(ctx) { return segmentColor(ctx, gD, rD); } }
-            }
-          ]
+          datasets: payoffDatasets(data)
         },
         options: {
           responsive: true,
           maintainAspectRatio: false,
           interaction: { mode: 'index', intersect: false },
           plugins: {
-            legend: { display: false },
+            legend: { display: !!compareMode, labels: { color: tc.text, boxWidth: 10, font: { size: 11 } } },
             tooltip: {
               callbacks: {
                 title: function(items) { return 'Stock: $' + Number(items[0].label).toFixed(2); },
@@ -1515,11 +1662,299 @@
         },
         plugins: [crosshairPlugin]
       });
+      bindChartGestures();
     }
 
     function formatMoney(val) {
       const abs = Math.abs(val);
       return (val < 0 ? '-' : '') + '$' + (abs >= 100 ? abs.toFixed(0) : abs.toFixed(2));
+    }
+
+    function cloneTemplateOptions() {
+      const src = document.getElementById('strategyTemplate');
+      const dst = document.getElementById('strategyTemplateB');
+      if (!src || !dst || dst.options.length > 1) return;
+      dst.innerHTML = src.innerHTML;
+    }
+
+    function defaultLongPut() {
+      const S = parseFloat(document.getElementById('spot').value) || 100;
+      return [{
+        id: nextIdB++,
+        side: 'buy',
+        type: 'put',
+        strike: Math.round(S),
+        dte: 90,
+        qty: 1,
+        premium: 5.00
+      }];
+    }
+
+    function toggleCompareMode() {
+      compareMode = !compareMode;
+      document.body.classList.toggle('compare-on', compareMode);
+      const btn = document.getElementById('compareToggleBtn');
+      if (btn) {
+        btn.classList.toggle('btn-toggle-on', compareMode);
+        btn.textContent = compareMode ? 'Exit compare' : 'Compare two strategies';
+      }
+      const metrics = document.getElementById('compareMetrics');
+      if (metrics) metrics.classList.toggle('on', compareMode);
+      cloneTemplateOptions();
+      if (compareMode && !legsB.length) {
+        legsB = defaultLongPut();
+        const sel = document.getElementById('strategyTemplateB');
+        if (sel) sel.value = 'long_put';
+        renderLegsB();
+      }
+      if (chart) { try { chart.destroy(); } catch (e) {} chart = null; }
+      recalc();
+    }
+
+    function applyTemplateB() {
+      const key = document.getElementById('strategyTemplateB').value;
+      const t = makeTemplateLegs(key);
+      if (!t) return;
+      legsB = t.map(function (leg) { return Object.assign({}, leg, { id: nextIdB++ }); });
+      renderLegsB();
+      recalc();
+    }
+
+    function addEmptyLegB() {
+      const S = parseFloat(document.getElementById('spot').value) || 100;
+      legsB.push({
+        id: nextIdB++,
+        side: 'buy',
+        type: 'put',
+        strike: Math.round(S),
+        dte: 90,
+        qty: 1,
+        premium: 3.00
+      });
+      renderLegsB();
+      recalc();
+    }
+
+    function removeLegB(id) {
+      legsB = legsB.filter(function (l) { return l.id !== id; });
+      if (!legsB.length) legsB = defaultLongPut();
+      renderLegsB();
+      recalc();
+    }
+
+    function clearLegsB() {
+      legsB = defaultLongPut();
+      renderLegsB();
+      recalc();
+    }
+
+    function updateLegFieldB(id, field, value, liveTyping) {
+      const saved = legs;
+      const savedRender = renderLegs;
+      legs = legsB;
+      renderLegs = function () {};
+      updateLegField(id, field, value, true);
+      legsB = legs;
+      legs = saved;
+      renderLegs = savedRender;
+      if (!liveTyping) renderLegsB();
+      recalc();
+    }
+
+    function renderLegsB() {
+      const container = document.getElementById('legsListB');
+      if (!container) return;
+      const saved = legs;
+      legs = legsB;
+      renderLegs();
+      container.innerHTML = document.getElementById('legsList').innerHTML
+        .replace(/updateLegField\(/g, 'updateLegFieldB(')
+        .replace(/removeLeg\(/g, 'removeLegB(');
+      legs = saved;
+      renderLegs();
+    }
+
+    function summarizeExpiry(expiry, labels) {
+      if (!expiry || !expiry.length) return { maxProfit: '—', maxLoss: '—', breakevens: '—' };
+      const maxP = Math.max.apply(null, expiry);
+      const minP = Math.min.apply(null, expiry);
+      let maxProfitText = formatMoney(maxP);
+      let maxLossText = formatMoney(minP);
+      if (expiry.length > 2) {
+        const lastSlope = expiry[expiry.length - 1] - expiry[expiry.length - 2];
+        if (lastSlope > 15 && maxP > 2000) maxProfitText = 'Unlimited';
+        const firstSlope = expiry[1] - expiry[0];
+        if (firstSlope < -15 && minP < -2000) maxLossText = 'Unlimited';
+      }
+      const bes = [];
+      for (let i = 1; i < expiry.length; i++) {
+        if (expiry[i - 1] * expiry[i] <= 0) {
+          const x0 = labels[i - 1], x1 = labels[i];
+          const y0 = expiry[i - 1], y1 = expiry[i];
+          if (Math.abs(y1 - y0) > 1e-9) {
+            bes.push((x0 - y0 * (x1 - x0) / (y1 - y0)).toFixed(1));
+          }
+        }
+      }
+      return {
+        maxProfit: maxProfitText,
+        maxLoss: maxLossText,
+        breakevens: bes.length ? bes.map(function (b) { return '$' + b; }).join(' / ') : '—'
+      };
+    }
+
+    function setNetLabel(el, net) {
+      if (!el) return;
+      if (net > 0) {
+        el.textContent = 'Debit ' + formatMoney(net);
+        el.style.color = 'var(--red)';
+      } else if (net < 0) {
+        el.textContent = 'Credit ' + formatMoney(Math.abs(net));
+        el.style.color = 'var(--green)';
+      } else {
+        el.textContent = '$0';
+        el.style.color = 'var(--text)';
+      }
+    }
+
+    function updateComparePanel(data, params) {
+      if (!compareMode) return;
+      const S = params.S;
+      const daysLeft = params.daysLeft;
+      const plB = legsB.length ? plAt(S, daysLeft, legsB) : 0;
+      const plEl = document.getElementById('plValueB');
+      if (plEl) {
+        plEl.textContent = (plB >= 0 ? '+' : '') + formatMoney(plB);
+        plEl.className = 'pl-value ' + (plB >= 0 ? 'pl-positive' : 'pl-negative');
+      }
+      setNetLabel(document.getElementById('netPremiumB'), legsB.length ? initialCost(legsB) : 0);
+      const sumB = summarizeExpiry(data.expiryB, data.labels);
+      const mp = document.getElementById('maxProfitB');
+      const ml = document.getElementById('maxLossB');
+      const be = document.getElementById('breakevensB');
+      if (mp) mp.textContent = sumB.maxProfit;
+      if (ml) ml.textContent = sumB.maxLoss;
+      if (be) be.textContent = sumB.breakevens;
+
+      const sumA = summarizeExpiry(data.expiry, data.labels);
+      const colA = document.getElementById('compareColA');
+      const colB = document.getElementById('compareColB');
+      const plA = plAt(S, daysLeft, legs);
+      if (colA) {
+        colA.innerHTML = '<h3>Strategy A at $' + S.toFixed(2) + '</h3>' +
+          'P/L now ' + formatMoney(plA) + '<br>Max profit ' + sumA.maxProfit +
+          '<br>Max loss ' + sumA.maxLoss + '<br>BE ' + sumA.breakevens;
+      }
+      if (colB) {
+        colB.innerHTML = '<h3>Strategy B at $' + S.toFixed(2) + '</h3>' +
+          'P/L now ' + formatMoney(plB) + '<br>Max profit ' + sumB.maxProfit +
+          '<br>Max loss ' + sumB.maxLoss + '<br>BE ' + sumB.breakevens;
+      }
+    }
+
+    function exportPayoffImage() {
+      if (!chart) updateChart();
+      if (!chart) return;
+      try {
+        const url = chart.toBase64Image('image/png', 1);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'jsm-payoff-' + new Date().toISOString().slice(0, 10) + '.png';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+      } catch (e) {
+        alert('Could not export the chart in this browser.');
+      }
+    }
+
+    function resetChartGestures() {
+      chartZoom = null;
+      recalc();
+    }
+
+    function bindChartGestures() {
+      const wrap = document.getElementById('chartContainer');
+      if (!wrap || chartGesturesBound) return;
+      chartGesturesBound = true;
+      let pointers = {};
+      let lastPinch = null;
+      let lastPanX = null;
+      let lastTap = 0;
+
+      function pointerList() {
+        return Object.keys(pointers).map(function (k) { return pointers[k]; });
+      }
+      function dist(a, b) {
+        const dx = a.x - b.x, dy = a.y - b.y;
+        return Math.sqrt(dx * dx + dy * dy);
+      }
+      function priceAtClientX(clientX) {
+        if (!chart || !chart.scales || !chart.scales.x) return null;
+        const rect = wrap.getBoundingClientRect();
+        const x = clientX - rect.left;
+        return chart.scales.x.getValueForPixel(x);
+      }
+
+      wrap.addEventListener('pointerdown', function (e) {
+        pointers[e.pointerId] = { x: e.clientX, y: e.clientY };
+        lastPanX = e.clientX;
+        wrap.setPointerCapture(e.pointerId);
+        const now = Date.now();
+        if (now - lastTap < 280 && Object.keys(pointers).length === 1) {
+          resetChartGestures();
+          lastTap = 0;
+        } else {
+          lastTap = now;
+        }
+      });
+      wrap.addEventListener('pointermove', function (e) {
+        if (!pointers[e.pointerId]) return;
+        pointers[e.pointerId] = { x: e.clientX, y: e.clientY };
+        const pts = pointerList();
+        if (pts.length >= 2) {
+          const d = dist(pts[0], pts[1]);
+          if (lastPinch && lastPinch > 0 && chart) {
+            const scale = d / lastPinch;
+            const xScale = chart.scales.x;
+            const mid = (xScale.min + xScale.max) / 2;
+            let span = (xScale.max - xScale.min) / scale;
+            span = Math.max(4, Math.min(span, (parseFloat(document.getElementById('spot').value) || 100) * 3));
+            chartZoom = { min: Math.max(0.5, mid - span / 2), max: mid + span / 2 };
+            const midClient = (pts[0].x + pts[1].x) / 2;
+            if (lastPanX != null) {
+              const p0 = priceAtClientX(lastPanX);
+              const p1 = priceAtClientX(midClient);
+              if (p0 != null && p1 != null) {
+                const shift = p0 - p1;
+                chartZoom.min += shift;
+                chartZoom.max += shift;
+              }
+            }
+            lastPanX = midClient;
+            updateChart();
+          }
+          lastPinch = d;
+        } else if (pts.length === 1) {
+          const price = priceAtClientX(e.clientX);
+          if (price && isFinite(price) && price > 0) {
+            document.getElementById('spot').value = price.toFixed(2);
+            const sl = document.getElementById('spotSlider');
+            if (sl) sl.value = price;
+            recalc();
+          }
+        }
+      });
+      function endPtr(e) {
+        delete pointers[e.pointerId];
+        if (Object.keys(pointers).length < 2) lastPinch = null;
+        if (!Object.keys(pointers).length) lastPanX = null;
+      }
+      wrap.addEventListener('pointerup', endPtr);
+      wrap.addEventListener('pointercancel', endPtr);
+      wrap.addEventListener('pointerleave', function (e) {
+        if (pointers[e.pointerId]) endPtr(e);
+      });
     }
 
     function liveUpdate() {
@@ -1583,6 +2018,7 @@
       crosshairS = S;
       crosshairPL = pl;
       updateChart();
+      updateComparePanel(data, params);
       updateGreeksUI();
       updateEduTip();
       if (simHistory.length) {
