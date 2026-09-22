@@ -6,523 +6,547 @@
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
   <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48.png">
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-
-  <title>Wheel, Cash-Secured Puts, Covered Calls &amp; Advanced Options Strategies</title>
-  <meta name="description" content="Learn the Wheel, cash-secured puts, covered calls, credit spreads, calendars, LEAPS, and iron condors with beginner-friendly examples and red/green payoff charts. Free advanced lessons.">
+  <title>Advanced Options Playbook - 45+ DTE, Wheel, Iron Condor, PMCC</title>
+  <meta name="description" content="Learn the Wheel, cash-secured puts, covered calls, credit spreads, calendars, LEAPS, and iron condors with beginner-friendly examples and red/green payoff charts. Free advanced lessons. 45+ DTE framework.">
   <link rel="canonical" href="https://jsm-options.com/level4/">
   <meta property="og:type" content="article">
   <meta property="og:site_name" content="JSM Options">
-  <meta property="og:title" content="Calendar Spreads, LEAPS &amp; Cash-Secured Puts Explained">
+  <meta property="og:title" content="Advanced Options Playbook - Trade Like The House">
   <meta property="og:description" content="Calendar spreads, credit spreads, cash-secured puts, covered calls, and LEAPS. Why 45+ DTE matters. Free advanced options lessons.">
   <meta property="og:url" content="https://jsm-options.com/level4/">
   <meta property="og:image" content="https://jsm-options.com/images/og-default.png">
-  <meta name="twitter:image" content="https://jsm-options.com/images/og-default.png">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Calendar Spreads, LEAPS &amp; Cash-Secured Puts Explained">
-  <meta name="twitter:description" content="Calendar spreads, credit spreads, cash-secured puts, covered calls, and LEAPS explained for intermediate learners.">
   <link rel="stylesheet" href="/assets/style.css?v=20260920">
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-BDL003RCN6"></script>
   <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-BDL003RCN6');</script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
-    .theta-box, .payoff-box{
-      background:var(--input);
-      border:1px solid var(--border);
-      border-radius:12px;
-      padding:16px 14px 12px;
-      margin:12px 0;
+    /* Hero Institutional - from screenshot */
+    .hero-institutional{
+      position:relative;
+      background:#0A0A0B;
+      border:1px solid rgba(255,255,255,0.08);
+      border-radius:20px;
+      overflow:hidden;
+      padding:32px;
+      margin:24px 0 40px;
+      isolation:isolate;
     }
-    .theta-box svg, .payoff-box svg{width:100%;height:auto;display:block}
-    .theta-caption, .payoff-caption{
-      font-size:.8rem;
-      color:var(--muted);
-      text-align:center;
-      margin-top:10px;
-      line-height:1.4;
+    .hero-institutional::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
+      background-size:48px 48px;
+      mask-image:radial-gradient(ellipse at center, black 60%, transparent 100%);
+      opacity:0.6;
+      z-index:-1;
     }
-    .payoff-legend{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;font-size:12px;margin-top:8px;color:var(--muted)}
-    .payoff-legend span::before{content:"";display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px;vertical-align:middle}
-    .payoff-legend .lg::before{background:#22c55e}
-    .payoff-legend .lr::before{background:#ef4444}
-    .step-list{margin:12px 0;padding-left:20px}
-    .step-list li{margin:8px 0;color:#c8d0dc}
+    .hero-topbar{
+      display:flex;justify-content:space-between;align-items:center;
+      font-size:11px;letter-spacing:0.18em;text-transform:uppercase;
+      color:#6B7280;margin-bottom:36px;flex-wrap:wrap;gap:8px;
+    }
+    .hero-topbar .dot{width:6px;height:6px;background:#10B981;border-radius:50%;display:inline-block;margin-left:8px;box-shadow:0 0 8px #10B981}
+    .hero-grid{
+      display:grid;grid-template-columns:1.1fr 0.9fr;gap:32px;align-items:start;
+    }
+    @media(max-width:960px){.hero-grid{grid-template-columns:1fr;}}
+    .badge-institutional{
+      display:inline-flex;align-items:center;gap:10px;
+      border:1px solid rgba(255,255,255,0.12);
+      background:rgba(255,255,255,0.06);
+      padding:8px 16px;border-radius:100px;
+      font-size:12px;letter-spacing:0.18em;font-weight:600;color:#E5E7EB;
+      margin-bottom:20px;
+    }
+    .badge-institutional .gdot{width:8px;height:8px;background:#34D399;border-radius:50%;box-shadow:0 0 10px #34D399}
+    .hero-title{
+      font-size:clamp(36px,5vw,72px);line-height:0.95;letter-spacing:-0.03em;
+      font-weight:800;color:#FFFFFF;font-family:Inter,system-ui;
+      margin:0 0 28px;
+    }
+    .hero-title .gray{color:#9CA3AF;font-weight:700}
+    .hero-desc{
+      font-size:18px;line-height:1.7;color:#9CA3AF;border-left:1px solid rgba(255,255,255,0.1);
+      padding-left:20px;max-width:560px;
+    }
+    .theta-card{
+      background:#141416;border:1px solid rgba(255,255,255,0.08);
+      border-radius:20px;padding:20px;position:relative;
+    }
+    .theta-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+    .theta-title{font-size:12px;letter-spacing:0.14em;color:#6B7280}
+    .live-badge{font-size:11px;background:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.25);color:#34D399;padding:5px 10px;border-radius:100px;font-weight:600}
+    .theta-graph{ background:#0E0E10;border:1px solid rgba(255,255,255,0.06);border-radius:14px;padding:16px;position:relative;overflow:hidden}
+    .theta-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:16px}
+    .tstat{background:#1A1A1E;border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:12px 14px}
+    .tstat .label{font-size:11px;letter-spacing:0.12em;color:#6B7280;margin-bottom:6px}
+    .tstat .value{font-size:20px;font-weight:700;color:#fff}
+    .tstat .sub{font-size:12px;color:#6B7280;margin-top:4px}
+    @media(max-width:520px){.theta-stats{grid-template-columns:1fr;}}
+
+    /* Options Content Clean Dark - merged */
+    .options-root{
+      background:var(--card, #1A1A1E);
+      border:1px solid var(--border, rgba(255,255,255,0.08));
+      border-radius:16px;
+      padding:32px;
+      color:var(--text, #D4D4D8);
+      font-family:Inter, system-ui, -apple-system, sans-serif;
+    }
+    html[data-theme="light"] .options-root{ background:#ffffff; border-color:#e5e7eb; }
+    html[data-theme="light"] .options-root p, html[data-theme="light"] .options-root li{ color:#374151; }
+    html[data-theme="light"] .options-root h2{ color:#111827; }
+    .options-root .intro{font-size:17px;line-height:1.7;color:#D1D5DB;margin-bottom:24px}
+    html[data-theme="light"] .options-root .intro{color:#4b5563}
+    .options-root .divider{border:none;border-top:1px solid rgba(255,255,255,0.08);margin:32px 0}
+    html[data-theme="light"] .options-root .divider{border-color:#e5e7eb}
+    .options-root .section{margin-bottom:12px}
+    .options-root .section-header{display:flex;gap:10px;align-items:center;font-size:20px;font-weight:700;color:#fff;margin-bottom:12px;line-height:1.3}
+    html[data-theme="light"] .options-root .section-header{color:#111827}
+    .options-root .section-sub{font-size:15px;line-height:1.6;color:#9CA3AF;margin-bottom:18px}
+    html[data-theme="light"] .options-root .section-sub{color:#6b7280}
+    .options-root .bullets{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:22px}
+    .options-root .bullets li{position:relative;padding-left:28px;line-height:1.7;font-size:15px;color:#D1D5DB}
+    html[data-theme="light"] .options-root .bullets li{color:#374151}
+    .options-root .bullets li::before{content:"";position:absolute;left:0;top:10px;width:6px;height:6px;background:#52525B;border-radius:50%}
+    .options-root .strategy-name{font-weight:700;color:#fff}
+    html[data-theme="light"] .options-root .strategy-name{color:#111827}
+    .options-root strong{color:#fff;font-weight:600}
+    html[data-theme="light"] .options-root strong{color:#111827}
+
+    /* viz */
+    .viz-wrapper{
+      background:#0E0E10;border:1px solid rgba(255,255,255,0.08);border-radius:12px;
+      padding:16px;margin:14px 0 6px 0;overflow:hidden;
+    }
+    html[data-theme="light"] .viz-wrapper{background:#f9fafb;border-color:#e5e7eb}
+    .viz-header{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+    .viz-example{font-size:12px;letter-spacing:0.06em;color:#A1A1AA;font-weight:600;text-transform:uppercase}
+    html[data-theme="light"] .viz-example{color:#6b7280}
+    .viz-contract-note{font-size:11px;color:#71717A;background:rgba(255,255,255,0.06);padding:4px 8px;border-radius:6px}
+    html[data-theme="light"] .viz-contract-note{background:#eef2ff;color:#4b5563}
+    .viz-chart{width:100%;height:280px;position:relative;background:#111113;border-radius:10px;border:1px solid rgba(255,255,255,0.05);overflow:hidden}
+    html[data-theme="light"] .viz-chart{background:#ffffff;border-color:#e5e7eb}
+    @media(max-width:640px){.viz-chart{height:220px}}
+    .viz-chart svg{width:100%;height:100%;display:block}
+    .viz-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:12px}
+    @media(max-width:640px){.viz-stats{grid-template-columns:1fr}}
+    .viz-stat{padding:10px 12px;border-radius:10px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06)}
+    html[data-theme="light"] .viz-stat{background:#fff;border-color:#e5e7eb}
+    .viz-stat .lab{font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:#71717A;margin-bottom:4px}
+    .viz-stat .val{font-size:16px;font-weight:700}
+    .viz-stat .val.green{color:#10B981} .viz-stat .val.red{color:#EF4444} .viz-stat .val.neutral{color:#fff}
+    html[data-theme="light"] .viz-stat .val.neutral{color:#111827}
+    .viz-stat .sub{font-size:11px;color:#71717A;margin-top:2px}
+    .viz-explain{font-size:13px;line-height:1.5;color:#9CA3AF;margin-top:10px}
+    html[data-theme="light"] .viz-explain{color:#6b7280}
+    .viz-legend{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;font-size:11px;color:#71717A;margin-top:8px}
+    .viz-legend span::before{content:"";display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px;vertical-align:middle}
+    .viz-legend .lg::before{background:#22c55e} .viz-legend .lr::before{background:#ef4444}
+    .viz-tooltip{position:absolute;pointer-events:none;background:#1F2937;color:#fff;padding:8px 10px;border-radius:8px;font-size:11px;line-height:1.4;border:1px solid rgba(255,255,255,0.1);transform:translate(-50%,-120%);white-space:nowrap;z-index:10;box-shadow:0 8px 20px rgba(0,0,0,0.4)}
+    html[data-theme="light"] .viz-tooltip{background:#111827}
+    .viz-toggle{display:flex;gap:6px;margin-bottom:10px}
+    .viz-toggle button{padding:6px 12px;border-radius:8px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.05);color:#9CA3AF;font-size:12px;font-weight:600;cursor:pointer}
+    html[data-theme="light"] .viz-toggle button{background:#f3f4f6;border-color:#e5e7eb;color:#4b5563}
+    .viz-toggle button.active{background:#fff;color:#000;border-color:#fff}
+    html[data-theme="light"] .viz-toggle button.active{background:#111827;color:#fff}
+
+    /* table */
+    .table-wrap{overflow-x:auto;border:1px solid rgba(255,255,255,0.08);border-radius:12px;margin-top:16px}
+    html[data-theme="light"] .table-wrap{border-color:#e5e7eb}
+    .options-root table{width:100%;border-collapse:collapse;font-size:14px}
+    .options-root th{text-align:left;padding:14px 16px;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:#A1A1AA;background:rgba(255,255,255,0.03);border-bottom:1px solid rgba(255,255,255,0.08)}
+    html[data-theme="light"] .options-root th{background:#f9fafb;color:#6b7280;border-color:#e5e7eb}
+    .options-root td{padding:14px 16px;border-bottom:1px solid rgba(255,255,255,0.06);color:#D1D5DB;line-height:1.6;vertical-align:top}
+    html[data-theme="light"] .options-root td{color:#374151;border-color:#f3f4f6}
+    .options-root td:first-child{font-weight:700;color:#fff;min-width:140px}
+    html[data-theme="light"] .options-root td:first-child{color:#111827}
+    .options-root tr:hover td{background:rgba(255,255,255,0.02)}
+    html[data-theme="light"] .options-root tr:hover td{background:#f9fafb}
+    @media(max-width:640px){
+      .options-root table, .options-root thead, .options-root tbody, .options-root th, .options-root td, .options-root tr{display:block}
+      .options-root thead{display:none}
+      .options-root tr{border-bottom:1px solid rgba(255,255,255,0.08);padding:12px}
+      .options-root td{border:none;padding:6px 0}
+      .options-root td::before{content:attr(data-label) ": ";font-weight:600;color:#71717A;font-size:11px;text-transform:uppercase;display:block;margin-bottom:2px}
+    }
+    .cta{margin-top:28px;padding:20px;border:1px solid rgba(255,255,255,0.08);border-radius:12px;background:rgba(255,255,255,0.03);text-align:center;color:#9CA3AF;line-height:1.6}
+    html[data-theme="light"] .cta{background:#f9fafb;border-color:#e5e7eb;color:#4b5563}
   </style>
 
-<style id="jsm-mobile-nav">
-.nav-toggle{display:none;box-sizing:border-box;width:44px;height:44px;min-width:44px;min-height:44px;padding:0;border:1px solid var(--border,#2d3a4f);border-radius:10px;background:var(--card,#1a2332);color:var(--text,#e7ecf3);cursor:pointer;align-items:center;justify-content:center;flex-direction:column;gap:5px;-webkit-tap-highlight-color:transparent;touch-action:manipulation;position:relative;z-index:40}
-.nav-toggle span{display:block;width:18px;height:2px;border-radius:1px;background:currentColor;pointer-events:none}
-.nav-toggle[aria-expanded="true"] span:nth-child(1){transform:translateY(7px) rotate(45deg)}
-.nav-toggle[aria-expanded="true"] span:nth-child(2){opacity:0}
-.nav-toggle[aria-expanded="true"] span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
-@media (max-width:900px){
-  .nav-toggle{display:inline-flex!important}
-  .site-header{z-index:100!important;position:sticky;top:0}
-  .site-header .nav{
-    display:none!important;
-    position:fixed!important;
-    top:56px!important;left:0!important;right:0!important;
-    width:100%!important;
-    max-height:calc(100vh - 56px)!important;
-    overflow-y:auto!important;
-    -webkit-overflow-scrolling:touch;
-    flex-direction:column!important;
-    align-items:stretch!important;
-    gap:6px!important;
-    padding:12px 16px 20px!important;
-    margin:0!important;
-    background:#0f1419!important;
-    border-bottom:1px solid #2d3a4f!important;
-    box-shadow:0 12px 28px rgba(0,0,0,.45)!important;
-    z-index:9999!important;
+  <style id="jsm-mobile-nav">
+  .nav-toggle{display:none;box-sizing:border-box;width:44px;height:44px;min-width:44px;min-height:44px;padding:0;border:1px solid var(--border,#2d3a4f);border-radius:10px;background:var(--card,#1a2332);color:var(--text,#e7ecf3);cursor:pointer;align-items:center;justify-content:center;flex-direction:column;gap:5px;-webkit-tap-highlight-color:transparent;touch-action:manipulation;position:relative;z-index:40}
+  .nav-toggle span{display:block;width:18px;height:2px;border-radius:1px;background:currentColor;pointer-events:none}
+  .nav-toggle[aria-expanded="true"] span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+  .nav-toggle[aria-expanded="true"] span:nth-child(2){opacity:0}
+  .nav-toggle[aria-expanded="true"] span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+  @media (max-width:900px){
+    .nav-toggle{display:inline-flex!important}
+    .site-header{z-index:100!important;position:sticky;top:0}
+    .site-header .nav{
+      display:none!important;
+      position:fixed!important;
+      top:56px!important;left:0!important;right:0!important;
+      width:100%!important;
+      max-height:calc(100vh - 56px)!important;
+      overflow-y:auto!important;
+      -webkit-overflow-scrolling:touch;
+      flex-direction:column!important;
+      align-items:stretch!important;
+      gap:6px!important;
+      padding:12px 16px 20px!important;
+      margin:0!important;
+      background:#0f1419!important;
+      border-bottom:1px solid #2d3a4f!important;
+      box-shadow:0 12px 28px rgba(0,0,0,.45)!important;
+      z-index:9999!important;
+    }
+    html[data-theme="light"] .site-header .nav{background:#ffffff!important;border-bottom-color:#e2e8f0!important}
+    .site-header .nav.is-open{display:flex!important}
+    .site-header .nav a{
+      width:100%!important;text-align:left!important;
+      padding:14px!important;font-size:16px!important;
+      min-height:48px!important;display:flex!important;align-items:center!important;
+      border-radius:10px!important;box-sizing:border-box!important;
+    }
   }
-  html[data-theme="light"] .site-header .nav{background:#ffffff!important;border-bottom-color:#e2e8f0!important}
-  .site-header .nav.is-open{display:flex!important}
-  .site-header .nav a{
-    width:100%!important;text-align:left!important;
-    padding:14px!important;font-size:16px!important;
-    min-height:48px!important;display:flex!important;align-items:center!important;
-    border-radius:10px!important;box-sizing:border-box!important;
-  }
-}
-</style>
-
-<script src="/assets/site.js?v=20260920" defer></script>
+  </style>
+  <script src="/assets/site.js?v=20260920" defer></script>
 </head>
 <body>
 <header class="site-header"><div class="site-header-inner"><a class="logo logo-link" href="/" aria-label="JSM Options Home"><div class="logo-icon">JSM</div><div><div style="font-weight:700">JSM Options</div><div class="brand-sub">jsm-options.com · Educational</div></div></a><div class="header-right"><nav class="nav" aria-label="Primary navigation"><a href="/">Home</a><a href="/level1/">Basics</a><a href="/level2/">Fundamentals</a><a href="/level3/">Spreads</a><a href="/level4/" class="active">Advanced</a><a href="/strategies/">Strategies</a><a href="/cheat-sheet/">Cheat sheet</a><a href="/builder/">Builder</a></nav><button type="button" class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button><button type="button" class="theme-toggle" id="themeToggle" aria-label="Toggle color theme"><span id="themeIcon" class="theme-icon">☼</span><span id="themeLabel" class="theme-label">Dark</span></button></div></div></header>
 
 <div class="wrap">
 <nav class="breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span aria-hidden="true">/</span><span aria-current="page">Advanced</span></nav>
-<nav class="lesson-toc" aria-label="On this page"><strong>On this page</strong><div class="lesson-toc-links"><a href="#dte">45+ DTE</a><a href="#csp">CSP</a><a href="#wheel">Wheel</a><a href="#covered-call">Covered call</a><a href="#spreads">Debit/credit</a><a href="#calendar">Calendar</a><a href="#"></a><a href="#iron-condor">Iron condor</a><a href="#risk-notes">Risk notes</a></div></nav>
 
-
-  <div class="hero">
-    <span class="badge">Advanced · Longer horizons</span>
-    <h1>Cash-secured puts, calendars, credits, covered calls &amp; LEAPS</h1>
-    <p>More structure, more time. Many discretionary traders prefer <b>45+ days to expiry</b> so theta is slower at entry and there is room to manage.</p>
+<!-- HERO FROM SCREENSHOT -->
+<div class="hero-institutional">
+  <div class="hero-topbar">
+    <div>—— EST. MMXXV • RISK-FIRST FRAMEWORK</div>
+    <div>THETA / VEGA / DELTA <span class="dot"></span></div>
   </div>
-
-  <div class="card">
-    <h2 id="dte">Why target 45+ DTE?</h2>
-    <ul>
-      <li><b>Slower early decay</b> — theta is often gentler far from expiry than in the final 2 weeks.</li>
-      <li><b>Room to adjust</b> — roll, close, or hedge before gamma spikes near expiration.</li>
-      <li><b>LEAPS</b> (long-dated options, often 1+ year) behave more like leveraged stock views with time still embedded.</li>
-    </ul>
-    <div class="note">This is a common teaching guideline, not a rule. Weekly options and 0-DTE products exist and behave very differently (high gamma, fast theta).</div>
-  </div>
-
-  <div class="card">
-    <h2 id="theta">Theta decay — sample shape</h2>
-    <p>Typical teaching picture: with other factors fixed, <b>time value</b> often falls faster in the last weeks before expiry than early in the life of the option. Long options usually <span class="loss">pay</span> theta; short premium often <span class="profit">collects</span> it — with risk attached.</p>
-    <div class="theta-box">
-      <svg viewBox="0 0 640 280" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Illustrative theta decay: time value falls faster as expiry approaches">
-        <defs>
-          <linearGradient id="tvFill" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stop-color="#3b82f6" stop-opacity="0.35"/>
-            <stop offset="100%" stop-color="#3b82f6" stop-opacity="0.02"/>
-          </linearGradient>
-        </defs>
-        <!-- plot area -->
-        <rect x="56" y="24" width="520" height="200" fill="#0f1419" stroke="#2d3a4f" rx="6"/>
-        <!-- grid lines -->
-        <g stroke="#2d3a4f" stroke-width="1">
-          <line x1="56" y1="74" x2="576" y2="74"/>
-          <line x1="56" y1="124" x2="576" y2="124"/>
-          <line x1="56" y1="174" x2="576" y2="174"/>
-          <line x1="186" y1="24" x2="186" y2="224"/>
-          <line x1="316" y1="24" x2="316" y2="224"/>
-          <line x1="446" y1="24" x2="446" y2="224"/>
-        </g>
-        <!-- area under curve: high at left (90 DTE), steep drop near right (0 DTE) -->
-        <path d="M56,48 C120,50 180,55 250,70 C320,88 380,115 440,155 C500,200 540,215 576,220 L576,224 L56,224 Z"
-              fill="url(#tvFill)"/>
-        <path d="M56,48 C120,50 180,55 250,70 C320,88 380,115 440,155 C500,200 540,215 576,220"
-              fill="none" stroke="#3b82f6" stroke-width="2.5" stroke-linecap="round"/>
-        <!-- axis labels -->
-        <g fill="#8b9bb4" font-family="Segoe UI, system-ui, sans-serif" font-size="12">
-          <text x="56" y="248">90 DTE</text>
-          <text x="186" y="248" text-anchor="middle">60</text>
-          <text x="316" y="248" text-anchor="middle">30</text>
-          <text x="446" y="248" text-anchor="middle">15</text>
-          <text x="576" y="248" text-anchor="end">0 (expiry)</text>
-          <text x="28" y="124" text-anchor="middle" transform="rotate(-90 28 124)">Time value →</text>
-          <text x="56" y="40" fill="#93c5fd" font-size="11">More time value</text>
-          <text x="500" y="210" fill="#93c5fd" font-size="11">Little left</text>
-        </g>
-        <!-- annotation -->
-        <g fill="#eab308" font-family="Segoe UI, system-ui, sans-serif" font-size="11">
-          <text x="400" y="100">Decay often accelerates</text>
-          <text x="400" y="114">near expiry →</text>
-        </g>
-      </svg>
-      <p class="theta-caption">Static illustration only — not a live pricing model. Actual theta depends on strike, IV, and moneyness.</p>
+  <div class="hero-grid">
+    <div>
+      <div class="badge-institutional"><span class="gdot"></span> INSTITUTIONAL PLAYBOOK</div>
+      <h1 class="hero-title">Trade Like The<br><span class="gray">House,</span><br>Not The Gambler</h1>
+      <p class="hero-desc">The most successful options traders rarely rely on direction-only bets like buying cheap, out-of-the-money options. Instead, they operate like the “house” in a casino, utilizing probability-based strategies that exploit time decay (Theta) and implied volatility (Vega). Here is a breakdown of the most widely used options trading strategies deployed by successful institutional and retail traders, categorized by market outlook.</p>
     </div>
-    <p style="font-size:.85rem;color:var(--muted)">Sample only — real theta depends on strike, IV, rates, and moneyness. Use the Builder’s Days Remaining slider on a live template to see <em>your</em> structure decay.</p>
-  </div>
-
-
-  <div class="note" role="note">
-    <strong>Mindset:</strong> “Advanced” means <em>more structure</em>, not “guaranteed income.” Every strategy below can lose money. Prefer stocks you understand, size small, and use the Builder to see red vs green before risking cash. Educational only.
-  </div>
-
-  <!-- ========== CSP ========== -->
-  <div class="card">
-    <div class="small">Bullish-to-neutral · income</div>
-    <h2 id="csp">Cash-secured put (CSP)</h2>
-    <p>You <b>sell a put</b> and keep enough cash in the account to <b>buy 100 shares</b> at the strike if the buyer exercises. You receive a <b>credit</b> (premium) up front.</p>
-    <p><strong>In plain English:</strong> you are paid to stand ready to buy the stock at a lower price. If the stock stays above the strike, the put often expires worthless and you keep the credit. If the stock falls and you are assigned, you <b>buy the shares</b> at the strike (your broker uses the cash you set aside).</p>
-    <ul>
-      <li><b>Max profit</b> = premium received (×100 per contract) if the put expires out of the money</li>
-      <li><b>Breakeven</b> ≈ strike − premium per share</li>
-      <li><b>Max loss</b> (if stock → $0) ≈ (strike − premium) × 100 — still large. “Cash-secured” means cash is reserved, <em>not</em> that risk is small</li>
-      <li><b>Assignment</b> = you buy 100 shares at the strike; cost basis ≈ strike − premium kept</li>
-    </ul>
-    <div class="analogy">
-      <b>Example:</b> Stock $100. Sell the $95 put for $2.00 → <span class="profit">+$200</span> credit. Reserve $9,500 cash.<br>
-      Stock stays above $95 → put expires → keep $200.<br>
-      Assigned at $95 → you <b>buy 100 shares</b> for $9,500; effective cost ≈ $93/share after the $2 premium.
-    </div>
-
-    <div class="payoff-box">
-      <svg viewBox="0 0 520 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Cash-secured put payoff at expiry">
-  <line x1="40" y1="150" x2="500" y2="150" stroke="#8b9bb4" stroke-width="1.5" opacity=".55"/>
-  <line x1="40" y1="30" x2="40" y2="230" stroke="#8b9bb4" stroke-width="1" opacity=".3"/>
-  <polygon points="40.0,220.0 173.9,150 40.0,150" fill="#ef4444" opacity="0.3"/><polygon points="173.9,150 260.0,105.0 260.0,150" fill="#22c55e" opacity="0.3"/><polygon points="260.0,105.0 500.0,105.0 500.0,150 260.0,150" fill="#22c55e" opacity="0.3"/>
-  <path d="M40.0 220.0 L260.0 105.0 L500.0 105.0" fill="none" stroke="#e7ecf3" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
-  <text x="14" y="36" fill="#8b9bb4" font-size="11" font-family="system-ui,sans-serif">P/L</text>
-  <text x="250" y="250" fill="#8b9bb4" font-size="11" font-family="system-ui,sans-serif" text-anchor="middle">Stock price at expiry →</text>
-  <text x="360" y="92" fill="#86efac" font-size="12" font-family="system-ui,sans-serif" text-anchor="start">Max profit = premium</text><text x="70" y="220" fill="#fca5a5" font-size="12" font-family="system-ui,sans-serif" text-anchor="start">Loss if stock falls</text>
-</svg>
-      <div class="payoff-legend"><span class="lg">Green = profit</span><span class="lr">Red = loss</span></div>
-      <p class="payoff-caption">Short put at expiry: continuous line from max loss through breakeven to flat max profit (premium).</p>
-    </div>
-
-    <h3>Why many learners use ~30–45+ DTE</h3>
-    <ul>
-      <li>More premium than ultra-short puts at a similar strike</li>
-      <li>Time to close early or roll if the trade goes against you</li>
-      <li>Avoid treating weeklies like lottery tickets until you understand assignment and gaps</li>
-    </ul>
-    <div class="warn"><strong>Risk:</strong> Only sell puts on stocks you are willing to <b>buy</b>. A CSP can lose far more than the credit. Educational only.</div>
-    <a class="btn" href="/builder/?template=cash_secured_put">Load Cash Secured Put in Builder →</a>
-  </div>
-
-  <!-- ========== WHEEL ========== -->
-  <div class="card">
-    <div class="small">Income cycle · CSP + covered call</div>
-    <h2 id="wheel">The Wheel strategy</h2>
-    <p>The <b>Wheel</b> is a <b>loop</b>, not one option. It connects cash-secured puts and covered calls: collect premium while waiting to buy shares you accept owning → collect premium while you hold them → shares sold when a call is assigned → start again.</p>
-
-    <div class="wheel-visual" role="img" aria-label="Wheel strategy cycle: sell CSP until assigned and you buy shares, sell covered call until shares are sold, then restart">
-      <svg viewBox="0 0 640 420" width="100%" height="auto" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="320" cy="210" r="150" fill="none" stroke="#2d3a4f" stroke-width="3" stroke-dasharray="8 6"/>
-        <path d="M320 60 A150 150 0 0 1 455 140" fill="none" stroke="#3b82f6" stroke-width="3"/>
-        <polygon points="455,140 442,128 440,145" fill="#3b82f6"/>
-        <path d="M470 210 A150 150 0 0 1 380 340" fill="none" stroke="#22c55e" stroke-width="3"/>
-        <polygon points="380,340 392,328 398,345" fill="#22c55e"/>
-        <path d="M260 350 A150 150 0 0 1 170 180" fill="none" stroke="#eab308" stroke-width="3"/>
-        <polygon points="170,180 178,194 162,192" fill="#eab308"/>
-        <circle cx="320" cy="210" r="48" fill="#1a2332" stroke="#3b82f6" stroke-width="2"/>
-        <text x="320" y="205" text-anchor="middle" fill="#e7ecf3" font-size="15" font-weight="700" font-family="system-ui,sans-serif">WHEEL</text>
-        <text x="320" y="224" text-anchor="middle" fill="#8b9bb4" font-size="11" font-family="system-ui,sans-serif">cycle</text>
-        <rect x="200" y="8" width="240" height="72" rx="12" fill="#1a2332" stroke="#3b82f6" stroke-width="1.5"/>
-        <text x="320" y="32" text-anchor="middle" fill="#60a5fa" font-size="12" font-weight="700" font-family="system-ui,sans-serif">1 · SELL CSP</text>
-        <text x="320" y="50" text-anchor="middle" fill="#c8d0dc" font-size="11" font-family="system-ui,sans-serif">Cash-secured put · collect credit</text>
-        <text x="320" y="66" text-anchor="middle" fill="#8b9bb4" font-size="10" font-family="system-ui,sans-serif">Repeat until assigned → you buy the shares</text>
-        <rect x="430" y="168" width="200" height="84" rx="12" fill="#1a2332" stroke="#22c55e" stroke-width="1.5"/>
-        <text x="530" y="194" text-anchor="middle" fill="#4ade80" font-size="12" font-weight="700" font-family="system-ui,sans-serif">2 · SELL COVERED CALL</text>
-        <text x="530" y="212" text-anchor="middle" fill="#c8d0dc" font-size="11" font-family="system-ui,sans-serif">You hold the shares</text>
-        <text x="530" y="228" text-anchor="middle" fill="#c8d0dc" font-size="11" font-family="system-ui,sans-serif">Sell a call against them</text>
-        <text x="530" y="244" text-anchor="middle" fill="#8b9bb4" font-size="10" font-family="system-ui,sans-serif">Repeat until shares are sold</text>
-        <rect x="20" y="300" width="230" height="84" rx="12" fill="#1a2332" stroke="#eab308" stroke-width="1.5"/>
-        <text x="135" y="326" text-anchor="middle" fill="#facc15" font-size="12" font-weight="700" font-family="system-ui,sans-serif">3 · RESTART</text>
-        <text x="135" y="344" text-anchor="middle" fill="#c8d0dc" font-size="11" font-family="system-ui,sans-serif">Shares sold → cash again</text>
-        <text x="135" y="360" text-anchor="middle" fill="#c8d0dc" font-size="11" font-family="system-ui,sans-serif">Back to step 1: sell CSP</text>
-        <text x="135" y="376" text-anchor="middle" fill="#8b9bb4" font-size="10" font-family="system-ui,sans-serif">Same stock or a new one</text>
-      </svg>
-    </div>
-
-    <ol class="step-list">
-      <li><strong>Sell a cash-secured put</strong> on a stock you are willing to buy. If it expires worthless, keep the premium and you can sell another put. If assigned, you <b>buy 100 shares</b> at the strike (cost basis ≈ strike − premiums kept).</li>
-      <li><strong>Sell a covered call</strong> against those shares. If the call expires worthless, keep the premium and you can sell another call. If the call is assigned, your shares are <b>sold</b> at the call strike.</li>
-      <li><strong>Restart</strong> — with cash again, return to step 1 and sell a new CSP.</li>
-    </ol>
-    <div class="warn"><strong>Risk stays real:</strong> a falling stock still hurts while you hold shares. A strong rally can force the sale of shares and cap upside. Educational only.</div>
-    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px">
-      <a class="btn" href="/builder/?template=cash_secured_put">CSP in Builder →</a>
-      <a class="btn btn-secondary" href="/builder/?template=covered_call">Covered Call in Builder →</a>
-      <a class="btn btn-secondary" href="/level2/">Covered Call lesson</a>
-    </div>
-  </div>
-
-  <!-- ========== COVERED CALL ========== -->
-  <div class="card">
-    <div class="small">Stock + short call · income</div>
-    <h2 id="covered-call">Covered call</h2>
-    <p>You <b>buy (or already hold) 100 shares</b> and <b>sell 1 call</b> against them. You collect a credit. Upside above the call strike is generally capped; downside on the shares remains — the premium only softens losses a little.</p>
-    <ul>
-      <li><b>Max profit</b> ≈ (call strike − stock purchase price) + premium, if shares are called away or finish above the strike</li>
-      <li><b>Breakeven</b> ≈ stock purchase price − premium</li>
-      <li><b>Risk</b> = stock can fall hard; premium is a small cushion, not insurance</li>
-    </ul>
-    <div class="analogy">
-      Buy stock at $100, sell the $105 call for $2 → <span class="profit">+$200</span> credit.<br>
-      Stock at $110 at expiry → shares sold at $105; total gain ≈ $5 + $2 = $7/share.<br>
-      Stock at $90 → loss on shares about $10, offset by $2 premium ≈ <span class="loss">$8</span>/share loss.
-    </div>
-    <div class="payoff-box">
-      <svg viewBox="0 0 520 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Covered call payoff at expiry">
-  <line x1="40" y1="150" x2="500" y2="150" stroke="#8b9bb4" stroke-width="1.5" opacity=".55"/>
-  <line x1="40" y1="30" x2="40" y2="230" stroke="#8b9bb4" stroke-width="1" opacity=".3"/>
-  <polygon points="40.0,230.0 182.2,150 40.0,150" fill="#ef4444" opacity="0.3"/><polygon points="182.2,150 280.0,95.0 280.0,150" fill="#22c55e" opacity="0.3"/><polygon points="280.0,95.0 500.0,95.0 500.0,150 280.0,150" fill="#22c55e" opacity="0.3"/>
-  <path d="M40.0 230.0 L280.0 95.0 L500.0 95.0" fill="none" stroke="#e7ecf3" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
-  <text x="14" y="36" fill="#8b9bb4" font-size="11" font-family="system-ui,sans-serif">P/L</text>
-  <text x="250" y="250" fill="#8b9bb4" font-size="11" font-family="system-ui,sans-serif" text-anchor="middle">Stock price at expiry →</text>
-  <text x="360" y="82" fill="#86efac" font-size="12" font-family="system-ui,sans-serif" text-anchor="start">Capped profit</text><text x="55" y="220" fill="#fca5a5" font-size="12" font-family="system-ui,sans-serif" text-anchor="start">Stock downside</text>
-</svg>
-      <div class="payoff-legend"><span class="lg">Green = profit</span><span class="lr">Red = loss</span></div>
-      <p class="payoff-caption">Covered call: line rises with the stock through breakeven to the short-call strike, then stays flat at max profit. Red = stock downside; green = profit zone.</p>
-    </div>
-    <a class="btn" href="/builder/?template=covered_call">Load Covered Call in Builder →</a>
-  </div>
-
-  <!-- ========== CREDIT / DEBIT SPREADS ========== -->
-  <div class="card">
-    <div class="small">Defined-risk verticals</div>
-    <h2 id="spreads">Debit spreads vs credit spreads</h2>
-    <p>A <b>vertical spread</b> is two options of the same type (calls or puts) and same expiry, different strikes. One is bought, one is sold. Risk is <b>defined</b> — you know the max loss at entry (before fees).</p>
-
-    <h3>Bull put spread (credit example)</h3>
-    <p>Sell a higher-strike put, buy a lower-strike put. You receive a net credit. You want the stock to stay <b>above</b> the short put strike.</p>
-    <div class="analogy">Sell $100 put / buy $95 put for $1.50 credit → max profit <span class="profit">$150</span>; max loss ≈ ($5 − $1.50) × 100 = <span class="loss">$350</span>.</div>
-    <div class="payoff-box">
-      <svg viewBox="0 0 520 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Bull put credit spread payoff at expiry">
-  <line x1="40" y1="150" x2="500" y2="150" stroke="#8b9bb4" stroke-width="1.5" opacity=".55"/>
-  <line x1="40" y1="30" x2="40" y2="230" stroke="#8b9bb4" stroke-width="1" opacity=".3"/>
-  <polygon points="40.0,205.0 140.0,205.0 140.0,150 40.0,150" fill="#ef4444" opacity="0.3"/><polygon points="140.0,205.0 197.6,150 140.0,150" fill="#ef4444" opacity="0.3"/><polygon points="197.6,150 250.0,100.0 250.0,150" fill="#22c55e" opacity="0.3"/><polygon points="250.0,100.0 500.0,100.0 500.0,150 250.0,150" fill="#22c55e" opacity="0.3"/>
-  <path d="M40.0 205.0 L140.0 205.0 L250.0 100.0 L500.0 100.0" fill="none" stroke="#e7ecf3" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
-  <text x="14" y="36" fill="#8b9bb4" font-size="11" font-family="system-ui,sans-serif">P/L</text>
-  <text x="250" y="250" fill="#8b9bb4" font-size="11" font-family="system-ui,sans-serif" text-anchor="middle">Stock price at expiry →</text>
-  <text x="340" y="88" fill="#86efac" font-size="12" font-family="system-ui,sans-serif" text-anchor="start">Max profit = credit</text><text x="50" y="222" fill="#fca5a5" font-size="12" font-family="system-ui,sans-serif" text-anchor="start">Max loss = width − credit</text>
-</svg>
-      <div class="payoff-legend"><span class="lg">Green = profit</span><span class="lr">Red = loss</span></div>
-      <p class="payoff-caption">Bull put (credit): flat max profit if stock stays high; limited max loss below the long put.</p>
-    </div>
-
-    <h3>Bull call spread (debit example)</h3>
-    <p>Buy a lower-strike call, sell a higher-strike call. You pay a net debit. You want the stock to rise toward (or above) the short call.</p>
-    <div class="analogy">Buy $100 call / sell $110 call for $4 debit → max loss <span class="loss">$400</span>; max profit ≈ ($10 − $4) × 100 = <span class="profit">$600</span>.</div>
-    <div class="payoff-box">
-      <svg viewBox="0 0 520 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Bull call debit spread payoff at expiry">
-  <line x1="40" y1="150" x2="500" y2="150" stroke="#8b9bb4" stroke-width="1.5" opacity=".55"/>
-  <line x1="40" y1="30" x2="40" y2="230" stroke="#8b9bb4" stroke-width="1" opacity=".3"/>
-  <polygon points="40.0,205.0 180.0,205.0 180.0,150 40.0,150" fill="#ef4444" opacity="0.3"/><polygon points="180.0,205.0 250.0,150 180.0,150" fill="#ef4444" opacity="0.3"/><polygon points="250.0,150 320.0,95.0 320.0,150" fill="#22c55e" opacity="0.3"/><polygon points="320.0,95.0 500.0,95.0 500.0,150 320.0,150" fill="#22c55e" opacity="0.3"/>
-  <path d="M40.0 205.0 L180.0 205.0 L320.0 95.0 L500.0 95.0" fill="none" stroke="#e7ecf3" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
-  <text x="14" y="36" fill="#8b9bb4" font-size="11" font-family="system-ui,sans-serif">P/L</text>
-  <text x="250" y="250" fill="#8b9bb4" font-size="11" font-family="system-ui,sans-serif" text-anchor="middle">Stock price at expiry →</text>
-  <text x="340" y="82" fill="#86efac" font-size="12" font-family="system-ui,sans-serif" text-anchor="start">Max profit = width − debit</text><text x="55" y="222" fill="#fca5a5" font-size="12" font-family="system-ui,sans-serif" text-anchor="start">Max loss = debit</text>
-</svg>
-      <div class="payoff-legend"><span class="lg">Green = profit</span><span class="lr">Red = loss</span></div>
-      <p class="payoff-caption">Bull call (debit): flat max loss (debit paid), then rises to flat max profit (width − debit).</p>
-    </div>
-    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px">
-      <a class="btn" href="/builder/?template=bull_call_spread">Bull call spread →</a>
-      <a class="btn btn-secondary" href="/builder/?template=bear_put_spread">Bear put spread →</a>
-      <a class="btn btn-secondary" href="/level3/">Spreads lesson</a>
-    </div>
-  </div>
-
-  <!-- ========== CALENDAR ========== -->
-  <div class="card">
-    <div class="small">Time spread</div>
-    <h2 id="calendar">Calendar spread (horizontal)</h2>
-    <p>Same strike, <b>different expirations</b>: typically <b>sell</b> a nearer-term option and <b>buy</b> a longer-dated one (net debit). You want the short front-month option to decay faster while the back-month keeps more value — often when price stays near the strike.</p>
-    <ul>
-      <li>Best thought of as a <b>time</b> trade, not a pure “stock goes to X” trade</li>
-      <li>IV changes matter a lot: a volatility crush can hurt the long leg</li>
-      <li>Payoff at the <em>front</em> expiry is not a simple single line — value depends on the remaining back-month option</li>
-    </ul>
-    <div class="analogy">Sell 30-DTE $100 call, buy 90-DTE $100 call for a debit. Ideal sketch: stock near $100 at the first expiry so the short call is cheap to close and the long call still has time value.</div>
-    <div class="payoff-box">
-      <svg viewBox="0 0 520 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Calendar spread conceptual payoff near front expiry">
-  <line x1="40" y1="150" x2="500" y2="150" stroke="#8b9bb4" stroke-width="1.5" opacity=".55"/>
-  <line x1="40" y1="30" x2="40" y2="230" stroke="#8b9bb4" stroke-width="1" opacity=".3"/>
-  <polygon points="40.0,205.0 120.0,205.0 120.0,150 40.0,150" fill="#ef4444" opacity="0.3"/><polygon points="120.0,205.0 181.6,150 120.0,150" fill="#ef4444" opacity="0.3"/><polygon points="181.6,150 260.0,80.0 260.0,150" fill="#22c55e" opacity="0.3"/><polygon points="260.0,80.0 338.4,150 260.0,150" fill="#22c55e" opacity="0.3"/><polygon points="338.4,150 400.0,205.0 400.0,150" fill="#ef4444" opacity="0.3"/><polygon points="400.0,205.0 500.0,205.0 500.0,150 400.0,150" fill="#ef4444" opacity="0.3"/>
-  <path d="M40.0 205.0 L120.0 205.0 L260.0 80.0 L400.0 205.0 L500.0 205.0" fill="none" stroke="#e7ecf3" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
-  <text x="14" y="36" fill="#8b9bb4" font-size="11" font-family="system-ui,sans-serif">P/L</text>
-  <text x="250" y="250" fill="#8b9bb4" font-size="11" font-family="system-ui,sans-serif" text-anchor="middle">Stock price at expiry →</text>
-  <text x="260" y="68" fill="#86efac" font-size="12" font-family="system-ui,sans-serif" text-anchor="middle">Peak near strike</text><text x="55" y="222" fill="#fca5a5" font-size="12" font-family="system-ui,sans-serif" text-anchor="start">Far move → loss</text><text x="400" y="222" fill="#fca5a5" font-size="12" font-family="system-ui,sans-serif" text-anchor="start">Far move → loss</text>
-</svg>
-      <div class="payoff-legend"><span class="lg">Green = profit</span><span class="lr">Red = loss</span></div>
-      <p class="payoff-caption">Calendar (illustrative near front expiry): continuous tent peaking near the strike. Green near the money; red when the stock moves far away. IV also matters in live markets.</p>
-    </div>
-    <a class="btn" href="/builder/?template=calendar_call">Load Calendar (Call) →</a>
-  </div>
-
-  <!-- ========== LEAPS ========== -->
-  <div class="card">
-    <div class="small">Long-dated options</div>
-    <h2 id="leaps">What are LEAPS (Long-Term Options)?</h2>
-    
-    <p><b>LEAPS</b> are options with expirations often <b>one year or more</b> out. A long LEAPS call is a long-term bullish view with a defined max loss (the premium). It can still go to zero if the thesis is wrong or time runs out.</p>
-    <ul>
-      <li>Uses less cash than buying 100 shares, but is not “cheaper risk” — 100% of the premium can be lost</li>
-      <li>Theta is slower early than on a 30-day option, but it still decays</li>
-      <li>Some investors sell shorter-term calls against a LEAPS call (diagonal / “poor man’s covered call” or PMCC) — meaning; you buy 1 very long-term (365+ days), In-the-Money (delta > 0.75) Call, and sell a shorter-term (45 - 60 days), Out-of-the-Money (delta < 0.25) call. Before your short call expires, or when it reaches a 50% profit, you ROLL-out.Roll-out: means closing the option that is approaching expiration and reopening it with a further expiration date. The goal here is to benefit from Theta, which means making money from time decay while waiting out the maturity of the long-term Call. Remember, <b>'Less is More'.</b></li>
-    </ul>
-    <div class="payoff-box">
-      <svg viewBox="0 0 520 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Long LEAPS call payoff at expiry">
-  <line x1="40" y1="150" x2="500" y2="150" stroke="#8b9bb4" stroke-width="1.5" opacity=".55"/>
-  <line x1="40" y1="30" x2="40" y2="230" stroke="#8b9bb4" stroke-width="1" opacity=".3"/>
-  <polygon points="40.0,200.0 240.0,200.0 240.0,150 40.0,150" fill="#ef4444" opacity="0.3"/><polygon points="240.0,200.0 323.9,150 240.0,150" fill="#ef4444" opacity="0.3"/><polygon points="323.9,150 500.0,45.0 500.0,150" fill="#22c55e" opacity="0.3"/>
-  <path d="M40.0 200.0 L240.0 200.0 L500.0 45.0" fill="none" stroke="#e7ecf3" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
-  <text x="14" y="36" fill="#8b9bb4" font-size="11" font-family="system-ui,sans-serif">P/L</text>
-  <text x="250" y="250" fill="#8b9bb4" font-size="11" font-family="system-ui,sans-serif" text-anchor="middle">Stock price at expiry →</text>
-  <text x="70" y="220" fill="#fca5a5" font-size="12" font-family="system-ui,sans-serif" text-anchor="start">Max loss = premium</text><text x="380" y="70" fill="#86efac" font-size="12" font-family="system-ui,sans-serif" text-anchor="start">Upside if stock rises</text>
-</svg>
-      <div class="payoff-legend"><span class="lg">Green = profit</span><span class="lr">Red = loss</span></div>
-      <p class="payoff-caption">Long call / LEAPS at expiry: flat max loss (premium), then rising profit if stock is above strike.</p>
-      
-    </div>
-    <ul>
-      <li>Broad Time Horizon: While standard option contracts typically have expirations of a few weeks or months, LEAPS contracts can have maturities ranging from 1 year up to 3 years.</li>
-      <li>Cost Advantage: Instead of buying the underlying stock directly, it allows you to participate in the long-term rise or fall of that stock with high leverage by paying a much lower capital (option premium).</li>
-      <li>Time Decay (Theta) Advantage: Time decay (Theta), which is the biggest enemy in short-term options, moves extremely slowly during the first months of LEAPS contracts due to their very long maturity. This grants the investor flexibility and time.</li>
-    </ul>
-    <a class="btn" href="/builder/?template=long_call">Start from Long Call (set DTE long) →</a>
-  </div>
-
-  <!-- ========== IRON CONDOR ========== -->
-  <div class="card">
-    <div class="small">Neutral · defined risk</div>
-    <h2 id="iron-condor">Iron condor (recap)</h2>
-    <p>An <b>iron condor</b> combines a bull put spread and a bear call spread. You collect a net credit and want the stock to stay in a <b>range</b> between the short strikes. Both sides have long options so risk is capped.</p>
-    <ul>
-      <li><b>Max profit</b> = net credit if price stays between the short put and short call</li>
-      <li><b>Max loss</b> ≈ width of one wing − credit (on the side that is breached)</li>
-      <li>Often taught with longer DTE (e.g. ~45) so there is time to manage before high gamma near expiry</li>
-    </ul>
-    <div class="payoff-box">
-      <svg viewBox="0 0 520 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Short iron condor payoff at expiry">
-  <line x1="40" y1="150" x2="500" y2="150" stroke="#8b9bb4" stroke-width="1.5" opacity=".55"/>
-  <line x1="40" y1="30" x2="40" y2="230" stroke="#8b9bb4" stroke-width="1" opacity=".3"/>
-  <polygon points="40.0,205.0 100.0,205.0 100.0,150 40.0,150" fill="#ef4444" opacity="0.3"/><polygon points="100.0,205.0 141.9,150 100.0,150" fill="#ef4444" opacity="0.3"/><polygon points="141.9,150 180.0,100.0 180.0,150" fill="#22c55e" opacity="0.3"/><polygon points="180.0,100.0 340.0,100.0 340.0,150 180.0,150" fill="#22c55e" opacity="0.3"/><polygon points="340.0,100.0 378.1,150 340.0,150" fill="#22c55e" opacity="0.3"/><polygon points="378.1,150 420.0,205.0 420.0,150" fill="#ef4444" opacity="0.3"/><polygon points="420.0,205.0 500.0,205.0 500.0,150 420.0,150" fill="#ef4444" opacity="0.3"/>
-  <path d="M40.0 205.0 L100.0 205.0 L180.0 100.0 L340.0 100.0 L420.0 205.0 L500.0 205.0" fill="none" stroke="#e7ecf3" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
-  <text x="14" y="36" fill="#8b9bb4" font-size="11" font-family="system-ui,sans-serif">P/L</text>
-  <text x="250" y="250" fill="#8b9bb4" font-size="11" font-family="system-ui,sans-serif" text-anchor="middle">Stock price at expiry →</text>
-  <text x="230" y="85" fill="#86efac" font-size="12" font-family="system-ui,sans-serif" text-anchor="middle">Profit in the range</text><text x="50" y="222" fill="#fca5a5" font-size="12" font-family="system-ui,sans-serif" text-anchor="start">Limited loss</text><text x="430" y="222" fill="#fca5a5" font-size="12" font-family="system-ui,sans-serif" text-anchor="start">Limited loss</text>
-</svg>
-      <div class="payoff-legend"><span class="lg">Green = profit</span><span class="lr">Red = loss</span></div>
-      <p class="payoff-caption">Short iron condor: flat max profit between short strikes; limited losses outside the wings.</p>
-    </div>
-    <a class="btn" href="/builder/?template=iron_condor">Load Iron Condor →</a>
-  </div>
-
-  <div class="warn">
-    <strong>Risk:</strong> Longer DTE is not automatically safer. You can still lose the full debit, or the maximum on a credit structure. LEAPS can lose most of their value if the thesis is wrong or IV collapses. Education only — not advice.
-  </div>
-
-  <div class="card" style="text-align:center">
-    <a class="btn" href="/builder/">Open Builder</a>
-    <a class="btn btn-secondary" href="/level3/">← Spreads</a>
-  </div>
-
-<div class="card" id="risk-notes">
-    <h2>IV, earnings, and assignment</h2>
-    <div class="risk-grid">
-      <div class="risk-card">
-        <h3>IV when selling premium</h3>
-        <p>CSPs, covered calls, and iron condors collect premium. Higher IV can mean richer credits — and more risk of large moves. Compare credit size to wing width or stock risk, not IV in isolation.</p>
+    <div class="theta-card">
+      <div class="theta-header">
+        <div class="theta-title">THETA DECAY • 45+ DTE MODEL</div>
+        <div class="live-badge">LIVE CURVE</div>
       </div>
-      <div class="risk-card">
-        <h3>Earnings</h3>
-        <p>Holding short options through earnings can produce gaps through your short strikes. Many learners avoid short premium through binary events until they understand assignment and gap risk.</p>
+      <div class="theta-graph">
+        <svg viewBox="0 0 520 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto">
+          <defs><linearGradient id="g1" x1="0" x2="0" y1="0" y2="1"><stop offset="0%" stop-color="#10B981" stop-opacity="0.35"/><stop offset="100%" stop-color="#10B981" stop-opacity="0"/></linearGradient></defs>
+          <line x1="40" y1="20" x2="40" y2="160" stroke="rgba(255,255,255,0.06)" stroke-width="1"/><line x1="40" y1="160" x2="500" y2="160" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+          <path d="M40 30 C 140 32, 220 50, 300 90 S 420 165, 500 180" fill="none" stroke="#10B981" stroke-width="2.5" stroke-linecap="round"/>
+          <path d="M40 30 C 140 32, 220 50, 300 90 S 420 165, 500 180 L 500 160 L 40 160 Z" fill="url(#g1)"/>
+          <circle cx="40" cy="30" r="5" fill="#10B981" stroke="#0A0A0B" stroke-width="2"/>
+          <circle cx="300" cy="90" r="5" fill="#FBBF24" stroke="#0A0A0B" stroke-width="2"/>
+          <circle cx="460" cy="155" r="5" fill="#EF4444" stroke="#0A0A0B" stroke-width="2"/>
+          <text x="40" y="178" font-size="10" fill="#6B7280" font-family="Inter">45+ DTE • SLOW Θ</text>
+          <text x="260" y="178" font-size="10" fill="#FBBF24" font-family="Inter">21 DTE • ACCELERATION</text>
+          <text x="400" y="178" font-size="10" fill="#F87171" font-family="Inter">0 DTE • GAMMA RISK</text>
+        </svg>
       </div>
-      <div class="risk-card">
-        <h3>Assignment</h3>
-        <p>Short puts → may <b>buy</b> shares. Short calls against stock → may <b>sell</b> shares. Pin risk and early exercise exist; defined-risk spreads still need monitoring near expiration.</p>
+      <div class="theta-stats">
+        <div class="tstat"><div class="label">WIN RATE</div><div class="value">68-82%</div><div class="sub">High Prob.</div></div>
+        <div class="tstat"><div class="label">AVG HOLD</div><div class="value">21 D</div><div class="sub">Manage Early</div></div>
+        <div class="tstat"><div class="label">EDGE</div><div class="value">Theta+Vega</div><div class="sub">House Model</div></div>
       </div>
     </div>
-    <div class="practice-prompt"><b>Practice:</b> Load <a href="/builder/?template=cash_secured_put">CSP</a>, then <a href="/builder/?template=covered_call">covered call</a>. Walk price through assignment zones and read max profit vs max loss on the solid line.</div>
+  </div>
+</div>
+
+<!-- OPTIONS CONTENT CLEAN DARK WITH VIZ -->
+<div class="options-root">
+  <p class="intro">The most successful options traders rarely rely on direction-only bets like buying cheap, out-of-the-money options. Instead, they operate like the "house" in a casino, utilizing <strong>probability-based strategies</strong> that exploit time decay <strong>(Theta)</strong> and implied volatility <strong>(Vega)</strong>.</p>
+  <p class="intro">Here is a breakdown of the most widely used options trading strategies deployed by successful institutional and retail traders, categorized by market outlook.</p>
+
+  <hr class="divider">
+
+  <div class="section">
+    <h2 class="section-header">🔎 1. Income & Cash Flow Generation (Delta Neutral / Range-Bound)</h2>
+    <p class="section-sub">These strategies are the core of a professional options trader's portfolio. They thrive when the market moves sideways or stays within a defined range.</p>
+    <ul class="bullets">
+      <li>
+        <span class="strategy-name">The Wheel Strategy:</span> A systematic two-step loop. Traders start by selling a <strong>Cash-Secured Put (CSP)</strong> on a stock they want to own at a discount. If the stock drops and they are assigned, they take ownership of the shares. They then immediately begin selling <strong>Covered Calls</strong> against those shares until they are called away, generating consistent premium income at every stage.
+        <div class="viz-wrapper" data-viz="wheel">
+          <div class="viz-header"><span class="viz-example">EXAMPLE: XYZ @ $100 | CSP $95 Put $2.00 = $200 TOTAL | CC $105 Call $1.50 = $150 TOTAL</span><span class="viz-contract-note">1 Contract = 100 Shares</span></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px" class="viz-grid-2">
+            <div><div style="font-size:11px;color:#71717A;margin-bottom:6px;font-weight:600">PHASE 1: CASH-SECURED PUT</div><div class="viz-chart" id="chart-wheel-csp"></div></div>
+            <div><div style="font-size:11px;color:#71717A;margin-bottom:6px;font-weight:600">PHASE 2: COVERED CALL @ $95 Cost Basis</div><div class="viz-chart" id="chart-wheel-cc"></div></div>
+          </div>
+          <div class="viz-stats">
+            <div class="viz-stat"><div class="lab">Csp Max Profit</div><div class="val green">+$200 TOTAL</div><div class="sub">$2.00/share × 100</div></div>
+            <div class="viz-stat"><div class="lab">Breakeven</div><div class="val neutral">$93.00</div><div class="sub">$95 Strike - $2 Premium</div></div>
+            <div class="viz-stat"><div class="lab">Covered Call Monthly</div><div class="val green">+$150 TOTAL</div><div class="sub">$1.50/share × 100 / mo</div></div>
+          </div>
+          <p class="viz-explain">Green = you keep $200 if XYZ stays above $95. Red = you buy 100 shares at effective $93 ($9,300 total) if it drops below.</p>
+          <div class="viz-legend"><span class="lg">Green = profit</span><span class="lr">Red = loss</span></div>
+        </div>
+      </li>
+      <li>
+        <span class="strategy-name">Iron Condor:</span> A multi-leg strategy used when a trader expects low volatility. It involves selling an OTM Put Spread and an OTM Call Spread simultaneously. It limits both maximum risk and maximum reward, profiting heavily as long as the underlying stock stays within the "safety runway" before expiration.
+        <div class="viz-wrapper" data-viz="ironcondor">
+          <div class="viz-header"><span class="viz-example">EXAMPLE: XYZ @ $100 | Sell 90/85 Put + 110/115 Call | $4.00 Credit = $400 TOTAL</span><span class="viz-contract-note">$4.00/share × 100 = $400 TOTAL</span></div>
+          <div class="viz-chart" id="chart-ironcondor"></div>
+          <div class="viz-stats">
+            <div class="viz-stat"><div class="lab">Max Profit</div><div class="val green">+$400 TOTAL</div><div class="sub">$4.00 × 100 inside $90-$110</div></div>
+            <div class="viz-stat"><div class="lab">Max Loss Per Side</div><div class="val red">-$100 TOTAL</div><div class="sub">($5 Width - $4 Credit) × 100</div></div>
+            <div class="viz-stat"><div class="lab">Safety Runway</div><div class="val neutral">$90 - $110</div><div class="sub">Flat top = profit zone</div></div>
+          </div>
+          <p class="viz-explain">You want XYZ to finish between $90 and $110 at expiry. Green flat top is $400 profit. Red wings outside $85/$115 are limited $100 loss.</p>
+        </div>
+      </li>
+      <li>
+        <span class="strategy-name">Strangles & Straddles (Short):</span> Highly advanced traders sell premium naked (uncovered) or via wide strangles when Implied Volatility (IV) is exceptionally high, betting that IV will collapse (Volatility Crush) faster than the price can breach their strikes.
+        <div class="viz-wrapper" data-viz="straddle">
+          <div class="viz-header"><span class="viz-example">SHORT VOLATILITY CRUSH</span><span class="viz-contract-note">Premium × 100 = TOTAL</span></div>
+          <div class="viz-toggle"><button class="active" data-target="straddle">Straddle $100 $8.00 = $800</button><button data-target="strangle">Strangle $95/$105 $4.50 = $450</button></div>
+          <div class="viz-chart" id="chart-straddle"></div>
+          <div class="viz-stats" id="stats-straddle">
+            <div class="viz-stat"><div class="lab">Max Profit</div><div class="val green">+$800 TOTAL</div><div class="sub">$8.00 × 100 at $100 exactly</div></div>
+            <div class="viz-stat"><div class="lab">Breakevens</div><div class="val neutral">$92 / $108</div><div class="sub">$100 ± $8 premium</div></div>
+            <div class="viz-stat"><div class="lab">Risk</div><div class="val red">Unlimited</div><div class="sub">Loss grows past BEs</div></div>
+          </div>
+          <p class="viz-explain">Green peak = max $800 if price doesn't move. You profit from IV collapsing faster than price moves.</p>
+        </div>
+      </li>
+    </ul>
   </div>
 
-  <div class="card bmc-card">
-    <h2>Support the site</h2>
-    <p>Lessons and the Builder stay free. If they help, you can buy a coffee.</p>
-    <a class="bmc-link" href="https://www.buymeacoffee.com/memoliro" target="_blank" rel="noopener">☕ Buy me a coffee</a>
+  <hr class="divider">
+
+  <div class="section">
+    <h2 class="section-header">📊 2. Synthetic Stock & Capital-Efficient Strategies (Bullish / Neutral)</h2>
+    <p class="section-sub">Successful traders strictly monitor their <strong>Return on Capital (ROC)</strong>. These strategies mimic stock ownership for a fraction of the cost.</p>
+    <ul class="bullets">
+      <li>
+        <span class="strategy-name">Poor Man's Covered Call (PMCC):</span> As you noted, this <strong>Diagonal Call Spread</strong> replaces expensive stock shares with a deep In-the-Money <strong>LEAPS Call (Delta &gt; 0.75, 365+ DTE)</strong>. Traders then systematically sell short-term Out-of-the-Money Calls (45-60 DTE) against it, harvesting Theta while scaling into a highly leveraged position.
+        <div class="viz-wrapper">
+          <div class="viz-header"><span class="viz-example">EXAMPLE: XYZ @ $100 | Buy $70 LEAPS $32.00 = $3,200 vs $10,000 Stock | Sell $105 Call $1.50 = $150 TOTAL</span><span class="viz-contract-note">Save $6,800 Capital</span></div>
+          <div class="viz-chart" id="chart-pmcc"></div>
+          <div class="viz-stats">
+            <div class="viz-stat"><div class="lab">LEAPS Cost</div><div class="val neutral">$3,200 TOTAL</div><div class="sub">$32.00 × 100 vs $10,000 stock</div></div>
+            <div class="viz-stat"><div class="lab">Monthly Harvest</div><div class="val green">+$150 TOTAL</div><div class="sub">$1.50 × 100 / 45+ DTE cycle</div></div>
+            <div class="viz-stat"><div class="lab">Year Potential</div><div class="val green">+$1,800 TOTAL</div><div class="sub">$150 × 12 months</div></div>
+          </div>
+          <p class="viz-explain">Chart looks like owning stock up to $105 then flat. You control 100 shares for 32% of cost and collect $150 each cycle.</p>
+        </div>
+      </li>
+      <li>
+        <span class="strategy-name">Credit Spreads (Bull Put / Bear Call):</span> Instead of buying an option and fighting time decay, traders sell an option closer to the stock price and buy a further OTM option as insurance. This defines their maximum risk up front and creates a high-probability trade where the stock can go up, sideways, or even slightly against them, and they still win.
+        <div class="viz-wrapper">
+          <div class="viz-toggle"><button class="active" data-target="bullput">Bull Put $95/$90 $1.20 = $120</button><button data-target="bearcall">Bear Call $105/$110 $1.20 = $120</button></div>
+          <div class="viz-chart" id="chart-credit"></div>
+          <div class="viz-stats">
+            <div class="viz-stat"><div class="lab">Max Profit</div><div class="val green">+$120 TOTAL</div><div class="sub">$1.20 × 100 if above $95</div></div>
+            <div class="viz-stat"><div class="lab">Max Loss</div><div class="val red">-$380 TOTAL</div><div class="sub">($5 - $1.20) × 100 = $380</div></div>
+            <div class="viz-stat"><div class="lab">Breakeven</div><div class="val neutral">$93.80</div><div class="sub">$95 - $1.20</div></div>
+          </div>
+          <p class="viz-explain">Green zone = keep $120 even if stock goes slightly against you. Red zone limited to $380 max. High probability.</p>
+        </div>
+      </li>
+    </ul>
   </div>
-</div><footer class="site-footer">
+
+  <hr class="divider">
+
+  <div class="section">
+    <h2 class="section-header">📈 3. Volatility Directional Strategies (Hedging & Black Swan Events)</h2>
+    <p class="section-sub">Professionals treat volatility as an asset class. They buy options when it is structurally underpriced.</p>
+    <ul class="bullets">
+      <li>
+        <span class="strategy-name">Calendar Spreads (Time Spreads):</span> A trader sells a short-term option and buys a longer-term option at the <strong>exact same strike price</strong>. This strategy wins if the underlying asset stays flat, but <strong>Implied Volatility spikes</strong>, because the longer-dated option expands in value much faster than the short-term one.
+        <div class="viz-wrapper">
+          <div class="viz-header"><span class="viz-example">EXAMPLE: Sell 30D $100 Call $2.00 = $200 | Buy 60D $100 Call $4.50 = $450 | Net $2.50 Debit = $250 TOTAL</span><span class="viz-contract-note">Net Debit $250</span></div>
+          <div class="viz-chart" id="chart-calendar"></div>
+          <div class="viz-stats">
+            <div class="viz-stat"><div class="lab">Peak Profit</div><div class="val green">+$150 TOTAL</div><div class="sub">Near $100 + IV spike</div></div>
+            <div class="viz-stat"><div class="lab">Max Loss</div><div class="val red">-$250 TOTAL</div><div class="sub">$2.50 × 100 debit</div></div>
+            <div class="viz-stat"><div class="lab">Sweet Spot</div><div class="val neutral">$100</div><div class="sub">Exact same strike</div></div>
+          </div>
+          <p class="viz-explain">Bell curve green peak at $100. Profits if stock stays flat and Vega expands long-dated option faster.</p>
+        </div>
+      </li>
+      <li>
+        <span class="strategy-name">Long Put Spreads / Protective Puts:</span> Used strictly as portfolio insurance. Successful macro traders systematically allocate a small percentage of their capital to cheap, long-dated OTM Put options to hedge long equity portfolios against sudden market crashes.
+        <div class="viz-wrapper">
+          <div class="viz-header"><span class="viz-example">EXAMPLE: Own 100 XYZ @ $100 = $10,000 | Buy $95 Put $2.00 = $200 Insurance</span><span class="viz-contract-note">$2.00 × 100 = $200 Fee</span></div>
+          <div class="viz-chart" id="chart-protective"></div>
+          <div class="viz-stats">
+            <div class="viz-stat"><div class="lab">Insurance Cost</div><div class="val neutral">-$200 TOTAL</div><div class="sub">$2.00 × 100 = $200</div></div>
+            <div class="viz-stat"><div class="lab">Max Loss Capped</div><div class="val red">-$700 TOTAL</div><div class="sub">($5 drop + $2 fee) × 100</div></div>
+            <div class="viz-stat"><div class="lab">Without Put</div><div class="val red">Unlimited Down</div><div class="sub">Stock could crash</div></div>
+          </div>
+          <p class="viz-explain">Pay $200 total to cap loss at $700. Green upside unlimited minus $200 fee. Red flat below $95 = protected.</p>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <hr class="divider">
+
+  <div class="section">
+    <h2 class="section-header">💡 Core Mechanics of Successful Traders</h2>
+    <p class="section-sub">Regardless of the strategy chosen, successful options traders almost universally adhere to these three mathematical rules:</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Rule</th><th>Execution Strategy</th><th>Why It Matters</th></tr></thead>
+        <tbody>
+          <tr><td data-label="Rule">Sell 45+ DTE, Manage at 21 DTE</td><td data-label="Execution Strategy">Entering trades around 45+ Days to Expiration captures the fastest acceleration of Theta decay while minimizing assignment risk.</td><td data-label="Why It Matters">Avoids the volatile "gamma risk" of expiry week.</td></tr>
+          <tr><td data-label="Rule">Take Profits Early</td><td data-label="Execution Strategy">Closing short premium trades at 50% of maximum profit or rolling out (like your PMCC rule).</td><td data-label="Why It Matters">Dramatically increases the overall win-rate over time.</td></tr>
+          <tr><td data-label="Rule">Trading High Implied Volatility (IV)</td><td data-label="Execution Strategy">Selling options when IV Percentile (IVP) is over 50%.</td><td data-label="Why It Matters">Options are statistically overpriced during high IV, giving sellers an edge when volatility reverts to its mean.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="cta"><p>Would you like to deep-dive into one of these specific frameworks, such as setting up the mathematical rules for an Iron Condor or exploring how to manage The Wheel Strategy when a trade goes completely against you?</p></div>
+</div>
+
+</div><!-- wrap -->
+
+<footer class="site-footer">
   <div class="footer-note">Educational only — not financial advice. Options involve risk of loss.</div>
   <div class="footer-links">
-    <a href="/">Home</a>
-    <a href="/level1/">Basics</a>
-    <a href="/level2/">Fundamentals</a>
-    <a href="/level3/">Spreads</a>
-    <a href="/level4/">Advanced</a>
-    <a href="/strategies/">Strategies</a>
-    <a href="/builder/">Builder</a>
-    <a href="/about/">About</a>
-    <a href="/contact/">Contact</a>
-    <a href="/disclaimer/">Disclaimer</a>
-    <a href="/privacy/">Privacy</a>
+    <a href="/">Home</a><a href="/level1/">Basics</a><a href="/level2/">Fundamentals</a><a href="/level3/">Spreads</a><a href="/level4/">Advanced</a><a href="/strategies/">Strategies</a><a href="/builder/">Builder</a><a href="/about/">About</a><a href="/contact/">Contact</a><a href="/disclaimer/">Disclaimer</a><a href="/privacy/">Privacy</a>
   </div>
-    <div class="footer-tools" style="margin-top:12px;font-size:12px;opacity:.9">
-      More free tools:
-      <a href="https://lyricprep.com/" target="_blank" rel="noopener">LyricPrep</a> ·
-      <a href="https://jsm-image.com/" target="_blank" rel="noopener">JSM Image</a> ·
-      <a href="https://jsm-video.com/" target="_blank" rel="noopener">JSM Video</a> ·
-      <a href="https://jsm-loudness.com/" target="_blank" rel="noopener">JSM Loudness</a>
-    </div>
+  <div class="footer-tools" style="margin-top:12px;font-size:12px;opacity:.9">More free tools: <a href="https://lyricprep.com/" target="_blank" rel="noopener">LyricPrep</a> · <a href="https://jsm-image.com/" target="_blank" rel="noopener">JSM Image</a> · <a href="https://jsm-video.com/" target="_blank" rel="noopener">JSM Video</a> · <a href="https://jsm-loudness.com/" target="_blank" rel="noopener">JSM Loudness</a></div>
 </footer>
 
+<script>
+// Generic payoff chart drawer with totals
+function drawChart(containerId, points, strikes, opts={}){
+  const container = document.getElementById(containerId);
+  if(!container) return;
+  container.innerHTML='';
+  const W=600, H=260, M={l:56,r:16,t:20,b:34};
+  const svgNS="http://www.w3.org/2000/svg";
+  const svg=document.createElementNS(svgNS,"svg");
+  svg.setAttribute("viewBox",`0 0 ${W} ${H}`);
+  svg.setAttribute("preserveAspectRatio","none");
+  svg.style.width="100%"; svg.style.height="100%";
+  const xMin=Math.min(...points.map(p=>p.x)), xMax=Math.max(...points.map(p=>p.x));
+  const yVals=[...points.map(p=>p.y),0];
+  let yMin=Math.min(...yVals), yMax=Math.max(...yVals);
+  let yr=yMax-yMin||100; yMin-=yr*0.15; yMax+=yr*0.15;
+  if(yMin>0) yMin=-yr*0.2; if(yMax<0) yMax=yr*0.2;
+  const toX=x=>M.l+((x-xMin)/(xMax-xMin||1))*(W-M.l-M.r);
+  const toY=y=>M.t+(H-M.t-M.b)-((y-yMin)/(yMax-yMin||1))*(H-M.t-M.b);
+  const yZero=toY(0);
+  // grid
+  for(let i=0;i<5;i++){let y=M.t+i/4*(H-M.t-M.b); let l=document.createElementNS(svgNS,"line"); l.setAttribute("x1",M.l); l.setAttribute("x2",W-M.r); l.setAttribute("y1",y); l.setAttribute("y2",y); l.setAttribute("stroke","rgba(255,255,255,0.06)"); l.setAttribute("stroke-width","1"); svg.appendChild(l);}
+  for(let i=0;i<6;i++){let x=M.l+i/5*(W-M.l-M.r); let l=document.createElementNS(svgNS,"line"); l.setAttribute("x1",x); l.setAttribute("x2",x); l.setAttribute("y1",M.t); l.setAttribute("y2",H-M.b); l.setAttribute("stroke","rgba(255,255,255,0.04)"); l.setAttribute("stroke-width","1"); svg.appendChild(l);}
+  let zl=document.createElementNS(svgNS,"line"); zl.setAttribute("x1",M.l); zl.setAttribute("x2",W-M.r); zl.setAttribute("y1",yZero); zl.setAttribute("y2",yZero); zl.setAttribute("stroke","rgba(255,255,255,0.18)"); zl.setAttribute("stroke-width","1.2"); svg.appendChild(zl);
+  // strikes
+  (strikes||[]).forEach(s=>{
+    let x=toX(s.x); let l=document.createElementNS(svgNS,"line"); l.setAttribute("x1",x); l.setAttribute("x2",x); l.setAttribute("y1",M.t); l.setAttribute("y2",H-M.b); l.setAttribute("stroke","rgba(255,255,255,0.22)"); l.setAttribute("stroke-dasharray","5 5"); l.setAttribute("stroke-width","1"); svg.appendChild(l);
+    let t=document.createElementNS(svgNS,"text"); t.setAttribute("x",x); t.setAttribute("y",M.t+10); t.setAttribute("text-anchor","middle"); t.setAttribute("font-size","10"); t.setAttribute("fill","#A1A1AA"); t.textContent=s.label; svg.appendChild(t);
+  });
+  // enriched with zero crossings
+  let enriched=[]; let sorted=[...points].sort((a,b)=>a.x-b.x);
+  for(let i=0;i<sorted.length-1;i++){enriched.push(sorted[i]); if(sorted[i].y*sorted[i+1].y<0){let t=(0-sorted[i].y)/(sorted[i+1].y-sorted[i].y); let xz=sorted[i].x+t*(sorted[i+1].x-sorted[i].x); enriched.push({x:xz,y:0,isBE:true});}} enriched.push(sorted[sorted.length-1]);
+  // fill green/red
+  for(let i=0;i<enriched.length-1;i++){
+    let p1=enriched[i], p2=enriched[i+1]; let avg=(p1.y+p2.y)/2; let col=avg>=0?"rgba(34,197,94,0.25)":"rgba(239,68,68,0.25)";
+    let poly=document.createElementNS(svgNS,"polygon");
+    let pts=`${toX(p1.x)},${toY(p1.y)} ${toX(p2.x)},${toY(p2.y)} ${toX(p2.x)},${yZero} ${toX(p1.x)},${yZero}`;
+    poly.setAttribute("points",pts); poly.setAttribute("fill",col); svg.appendChild(poly);
+  }
+  // line
+  let pathD=""; enriched.forEach((p,i)=>{let x=toX(p.x), y=toY(p.y); pathD+= (i===0?"M":" L")+x+" "+y;});
+  let path=document.createElementNS(svgNS,"path"); path.setAttribute("d",pathD); path.setAttribute("fill","none"); path.setAttribute("stroke","#E5E7EB"); path.setAttribute("stroke-width","2.5"); path.setAttribute("stroke-linejoin","round"); path.setAttribute("stroke-linecap","round"); svg.appendChild(path);
+  // colored segments overlay
+  for(let i=0;i<enriched.length-1;i++){
+    let p1=enriched[i], p2=enriched[i+1]; let col=(p1.y+p2.y)/2>=0?"#10B981":"#EF4444";
+    let l=document.createElementNS(svgNS,"line"); l.setAttribute("x1",toX(p1.x)); l.setAttribute("y1",toY(p1.y)); l.setAttribute("x2",toX(p2.x)); l.setAttribute("y2",toY(p2.y)); l.setAttribute("stroke",col); l.setAttribute("stroke-width","2.5"); l.setAttribute("stroke-linecap","round"); svg.appendChild(l);
+  }
+  // BE labels
+  enriched.filter(p=>p.isBE).forEach(p=>{
+    let x=toX(p.x); let c=document.createElementNS(svgNS,"circle"); c.setAttribute("cx",x); c.setAttribute("cy",yZero); c.setAttribute("r","4"); c.setAttribute("fill","#FBBF24"); c.setAttribute("stroke","#000"); svg.appendChild(c);
+    let t=document.createElementNS(svgNS,"text"); t.setAttribute("x",x); t.setAttribute("y",yZero-10); t.setAttribute("text-anchor","middle"); t.setAttribute("font-size","10"); t.setAttribute("fill","#FBBF24"); t.textContent="BE $"+p.x.toFixed(2); svg.appendChild(t);
+  });
+  container.appendChild(svg);
+  // tooltip
+  let tip=document.createElement("div"); tip.className="viz-tooltip"; tip.style.display="none"; container.style.position="relative"; container.appendChild(tip);
+  function showTip(clientX, rect){
+    let rel=(clientX-rect.left)/rect.width; let price=xMin+rel*(xMax-xMin); price=Math.max(xMin,Math.min(xMax,price));
+    // interp
+    let pl=0; for(let i=0;i<sorted.length-1;i++){if(price>=sorted[i].x && price<=sorted[i+1].x){let t=(price-sorted[i].x)/(sorted[i+1].x-sorted[i].x); pl=sorted[i].y+t*(sorted[i+1].y-sorted[i].y); break;}} if(price<=sorted[0].x) pl=sorted[0].y; if(price>=sorted[sorted.length-1].x) pl=sorted[sorted.length-1].y;
+    let xPix=toX(price); let yPix=toY(pl);
+    tip.style.left=xPix/W*100+"%"; tip.style.top=yPix/H*100+"%"; tip.style.display="block";
+    let per=(pl/100).toFixed(2); let sign=pl>=0?"+":"-"; tip.innerHTML=`Stock: $${price.toFixed(2)} → P/L: ${sign}$${Math.abs(pl).toLocaleString()} TOTAL<br><span style="opacity:.7">$${per}/share × 100</span>`;
+  }
+  container.addEventListener("mousemove",e=>{showTip(e.clientX, container.getBoundingClientRect());});
+  container.addEventListener("mouseleave",()=>{tip.style.display="none";});
+  container.addEventListener("touchmove",e=>{showTip(e.touches[0].clientX, container.getBoundingClientRect());},{passive:true});
+}
 
+document.addEventListener("DOMContentLoaded", ()=>{
+  // Wheel CSP: flat 200 above 95, then (price-95)*100+200 below
+  drawChart("chart-wheel-csp", [{x:70,y:(70-95)*100+200},{x:85,y:(85-95)*100+200},{x:93,y:0},{x:95,y:200},{x:110,y:200},{x:125,y:200}], [{x:95,label:"Strike $95"}]);
+  drawChart("chart-wheel-cc", [{x:70,y:(70-95)*100+150},{x:85,y:(85-95)*100+150},{x:93.5,y:0},{x:95,y:150},{x:105,y:1150},{x:120,y:1150}], [{x:95,label:"Cost $95"},{x:105,label:"Call $105"}]);
+  drawChart("chart-ironcondor", [{x:70,y:-100},{x:85,y:-100},{x:90,y:400},{x:110,y:400},{x:115,y:-100},{x:130,y:-100}], [{x:85,label:"LP $85"},{x:90,label:"SP $90"},{x:110,label:"SC $110"},{x:115,label:"LC $115"}]);
+  // straddle
+  function renderStraddle(type){
+    if(type==="straddle"){
+      drawChart("chart-straddle", [{x:80,y:-400},{x:92,y:0},{x:100,y:800},{x:108,y:0},{x:120,y:-400}], [{x:100,label:"$100"}]);
+      document.getElementById("stats-straddle").innerHTML=`<div class="viz-stat"><div class="lab">Max Profit</div><div class="val green">+$800 TOTAL</div><div class="sub">$8.00 × 100 at $100 exactly</div></div><div class="viz-stat"><div class="lab">Breakevens</div><div class="val neutral">$92 / $108</div><div class="sub">$100 ± $8 premium</div></div><div class="viz-stat"><div class="lab">Risk</div><div class="val red">Unlimited</div><div class="sub">Loss grows past BEs</div></div>`;
+    }else{
+      drawChart("chart-straddle", [{x:75,y:-500},{x:90.5,y:0},{x:95,y:450},{x:105,y:450},{x:109.5,y:0},{x:125,y:-500}], [{x:95,label:"Put $95"},{x:105,label:"Call $105"}]);
+      document.getElementById("stats-straddle").innerHTML=`<div class="viz-stat"><div class="lab">Max Profit</div><div class="val green">+$450 TOTAL</div><div class="sub">$4.50 × 100 flat $95-$105</div></div><div class="viz-stat"><div class="lab">Breakevens</div><div class="val neutral">$90.50 / $109.50</div><div class="sub">$95-$4.5 / $105+$4.5</div></div><div class="viz-stat"><div class="lab">Risk</div><div class="val red">Unlimited</div><div class="sub">Wider wings</div></div>`;
+    }
+  }
+  renderStraddle("straddle");
+  document.querySelectorAll('[data-target="straddle"],[data-target="strangle"]').forEach(b=>{
+    b.addEventListener("click", e=>{
+      document.querySelectorAll('[data-target="straddle"],[data-target="strangle"]').forEach(x=>x.classList.remove("active"));
+      e.target.classList.add("active");
+      renderStraddle(e.target.dataset.target);
+    });
+  });
+  // PMCC
+  drawChart("chart-pmcc", [{x:50,y:-3200},{x:70,y:-3200},{x:85,y:-1700},{x:100,y:-200},{x:105,y:300},{x:105,y:300},{x:125,y:300}], [{x:70,label:"LEAPS $70"},{x:105,label:"Short $105"}]);
+  // Credit spreads
+  function renderCredit(type){
+    if(type==="bullput"){
+      drawChart("chart-credit", [{x:80,y:-380},{x:90,y:-380},{x:93.8,y:0},{x:95,y:120},{x:110,y:120}], [{x:90,label:"Long $90"},{x:95,label:"Short $95"}]);
+    }else{
+      drawChart("chart-credit", [{x:90,y:120},{x:105,y:120},{x:106.2,y:0},{x:110,y:-380},{x:120,y:-380}], [{x:105,label:"Short $105"},{x:110,label:"Long $110"}]);
+    }
+  }
+  renderCredit("bullput");
+  document.querySelectorAll('[data-target="bullput"],[data-target="bearcall"]').forEach(b=>{
+    b.addEventListener("click", e=>{
+      document.querySelectorAll('[data-target="bullput"],[data-target="bearcall"]').forEach(x=>x.classList.remove("active"));
+      e.target.classList.add("active");
+      renderCredit(e.target.dataset.target);
+    });
+  });
+  drawChart("chart-calendar", [{x:80,y:-100},{x:92,y:0},{x:97,y:120},{x:100,y:150},{x:103,y:120},{x:108,y:0},{x:120,y:-100}], [{x:100,label:"Strike $100"}]);
+  drawChart("chart-protective", [{x:70,y:-2700},{x:85,y:-1200},{x:93,y:-200},{x:95,y:-200},{x:100,y:300},{x:120,y:2300}], [{x:95,label:"Put $95"}]);
+});
+</script>
 
 <script>
 (function(){
   function initNav(){
-    var btn = document.getElementById('navToggle');
-    var nav = document.querySelector('.site-header .nav');
-    if (!btn || !nav) return;
-    if (btn.getAttribute('data-nav-bound') === '1') return;
-    btn.setAttribute('data-nav-bound', '1');
-
-    btn.addEventListener('click', function (e) {
-      e.preventDefault();
-      e.stopPropagation();
-      var open = !nav.classList.contains('is-open');
-      nav.classList.toggle('is-open', open);
-      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
-      btn.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
-    });
-
-    // Close after choosing a link
-    nav.addEventListener('click', function (e) {
-      if (e.target.closest('a')) {
-        nav.classList.remove('is-open');
-        btn.setAttribute('aria-expanded', 'false');
-        btn.setAttribute('aria-label', 'Open menu');
-      }
-    });
-
-    // Close on outside click (use capture delay so button click isn't treated as outside)
-    document.addEventListener('click', function (e) {
-      if (!nav.classList.contains('is-open')) return;
-      if (btn.contains(e.target) || nav.contains(e.target)) return;
-      nav.classList.remove('is-open');
-      btn.setAttribute('aria-expanded', 'false');
-      btn.setAttribute('aria-label', 'Open menu');
-    });
+    var btn=document.getElementById('navToggle'); var nav=document.querySelector('.site-header .nav');
+    if(!btn||!nav) return; if(btn.getAttribute('data-nav-bound')==='1') return; btn.setAttribute('data-nav-bound','1');
+    btn.addEventListener('click', function(e){e.preventDefault(); e.stopPropagation(); var open=!nav.classList.contains('is-open'); nav.classList.toggle('is-open',open); btn.setAttribute('aria-expanded', open?'true':'false');});
+    nav.addEventListener('click', function(e){if(e.target.closest('a')){nav.classList.remove('is-open'); btn.setAttribute('aria-expanded','false');}});
+    document.addEventListener('click', function(e){if(!nav.classList.contains('is-open')) return; if(btn.contains(e.target)||nav.contains(e.target)) return; nav.classList.remove('is-open'); btn.setAttribute('aria-expanded','false');});
   }
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initNav);
-  } else {
-    initNav();
-  }
+  if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',initNav);}else{initNav();}
 })();
 </script>
-
-
-
 
 </body>
 </html>
