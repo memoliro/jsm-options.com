@@ -82,12 +82,32 @@
 .quiz-result p{color:var(--muted);margin:8px 0 16px;font-size:14px;line-height:1.5}
 .quiz-result .btn-secondary{cursor:pointer;font:inherit}
 @media(max-width:700px){.quiz-card{padding:18px}}
+.walkthrough{max-width:1080px;margin:0 auto}
+.walk-steps{display:grid;gap:14px;margin:16px 0 8px}
+.walk-step{display:grid;grid-template-columns:52px 1fr;gap:14px;align-items:start;padding:16px;border:1px solid var(--border);border-radius:14px;background:var(--input)}
+.walk-num{width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;background:var(--card);border:1px solid var(--border);font-weight:800;color:var(--accent);font-size:18px}
+.walk-step h3{margin:0 0 6px;font-size:17px}
+.walk-step p{margin:0;color:var(--muted);font-size:14px;line-height:1.55}
+.shot-wrap{margin:16px 0 8px;border:1px solid var(--border);border-radius:16px;overflow:hidden;background:#0b1220}
+.shot-wrap img{width:100%;height:auto;display:block}
+.shot-caption{padding:12px 14px;font-size:12px;line-height:1.5;color:var(--muted);background:var(--card);border-top:1px solid var(--border)}
+.shot-caption strong{color:var(--text)}
+.callout-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0}
+.callout{padding:13px 14px;border-radius:12px;background:var(--input);border:1px solid var(--border);font-size:13px;line-height:1.5;color:var(--muted)}
+.callout b{display:block;color:var(--text);margin-bottom:4px;font-size:14px}
+.chain-legend{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
+.chain-legend span{font-size:11px;padding:6px 9px;border-radius:999px;border:1px solid var(--border);background:var(--input);color:var(--muted)}
+.flow-row{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;gap:8px;align-items:center;margin:16px 0}
+.flow-box{padding:12px;border:1px solid var(--border);border-radius:12px;background:var(--input);font-size:12px;line-height:1.45;text-align:center;color:var(--muted)}
+.flow-box b{display:block;color:var(--text);margin-bottom:4px;font-size:13px}
+.flow-arrow{color:var(--accent);font-weight:800}
+@media(max-width:800px){.callout-grid,.flow-row{grid-template-columns:1fr}.flow-arrow{display:none}.walk-step{grid-template-columns:40px 1fr}.walk-num{width:40px;height:40px;font-size:15px}}
 </style>
 </head><body><header class="site-header"><div class="site-header-inner"><a aria-label="JSM Options Home" class="logo logo-link" href="/tr/"><div class="logo-icon">JSM</div><div><div style="font-weight:700">JSM Options</div><div class="brand-sub">jsm-options.com · Educational</div></div></a><div class="header-right"><nav aria-label="Primary navigation" class="nav"><a class="active" href="/tr/">Home</a><a href="/tr/level1/">Basics</a><a href="/tr/level2/">Fundamentals</a><a href="/tr/level3/">Spreads</a><a href="/tr/level4/">Advanced</a><a href="/tr/strategies/">Strategies</a><a href="/tr/cheat-sheet/">Cheat sheet</a><a href="/tr/builder/">Builder</a></nav><button aria-expanded="false" aria-label="Open menu" class="nav-toggle" id="navToggle" type="button"><span></span><span></span><span></span></button><button aria-label="Toggle color theme" class="theme-toggle" id="themeToggle" type="button"><span class="theme-icon" id="themeIcon">☼</span><span class="theme-label" id="themeLabel">Dark</span></button></div></div></header><main class="wrap wide">
 <div class="card term-banner">
 <p style="margin:0"><b>Temel terimler</b> — call, put, strike, premium, expiry ve strateji adları bilinçli olarak İngilizce bırakıldı. Uluslararası borsalarda işlem yapmak için bu terimlere alışmalısınız. Türkçe karşılıkları sayfa sonunda vardır.</p>
 </div>
-<section class="home-hero"><div><div class="eyebrow">Ücretsiz kurs · Canlı strateji builder</div><h1>Yeni başlayanlar için ücretsiz opsiyon kursu</h1><p>Önce bir opsiyonun ne olduğunu anlayın; ardından call, put ve stratejileri adım adım öğrenin. Öğrendiklerinizi canlı Strategy Builder ile getiri grafikleri ve eğitim amaçlı Greeks kullanarak deneyin. Hesap gerekmez.</p><div class="hero-actions"><a class="btn-primary" href="/tr/level1/">Opsiyon Nedir? →</a><a class="btn-secondary" href="/tr/builder/">Builder’ı aç</a></div></div><div class="payoff-demo"><div class="eyebrow">Örnek · Long Iron Condor</div>
+<section class="home-hero"><div><div class="eyebrow">Ücretsiz kurs · Canlı strateji builder</div><h1>Yeni başlayanlar için ücretsiz opsiyon kursu</h1><p>Önce herhangi bir aracı kurumda hesap açın, hisse grafiğini okuyun ve opsiyon zincirini öğrenin. Aynı sayıları canlı Strategy Builder’da görselleştirin; ancak ondan sonra alım veya satım emri gönderin. Yalnızca eğitim amaçlıdır — yatırım tavsiyesi değildir.</p></div><div class="payoff-demo"><div class="eyebrow">Örnek · Long Iron Condor</div>
 <svg aria-label="Long iron condor vade sonu kar/zarar" role="img" viewbox="0 0 520 260" xmlns="http://www.w3.org/2000/svg">
 <line opacity=".55" stroke="#8b9bb4" stroke-width="1.5" x1="40" x2="500" y1="150" y2="150"></line>
 <line opacity=".3" stroke="#8b9bb4" stroke-width="1" x1="40" x2="40" y1="30" y2="230"></line>
@@ -98,6 +118,117 @@
 <text fill="#fca5a5" font-family="system-ui,sans-serif" font-size="12" text-anchor="middle" x="230" y="215">Ortada zarar</text><text fill="#86efac" font-family="system-ui,sans-serif" font-size="12" text-anchor="start" x="55" y="75">Kâr</text><text fill="#86efac" font-family="system-ui,sans-serif" font-size="12" text-anchor="start" x="450" y="75">Kâr</text>
 </svg>
 <div class="demo-legend"><span style="color:#ef4444">■ Kırmızı = zarar</span><span style="color:#22c55e">■ Yeşil = kâr</span><span style="opacity:.7">Beyaz çizgi = P/L at expiry</span></div></div></section>
+<section class="home-section what-is-option-article walkthrough" id="broker-walkthrough">
+<div class="section-head"><div><div class="eyebrow">Buradan başlayın · Herhangi bir aracı kurum</div><h2>Aracı kurum hesabından ilk opsiyon emrine</h2><p>Bu adımlar opsiyon izni olan her aracı kurumda geçerlidir. Ekran görüntüleri yalnızca örnek bir arayüzdür — sizin platformunuzda düğmeler ve menüler farklı durur. Fikir (grafik → zincir → builder → emir) hiçbir kuruma ait değildir.</p></div></div>
+<div class="article-card">
+<p class="lead">Bu ders aracı kurumdan bağımsızdır. JSM Options, ekran görüntüsündeki platformla veya başka bir kurumla bağlı değildir. Burada hesap açmadan çalışabilirsiniz. İşlem yapmak için <strong>güvenilir herhangi bir aracı kurumda</strong> hesap açın, opsiyon yetkisi alın, sonra aşağıdaki sırayı izleyin. Görsellerde Netflix (NFLX) yaklaşık 72$’da; sayıları resimle eşleştirmeniz için seçildi.</p>
+<div class="analogy-box"><strong>Ekran görüntüleri zorunlu platform değildir, örnektir.</strong> Gerçek bir zinciri boş şemadan öğretmek daha kolaydır. Kendi kurumunuzda şunları bulun: hisse grafiği, Options veya Option Chain sekmesi, expiry listesi, strike’lar, bid/ask ve emir fişi. “SMART”, “Show Weeklies” veya mavi/kırmızı Buy/Sell yazıları o ekranın dilidir — kopyalamanız gereken kurallar değildir.</div>
+
+<h3>1. Önce bir aracı kurum hesabı açın</h3>
+<p>Listelenmiş opsiyon sunan saygın herhangi bir kurumu seçin. Yeni başlayanlar genelde <strong>hisse komisyonu düşük veya sıfır</strong>, opsiyon ücretini sözleşme başına şeffaf yazan platformları tercih eder; çünkü 2,00$’lık bir opsiyonda 0,65$ ücret primin büyük bir parçasıdır.</p>
+<div class="callout-grid">
+<div class="callout"><b>Nelere bakın</b>Hisse ve ETF komisyonunun 0$’a yakın olması. Opsiyon ücretinin sözleşme başına yazılması. Varsa paper-trading / simülatör. Net bir opsiyon yetkisi başvurusu.</div>
+<div class="callout"><b>Herhangi bir kurum yeter</b>Zaten güvendiğiniz firmayı kullanın veya ABD opsiyonu listeleyen birkaçını karşılaştırın. Bu site hesap açmaz, kurum sıralamaz ve ekran görüntüsündeki platformla bağlı değildir.</div>
+</div>
+<div class="analogy-box"><strong>Margin hesabı ve nakit hesabı.</strong> Çoğu kurum opsiyon işlemi için <strong>margin hesabı</strong> artı ayrı bir <strong>opsiyon işlem başvurusu</strong> ister. Tek bir call veya put almak bazen nakit hesapta da mümkündür; prim satmak, spread ve çok bacaklı stratejiler neredeyse her zaman margin onayı ister. Yetki seviyeler halinde verilir (önce long call/put, sonra covered call ve cash-secured put, sonra spread). Başvuruyu dürüst doldurun — deneyimi abartmak, henüz taşıyamayacağınız ürünleri açabilir.</div>
+<p>Hesap fonlandıktan ve opsiyon izni açıldıktan sonra ticker’ı hisse arar gibi ararsınız. İlk ekran görüntüsü orada başlar.</p>
+
+<h3>2. Opsiyona dokunmadan önce hisse grafiğini okuyun</h3>
+<p>Opsiyon fiyatı dayanak hisseden türer. Grafiği ve kota panelini okuyamazsanız zincir rastgele sayılar gibi durur. Her kurum aynı çekirdek veriyi gösterir: last, değişim, open/high/low/close, hacim ve mum (veya bar/çizgi) grafiği. <em>Örnek</em> ekranda NFLX bir izleme listesinden seçilmiş ve ana panel <strong>4 saatlik mum grafiğidir</strong>.</p>
+<figure class="shot-wrap">
+<img src="/images/ibkr-nflx-chart.png" alt="Örnek aracı kurum NFLX grafiği: 4 saatlik mumlar, hacim ve last 72.00 kota paneli" width="1600" height="900"/>
+<div class="shot-caption"><strong>Ekran 1 — örnek grafik alanı (herhangi bir kurum).</strong> NFLX last 72.00 (−1.36 / −1.85%). Başlık O 72.08 · H 72.17 · L 71.58 · C 72.01, 4s zaman dilimi, hacim 8.39M. Noktalı çizgi güncel fiyattır. İzleme listeniz, renkler ve düğme adları farklı olacaktır.</div>
+</figure>
+<div class="callout-grid">
+<div class="callout"><b>İzleme listesi (sol)</b>SPY, QQQ, AAPL, AMZN, TSLA, MSFT, META, NFLX gibi semboller. Last ve günlük % değişim yanında durur. NFLX’e tıklayınca grafik ve kota o hisseye geçer.</div>
+<div class="callout"><b>Grafik araç çubuğu</b>Zaman dilimi <strong>4h</strong>. Grafiğin altında: 5y, 1y, 6m, 3m, 1m, 1w, 1d. Trend için yüksek zaman dilimi, strike seçmeden önce 1d veya 4h kullanın.</div>
+<div class="callout"><b>Mumlar</b>Yeşil mum = kapanış açılışın üstünde. Kırmızı mum = kapanış açılışın altında. Fitil high/low’dur. NFLX nisan rallisi, temmuz satışları, eylülde 70$ civarı yatay hareket gösterir.</div>
+<div class="callout"><b>Hacim histogramı</b>Fiyat panelinin altındaki yeşil/kırmızı çubuklar. Sivri uçlar çoğu zaman haber veya bilanço günüdür. Örnek barda 8.39M yazar. İnce hacimli büyük mum, yoğun hacimli harekete göre daha zayıf sinyaldir.</div>
+<div class="callout"><b>Kota paneli (sağ)</b>Last <strong>72.00</strong>, bid 72.00 × 3.500, ask 72.01 × 2.300. Opening 73.75, prior close 73.36, high 73.76, low 71.58. 52 hafta high 124.86 / low 65.08. Hacim 25.2M, ortalama 39.1M.</div>
+<div class="callout"><b>Opsiyonla ilgili istatistikler</b>Opt. IV% 42.3 ve Hist Vol 33.5, ima edilen ve gerçekleşen volatiliteyi gösterir. Open interest 4.78M, put/call hacmi 0.59. Bu karede earnings: 20 Eki 2026.</div>
+</div>
+<div class="example-box"><strong>Tek bir bar nasıl okunur.</strong> Başlıktaki <em>O 72.08 H 72.17 L 71.58 C 72.01</em> o anki 4 saatlik mumdur: 72.08’de açıldı, 72.17’ye çıktı, 71.58’e indi, son işlem 72.01. Opsiyon zinciri bu last’e göre fiyatlanır.</div>
+<p>Haber kartına da bakın: hisse 52 haftalık 124.86$ zirvesinden geridedir; zincirdeki birçok strike bugünkü fiyattan uzaktır. Sonraki adımda expiry ve strike seçerken bu işe yarar.</p>
+<p>Yönel bir görüşünüz — veya “72$ civarında kalır” görüşünüz — oluşunca hisse emir fişinden opsiyon göndermeyin. Kurumunuzun <strong>Options</strong> veya <strong>Option Chain</strong> ekranına geçin. Bu menü sekme, sembole sağ tık veya İşlem → Opsiyon olabilir. Ad değişir; varış noktası değişmez.</p>
+
+<h3>3. Grafikten opsiyon zincirine geçin</h3>
+<p>Options, Option Chain, Calls/Puts benzeri bir kontrol arayın. Örnek pencerede sekmeler Charts · Options · News · Fundamentals diye yazar — bu yalnızca o firmanın düzenidir. Ham zincirde kalın (kurum içi “wizard” veya “strategy builder” araçlarını zinciri okumadan kullanmayın).</p>
+<div class="walk-steps">
+<div class="walk-step"><div class="walk-num">1</div><div><h3>Hisseyi seçin</h3><p>Başlığın hâlâ aynı ticker ve last’i gösterdiğini doğrulayın (burada NFLX 72.00, −1.85%). Her kurumda zincir aynı anda tek dayanak içindir.</p></div></div>
+<div class="walk-step"><div class="walk-num">2</div><div><h3>Expiry seçin</h3><p>Listelenmiş her vade bir tarih satırı veya açılır listedir. Bazı platformlar haftalıkları <strong>W</strong> ile işaretler. Örnekte <strong>NOV 20 ’26 · 59 Days</strong> seçilidir. Kısa vadeler daha hızlı hareket eder ve daha hızlı değer kaybeder; uzun vadeler daha pahalı prim ister. Bu ilişki her yerde aynıdır.</p></div></div>
+<div class="walk-step"><div class="walk-num">3</div><div><h3>Görünümü ayarlayın</h3><p>Tabloyu hisse fiyatının çevresindeki birkaç strike ile sınırlayın (örnek 10 strike kullanır). Haftalıklar, routing, yalnızca call/put gibi filtreler kolaylıktır. İhtiyacınız olan: expiry, strike listesi, call, put, bid ve ask.</p></div></div>
+</div>
+<figure class="shot-wrap">
+<img src="/images/ibkr-nflx-chain.png" alt="Örnek aracı kurum NFLX opsiyon zinciri, 20 Kasım 2026: solda call, ortada strike, sağda put" width="1600" height="900"/>
+<div class="shot-caption"><strong>Ekran 2 — örnek option chain (herhangi bir kurum).</strong> Bir yanda call, ortada strike, diğer yanda put. Orta başlıkta IV 40.1%. Aktif vade 20 Kasım 2026 (59 gün). Sütun sırası ve renkler platforma göre değişir; bid, ask, last, strike ve expiry değişmez.</div>
+</figure>
+
+<h3>4. Zincirdeki her sütunu okuyun</h3>
+<p>Option chain, aynı dayanak ve aynı expiry’yi paylaşan kontratların fiyat listesidir. Her <strong>satır</strong> bir strike’tır. Her <strong>yan</strong> o strike’taki call veya put’tur.</p>
+<div class="chain-legend">
+<span>Call = alma hakkı</span>
+<span>Put = satma hakkı</span>
+<span>Strike = kontrat fiyatı</span>
+<span>Bid = alıcının vereceği</span>
+<span>Ask = satıcının istediği</span>
+<span>Last = son işlem</span>
+<span>Delta / Gamma = duyarlılık</span>
+<span>× 100 hisse / kontrat</span>
+</div>
+<table class="beginner-table">
+<thead><tr><th>Sütun</th><th>Ne anlama gelir</th><th>Bu ekrandan</th></tr></thead>
+<tbody>
+<tr><td><strong>Strike</strong></td><td>Sözleşmeye yazılan fiyattır. Hisse fiyatına yakın satırlar at-the-money (ATM) sayılır.</td><td>Spot ≈ 72. En yakın ATM 72.5 satırıdır. 55–70 call için in-the-money / put için out-of-the-money. 75–82.5 tersidir.</td></tr>
+<tr><td><strong>Bid</strong></td><td>Alıcının o anda teklif ettiği en yüksek fiyat. Opsiyonu <em>satıyorsanız</em> şu an alabileceğiniz gerçekçi prim budur.</td><td>72.5 call bid <strong>4.60</strong>. 72.5 put bid <strong>4.60</strong>.</td></tr>
+<tr><td><strong>Ask</strong></td><td>Satıcının istediği en düşük fiyat. Opsiyonu <em>alıyorsanız</em> genelde bunu ödersiniz (veya bid ile ask arasına limit koyarsınız).</td><td>72.5 call ask <strong>4.70</strong>. 72.5 put ask <strong>4.70</strong>.</td></tr>
+<tr><td><strong>Last</strong></td><td>En son işlem. Bağlam için yararlıdır, bir sonraki dolum garantisi değildir — canlı piyasa bid/ask’tır.</td><td>72.5 call last 4.65. Derin 55 strike call last C19.02 gösterir (kapanış tipi bir iz).</td></tr>
+<tr><td><strong>Delta</strong></td><td>Hisse 1$ hareket ederse opsiyon fiyatının kabaca ne kadar değişeceği. Yeni başlayan için “vadede in-the-money bitme ihtimali” kaba bir özet de olabilir.</td><td>72.5 call delta <strong>0.532</strong> (ATM call, yazı tura). 72.5 put delta <strong>−0.474</strong>. Put delta’sı negatiftir çünkü hisse düşünce değer kazanır.</td></tr>
+<tr><td><strong>Gamma</strong></td><td>Hisse hareket ettikçe delta’nın ne hızla değiştiği. ATM civarında en yüksektir.</td><td>72.5 call gamma 0.03451 — tablonun zirve bölgesi.</td></tr>
+<tr><td><strong>IV</strong></td><td>Bu expiry’nin ima edilen volatilitesi, genelde orta başlıkta. Yüksek IV = daha pahalı prim ve daha geniş beklenen bant.</td><td>Bu karede Kas ’26 vadesi için <strong>IV 40.1%</strong>.</td></tr>
+</tbody>
+</table>
+<div class="example-box"><strong>İşlenmiş satır — NFLX 72.5 call, 59 gün.</strong><br>
+Hisse 72.00. Strike 72.50. Bid 4.60 / Ask 4.70 / Last 4.65 / Delta 0.532.<br>
+Bir kontrat <em>almak</em> için kabaca 4.70$ × 100 = <strong>470$</strong> (artı ücret) planlarsınız. Alıcı olarak vade sonuna kadar değersiz biterse kaybedebileceğiniz azami tutar budur.<br>
+Aynı call’u <em>satmak</em> yaklaşık 4.60$ × 100 = <strong>460$</strong> prim getirir; ancak çıplak (naked) call satmak ileri düzey ve yüksek riskli bir yetkidir — oradan başlamayın.
+</div>
+<div class="concept-grid">
+<div class="concept-card"><h4>In-, at- ve out-of-the-money</h4><p>NFLX 72$ iken: 65 call in-the-money’dir (hisseyi piyasadan ucuza alma hakkı). 72.5 call at-the-money’dir. 80 call out-of-the-money’dir ve daha ucuzdur (bid 2.06 / ask 2.09) çünkü kullanışlı olması için hissenin yükselmesi gerekir.</p></div>
+<div class="concept-card"><h4>Bid/ask farkı bir maliyettir</h4><p>72.5 satırında fark 0.10$’dır. Ask’tan alıp hemen bid’den satarsanız bu kontrat başına 10$ eder. Birkaç sentlik dar farklar, geniş spread’li ucuz hisselerin opsiyonlarından yeni başlayan için daha uygundur.</p></div>
+</div>
+<p>72.5 call ile 72.5 put burada neredeyse aynı fiyattadır (ikisi de ~4.65$). ATM civarında faiz ve temettü baskın değilse bu yaygındır: put-call parity iki tarafı birbirine bağlar. Formülü henüz ezberlemeniz gerekmez — aynı strike’ın iki yanı aynı işlemin kopyası değil, iki farklı bahistir.</p>
+
+<h3>5. Emir vermeden önce Strategy Builder’da görün</h3>
+<p>Zincir size <em>fiyatı</em> söyler. Kâr/zarar şeklini göstermez. Sayıları önce ücretsiz builder’a kopyalayın; maksimum kazanç, maksimum zarar ve başabaş grafikte görünsün.</p>
+<div class="flow-row">
+<div class="flow-box"><b>Zincirden</b>Ticker NFLX · Tip Call veya Put · Strike 72.5 · DTE 59 · Premium 4.70 (alış) veya 4.60 (satış)</div>
+<div class="flow-arrow">→</div>
+<div class="flow-box"><b>Builder’da</b>Bir bacak ekleyin. Side Long veya Short, Type, Strike, DTE, Qty 1, Premium. Grafik anında güncellenir.</div>
+<div class="flow-arrow">→</div>
+<div class="flow-box"><b>Kontrol edin</b>Vade sonu yeşil / kırmızı payoff, break-even ve dolar riskinin kaybetmeyi göze aldığınız tutarla uyumu.</div>
+</div>
+<div class="analogy-box"><strong>Bu ekranı builder’a aktarmak</strong><br>
+Ticker: <strong>NFLX</strong> &nbsp;·&nbsp; Type: <strong>Call</strong> &nbsp;·&nbsp; Side: <strong>Long</strong> (alıyorsunuz) &nbsp;·&nbsp; Strike: <strong>72.5</strong> &nbsp;·&nbsp; DTE: <strong>59</strong> &nbsp;·&nbsp; Premium: <strong>4.70</strong> (alış modelinde ask, satış modelinde bid kullanın).<br>
+Bir kontrat = 100 hisse; builder 4.70$’ı 470$ debit olarak işler. Spread çalışıyorsanız ikinci bacak ekleyin. İki fikri aynı grafikte görmek için strateji A ve B’yi karşılaştırın.
+</div>
+<p><a class="btn-primary" href="https://jsm-options.com/tr/builder/" style="margin-top:8px">Strategy Builder’ı aç →</a></p>
+<p>Grafikle üç soruyu cevaplayın: Tüm primi nerede kaybederim? Nerede başabaş olurum? 5$’lık bir hisse hareketi bu pozisyona yardım eder mi, zarar mı ettirir? Resim net değilse emri göndermeyin — builder’da strike veya expiry’yi risk açık olana kadar değiştirin.</p>
+
+<h3>6. Emri yeniden opsiyon zincirinden gönderin</h3>
+<p>Builder’daki payoff istediğiniz işlemse aracı kurum zincirine dönün. Hisse emri yazmayın. Modellemiş olduğunuz <strong>opsiyona</strong> tıklayın.</p>
+<div class="walk-steps">
+<div class="walk-step"><div class="walk-num">1</div><div><h3>Doğru satırdaki bid veya ask’a tıklayın</h3><p>Alıyor musunuz? Modellemiş olduğunuz call veya put’un <strong>Ask</strong>’ına tıklayın (limitle bid’e katılacaksanız Bid). Satıyor musunuz? <strong>Bid</strong>’e tıklayın. Emir fişinde NFLX, call/put, strike 72.5 ve 20 Kas 2026 yazmalıdır — her alanı kontrol edin.</p></div></div>
+<div class="walk-step"><div class="walk-num">2</div><div><h3>Buy veya Sell seçin, sonra limit fiyatı girin</h3><p>Hisse Buy/Sell düğmelerini, fiş açıkça opsiyon kontratını (call veya put, strike, expiry) yazmıyorsa kullanmayın. Zincir satırına tıklamak doğru kontratı bağlamanın olağan yoludur. Öğrenirken piyasa emri yerine bid ile ask arasına <strong>limit</strong> koyun. Adet 1 = bir kontrat = standart ABD opsiyonunda 100 hisse riski.</p></div></div>
+<div class="walk-step"><div class="walk-num">3</div><div><h3>Göndermeden önce fişi okuyun</h3><p>Doğrulayın: işlem (BUY TO OPEN veya SELL TO OPEN), expiry, strike, hak (C veya P), limit fiyat, tahmini debit/credit × 100 ve komisyon. Long call veya long put’ta maksimum zarar ödediğiniz primdir. Short veya çok bacaklı fişlerde zarar çok daha büyük olabilir — fiş builder’daki resimle uyuşmuyorsa durun.</p></div></div>
+<div class="walk-step"><div class="walk-num">4</div><div><h3>Gönderin, dolumu izleyin</h3><p>O 72.5 call’da 4.65 dolumu, ücret hariç 465$ ödediğiniz anlamına gelir. Pozisyon, kullanılmadıkça veya assignment olmadıkça 100 NFLX hissesi değil, opsiyon portföyünüzde durur. Vadeden önce herhangi bir gün, long ise satarak, short ise geri alarak kapatabilirsiniz.</p></div></div>
+</div>
+<div class="key-takeaway"><strong>Ezberlenecek yeni başlayan sırası</strong>
+<p>Düşük ücretli hesap fonlayın → margin + opsiyon yetkisi alın → hisse grafiğini ve kotayı okuyun → Option Chain’i açın → expiry ve strike seçin → strike / DTE / bid-ask’ı <a href="https://jsm-options.com/tr/builder/">Strategy Builder</a>’a kopyalayın → ancak ondan sonra zincirden alın veya satın. Builder alıştırma. Zincir gerçek paradır.</p>
+</div>
+<p class="home-note">Yalnızca eğitim amaçlıdır — yatırım tavsiyesi değildir; hiçbir aracı kurum, hisse veya opsiyon önerisi değildir. Ekran görüntüleri sayıların görünmesi için dondurulmuş tek bir örnek penceredir; zorunlu platform değildir ve canlı fiyatlarla örtüşmez. Sütun adları, renkler ve menü yolları firmaya göre değişir. Bid, ask, strike, expiry ve 100 hisse çarpanı her yerde aynı fikirdir (yerel vadeli/opsiyon çarpanları farklı olabilir). Opsiyonlar değersiz bitebilir. Çıplak short opsiyonlar alınan primden fazla kaybettirebilir. Yetki seviyeleri ve margin kuralları kurum ve ülkeye göre değişir.</p>
+</div>
+</section>
+
 <section class="home-section what-is-option-article" id="what-is-an-option">
 <div class="section-head"><div><div class="eyebrow">1. Adım · Buradan başlayın</div><h2>Opsiyon Nedir?</h2><p>Her opsiyon yatırımcısının önce okuması gereken başlangıç dersi.</p></div></div>
 <div class="article-card">
