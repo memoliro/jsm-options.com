@@ -88,6 +88,164 @@
 </style>
 
 <script src="/assets/site.js?v=20260920" defer></script>
+<style id="otp-playbook-css">
+#otp-playbook{
+  --otp-bg:var(--card,#1a2332);
+  --otp-panel:var(--input,#0f172a);
+  --otp-ink:var(--text,#e7ecf3);
+  --otp-muted:var(--muted,#8b9bb4);
+  --otp-line:var(--border,#2d3a4f);
+  --otp-em:#22c55e;--otp-vi:#8b5cf6;--otp-am:#eab308;
+  --otp-link:var(--accent,#3b82f6);
+  font-family:'Segoe UI',system-ui,-apple-system,sans-serif;
+  color:var(--otp-ink);
+  background:var(--otp-bg);
+  border:1px solid var(--otp-line);
+  border-radius:16px;
+  padding:22px 18px 28px;
+  margin:0 0 22px;
+}
+@media(min-width:760px){#otp-playbook{padding:28px 28px 36px}}
+#otp-playbook *{box-sizing:border-box}
+#otp-playbook h2,#otp-playbook h3{margin:0;color:var(--otp-ink);letter-spacing:-.02em}
+#otp-playbook p{margin:0;color:var(--otp-muted);line-height:1.65}
+#otp-playbook a{color:var(--otp-link);text-decoration:none}
+#otp-playbook a:hover{text-decoration:underline}
+#otp-playbook .otp-kicker{
+  display:inline-flex;align-items:center;gap:8px;
+  border:1px solid var(--otp-line);background:var(--otp-panel);
+  border-radius:999px;padding:5px 10px;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--otp-muted)
+}
+#otp-playbook .otp-dot{width:7px;height:7px;border-radius:50%;background:var(--otp-link);animation:otp-pulse 2s ease-in-out infinite}
+@keyframes otp-pulse{50%{opacity:.45}}
+#otp-playbook .otp-title{font-size:clamp(1.35rem,3vw,1.85rem);font-weight:650;margin:12px 0 8px;max-width:28ch}
+#otp-playbook .otp-lead{max-width:62ch;font-size:14px}
+#otp-playbook .otp-nav{
+  display:flex;flex-wrap:wrap;gap:8px;margin:16px 0 8px
+}
+#otp-playbook .otp-nav a{
+  color:var(--otp-ink);font-size:12px;border:1px solid var(--otp-line);
+  background:var(--otp-panel);border-radius:999px;padding:6px 11px
+}
+#otp-playbook .otp-section{margin-top:28px}
+#otp-playbook .otp-sec-head{display:flex;flex-wrap:wrap;align-items:center;gap:10px;border-left:2px solid var(--otp-em);padding-left:14px;margin-bottom:14px}
+#otp-playbook .otp-sec-head.vi{border-left-color:var(--otp-vi)}
+#otp-playbook .otp-sec-head.am{border-left-color:var(--otp-am)}
+#otp-playbook .otp-sec-head h2{font-size:1.15rem;font-weight:650}
+#otp-playbook .otp-pill{
+  font-size:10px;letter-spacing:.14em;text-transform:uppercase;
+  border-radius:999px;padding:4px 9px;border:1px solid rgba(16,185,129,.25);
+  background:rgba(16,185,129,.12);color:var(--otp-em)
+}
+#otp-playbook .otp-pill.vi{border-color:rgba(139,92,246,.28);background:rgba(139,92,246,.12);color:var(--otp-vi)}
+#otp-playbook .otp-pill.am{border-color:rgba(245,158,11,.3);background:rgba(245,158,11,.12);color:var(--otp-am)}
+#otp-playbook .otp-card{
+  display:grid;grid-template-columns:1fr;gap:16px;
+  background:var(--otp-panel);
+  border:1px solid var(--otp-line);border-radius:16px;padding:18px;margin:0 0 12px
+}
+@media(min-width:880px){
+  #otp-playbook .otp-card{grid-template-columns:minmax(0,1.35fr) minmax(240px,.85fr);align-items:start}
+}
+#otp-playbook .otp-meta{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:8px}
+#otp-playbook .otp-badge{font-size:10px;letter-spacing:.12em;text-transform:uppercase;border-radius:999px;padding:3px 8px;border:1px solid var(--otp-line);color:var(--otp-muted)}
+#otp-playbook .otp-card h3{font-size:1.05rem;font-weight:650;margin-bottom:8px}
+#otp-playbook .otp-card p+p{margin-top:8px}
+#otp-playbook .otp-card ul{margin:10px 0 0;padding-left:18px;color:var(--otp-ink);font-size:13.5px;line-height:1.55}
+#otp-playbook .otp-card li{margin:5px 0}
+#otp-playbook .otp-legs{
+  display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 2px
+}
+#otp-playbook .otp-leg{
+  font-size:11.5px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+  border-radius:8px;padding:5px 8px;border:1px solid var(--otp-line);background:var(--otp-bg)
+}
+#otp-playbook .otp-leg.long{color:var(--green,#22c55e);border-color:rgba(16,185,129,.35)}
+#otp-playbook .otp-leg.short{color:var(--red,#ef4444);border-color:rgba(239,68,68,.35)}
+#otp-playbook .otp-viz{
+  background:var(--otp-bg);border:1px solid var(--otp-line);border-radius:12px;padding:10px 10px 8px
+}
+#otp-playbook .otp-chart{position:relative;width:100%}
+#otp-playbook .otp-chart svg{width:100%;height:auto;display:block}
+#otp-playbook .otp-legend{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;font-size:10px;color:var(--otp-muted);margin:4px 0 2px}
+#otp-playbook .otp-legend i{display:inline-block;width:10px;height:8px;border-radius:2px;margin-right:5px;vertical-align:middle}
+#otp-playbook .otp-legend .g{background:rgba(16,185,129,.35);border:1px solid rgba(16,185,129,.55)}
+#otp-playbook .otp-legend .r{background:rgba(239,68,68,.35);border:1px solid rgba(239,68,68,.55)}
+#otp-playbook .otp-caption{font-size:11px;color:var(--otp-muted);text-align:center;margin-top:6px}
+#otp-playbook .otp-tip{
+  position:absolute;pointer-events:none;opacity:0;transform:translate(-50%,-110%);
+  background:var(--otp-bg);border:1px solid var(--otp-line);border-radius:8px;
+  padding:5px 7px;font-size:10px;color:var(--otp-ink);white-space:nowrap;z-index:2
+}
+#otp-playbook .otp-btnrow{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+#otp-playbook .otp-btn{
+  display:inline-flex;align-items:center;border-radius:999px;padding:8px 13px;font-size:13px;font-weight:600;
+  background:var(--accent,#3b82f6);color:#fff;border:0
+}
+#otp-playbook .otp-btn.ghost{background:transparent;color:var(--otp-ink);border:1px solid var(--otp-line)}
+#otp-playbook .otp-warn{
+  font-size:12.5px;color:#fde68a;border:1px solid rgba(245,158,11,.25);
+  background:rgba(245,158,11,.08);border-radius:10px;padding:8px 10px;margin-top:10px
+}
+#otp-playbook .otp-foot{
+  margin-top:18px;text-align:center;font-size:10px;letter-spacing:.12em;color:var(--otp-muted);text-transform:uppercase
+}
+html[data-theme="light"] #otp-playbook{
+  --otp-em:#15803d;
+  --otp-vi:#6d28d9;
+  --otp-am:#b45309;
+  --otp-link:#0f766e;
+}
+html[data-theme="light"] #otp-playbook h2,
+html[data-theme="light"] #otp-playbook h3,
+html[data-theme="light"] #otp-playbook .otp-title{
+  color:#0f172a;
+}
+html[data-theme="light"] #otp-playbook p,
+html[data-theme="light"] #otp-playbook .otp-lead,
+html[data-theme="light"] #otp-playbook .otp-caption,
+html[data-theme="light"] #otp-playbook .otp-legend,
+html[data-theme="light"] #otp-playbook .otp-kicker,
+html[data-theme="light"] #otp-playbook .otp-badge,
+html[data-theme="light"] #otp-playbook .otp-foot{
+  color:#334155;
+}
+html[data-theme="light"] #otp-playbook .otp-card ul,
+html[data-theme="light"] #otp-playbook .otp-card li,
+html[data-theme="light"] #otp-playbook .otp-nav a{
+  color:#1e293b;
+}
+html[data-theme="light"] #otp-playbook .otp-card{
+  background:#fff;
+  border-color:#d8dee9;
+}
+html[data-theme="light"] #otp-playbook .otp-viz,
+html[data-theme="light"] #otp-playbook .otp-leg,
+html[data-theme="light"] #otp-playbook .otp-kicker,
+html[data-theme="light"] #otp-playbook .otp-nav a{
+  background:#f8fafc;
+  border-color:#d8dee9;
+}
+html[data-theme="light"] #otp-playbook .otp-pill{
+  background:#dcfce7;border-color:#86efac;color:#14532d;
+}
+html[data-theme="light"] #otp-playbook .otp-pill.vi{
+  background:#ede9fe;border-color:#c4b5fd;color:#5b21b6;
+}
+html[data-theme="light"] #otp-playbook .otp-pill.am{
+  background:#fef3c7;border-color:#fcd34d;color:#92400e;
+}
+html[data-theme="light"] #otp-playbook .otp-leg.long{color:#166534;border-color:#86efac;background:#f0fdf4}
+html[data-theme="light"] #otp-playbook .otp-leg.short{color:#991b1b;border-color:#fca5a5;background:#fef2f2}
+html[data-theme="light"] #otp-playbook .otp-warn{
+  color:#92400e;background:#fffbeb;border-color:#f59e0b;
+}
+html[data-theme="light"] #otp-playbook .otp-btn{background:#0f766e;color:#fff}
+html[data-theme="light"] #otp-playbook .otp-btn.ghost{color:#0f172a;border-color:#cbd5e1;background:#fff}
+html[data-theme="light"] #otp-playbook a{color:#0f766e}
+</style>
+
+
 </head>
 <body>
 <header class="site-header"><div class="site-header-inner"><a class="logo logo-link" href="/tr/" aria-label="JSM Options Home"><div class="logo-icon">JSM</div><div><div style="font-weight:700">JSM Options</div><div class="brand-sub">jsm-options.com · Educational</div></div></a><div class="header-right"><nav class="nav" aria-label="Primary navigation"><a href="/">Home</a><a href="/level1/">Basics</a><a href="/tr/level2/">Fundamentals</a><a href="/tr/level3/">Spreads</a><a href="/level4/" class="active">Advanced</a><a href="/strategies/">Strategies</a><a href="/cheat-sheet/">Cheat sheet</a><a href="/tr/builder/">Builder</a></nav><button type="button" class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button><button type="button" class="theme-toggle" id="themeToggle" aria-label="Toggle color theme"><span id="themeIcon" class="theme-icon">☼</span><span id="themeLabel" class="theme-label">Dark</span></button></div></div></header>
@@ -98,16 +256,385 @@
   <p style="margin:0"><b>Temel terimler</b> — call, put, strike, premium, expiry ve strateji adları bilinçli olarak İngilizce bırakıldı. Uluslararası borsalarda işlem yapmak için bu terimlere alışmalısınız. Türkçe karşılıkları sayfa sonunda vardır.</p>
 </div>
 
-<nav class="lesson-toc" aria-label="Bu sayfada"><strong>Bu sayfada</strong><div class="lesson-toc-links"><a href="#dte">45+ DTE</a><a href="#csp">CSP</a><a href="#wheel">Wheel</a><a href="#covered-call">Covered call</a><a href="#spreads">Debit/credit</a><a href="#calendar">Calendar</a><a href="#leaps">LEAPS</a><a href="#iron-condor">Iron condor</a><a href="#risk-notes">Risk notları</a></div></nav>
+<section id="otp-playbook" aria-label="Options trading playbook">
+  <div class="otp-kicker"><span class="otp-dot"></span> Playbook · Sermaye-etkin yapılar</div>
+  <h2 class="otp-title">Jade Lizard, PMCC, Ratio Spread ve Synthetic Stock</h2>
+  <p class="otp-lead">Tek kart, tek strateji. Builder ile aynı dil: Long / Short, Call / Put, Strike, DTE, Debit / Credit. Yalnızca eğitim.</p>
+  <nav class="otp-nav" aria-label="Playbook strategies">
+    <a href="#otp-jade">Jade Lizard</a>
+    <a href="#otp-pmcc">Poor Man’s Covered Call</a>
+    <a href="#otp-ratio">Ratio Spread</a>
+    <a href="#otp-syn-long">Synthetic Long</a>
+    <a href="#otp-syn-short">Synthetic Short</a>
+  </nav>
 
+  <div class="otp-section">
+    <div class="otp-sec-head am">
+      <h2>Income overlay</h2>
+      <span class="otp-pill am">Neutral / hafif Bullish</span>
+    </div>
 
-  <div class="hero">
-    <span class="badge">İleri · Daha uzun vadeler</span>
-    <h1>Cash-secured put, calendar, credit, Covered Call ve LEAPS</h1>
-    <p>Daha çok yapı, daha çok zaman. Birçok kişi girişte theta yavaş olsun ve yönetim payı kalsın diye <b>45+ DTE</b> tercih eder.</p>
+    <article class="otp-card" id="otp-jade">
+      <div>
+        <div class="otp-meta"><span class="otp-badge">Jade Lizard</span><span class="otp-badge">Credit</span><span class="otp-badge">Doğru boyutta çıplak upside yok</span></div>
+        <h3>Jade Lizard</h3>
+        <p>Jade Lizard bir <b>Short Put</b> artı bir <b>bear Call Spread</b>’dir (paraya daha yakın Short Call, daha uzak OTM Long Call). Tüm bacaklar aynı expiration’dadır — sıkça ~30–45 DTE.</p>
+        <p>Net Credit toplarsınız. Klasik kurulum: Credit ≥ Call Spread genişliği. Underlying sert yükselirse Call kanadının max zararı Credit ile karşılanır; teorik upside riski düzleşir. Aşağı yön hâlâ Short Put gibidir: hisse çökerse zarar büyüktür.</p>
+        <div class="otp-legs">
+          <span class="otp-leg short">Short Put · OTM</span>
+          <span class="otp-leg short">Short Call · OTM</span>
+          <span class="otp-leg long">Long Call · daha uzak OTM</span>
+        </div>
+        <ul>
+          <li><b>Yön:</b> Neutral’dan hafif Bullish’e. Fiyat Put Strike üstünde kalsın; sert çöküş istemezsiniz.</li>
+          <li><b>Max kâr:</b> fiyat Short Put ile Short Call arasındaysa net Credit.</li>
+          <li><b>Upside:</b> Credit ≥ Call-spread genişliği ise Call tarafı, toplanan Credit’ten fazlasını kaybetmemek üzere kurulur.</li>
+          <li><b>Downside:</b> Cash-Secured Put gibi — hisse sıfıra giderse asıl risk oradadır. Hisse alacakmış gibi boyutlayın.</li>
+          <li><b>Yönetim:</b> sık öğretilen: ~45 DTE giriş, Credit’in ~%50’sinde kapat, veya expiration haftasından önce test olan tarafı roll edin.</li>
+        </ul>
+        <div class="otp-warn">“Upside riski yok” ancak Credit gerçekten Call kanadını aşıyorsa doğrudur. Canlı zinciri kontrol edin — Builder’daki Premium değerleri örnektir.</div>
+        <div class="otp-btnrow">
+          <a class="otp-btn" href="/tr/builder/?template=jade_lizard">Builder’da Jade Lizard yükle</a>
+        </div>
+      </div>
+      <div class="otp-viz">
+        <div class="otp-chart" data-chart="jade"></div>
+        <div class="otp-legend"><span><i class="g"></i>Kâr</span><span><i class="r"></i>Zarar</span></div>
+        <p class="otp-caption">Expiry P/L ×100. Sürekli çizgi, boyalı kâr/zarar. Fiyat okumak için üzerine gelin.</p>
+      </div>
+    </article>
   </div>
 
-  <div class="card">
+  <div class="otp-section">
+    <div class="otp-sec-head">
+      <h2>Synthetic Stock &amp; sermaye-etkin (Bullish / Neutral)</h2>
+      <span class="otp-pill">ROC</span>
+    </div>
+
+    <article class="otp-card" id="otp-pmcc">
+      <div>
+        <div class="otp-meta"><span class="otp-badge">PMCC</span><span class="otp-badge">Diagonal</span><span class="otp-badge">LEAPS</span></div>
+        <h3>Poor Man’s Covered Call</h3>
+        <p>Covered Call 100 hisse ister. PMCC hisseyi derin ITM bir LEAPS Call ile değiştirir (sıkça 365+ DTE, öğretilen Delta &gt; 0.75) ve üzerine daha kısa vadeli OTM Call satar (sıkça 30–60 DTE).</p>
+        <p>Long LEAPS için Debit ödersiniz; her Short Call’dan Credit alırsınız. Short Call’un Theta’sı daha hızlıdır; Long Call yavaş erir. Short expire olmadan — veya max kârın ~%50’sinde — <b>Roll-out</b> yaparsınız: yakın expiration’ı kapatıp daha uzun vade satarsınız.</p>
+        <div class="otp-legs">
+          <span class="otp-leg long">Long Call · ITM · 180–365+ DTE</span>
+          <span class="otp-leg short">Short Call · OTM · 30–60 DTE</span>
+        </div>
+        <ul>
+          <li><b>Neden sermaye-etkin:</b> LEAPS Premium’u genelde 100 hisseden ucuzdur; max zarar tanımlıdır (Long Call’a ödenen, Credit’lerle düzeltilmiş).</li>
+          <li><b>Upside tavanı:</b> fiyat Short Strike’ı geçerse LEAPS kazancı yavaşlar, Short Call aleyhinize işler — Covered Call tavanı ile aynı fikir.</li>
+          <li><b>Assignment:</b> Short Call assign olabilir; hisse yoktur, Long Call’u kapatmanız veya exercise etmeniz gerekebilir. Girişten önce planlayın.</li>
+          <li><b>Less is more:</b> her Long LEAPS’e bir Short Call. Fazlası Ratio’ya döner ve tavanı kaldırır.</li>
+        </ul>
+        <div class="otp-btnrow">
+          <a class="otp-btn" href="/tr/builder/?template=pmcc">Builder’da PMCC yükle</a>
+          <a class="otp-btn ghost" href="#leaps">Aşağıda LEAPS dersi</a>
+        </div>
+      </div>
+      <div class="otp-viz">
+        <div class="otp-chart" data-chart="pmcc"></div>
+        <div class="otp-legend"><span><i class="g"></i>Kâr</span><span><i class="r"></i>Zarar</span></div>
+        <p class="otp-caption">Aynı expiry eskizi: LEAPS Call eksi Short Call (canlı piyasada diagonal zamanlama daha zengindir).</p>
+      </div>
+    </article>
+
+    <article class="otp-card" id="otp-ratio">
+      <div>
+        <div class="otp-meta"><span class="otp-badge">Ratio</span><span class="otp-badge">1×2</span><span class="otp-badge">Ek Short tanımsız</span></div>
+        <h3>Ratio Spread</h3>
+        <p>Front-ratio 1 opsiyon alır, aynı tip ve expiration’da 2 daha uzak OTM satar. Call Ratio: Long 1 ATM/ITM Call, Short 2 OTM Call. Put Ratio: Long 1 Put, Short 2 daha düşük Put.</p>
+        <p>Hikâyeyi değiştiren ekstra Short kontratıdır. Long Strike ile Short Strike arasında şekil dost görünebilir (Credit veya küçük Debit). Çift Short Strike’ın ötesinde risk açılır — Call ratio’da Underlying sert yükselirse sınırsız; Put ratio’da çöküşte ağır.</p>
+        <div class="otp-legs">
+          <span class="otp-leg long">Long 1 Call (veya Put) · yakın Strike</span>
+          <span class="otp-leg short">Short 2 Call (veya Put) · daha uzak OTM</span>
+        </div>
+        <ul>
+          <li><b>Call 1×2:</b> fiyat Short Strike’a doğru — ama içinden geçmeden — yükselirse işe yarar. İki Short’un ötesine erime tehlikedir.</li>
+          <li><b>Put 1×2:</b> fiyat Short Put’lara doğru süzülürse işe yarar. Çöküş tehlikedir.</li>
+          <li><b>Greeks:</b> Short’ların dışında sıkça short Gamma ve short Vega. Bantta idare eder; trendde sertleşir.</li>
+          <li><b>Yönetim:</b> tanımlı-risk tarafı çıplak Ratio’yu genelde atlar veya bir kanat daha alıp broken-wing Butterfly’a çevirir.</li>
+        </ul>
+        <div class="otp-btnrow">
+          <a class="otp-btn" href="/tr/builder/?template=call_ratio_spread">Call Ratio 1×2</a>
+          <a class="otp-btn ghost" href="/tr/builder/?template=put_ratio_spread">Put Ratio 1×2</a>
+        </div>
+      </div>
+      <div class="otp-viz">
+        <div class="otp-chart" data-chart="ratio"></div>
+        <div class="otp-legend"><span><i class="g"></i>Kâr</span><span><i class="r"></i>Zarar</span></div>
+        <p class="otp-caption">Expiry’de Call 1×2 — tepe, sonra tavansız ekstra Short Call.</p>
+      </div>
+    </article>
+
+    <article class="otp-card" id="otp-syn-long">
+      <div>
+        <div class="otp-meta"><span class="otp-badge">Synthetic Long</span><span class="otp-badge">~+100 Delta</span></div>
+        <h3>Synthetic Long</h3>
+        <p>Long Call + Short Put, <b>aynı Strike ve expiration</b>, yaklaşık 100 hisse sahibi olmayı taklit eder (put-call parity). Tam hisse Debit’ini ödemezsiniz. Short Put için teminat gerekebilir; o Put’ta Assignment Strike’tan hisse almak demektir.</p>
+        <p>Expiration’da Payoff, Strike’tan geçen düz çizgidir — o Strike’tan alınmış hisse gibi; iki Premium’un net Debit veya Credit’i ile düzeltilir.</p>
+        <div class="otp-legs">
+          <span class="otp-leg long">Long Call · aynı Strike</span>
+          <span class="otp-leg short">Short Put · aynı Strike</span>
+        </div>
+        <ul>
+          <li><b>Bullish:</b> Underlying yükselsin. Aşağı yön hisse gibidir, “sadece Call Premium’u” değildir.</li>
+          <li><b>Hisseye göre:</b> daha az nakit çıkışı, temettü yok, Put’ta erken Assignment, bir expiration tarihi vardır.</li>
+          <li><b>Risk Reversal:</b> Long OTM Call + Short OTM Put — daha ucuz eğim; Put test olursa sol kuyruk yine büyük.</li>
+        </ul>
+        <div class="otp-btnrow">
+          <a class="otp-btn" href="/tr/builder/?template=synthetic_long">Synthetic Long</a>
+          <a class="otp-btn ghost" href="/tr/builder/?template=risk_reversal">Risk Reversal</a>
+        </div>
+      </div>
+      <div class="otp-viz">
+        <div class="otp-chart" data-chart="synlong"></div>
+        <div class="otp-legend"><span><i class="g"></i>Kâr</span><span><i class="r"></i>Zarar</span></div>
+        <p class="otp-caption">Long Call + Short Put, aynı Strike — hisse benzeri eğim.</p>
+      </div>
+    </article>
+
+    <article class="otp-card" id="otp-syn-short">
+      <div>
+        <div class="otp-meta"><span class="otp-badge">Synthetic Short</span><span class="otp-badge">~−100 Delta</span></div>
+        <h3>Synthetic Short</h3>
+        <p>Short Call + Long Put, aynı Strike ve expiration — ayna. Payoff 100 hisse short’a benzer. Hisse yükselişi teorik olarak sınırsız risktir (Short Call). Long Put fiyat düşünce öder.</p>
+        <div class="otp-legs">
+          <span class="otp-leg short">Short Call · aynı Strike</span>
+          <span class="otp-leg long">Long Put · aynı Strike</span>
+        </div>
+        <ul>
+          <li><b>Bearish:</b> Underlying düşsün. Yukarı sıkışma short hisse gibi incitir.</li>
+          <li><b>Assignment:</b> Short Call, elinizde olmayan hisseyi sattırabilir.</li>
+          <li><b>Hedge:</b> bazı masalar ödünç hisse yerine bunu kullanır; yine de erken exercise ve expiration riski vardır.</li>
+        </ul>
+        <div class="otp-btnrow">
+          <a class="otp-btn" href="/tr/builder/?template=synthetic_short">Synthetic Short</a>
+        </div>
+      </div>
+      <div class="otp-viz">
+        <div class="otp-chart" data-chart="synshort"></div>
+        <div class="otp-legend"><span><i class="g"></i>Kâr</span><span><i class="r"></i>Zarar</span></div>
+        <p class="otp-caption">Short Call + Long Put — short-hisse eğimi, sağda tavan yok.</p>
+      </div>
+    </article>
+  </div>
+
+  <p class="otp-foot">Yatırım tavsiyesi değildir · eğitim çerçevesi · nakit riske atmadan Builder’ı kullanın</p>
+</section>
+<script>
+(function () {
+  function callPay(S, K) { return Math.max(S - K, 0); }
+  function putPay(S, K) { return Math.max(K - S, 0); }
+  var models = {
+    jade: {
+      range: [60, 140],
+      strikes: [
+        { price: 90, label: 'P 90', color: '#f87171' },
+        { price: 110, label: 'C 110', color: '#a78bfa' },
+        { price: 120, label: 'C 120', color: '#34d399' }
+      ],
+      fn: function (S) {
+        var credit = (3.20 + 2.40 - 0.70) * 100;
+        return (-putPay(S, 90) - callPay(S, 110) + callPay(S, 120)) * 100 + credit;
+      }
+    },
+    pmcc: {
+      range: [60, 140],
+      strikes: [
+        { price: 85, label: 'L 85', color: '#34d399' },
+        { price: 110, label: 'S 110', color: '#f87171' }
+      ],
+      fn: function (S) {
+        var debit = (18.00 - 2.20) * 100;
+        return (callPay(S, 85) - callPay(S, 110)) * 100 - debit;
+      }
+    },
+    ratio: {
+      range: [70, 150],
+      strikes: [
+        { price: 100, label: 'L 100', color: '#34d399' },
+        { price: 110, label: '2× 110', color: '#f87171' }
+      ],
+      fn: function (S) {
+        var net = (5.00 - 2 * 2.15) * 100;
+        return (callPay(S, 100) - 2 * callPay(S, 110)) * 100 - net;
+      }
+    },
+    synlong: {
+      range: [70, 130],
+      strikes: [{ price: 100, label: 'K 100', color: '#fbbf24' }],
+      fn: function (S) {
+        var net = (5.00 - 4.80) * 100;
+        return (callPay(S, 100) - putPay(S, 100)) * 100 - net;
+      }
+    },
+    synshort: {
+      range: [70, 130],
+      strikes: [{ price: 100, label: 'K 100', color: '#fbbf24' }],
+      fn: function (S) {
+        var net = (4.80 - 5.00) * 100;
+        return (-callPay(S, 100) + putPay(S, 100)) * 100 - net;
+      }
+    }
+  };
+
+  function shadePaths(pts, zeroY, wantProfit) {
+    var out = [], buf = [], startX = null, on = false;
+    function flush() {
+      if (!buf.length || startX == null) return;
+      var d = 'M ' + startX + ' ' + zeroY + ' ';
+      for (var i = 0; i < buf.length; i++) d += 'L ' + buf[i].x + ' ' + buf[i].y + ' ';
+      d += 'L ' + buf[buf.length - 1].x + ' ' + zeroY + ' Z';
+      out.push(d);
+      buf = []; startX = null; on = false;
+    }
+    for (var i = 0; i < pts.length; i++) {
+      var p = pts[i], ok = wantProfit ? p.pl >= 0 : p.pl <= 0;
+      var prev = i ? pts[i - 1] : null;
+      if (ok && !on) {
+        on = true; buf = [];
+        if (prev && ((wantProfit && prev.pl < 0) || (!wantProfit && prev.pl > 0))) {
+          var t = (0 - prev.pl) / (p.pl - prev.pl);
+          var x = prev.x + t * (p.x - prev.x);
+          startX = x; buf.push({ x: x, y: zeroY });
+        } else startX = p.x;
+        buf.push(p);
+      } else if (ok && on) buf.push(p);
+      else if (!ok && on) {
+        if (prev) {
+          var t2 = (0 - prev.pl) / (p.pl - prev.pl);
+          var x2 = prev.x + t2 * (p.x - prev.x);
+          buf.push({ x: x2, y: zeroY });
+        }
+        flush();
+      }
+    }
+    flush();
+    return out;
+  }
+
+  function lineSegs(pts, zeroY, wantProfit) {
+    var d = '';
+    for (var i = 0; i < pts.length - 1; i++) {
+      var a = pts[i], b = pts[i + 1];
+      var both = wantProfit ? (a.pl >= 0 && b.pl >= 0) : (a.pl <= 0 && b.pl <= 0 && !(a.pl === 0 && b.pl === 0));
+      if (both) d += 'M ' + a.x + ' ' + a.y + ' L ' + b.x + ' ' + b.y + ' ';
+      else if ((wantProfit && a.pl >= 0 && b.pl < 0) || (!wantProfit && a.pl <= 0 && b.pl > 0)) {
+        var t = (0 - a.pl) / (b.pl - a.pl);
+        var x = a.x + t * (b.x - a.x);
+        d += 'M ' + a.x + ' ' + a.y + ' L ' + x + ' ' + zeroY + ' ';
+      } else if ((wantProfit && a.pl < 0 && b.pl >= 0) || (!wantProfit && a.pl > 0 && b.pl <= 0)) {
+        var t2 = (0 - a.pl) / (b.pl - a.pl);
+        var x2 = a.x + t2 * (b.x - a.x);
+        d += 'M ' + x2 + ' ' + zeroY + ' L ' + b.x + ' ' + b.y + ' ';
+      }
+    }
+    return d;
+  }
+
+  function renderChart(el, key) {
+    var m = models[key];
+    if (!m || !el) return;
+    var W = 400, H = 220, L = 46, R = 14, T = 26, B = 34;
+    var innerW = W - L - R, innerH = H - T - B;
+    var lo = m.range[0], hi = m.range[1], n = 240;
+    var pts = [], i;
+    for (i = 0; i < n; i++) {
+      var px = lo + i / (n - 1) * (hi - lo);
+      pts.push({ price: px, pl: m.fn(px) });
+    }
+    var minY = Math.min.apply(null, pts.map(function (p) { return p.pl; }).concat([0]));
+    var maxY = Math.max.apply(null, pts.map(function (p) { return p.pl; }).concat([0]));
+    var span = maxY - minY; if (span < 80) span = 80;
+    minY -= span * 0.18; maxY += span * 0.18; span = maxY - minY;
+    function xOf(p) { return L + (p - lo) / (hi - lo) * innerW; }
+    function yOf(v) { return T + innerH - (v - minY) / span * innerH; }
+    var zeroY = yOf(0);
+    pts.forEach(function (p) { p.x = xOf(p.price); p.y = yOf(p.pl); });
+    var be = [];
+    for (i = 0; i < pts.length - 1; i++) {
+      if (pts[i].pl * pts[i + 1].pl < 0) {
+        var t = (0 - pts[i].pl) / (pts[i + 1].pl - pts[i].pl);
+        be.push({ x: pts[i].x + t * (pts[i + 1].x - pts[i].x), price: pts[i].price + t * (pts[i + 1].price - pts[i].price) });
+      }
+    }
+    var gFill = shadePaths(pts, zeroY, true);
+    var rFill = shadePaths(pts, zeroY, false);
+    var gLine = lineSegs(pts, zeroY, true);
+    var rLine = lineSegs(pts, zeroY, false);
+    var light = document.documentElement.getAttribute('data-theme') === 'light';
+    var gridStroke = light ? 'rgba(15,23,42,0.08)' : 'rgba(255,255,255,0.06)';
+    var zeroStroke = light ? 'rgba(15,23,42,0.28)' : 'rgba(255,255,255,0.22)';
+    var beFill = light ? '#fff' : '#27272A';
+    var beText = light ? '#334155' : '#D4D4D8';
+    var tagFill = light ? '#fff' : '#18181b';
+    var grid = '';
+    [0, 0.25, 0.5, 0.75, 1].forEach(function (f) {
+      grid += '<line x1="' + (L + f * innerW) + '" y1="' + T + '" x2="' + (L + f * innerW) + '" y2="' + (T + innerH) + '" stroke="' + gridStroke + '" stroke-width="0.5"/>';
+      grid += '<line x1="' + L + '" y1="' + (T + f * innerH) + '" x2="' + (W - R) + '" y2="' + (T + f * innerH) + '" stroke="' + gridStroke + '" stroke-width="0.5"/>';
+    });
+    var fills = gFill.map(function (d) { return '<path d="' + d + '" fill="rgba(16,185,129,0.22)"/>'; }).join('') +
+      rFill.map(function (d) { return '<path d="' + d + '" fill="rgba(239,68,68,0.22)"/>'; }).join('');
+    var strikes = (m.strikes || []).map(function (s) {
+      var x = xOf(s.price), c = s.color || 'rgba(255,255,255,0.18)';
+      return '<line x1="' + x + '" y1="' + T + '" x2="' + x + '" y2="' + (T + innerH) + '" stroke="' + c + '" stroke-width="1" stroke-dasharray="2 5" opacity="0.85"/>' +
+        '<g transform="translate(' + x + ',' + T + ')">' +
+        '<rect x="-22" y="-14" width="44" height="14" rx="7" fill="' + tagFill + '" stroke="' + c + '" stroke-opacity="0.45"/>' +
+        '<text x="0" y="-4.5" text-anchor="middle" font-size="8" fill="' + c + '" font-weight="600">' + s.label + '</text></g>';
+    }).join('');
+    var bes = be.map(function (b) {
+      return '<line x1="' + b.x + '" y1="' + T + '" x2="' + b.x + '" y2="' + (T + innerH) + '" stroke="#71717A" stroke-dasharray="4 4"/>' +
+        '<g transform="translate(' + b.x + ',188)"><rect x="-32" y="0" width="64" height="14" rx="7" fill="' + beFill + '" stroke="' + gridStroke + '"/>' +
+        '<text x="0" y="10" text-anchor="middle" font-size="8" fill="' + beText + '">BREAKEVEN</text></g>';
+    }).join('');
+    el.innerHTML =
+      '<div class="otp-tip"></div>' +
+      '<svg viewBox="0 0 400 220" preserveAspectRatio="none" aria-label="Payoff at expiry">' +
+      grid +
+      '<line x1="' + L + '" y1="' + zeroY + '" x2="' + (W - R) + '" y2="' + zeroY + '" stroke="' + zeroStroke + '" stroke-dasharray="6 4"/>' +
+      fills + strikes + bes +
+      '<path d="' + gLine + '" fill="none" stroke="#34d399" stroke-width="2.1" stroke-linejoin="round"/>' +
+      '<path d="' + rLine + '" fill="none" stroke="#f87171" stroke-width="2.1" stroke-linejoin="round"/>' +
+      '<line class="otp-cross" x1="0" y1="' + T + '" x2="0" y2="' + (T + innerH) + '" stroke="rgba(255,255,255,0.35)" stroke-dasharray="3 3" opacity="0"/>' +
+      '</svg>';
+    var svg = el.querySelector('svg');
+    var tip = el.querySelector('.otp-tip');
+    var cross = el.querySelector('.otp-cross');
+    function read(ev) {
+      var rect = svg.getBoundingClientRect();
+      var clientX = ev.touches ? ev.touches[0].clientX : ev.clientX;
+      var mx = (clientX - rect.left) * (W / rect.width);
+      var price = lo + ((mx - L) / innerW) * (hi - lo);
+      price = Math.max(lo, Math.min(hi, price));
+      var pl = m.fn(price);
+      var x = xOf(price);
+      cross.setAttribute('x1', x); cross.setAttribute('x2', x); cross.setAttribute('opacity', '1');
+      tip.style.opacity = '1';
+      tip.style.left = ((x / W) * 100) + '%';
+      tip.style.top = '18px';
+      tip.textContent = '$' + price.toFixed(1) + '  ·  ' + (pl >= 0 ? '+' : '') + '$' + pl.toFixed(0);
+    }
+    svg.addEventListener('mousemove', read);
+    svg.addEventListener('touchmove', function (e) { read(e); }, { passive: true });
+    svg.addEventListener('mouseleave', function () { cross.setAttribute('opacity', '0'); tip.style.opacity = '0'; });
+  }
+
+  function boot() {
+    document.querySelectorAll('#otp-playbook .otp-chart[data-chart]').forEach(function (el) {
+      renderChart(el, el.getAttribute('data-chart'));
+    });
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
+  else boot();
+  try {
+    new MutationObserver(boot).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  } catch (e) {}
+})();
+</script>
+
+
+<div class="card">
     <h2 id="dte">Neden 45+ DTE?</h2>
     <ul>
       <li><b>Erken erime daha yavaş</b> — theta, son 2 haftaya göre expiry’den uzakta genelde daha yumuşaktır.</li>
