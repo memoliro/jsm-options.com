@@ -243,6 +243,30 @@ html[data-theme="light"] #otp-playbook .otp-warn{
 html[data-theme="light"] #otp-playbook .otp-btn{background:#0f766e;color:#fff}
 html[data-theme="light"] #otp-playbook .otp-btn.ghost{color:#0f172a;border-color:#cbd5e1;background:#fff}
 html[data-theme="light"] #otp-playbook a{color:#0f766e}
+
+#otp-playbook .otp-rules{margin-top:28px;overflow:hidden;border:1px solid var(--otp-line);border-radius:16px;background:var(--otp-panel)}
+#otp-playbook .otp-rules-head,#otp-playbook .otp-rules-row{
+  display:grid;grid-template-columns:1fr;gap:6px;padding:14px 16px;border-bottom:1px solid var(--otp-line)
+}
+@media(min-width:800px){
+  #otp-playbook .otp-rules-head,#otp-playbook .otp-rules-row{grid-template-columns:1.15fr 1.6fr 1.2fr;gap:12px;align-items:start}
+}
+#otp-playbook .otp-rules-head{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--otp-muted);background:transparent}
+#otp-playbook .otp-rules-row:last-child{border-bottom:0}
+#otp-playbook .otp-rule-name{display:flex;gap:10px;align-items:flex-start;color:var(--otp-ink);font-weight:600;font-size:14px}
+#otp-playbook .otp-ico{width:28px;height:28px;border-radius:999px;display:inline-flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;border:1px solid var(--otp-line)}
+#otp-playbook .otp-ico.em{background:rgba(16,185,129,.12);color:#34d399;border-color:rgba(16,185,129,.25)}
+#otp-playbook .otp-ico.am{background:rgba(245,158,11,.12);color:#fbbf24;border-color:rgba(245,158,11,.3)}
+#otp-playbook .otp-ico.vi{background:rgba(139,92,246,.12);color:#a78bfa;border-color:rgba(139,92,246,.28)}
+#otp-playbook .otp-rules-row p{font-size:13px}
+#otp-playbook .otp-cta{
+  margin-top:22px;border:1px solid var(--otp-line);border-radius:18px;padding:22px 18px;text-align:center;background:var(--otp-panel)
+}
+#otp-playbook .otp-cta h3{font-size:1.05rem;font-weight:600;max-width:40rem;margin:10px auto 14px;line-height:1.45}
+html[data-theme="light"] #otp-playbook .otp-ico.em{color:#15803d}
+html[data-theme="light"] #otp-playbook .otp-ico.am{color:#b45309}
+html[data-theme="light"] #otp-playbook .otp-ico.vi{color:#6d28d9}
+
 </style>
 
 
@@ -418,6 +442,42 @@ html[data-theme="light"] #otp-playbook a{color:#0f766e}
         <p class="otp-caption">Short Call + Long Put — short-hisse eğimi, sağda tavan yok.</p>
       </div>
     </article>
+  </div>
+
+
+  <div class="otp-section" id="otp-mechanics">
+    <div class="otp-sec-head">
+      <h2>Core Mechanics of Successful Traders</h2>
+      <span class="otp-pill">3 kural</span>
+    </div>
+    <p class="otp-lead" style="margin-bottom:14px">Strateji ne olursa olsun bu üç kural tekrar tekrar çıkar.</p>
+    <div class="otp-rules">
+      <div class="otp-rules-head"><span>Rule</span><span>Execution Strategy</span><span>Why It Matters</span></div>
+      <div class="otp-rules-row">
+        <div class="otp-rule-name"><span class="otp-ico em">Θ</span>Sell 45 DTE, Manage at 21 DTE</div>
+        <p>Yaklaşık 45 DTE’de girin ki Theta hızlansın, Assignment riski daha düşük kalsın. ~21 DTE’de yönetin veya çıkın.</p>
+        <p>Expiry haftasının volatil “gamma risk”ini azaltır.</p>
+      </div>
+      <div class="otp-rules-row">
+        <div class="otp-rule-name"><span class="otp-ico am">◐</span>Take Profits Early</div>
+        <p>Short Premium işlemleri max kârın ~%50’sinde kapatın veya Roll-out yapın (PMCC alışkanlığı).</p>
+        <p>Uzun vadede kazanma oranını yükseltir; kalan Credit çoğu zaman kuyruk riskine değmez.</p>
+      </div>
+      <div class="otp-rules-row">
+        <div class="otp-rule-name"><span class="otp-ico vi">ν</span>Trading High Implied Volatility (IV)</div>
+        <p>IV Percentile (IVP) ~%50’nin üstündeyken opsiyon satın.</p>
+        <p>Yüksek IV’de opsiyonlar istatistiksel olarak pahalı olabilir; volatility ortalamaya dönerse satıcı avantajı doğar.</p>
+      </div>
+    </div>
+    <div class="otp-cta">
+      <div class="otp-kicker"><span class="otp-dot"></span> Next step · Choose your edge</div>
+      <h3>Sıradaki çerçeve: Iron Condor matematiği veya işlem aleyhinize gidince Wheel’i nasıl yöneteceğiniz.</h3>
+      <div class="otp-btnrow" style="justify-content:center">
+        <a class="otp-btn" href="#iron-condor">Iron Condor Math →</a>
+        <a class="otp-btn ghost" href="#wheel">Wheel</a>
+      </div>
+      <p class="otp-foot" style="margin-top:14px">Yatırım tavsiyesi değildir · yalnızca eğitim</p>
+    </div>
   </div>
 
   <p class="otp-foot">Yatırım tavsiyesi değildir · eğitim çerçevesi · nakit riske atmadan Builder’ı kullanın</p>
