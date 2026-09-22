@@ -765,7 +765,7 @@
           <input type="range" id="daysLeft" min="0" max="90" value="90" oninput="onDaysChange()" />
         </div>
         <div class="slider-group" style="margin-top:6px;">
-          <label>Underlying <strong id="spotLabel">$100.00</strong></label>
+          <label>Hisse <strong id="spotLabel">$100.00</strong></label>
           <input type="range" id="spotSlider" min="40" max="180" step="0.5" value="100" oninput="onSpotSlide()" />
         </div>
       </div>
@@ -833,12 +833,12 @@
         <div class="greek-card">
           <div class="g-name">Δ Delta</div>
           <div class="g-val" id="gDelta">—</div>
-          <div class="g-impact" id="gDeltaImpact">Fiyat duyarlılığı: Underlying $1 hareket ederse K/Z ne kadar değişir.</div>
+          <div class="g-impact" id="gDeltaImpact">Fiyat duyarlılığı: Hisse $1 hareket ederse K/Z ne kadar değişir.</div>
         </div>
         <div class="greek-card">
           <div class="g-name">Γ Gamma</div>
           <div class="g-val" id="gGamma">—</div>
-          <div class="g-impact" id="gGammaImpact">Dışbükeylik: Underlying hareket edince Delta ne kadar hızlı değişir.</div>
+          <div class="g-impact" id="gGammaImpact">Dışbükeylik: Hisse hareket edince Delta ne kadar hızlı değişir.</div>
         </div>
         <div class="greek-card">
           <div class="g-name">Θ Theta</div>
@@ -867,29 +867,29 @@
     <h2>Terimler <span style="font-size:0.72rem;color:var(--muted);font-weight:500;">İngilizce bırakılan sözcüklerin kısa Türkçe açıklaması</span></h2>
     <p style="font-size:0.78rem;color:var(--muted);margin-bottom:10px;">Builder metninde bu terimler bilinçli olarak İngilizce durur; aşağıda her birinin anlamı vardır.</p>
     <dl class="glossary-grid">
-      <div class="glossary-item"><dt>Call</dt><dd>Belirli bir Strike üzerinden Underlying’i alma hakkı veren opsiyon.</dd></div>
-      <div class="glossary-item"><dt>Put</dt><dd>Belirli bir Strike üzerinden Underlying’i satma hakkı veren opsiyon.</dd></div>
+      <div class="glossary-item"><dt>Call</dt><dd>Belirli bir Strike üzerinden Hisseyi’i alma hakkı veren opsiyon.</dd></div>
+      <div class="glossary-item"><dt>Put</dt><dd>Belirli bir Strike üzerinden Hisse’i satma hakkı veren opsiyon.</dd></div>
       <div class="glossary-item"><dt>Strike</dt><dd>Opsiyonun alım veya satım hakkı tanıdığı sabit fiyat.</dd></div>
       <div class="glossary-item"><dt>Expiry / expiration</dt><dd>Kontratın sona erdiği tarih; DTE bu güne kalan gün sayısıdır.</dd></div>
       <div class="glossary-item"><dt>DTE</dt><dd>Days to expiration: expiration’a kalan takvim günü.</dd></div>
-      <div class="glossary-item"><dt>Moneyness</dt><dd>Strike’ın Underlying fiyatına göre konumu: ITM, ATM veya OTM.</dd></div>
-      <div class="glossary-item"><dt>ITM / In-the-money</dt><dd>Call’da Underlying &gt; Strike; Put’ta Underlying &lt; Strike. İçsel değeri vardır.</dd></div>
-      <div class="glossary-item"><dt>ATM / At-the-money</dt><dd>Strike, Underlying fiyatına çok yakındır.</dd></div>
-      <div class="glossary-item"><dt>OTM / Out-of-the-money</dt><dd>Call’da Underlying &lt; Strike; Put’ta Underlying &gt; Strike. Intrinsic değeri sıfırdır.</dd></div>
+      <div class="glossary-item"><dt>Moneyness</dt><dd>Strike’ın Hisse fiyatına göre konumu: ITM, ATM veya OTM.</dd></div>
+      <div class="glossary-item"><dt>ITM / In-the-money</dt><dd>Call’da Hisse &gt; Strike; Put’ta Hisse &lt; Strike. İçsel değeri vardır.</dd></div>
+      <div class="glossary-item"><dt>ATM / At-the-money</dt><dd>Strike, Hisse fiyatına çok yakındır.</dd></div>
+      <div class="glossary-item"><dt>OTM / Out-of-the-money</dt><dd>Call’da Hisse &lt; Strike; Put’ta Hisse &gt; Strike. Intrinsic değeri sıfırdır.</dd></div>
       <div class="glossary-item"><dt>Premium</dt><dd>Opsiyonun pay başına fiyatı; Bid / Ask / Last ile görülür.</dd></div>
       <div class="glossary-item"><dt>Bid / Ask / Last</dt><dd>Alış teklifi, satış teklifi ve son işlem fiyatı.</dd></div>
       <div class="glossary-item"><dt>Long / Short</dt><dd>Long = satın almak (hak sahibi); Short = satmak / yazmak (yükümlülük).</dd></div>
       <div class="glossary-item"><dt>Debit / Credit</dt><dd>Debit: net ödenen prim. Credit: net alınan prim.</dd></div>
       <div class="glossary-item"><dt>Intrinsic / extrinsic</dt><dd>Intrinsic: ITM kısmı. Extrinsic: zaman ve IV’den gelen Premium artışı.</dd></div>
-      <div class="glossary-item"><dt>Underlying</dt><dd>Opsiyonun dayandığı hisse, endeks veya varlık.</dd></div>
+      <div class="glossary-item"><dt>Hisse</dt><dd>Opsiyonun dayandığı hisse, endeks veya varlık.</dd></div>
       <div class="glossary-item"><dt>Greeks</dt><dd>Risk ölçüleri: Delta, Gamma, Theta, Vega.</dd></div>
-      <div class="glossary-item"><dt>Delta</dt><dd>Underlying $1 hareketince opsiyon fiyatının yaklaşık değişimi.</dd></div>
-      <div class="glossary-item"><dt>Gamma</dt><dd>Underlying hareket edince Delta’nın ne kadar değiştiği.</dd></div>
+      <div class="glossary-item"><dt>Delta</dt><dd>Hisse $1 hareketince opsiyon fiyatının yaklaşık değişimi.</dd></div>
+      <div class="glossary-item"><dt>Gamma</dt><dd>Hisse hareket edince Delta’nın ne kadar değiştiği.</dd></div>
       <div class="glossary-item"><dt>Theta</dt><dd>Bir gün geçince beklenen zaman aşınması.</dd></div>
       <div class="glossary-item"><dt>Vega</dt><dd>IV bir puan artınca Premium’un yaklaşık değişimi.</dd></div>
       <div class="glossary-item"><dt>IV / implied volatility</dt><dd>Piyasanın fiyatladığı beklenen salınım; Premium’u şişirir veya söndürür.</dd></div>
       <div class="glossary-item"><dt>Payoff</dt><dd>Fiyata göre kâr/zarar eğrisi; genelde expiration anı çizilir.</dd></div>
-      <div class="glossary-item"><dt>Break-Even</dt><dd>Expiration’da işlemin sıfır kâr/zarar ettiği Underlying fiyatı.</dd></div>
+      <div class="glossary-item"><dt>Break-Even</dt><dd>Expiration’da işlemin sıfır kâr/zarar ettiği Hisse fiyatı.</dd></div>
       <div class="glossary-item"><dt>Assignment</dt><dd>Short opsiyonun kullanılması; hisse teslim veya teslim alma yükümlülüğü.</dd></div>
       <div class="glossary-item"><dt>Spread</dt><dd>Aynı veya yakın vadelerde birden fazla bacaklı yapı.</dd></div>
       <div class="glossary-item"><dt>Vertical</dt><dd>Aynı expiration, farklı Strike’lı Spread.</dd></div>
