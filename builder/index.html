@@ -563,6 +563,15 @@
             <option value="iron_condor">Iron Condor</option>
             <option value="iron_butterfly">Iron Butterfly</option>
             <option value="calendar_call">Calendar Spread (Call)</option>
+            <option value="jade_lizard">Jade Lizard</option>
+          </optgroup>
+          <optgroup label="Synthetic Stock &amp; Capital-Efficient (Bullish / Neutral)">
+            <option value="pmcc">Poor Man's Covered Call</option>
+            <option value="call_ratio_spread">Call Ratio Spread (1×2)</option>
+            <option value="put_ratio_spread">Put Ratio Spread (1×2)</option>
+            <option value="synthetic_long">Synthetic Long</option>
+            <option value="synthetic_short">Synthetic Short</option>
+            <option value="risk_reversal">Risk Reversal (synthetic tilt)</option>
           </optgroup>
         </select>
       </div>
@@ -1007,6 +1016,45 @@
         calendar_call: [
           { side: 'sell', type: 'call', strike: K, dte: 30, qty: 1, premium: +(p * 0.55).toFixed(2) },
           { side: 'buy', type: 'call', strike: K, dte: 90, qty: 1, premium: p }
+        ],
+        // Short OTM put + short call spread. Structured so net credit often
+        // exceeds the call-spread width → theoretically no upside risk.
+        jade_lizard: [
+          { side: 'sell', type: 'put', strike: K - 10, dte: 45, qty: 1, premium: +(p * 0.75).toFixed(2) },
+          { side: 'sell', type: 'call', strike: K + 10, dte: 45, qty: 1, premium: +(p * 0.55).toFixed(2) },
+          { side: 'buy', type: 'call', strike: K + 20, dte: 45, qty: 1, premium: +(p * 0.22).toFixed(2) }
+        ],
+        // Long deep-ITM LEAP call + short near-term OTM call (covered call
+        // without owning the shares).
+        pmcc: [
+          { side: 'buy', type: 'call', strike: Math.max(1, K - 15), dte: 180, qty: 1, premium: +(Math.max(p * 2.2, 15 + p * 0.7)).toFixed(2) },
+          { side: 'sell', type: 'call', strike: K + 10, dte: 30, qty: 1, premium: +(p * 0.5).toFixed(2) }
+        ],
+        // Front-ratio call: long 1 ATM, short 2 OTM. Credit or small debit;
+        // unlimited upside risk on the extra short call.
+        call_ratio_spread: [
+          { side: 'buy', type: 'call', strike: K, dte: 45, qty: 1, premium: p },
+          { side: 'sell', type: 'call', strike: K + 10, dte: 45, qty: 2, premium: +(p * 0.55).toFixed(2) }
+        ],
+        put_ratio_spread: [
+          { side: 'buy', type: 'put', strike: K, dte: 45, qty: 1, premium: p },
+          { side: 'sell', type: 'put', strike: K - 10, dte: 45, qty: 2, premium: +(p * 0.55).toFixed(2) }
+        ],
+        // Long call + short put, same strike/expiry ≈ long 100 shares.
+        synthetic_long: [
+          { side: 'buy', type: 'call', strike: K, dte: 90, qty: 1, premium: p },
+          { side: 'sell', type: 'put', strike: K, dte: 90, qty: 1, premium: +(p * 0.95).toFixed(2) }
+        ],
+        // Short call + long put, same strike/expiry ≈ short 100 shares.
+        synthetic_short: [
+          { side: 'sell', type: 'call', strike: K, dte: 90, qty: 1, premium: p },
+          { side: 'buy', type: 'put', strike: K, dte: 90, qty: 1, premium: +(p * 0.95).toFixed(2) }
+        ],
+        // OTM call long + OTM put short: directional synthetic with less
+        // premium outlay than an ATM synthetic.
+        risk_reversal: [
+          { side: 'buy', type: 'call', strike: K + 10, dte: 90, qty: 1, premium: +(p * 0.6).toFixed(2) },
+          { side: 'sell', type: 'put', strike: K - 10, dte: 90, qty: 1, premium: +(p * 0.6).toFixed(2) }
         ]
       };
 
@@ -1041,7 +1089,14 @@
       long_call_butterfly: { title: 'Call Butterfly', href: '/strategies/', label: 'Strategies' },
       call_condor: { title: 'Call Condor', href: '/strategies/', label: 'Strategies' },
       long_put_butterfly: { title: 'Put Butterfly', href: '/strategies/', label: 'Strategies' },
-      put_condor: { title: 'Put Condor', href: '/strategies/', label: 'Strategies' }
+      put_condor: { title: 'Put Condor', href: '/strategies/', label: 'Strategies' },
+      jade_lizard: { title: 'Jade Lizard', href: '/strategies/', label: 'Strategies' },
+      pmcc: { title: "Poor Man's Covered Call", href: '/level4/', label: 'Advanced' },
+      call_ratio_spread: { title: 'Call Ratio Spread (1×2)', href: '/level4/', label: 'Advanced' },
+      put_ratio_spread: { title: 'Put Ratio Spread (1×2)', href: '/level4/', label: 'Advanced' },
+      synthetic_long: { title: 'Synthetic Long', href: '/level4/', label: 'Advanced' },
+      synthetic_short: { title: 'Synthetic Short', href: '/level4/', label: 'Advanced' },
+      risk_reversal: { title: 'Risk Reversal', href: '/level4/', label: 'Advanced' }
     };
 
     function setTemplateTip(key) {
