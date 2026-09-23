@@ -85,6 +85,22 @@
     @media(max-width:720px){.tpl-pop.open{grid-template-columns:1fr}}
     .tpl-groups{display:flex;flex-direction:column;gap:8px;min-width:0}
     .tpl-g-label{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);padding:2px 4px}
+
+    .tpl-item{justify-content:flex-start}
+    @media (max-width:720px){
+      .tpl-pop{
+        width:auto;
+      }
+      .tpl-pop.open{
+        position:fixed!important;left:10px!important;right:10px!important;top:auto!important;bottom:10px;
+        width:auto!important;min-width:0!important;max-width:none!important;
+        grid-template-columns:1fr!important;max-height:min(70vh,480px);
+        padding:8px;gap:8px
+      }
+      .tpl-peek{order:-1;position:static}
+      .tpl-peek-chart svg{max-height:88px}
+      .tpl-item{padding:8px 8px;font-size:14px}
+    }
     .tpl-item{
       display:flex;align-items:center;justify-content:space-between;gap:8px;
       width:100%;text-align:left;border:1px solid transparent;background:transparent;
@@ -99,6 +115,8 @@
     .tpl-peek-name{font-size:13px;font-weight:650;margin-bottom:4px}
     .tpl-peek-note{font-size:11px;color:var(--muted);margin-top:6px;line-height:1.4}
     .tpl-peek svg{width:100%;height:auto;display:block}
+
+    [data-offline-banner], .offline-banner, #offlineEnable, .pwa-enable, .sw-enable { display:none !important; }
     .subtitle { color: var(--muted); font-size: 0.88rem; margin-bottom: 14px; }
 
     .top-bar {
@@ -1769,17 +1787,18 @@
         const right = chart.chartArea.right;
         if (x < left || x > right) return;
         ctx.save();
-        ctx.lineWidth = 1;
-        ctx.setLineDash([4, 3]);
+        ctx.lineWidth = 1.35;
+        ctx.setLineDash([5, 4]);
+        var light = (typeof isLightTheme === 'function') ? isLightTheme() : (document.documentElement.getAttribute('data-theme') === 'light');
         // vertical at underlying price
-        ctx.strokeStyle = 'rgba(148, 163, 184, 0.85)';
+        ctx.strokeStyle = light ? 'rgba(15, 23, 42, 0.72)' : 'rgba(203, 213, 225, 0.9)';
         ctx.beginPath();
         ctx.moveTo(x, top);
         ctx.lineTo(x, bottom);
         ctx.stroke();
         // horizontal at current P/L
         if (y >= top && y <= bottom) {
-          ctx.strokeStyle = 'rgba(250, 204, 21, 0.9)';
+          ctx.strokeStyle = light ? 'rgba(180, 83, 9, 0.95)' : 'rgba(250, 204, 21, 0.95)';
           ctx.beginPath();
           ctx.moveTo(left, y);
           ctx.lineTo(right, y);
@@ -2312,24 +2331,36 @@
         listBox.innerHTML = groups().map(function (g) {
           return '<div><div class="tpl-g-label">' + g.label + '</div>' +
             g.items.map(function (it) {
-              const series = templateExpirySeries(it.value);
-              const spark = series ? miniPayoffSVG(series.ys, 72, 28) : '';
               const on = it.value === activeKey ? ' active' : '';
               return '<button type="button" class="tpl-item' + on + '" data-key="' + it.value + '"><span>' + it.text +
-                '</span>' + spark + '</button>';
+                '</span></button>';
             }).join('') + '</div>';
         }).join('');
       }
       function placePop() {
         const host = trigger || sel;
         const r = host.getBoundingClientRect();
-        pop.style.position = 'absolute';
-        pop.style.left = '0';
-        pop.style.right = '0';
-        pop.style.top = 'calc(100% + 6px)';
-        pop.style.width = 'auto';
-        pop.style.minWidth = Math.max(r.width, 520) + 'px';
-        pop.style.maxWidth = 'min(720px, calc(100vw - 24px))';
+        const vw = window.innerWidth;
+        const narrow = vw < 720;
+        if (narrow) {
+          pop.style.position = 'fixed';
+          pop.style.left = '10px';
+          pop.style.right = '10px';
+          pop.style.top = 'auto';
+          pop.style.bottom = '10px';
+          pop.style.width = 'auto';
+          pop.style.minWidth = '0';
+          pop.style.maxWidth = 'none';
+        } else {
+          pop.style.position = 'absolute';
+          pop.style.left = '0';
+          pop.style.right = 'auto';
+          pop.style.top = 'calc(100% + 6px)';
+          pop.style.bottom = 'auto';
+          pop.style.width = 'auto';
+          pop.style.minWidth = Math.max(r.width, 420) + 'px';
+          pop.style.maxWidth = 'min(560px, calc(100vw - 24px))';
+        }
       }
       function openPop() {
         renderList(sel.value);
@@ -2718,7 +2749,7 @@
         svgHtml += '<text x="' + (pad.l - 6) + '" y="' + (yPix + 3) + '" text-anchor="end" font-size="9.5" fill="var(--muted)">$' + yVal.toFixed(0) + '</text>';
       }
       const startXPix = xScale(0);
-      svgHtml += '<line x1="' + startXPix + '" y1="' + pad.t + '" x2="' + startXPix + '" y2="' + (height - pad.b) + '" stroke="var(--yellow)" stroke-width="1" stroke-dasharray="3,3"/>';
+      svgHtml += '<line x1="' + startXPix + '" y1="' + pad.t + '" x2="' + startXPix + '" y2="' + (height - pad.b) + '" stroke="var(--spot-guide, var(--yellow))" stroke-width="1.2" stroke-dasharray="4,3"/>';
 
       const candleSpacing = innerW / (xDomain[1] - xDomain[0]);
       const candleWidth = Math.max(3, Math.min(14, candleSpacing * 0.6));
@@ -3072,6 +3103,26 @@
 
 
 
+
+
+<script>
+(function(){
+  function stripOffline(){
+    var needle = 'Çevrimdışı uygulamayı etkinleştir';
+    var nodes = document.querySelectorAll('button, a, label, p, div, span, li');
+    for (var i = 0; i < nodes.length; i++) {
+      var el = nodes[i];
+      if (!el.childElementCount && el.textContent && el.textContent.indexOf(needle) !== -1) {
+        var box = el.closest('p, label, div, li, button') || el;
+        box.style.display = 'none';
+      }
+    }
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', stripOffline);
+  else stripOffline();
+  setTimeout(stripOffline, 800);
+})();
+</script>
 
 </body>
 </html>
