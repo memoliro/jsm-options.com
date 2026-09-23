@@ -60,6 +60,10 @@
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
+    .pl-box-split{display:flex;flex-direction:column;gap:8px;padding:8px 10px}
+    .pl-box-split .pl-value{font-size:1.25rem}
+    .pl-split{border-bottom:1px solid var(--border);padding-bottom:6px}
+    .pl-split:last-child{border-bottom:0;padding-bottom:0}
     .subtitle { color: var(--muted); font-size: 0.88rem; margin-bottom: 14px; }
 
     .top-bar {
@@ -664,9 +668,15 @@
           </p>
         </div>
         <div class="legs-summary-col">
-          <div class="pl-box">
-            <div style="font-size:0.7rem;color:var(--muted);">K/Z (teorik)</div>
-            <div id="plValue" class="pl-value pl-positive">$0</div>
+          <div class="pl-box pl-box-split">
+            <div class="pl-split">
+              <div style="font-size:0.68rem;color:var(--muted);">Model P/L <span style="font-weight:400">(time left · not Bid)</span></div>
+              <div id="plValue" class="pl-value pl-positive">$0</div>
+            </div>
+            <div class="pl-split">
+              <div style="font-size:0.68rem;color:var(--muted);">Expiry P/L <span style="font-weight:400">@ this price</span></div>
+              <div id="plExpiry" class="pl-value pl-negative">$0</div>
+            </div>
           </div>
           <div class="metrics">
             <div class="metric">
@@ -674,11 +684,11 @@
               <div class="val" id="netPremium">$0</div>
             </div>
             <div class="metric">
-              <div class="label">Maks. kâr</div>
+              <div class="label">Max profit</div>
               <div class="val" id="maxProfit">—</div>
             </div>
             <div class="metric">
-              <div class="label">Maks. zarar</div>
+              <div class="label">Max loss</div>
               <div class="val" id="maxLoss">—</div>
             </div>
             <div class="metric">
@@ -729,11 +739,11 @@
               <div class="val" id="netPremiumB">$0</div>
             </div>
             <div class="metric">
-              <div class="label">Maks. kâr</div>
+              <div class="label">Max profit</div>
               <div class="val" id="maxProfitB">—</div>
             </div>
             <div class="metric">
-              <div class="label">Maks. zarar</div>
+              <div class="label">Max loss</div>
               <div class="val" id="maxLossB">—</div>
             </div>
             <div class="metric">
@@ -817,18 +827,22 @@
 
       <!-- Position Summary — how P/L has moved across the simulated days -->
       <div class="card">
-        <h2>Position summary <span style="font-size:0.72rem;color:var(--muted);font-weight:500;">live</span></h2>
+        <h2>Position summary <span style="font-size:0.72rem;color:var(--muted);font-weight:500;">model vs expiry</span></h2>
         <div class="metrics pos-metrics">
           <div class="metric">
-            <div class="label">Live P/L</div>
+            <div class="label">Model P/L</div>
             <div class="val" id="posCurrentPL">$0</div>
+          </div>
+          <div class="metric">
+            <div class="label">Expiry P/L</div>
+            <div class="val" id="posExpiryPL">$0</div>
           </div>
           <div class="metric">
             <div class="label">Net Debit/Credit</div>
             <div class="val" id="posNetPremium">$0</div>
           </div>
           <div class="metric">
-            <div class="label">Pozisyon Delta</div>
+            <div class="label">Position Delta</div>
             <div class="val" id="posDelta">—</div>
           </div>
           <div class="metric">
@@ -2136,6 +2150,14 @@
       });
     }
 
+
+    function paintPL(el, val) {
+      if (!el) return;
+      el.textContent = (val >= 0 ? '+' : '') + formatMoney(val);
+      el.style.color = val >= 0 ? 'var(--green)' : 'var(--red)';
+      el.classList.remove('pl-positive', 'pl-negative');
+      el.classList.add(val >= 0 ? 'pl-positive' : 'pl-negative');
+    }
     function liveUpdate() {
       updateSpotSliderRange();
       recalc();
@@ -2149,9 +2171,10 @@
       const S = params.S;
       const daysLeft = params.daysLeft;
       const pl = plAt(S, daysLeft);
-      const plEl = document.getElementById('plValue');
-      plEl.textContent = (pl >= 0 ? '+' : '') + formatMoney(pl);
-      plEl.className = 'pl-value ' + (pl >= 0 ? 'pl-positive' : 'pl-negative');
+      const expPl = expiryPayoff(S);
+      paintPL(document.getElementById('plValue'), pl);
+      paintPL(document.getElementById('plExpiry'), expPl);
+      paintPL(document.getElementById('posExpiryPL'), expPl);
 
       const net = initialCost();
       const netEl = document.getElementById('netPremium');
