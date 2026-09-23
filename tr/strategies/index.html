@@ -21,7 +21,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="26 Options Trading Strategies Explained">
 <meta name="twitter:description" content="Covered call, iron condor, straddle, verticals, and more — plain-English strategy library for learners.">
-<link rel="stylesheet" href="/assets/style.css?v=20260920">
+<link rel="stylesheet" href="/assets/style.css?v=20260923b">
 <style>
 .strategy-toolbar{display:grid;grid-template-columns:1.4fr 1fr;gap:10px;margin:18px 0}.filters{display:flex;gap:7px;flex-wrap:wrap}.filter{padding:8px 12px;border:1px solid var(--border);background:var(--input);color:var(--muted);border-radius:999px;cursor:pointer;font-size:12px}.filter.active{background:#fff;color:#000;border-color:var(--text)}.strategy-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.strategy-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:18px;display:flex;flex-direction:column;min-height:290px;transition:.15s transform,.15s border-color}.strategy-card:hover{transform:translateY(-2px);border-color:#52525b}.strategy-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.strategy-head h2{font-size:20px;margin:0 0 5px}.pill{display:inline-flex;align-items:center;border:1px solid var(--border);border-radius:999px;padding:4px 8px;font-size:10px;color:var(--muted);white-space:nowrap}.pill.bullish{color:#86efac}.pill.bearish{color:#fca5a5}.pill.neutral{color:#d4d4d8}.pill.vol{color:#93c5fd}.pill.hedge{color:#fde68a}.strategy-card p{font-size:13px;color:var(--muted)}.legs{font-size:12px;color:var(--muted);margin:7px 0}.legs b{color:var(--text)}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:auto;padding-top:12px}.stat{background:var(--input);border:1px solid var(--border);border-radius:10px;padding:9px}.stat span{display:block;font-size:9px;color:var(--dim);text-transform:uppercase;letter-spacing:.05em}.stat strong{display:block;font-size:11px;margin-top:3px}.risk{font-size:11px;color:var(--muted);margin-top:9px}.risk strong{color:var(--text)}.empty{display:none;padding:25px;text-align:center;color:var(--muted);border:1px dashed var(--border);border-radius:14px}.mini-note{font-size:12px;color:var(--dim)}
 
@@ -114,11 +114,10 @@
     </a>
   </div>
 </section>
-</main>
-
-<section class="quiz-section" id="page-quiz">
-<div class="section-head"><div class="eyebrow">Hızlı kontrol</div><h2>Strateji kütüphanesi testi</h2><p>İsme değil, beklentiye ve riske göre seçin.</p></div>
-<div class="quiz-card">
+<div class="card quiz-card" id="page-quiz">
+    <span class="badge">Hızlı kontrol</span>
+    <h2>Strateji kütüphanesi testi</h2>
+    <p>İsme değil, beklentiye ve riske göre seçin.</p>
 <form id="quizForm" class="quiz-form" data-lang="tr" novalidate>
 <div class="quiz-q" data-name="q1">
 <p class="quiz-q-title">1. Strateji seçerken ilk filtre:</p>
@@ -149,10 +148,12 @@
 <div class="quiz-result" id="quizResult" hidden>
 <div class="quiz-score" id="quizScore"></div>
 <p id="quizScoreMsg" data-quiz-msg></p>
-<button type="button" class="btn btn-secondary" id="quizRetry" data-quiz-retry>Tekrar dene</button>
-</div></div></section>
+<button type="button" class="btn btn-secondary" id="quizRetry" data-quiz-retry">Tekrar dene</button>
+</div>
 <script type="application/json" id="quizAnswers">{"q1": {"correct": "b", "explain": "Yapı görüşü izler. Condor, uzun call’un yerine geçmez."}, "q2": {"correct": "b", "explain": "O bilinen tutarı yine kaybedebilirsiniz; sürpriz sınırsız zarar olmaması hedeflenir."}, "q3": {"correct": "b", "explain": "Kütüphane harita, Builder sayıdır."}}</script>
 <script>window.JSM_QUIZ_MSGS = {"perfect": "You are using the library the way it was designed.", "good": "Good filter. Always pair outlook with max-loss next.", "retry": "Start with outlook, then risk type, then open Builder."};</script>
+
+</main>
 <footer class="site-footer">
   <div class="footer-note">Educational only — not financial advice. Options involve risk of loss.</div>
   <div class="footer-links">

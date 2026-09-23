@@ -20,7 +20,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="What Is an Option? Calls &amp; Puts Explained for Beginners">
   <meta name="twitter:description" content="Learn calls and puts with simple analogies, key terms, and a basic long-call payoff picture.">
-  <link rel="stylesheet" href="/assets/style.css?v=20260920">
+  <link rel="stylesheet" href="/assets/style.css?v=20260923b">
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-BDL003RCN6"></script>
   <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-BDL003RCN6');</script>
 
@@ -1175,11 +1175,11 @@
       <a class="btn btn-secondary" href="/builder/?template=long_call">Try Long Call in Builder</a>
     </div>
   </div>
-</div>
 
-<section class="quiz-section" id="page-quiz">
-<div class="section-head"><div class="eyebrow">Quick check</div><h2>Basics quiz</h2><p>Four questions from this page — reservation ticket, call vs put, premium × 100, and assignment.</p></div>
-<div class="quiz-card">
+<div class="card quiz-card" id="page-quiz">
+    <span class="badge">Quick check</span>
+    <h2>Basics quiz</h2>
+    <p>Four questions from this page — reservation ticket, call vs put, premium × 100, and assignment.</p>
 <form id="quizForm" class="quiz-form" data-lang="en" novalidate>
 <div class="quiz-q" data-name="q1">
 <p class="quiz-q-title">1. In the sneaker story, the $5 reservation fee is the option’s:</p>
@@ -1218,10 +1218,13 @@
 <div class="quiz-result" id="quizResult" hidden>
 <div class="quiz-score" id="quizScore"></div>
 <p id="quizScoreMsg" data-quiz-msg></p>
-<button type="button" class="btn btn-secondary" id="quizRetry" data-quiz-retry>Retake the quiz</button>
-</div></div></section>
+<button type="button" class="btn btn-secondary" id="quizRetry" data-quiz-retry">Retake the quiz</button>
+</div>
 <script type="application/json" id="quizAnswers">{"q1": {"correct": "b", "explain": "Premium is what you pay for the right. The $100 buy price is the strike."}, "q2": {"correct": "b", "explain": "A put is the right to sell at the strike — useful if the underlying drops, like insurance."}, "q3": {"correct": "c", "explain": "Listed equity options are typically ×100. $1.09 × 100 ≈ $109 before fees."}, "q4": {"correct": "c", "explain": "Assignment hits the short side: the seller may have to buy or sell shares at the strike."}}</script>
 <script>window.JSM_QUIZ_MSGS = {"perfect": "Perfect — the Basics vocabulary is in place.", "good": "Good start. Read the short notes above before Fundamentals.", "retry": "Normal on a first pass. Re-read the sneaker / insurance stories and try again."};</script>
+</div>
+
+</div>
 <footer class="site-footer">
   <div class="footer-note">Educational only — not financial advice. Options involve risk of loss.</div>
   <div class="footer-links">
