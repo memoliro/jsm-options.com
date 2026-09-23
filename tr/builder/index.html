@@ -143,16 +143,21 @@
     /* Leg rows - horizontal on desktop */
     .legs-header, .leg-row {
       display: grid;
-      grid-template-columns: 80px 80px 90px 70px 60px 90px 40px;
+      grid-template-columns: 72px 72px 58px 70px 56px 48px 78px 36px;
       gap: 8px;
       align-items: center;
       margin-bottom: 4px;
     }
     @media (min-width: 700px) {
       .legs-header, .leg-row {
-        grid-template-columns: 90px 90px 110px 80px 70px 100px 44px;
+        grid-template-columns: 90px 90px 72px 110px 80px 70px 100px 44px;
       }
     }
+    .quote-status{font-size:0.72rem;color:var(--muted);margin-top:6px;min-height:1.1em}
+    .quote-status.ok{color:var(--green)}
+    .quote-status.err{color:var(--red)}
+    .quote-status.warn{color:var(--amber,#eab308)}
+    .field.ticker-field input{text-transform:uppercase;letter-spacing:.04em;font-weight:650}
     .legs-header {
       font-size: 0.65rem;
       color: var(--muted);
@@ -568,7 +573,7 @@
       <div class="field wide">
         <label>Strateji şablonu <span style="font-weight:400;color:var(--muted)">(örnek Premium — zincire göre düzenleyin)</span></label>
         <select id="strategyTemplate" onchange="applyTemplate()">
-          <option value="">— Strateji seçin —</option>
+          <option value="">— Şablon seçin —</option>
           <optgroup label="Bullish">
             <option value="long_call">Long Call</option>
             <option value="covered_call">Covered Call</option>
@@ -605,6 +610,14 @@
           </optgroup>
         </select>
       </div>
+      <div class="field ticker-field">
+        <label>Symbol / Ticker</label>
+        <input id="ticker" type="text" value="SPY" maxlength="12" autocomplete="off" spellcheck="false" placeholder="SPY" onchange="syncStrategyTicker()" />
+      </div>
+      <div class="field" style="min-width:auto">
+        <label>&nbsp;</label>
+        <button type="button" class="btn-secondary" onclick="loadDelayedQuote()">Gecikmeli fiyat</button>
+      </div>
       <div class="field">
         <label>Hisse fiyatı ($)</label>
         <input id="spot" type="number" value="100" step="0.5" min="1" oninput="liveUpdate()" onchange="resetSimulation()" />
@@ -622,17 +635,19 @@
         <input id="divYield" type="number" value="0" step="0.1" min="0" max="15" oninput="liveUpdate()" />
       </div>
     </div>
+    <p id="quoteStatus" class="quote-status">Gecikmeli kotasyon (~15 dk). Bacakta Symbol boşsa strateji ticker’ı kullanılır. Eğitim — işlem için değil.</p>
   </div>
 
   <div class="main-grid">
     <!-- Current Legs, with the strategy's static metrics moved alongside it -->
     <div class="card">
-      <h2>Mevcut bacak(lar) <span class="slot-tag">A</span></h2>
+      <h2>Mevcut bacaklar <span class="slot-tag">A</span></h2>
       <div class="legs-with-summary">
         <div>
           <div class="legs-header">
             <span>Yön</span>
             <span>Tür</span>
+            <span>Symbol</span>
             <span>Strike</span>
             <span>DTE</span>
             <span>Adet</span>
@@ -690,6 +705,7 @@
           <div class="legs-header">
             <span>Yön</span>
             <span>Tür</span>
+            <span>Symbol</span>
             <span>Strike</span>
             <span>DTE</span>
             <span>Adet</span>
@@ -765,7 +781,7 @@
           <input type="range" id="daysLeft" min="0" max="90" value="90" oninput="onDaysChange()" />
         </div>
         <div class="slider-group" style="margin-top:6px;">
-          <label>Hisse <strong id="spotLabel">$100.00</strong></label>
+          <label>Underlying <strong id="spotLabel">$100.00</strong></label>
           <input type="range" id="spotSlider" min="40" max="180" step="0.5" value="100" oninput="onSpotSlide()" />
         </div>
       </div>
@@ -833,12 +849,12 @@
         <div class="greek-card">
           <div class="g-name">Δ Delta</div>
           <div class="g-val" id="gDelta">—</div>
-          <div class="g-impact" id="gDeltaImpact">Fiyat duyarlılığı: Hisse $1 hareket ederse K/Z ne kadar değişir.</div>
+          <div class="g-impact" id="gDeltaImpact">Fiyat duyarlılığı: Underlying $1 hareket ederse K/Z ne kadar değişir.</div>
         </div>
         <div class="greek-card">
           <div class="g-name">Γ Gamma</div>
           <div class="g-val" id="gGamma">—</div>
-          <div class="g-impact" id="gGammaImpact">Dışbükeylik: Hisse hareket edince Delta ne kadar hızlı değişir.</div>
+          <div class="g-impact" id="gGammaImpact">Dışbükeylik: Underlying hareket edince Delta ne kadar hızlı değişir.</div>
         </div>
         <div class="greek-card">
           <div class="g-name">Θ Theta</div>
@@ -867,29 +883,29 @@
     <h2>Terimler <span style="font-size:0.72rem;color:var(--muted);font-weight:500;">İngilizce bırakılan sözcüklerin kısa Türkçe açıklaması</span></h2>
     <p style="font-size:0.78rem;color:var(--muted);margin-bottom:10px;">Builder metninde bu terimler bilinçli olarak İngilizce durur; aşağıda her birinin anlamı vardır.</p>
     <dl class="glossary-grid">
-      <div class="glossary-item"><dt>Call</dt><dd>Belirli bir Strike üzerinden Hisseyi’i alma hakkı veren opsiyon.</dd></div>
-      <div class="glossary-item"><dt>Put</dt><dd>Belirli bir Strike üzerinden Hisse’i satma hakkı veren opsiyon.</dd></div>
+      <div class="glossary-item"><dt>Call</dt><dd>Belirli bir Strike üzerinden Underlying’i alma hakkı veren opsiyon.</dd></div>
+      <div class="glossary-item"><dt>Put</dt><dd>Belirli bir Strike üzerinden Underlying’i satma hakkı veren opsiyon.</dd></div>
       <div class="glossary-item"><dt>Strike</dt><dd>Opsiyonun alım veya satım hakkı tanıdığı sabit fiyat.</dd></div>
       <div class="glossary-item"><dt>Expiry / expiration</dt><dd>Kontratın sona erdiği tarih; DTE bu güne kalan gün sayısıdır.</dd></div>
       <div class="glossary-item"><dt>DTE</dt><dd>Days to expiration: expiration’a kalan takvim günü.</dd></div>
-      <div class="glossary-item"><dt>Moneyness</dt><dd>Strike’ın Hisse fiyatına göre konumu: ITM, ATM veya OTM.</dd></div>
-      <div class="glossary-item"><dt>ITM / In-the-money</dt><dd>Call’da Hisse &gt; Strike; Put’ta Hisse &lt; Strike. İçsel değeri vardır.</dd></div>
-      <div class="glossary-item"><dt>ATM / At-the-money</dt><dd>Strike, Hisse fiyatına çok yakındır.</dd></div>
-      <div class="glossary-item"><dt>OTM / Out-of-the-money</dt><dd>Call’da Hisse &lt; Strike; Put’ta Hisse &gt; Strike. Intrinsic değeri sıfırdır.</dd></div>
+      <div class="glossary-item"><dt>Moneyness</dt><dd>Strike’ın Underlying fiyatına göre konumu: ITM, ATM veya OTM.</dd></div>
+      <div class="glossary-item"><dt>ITM / In-the-money</dt><dd>Call’da Underlying &gt; Strike; Put’ta Underlying &lt; Strike. İçsel değeri vardır.</dd></div>
+      <div class="glossary-item"><dt>ATM / At-the-money</dt><dd>Strike, Underlying fiyatına çok yakındır.</dd></div>
+      <div class="glossary-item"><dt>OTM / Out-of-the-money</dt><dd>Call’da Underlying &lt; Strike; Put’ta Underlying &gt; Strike. Intrinsic değeri sıfırdır.</dd></div>
       <div class="glossary-item"><dt>Premium</dt><dd>Opsiyonun pay başına fiyatı; Bid / Ask / Last ile görülür.</dd></div>
       <div class="glossary-item"><dt>Bid / Ask / Last</dt><dd>Alış teklifi, satış teklifi ve son işlem fiyatı.</dd></div>
       <div class="glossary-item"><dt>Long / Short</dt><dd>Long = satın almak (hak sahibi); Short = satmak / yazmak (yükümlülük).</dd></div>
       <div class="glossary-item"><dt>Debit / Credit</dt><dd>Debit: net ödenen prim. Credit: net alınan prim.</dd></div>
       <div class="glossary-item"><dt>Intrinsic / extrinsic</dt><dd>Intrinsic: ITM kısmı. Extrinsic: zaman ve IV’den gelen Premium artışı.</dd></div>
-      <div class="glossary-item"><dt>Hisse</dt><dd>Opsiyonun dayandığı hisse, endeks veya varlık.</dd></div>
+      <div class="glossary-item"><dt>Underlying</dt><dd>Opsiyonun dayandığı hisse, endeks veya varlık.</dd></div>
       <div class="glossary-item"><dt>Greeks</dt><dd>Risk ölçüleri: Delta, Gamma, Theta, Vega.</dd></div>
-      <div class="glossary-item"><dt>Delta</dt><dd>Hisse $1 hareketince opsiyon fiyatının yaklaşık değişimi.</dd></div>
-      <div class="glossary-item"><dt>Gamma</dt><dd>Hisse hareket edince Delta’nın ne kadar değiştiği.</dd></div>
+      <div class="glossary-item"><dt>Delta</dt><dd>Underlying $1 hareketince opsiyon fiyatının yaklaşık değişimi.</dd></div>
+      <div class="glossary-item"><dt>Gamma</dt><dd>Underlying hareket edince Delta’nın ne kadar değiştiği.</dd></div>
       <div class="glossary-item"><dt>Theta</dt><dd>Bir gün geçince beklenen zaman aşınması.</dd></div>
       <div class="glossary-item"><dt>Vega</dt><dd>IV bir puan artınca Premium’un yaklaşık değişimi.</dd></div>
       <div class="glossary-item"><dt>IV / implied volatility</dt><dd>Piyasanın fiyatladığı beklenen salınım; Premium’u şişirir veya söndürür.</dd></div>
       <div class="glossary-item"><dt>Payoff</dt><dd>Fiyata göre kâr/zarar eğrisi; genelde expiration anı çizilir.</dd></div>
-      <div class="glossary-item"><dt>Break-Even</dt><dd>Expiration’da işlemin sıfır kâr/zarar ettiği Hisse fiyatı.</dd></div>
+      <div class="glossary-item"><dt>Break-Even</dt><dd>Expiration’da işlemin sıfır kâr/zarar ettiği Underlying fiyatı.</dd></div>
       <div class="glossary-item"><dt>Assignment</dt><dd>Short opsiyonun kullanılması; hisse teslim veya teslim alma yükümlülüğü.</dd></div>
       <div class="glossary-item"><dt>Spread</dt><dd>Aynı veya yakın vadelerde birden fazla bacaklı yapı.</dd></div>
       <div class="glossary-item"><dt>Vertical</dt><dd>Aynı expiration, farklı Strike’lı Spread.</dd></div>
@@ -987,6 +1003,95 @@
     let nextIdB = 10001;
     let chartZoom = null;
     let chartGesturesBound = false;
+
+
+    function currentTicker() {
+      const el = document.getElementById('ticker');
+      return ((el && el.value) || 'SPY').trim().toUpperCase();
+    }
+    function syncStrategyTicker() {
+      const tkr = currentTicker();
+      [legs, legsB].forEach(function (list) {
+        if (!list) return;
+        list.forEach(function (leg) { if (!leg.ticker) leg.ticker = tkr; });
+      });
+    }
+    function setQuoteStatus(msg, kind) {
+      const el = document.getElementById('quoteStatus');
+      if (!el) return;
+      el.textContent = msg;
+      el.className = 'quote-status' + (kind ? ' ' + kind : '');
+    }
+    function parseYahooChart(json) {
+      const res = json && json.chart && json.chart.result && json.chart.result[0];
+      if (!res || !res.meta) throw new Error('Boş kotasyon');
+      const meta = res.meta;
+      const last = Number(meta.regularMarketPrice || meta.chartPreviousClose || meta.previousClose);
+      if (!last || !isFinite(last)) throw new Error('Fiyat yok');
+      const ts = meta.regularMarketTime ? new Date(meta.regularMarketTime * 1000) : new Date();
+      return {
+        symbol: meta.symbol || currentTicker(),
+        last: last,
+        prev: Number(meta.chartPreviousClose || meta.previousClose || last),
+        currency: meta.currency || 'USD',
+        exchange: meta.fullExchangeName || meta.exchangeName || '',
+        when: ts,
+        source: 'Yahoo Finance (gecikmeli)'
+      };
+    }
+    async function fetchDelayedQuote(sym) {
+      const path = 'https://query1.finance.yahoo.com/v8/finance/chart/' +
+        encodeURIComponent(sym) + '?range=5d&interval=1d';
+      const attempts = [
+        path,
+        'https://query2.finance.yahoo.com/v8/finance/chart/' + encodeURIComponent(sym) + '?range=5d&interval=1d',
+        'https://api.allorigins.win/raw?url=' + encodeURIComponent(path)
+      ];
+      let lastErr = null;
+      for (let i = 0; i < attempts.length; i++) {
+        try {
+          const r = await fetch(attempts[i], { mode: 'cors' });
+          if (!r.ok) { lastErr = new Error('HTTP ' + r.status); continue; }
+          return parseYahooChart(await r.json());
+        } catch (e) { lastErr = e; }
+      }
+      throw lastErr || new Error('Kotasyon alınamadı');
+    }
+    async function loadDelayedQuote() {
+      const sym = currentTicker();
+      if (!sym) { setQuoteStatus('Symbol girin (ör. SPY, AAPL).', 'err'); return; }
+      setQuoteStatus(sym + ' yükleniyor…', 'warn');
+      try {
+        const q = await fetchDelayedQuote(sym);
+        const spotEl = document.getElementById('spot');
+        const oldS = parseFloat(spotEl.value) || q.last;
+        const ratio = oldS > 0 ? q.last / oldS : 1;
+        spotEl.value = (Math.round(q.last * 100) / 100).toFixed(2);
+        function rescale(list) {
+          if (!list) return;
+          list.forEach(function (leg) {
+            if (!leg.ticker) leg.ticker = q.symbol;
+            if (leg.type !== 'stock' && Math.abs(ratio - 1) > 0.02) {
+              leg.strike = Math.round(leg.strike * ratio * 2) / 2;
+            }
+            if (leg.type === 'stock') leg.premium = q.last;
+          });
+        }
+        rescale(legs);
+        rescale(legsB);
+        const hh = q.when.toLocaleString('tr-TR', { hour: '2-digit', minute: '2-digit', day: '2-digit', month: 'short' });
+        const chg = q.last - q.prev;
+        const chgTxt = (chg >= 0 ? '+' : '') + chg.toFixed(2);
+        setQuoteStatus(q.symbol + '  $' + q.last.toFixed(2) + '  (' + chgTxt + ')  ·  ' + q.source + '  ·  ' + hh +
+          (q.exchange ? '  ·  ' + q.exchange : '') + '  — Bid/Ask zinciri yok; Premium modelde kalır.', 'ok');
+        renderLegs();
+        if (typeof renderLegsB === 'function') renderLegsB();
+        if (typeof resetSimulation === 'function') resetSimulation();
+        recalc();
+      } catch (e) {
+        setQuoteStatus('Kotasyon alınamadı (' + (e && e.message ? e.message : e) + '). Spot’u elle girin.', 'err');
+      }
+    }
 
     function normCDF(x) {
       const a1 = 0.254829592, a2 = -0.284496736, a3 = 1.421413741;
@@ -1205,7 +1310,10 @@
         ]
       };
 
-      return templates[key] || null;
+      const raw = templates[key];
+      if (!raw) return null;
+      const tkr = currentTicker();
+      return raw.map(function (leg) { return Object.assign({ ticker: tkr }, leg); });
     }
 
     function applyTemplate() {
@@ -1284,7 +1392,8 @@
         strike: Math.round(S),
         dte: 90,
         qty: 1,
-        premium: 3.00
+        premium: 3.00,
+        ticker: currentTicker()
       });
       syncDTESlider();
       renderLegs();
@@ -1312,7 +1421,9 @@
     function updateLegField(id, field, value, liveTyping) {
       const leg = legs.find(l => l.id === id);
       if (!leg) return;
-      if (field === 'side' || field === 'type') {
+      if (field === 'ticker') {
+        leg.ticker = (value || '').toString().trim().toUpperCase();
+      } else if (field === 'side' || field === 'type') {
         leg[field] = value;
         // When switching to Stock: use current spot as cost basis; Qty = shares (default 100)
         if (field === 'type' && value === 'stock') {
@@ -1420,6 +1531,12 @@
           '<input type="number" value="' + l.qty + '" min="1" step="1" ' +
             'onchange="updateLegField(' + l.id + ',\'qty\',this.value,false)" ' +
             'oninput="updateLegField(' + l.id + ',\'qty\',this.value,true)" />';
+        const inherited = currentTicker();
+        const tickerVal = (l.ticker || '').toString().toUpperCase();
+        const tickerInput =
+          '<input type="text" maxlength="8" spellcheck="false" placeholder="' + inherited + '" value="' + tickerVal + '" ' +
+            'title="Bacak Symbol; boşsa strateji ticker" style="text-transform:uppercase" ' +
+            'onchange="updateLegField(' + l.id + ',\'ticker\',this.value,false)" />';
 
         return (
           '<div class="leg-row ' + rowCls + '">' +
@@ -1432,6 +1549,7 @@
               '<option value="put"' + typePut + '>Put</option>' +
               '<option value="stock"' + typeStock + '>Hisse</option>' +
             '</select>' +
+            tickerInput +
             strikeInput +
             dteInput +
             qtyInput +
