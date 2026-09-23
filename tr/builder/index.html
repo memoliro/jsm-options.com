@@ -64,6 +64,41 @@
     .pl-box-split .pl-value{font-size:1.25rem}
     .pl-split{border-bottom:1px solid var(--border);padding-bottom:6px}
     .pl-split:last-child{border-bottom:0;padding-bottom:0}
+
+
+    .tpl-trigger{
+      width:100%;display:flex;align-items:center;justify-content:space-between;gap:8px;
+      background:var(--input,#0f172a);color:var(--text);border:1px solid var(--border);
+      border-radius:8px;padding:8px 10px;font-size:0.92rem;cursor:pointer;text-align:left
+    }
+    .tpl-trigger:hover,.tpl-trigger:focus{border-color:var(--accent);outline:none}
+    .tpl-trigger .tpl-caret{opacity:.6;font-size:10px}
+    .tpl-wrap select.tpl-native{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+    .tpl-wrap{position:relative;flex:2 1 200px;min-width:200px}
+    .tpl-pop{
+      display:none;position:fixed;z-index:80;width:min(420px,calc(100vw - 24px));
+      background:var(--card);border:1px solid var(--border);border-radius:12px;
+      box-shadow:0 16px 40px rgba(0,0,0,.35);padding:10px;max-height:min(70vh,520px);
+      overflow:auto;
+    }
+    .tpl-pop.open{display:grid;grid-template-columns:minmax(280px,1.4fr) 180px;gap:12px}
+    @media(max-width:720px){.tpl-pop.open{grid-template-columns:1fr}}
+    .tpl-groups{display:flex;flex-direction:column;gap:8px;min-width:0}
+    .tpl-g-label{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);padding:2px 4px}
+    .tpl-item{
+      display:flex;align-items:center;justify-content:space-between;gap:8px;
+      width:100%;text-align:left;border:1px solid transparent;background:transparent;
+      color:var(--text);border-radius:8px;padding:6px 8px;cursor:pointer;font-size:13px
+    }
+    .tpl-item:hover,.tpl-item.active{background:var(--input,#0f172a);border-color:var(--border)}
+    .tpl-item canvas,.tpl-item svg{width:72px;height:28px;flex-shrink:0}
+    .tpl-peek{
+      border:1px solid var(--border);border-radius:10px;padding:8px;background:var(--bg);
+      position:sticky;top:0;align-self:start
+    }
+    .tpl-peek-name{font-size:13px;font-weight:650;margin-bottom:4px}
+    .tpl-peek-note{font-size:11px;color:var(--muted);margin-top:6px;line-height:1.4}
+    .tpl-peek svg{width:100%;height:auto;display:block}
     .subtitle { color: var(--muted); font-size: 0.88rem; margin-bottom: 14px; }
 
     .top-bar {
@@ -574,8 +609,9 @@
 
   <div class="card" style="margin-bottom:12px;">
     <div class="top-bar">
-      <div class="field wide">
+      <div class="field wide tpl-wrap">
         <label>Strateji şablonu <span style="font-weight:400;color:var(--muted)">(örnek Premium — zincire göre düzenleyin)</span></label>
+        <button type="button" class="tpl-trigger" id="tplTrigger" aria-haspopup="listbox" aria-expanded="false"><span class="tpl-trigger-label">— Şablon seçin —</span><span class="tpl-caret">▼</span></button>
         <select id="strategyTemplate" onchange="applyTemplate()">
           <option value="">— Şablon seçin —</option>
           <optgroup label="Bullish">
@@ -613,6 +649,14 @@
             <option value="risk_reversal">Risk Reversal (synthetic tilt)</option>
           </optgroup>
         </select>
+        <div class="tpl-pop" id="tplPopover">
+          <div class="tpl-groups"></div>
+          <div class="tpl-peek">
+            <div class="tpl-peek-name">Template</div>
+            <div class="tpl-peek-chart"></div>
+            <p class="tpl-peek-note"></p>
+          </div>
+        </div>
       </div>
       <div class="field ticker-field">
         <label>Symbol / Ticker</label>
@@ -703,11 +747,20 @@
     <div class="card legs-card-b" id="compareLegsCard">
       <h2>Karşılaştırma bacakları <span class="slot-tag b">B</span></h2>
       <div class="top-bar" style="margin-bottom:10px;">
-        <div class="field wide">
+        <div class="field wide tpl-wrap">
           <label>Strateji B şablonu</label>
-          <select id="strategyTemplateB" onchange="applyTemplateB()">
+          <button type="button" class="tpl-trigger" id="tplTriggerB" aria-haspopup="listbox" aria-expanded="false"><span class="tpl-trigger-label">— Şablon seçin —</span><span class="tpl-caret">▼</span></button>
+        <select id="strategyTemplateB" onchange="applyTemplateB()">
             <option value="">— Şablon seçin —</option>
           </select>
+        <div class="tpl-pop" id="tplPopoverB">
+          <div class="tpl-groups"></div>
+          <div class="tpl-peek">
+            <div class="tpl-peek-name">Template</div>
+            <div class="tpl-peek-chart"></div>
+            <p class="tpl-peek-note"></p>
+          </div>
+        </div>
         </div>
       </div>
       <div class="legs-with-summary">
@@ -1198,6 +1251,7 @@
       const K = Math.round(S);
       const iv = parseFloat(document.getElementById('iv').value) || 25;
       const p = Math.max(0.5, +(S * 0.04 * (iv / 25)).toFixed(2));
+      const unit = Math.max(0.25, +(S / 100).toFixed(4));
 
       const templates = {
         long_call: [
@@ -1223,15 +1277,15 @@
           { side: 'buy', type: 'put', strike: K - 10, dte: 90, qty: 1, premium: +(p * 0.6).toFixed(2) }
         ],
         long_call_butterfly: [
-          { side: 'buy', type: 'call', strike: K - 10, dte: 90, qty: 1, premium: +(p * 1.4).toFixed(2) },
-          { side: 'sell', type: 'call', strike: K, dte: 90, qty: 2, premium: p },
-          { side: 'buy', type: 'call', strike: K + 10, dte: 90, qty: 1, premium: +(p * 0.5).toFixed(2) }
+          { side: 'buy', type: 'call', strike: K - 10, dte: 90, qty: 1, premium: +(8.6 * unit).toFixed(2) },
+          { side: 'sell', type: 'call', strike: K, dte: 90, qty: 2, premium: +(4.2 * unit).toFixed(2) },
+          { side: 'buy', type: 'call', strike: K + 10, dte: 90, qty: 1, premium: +(1.9 * unit).toFixed(2) }
         ],
         call_condor: [
-          { side: 'buy', type: 'call', strike: K - 15, dte: 90, qty: 1, premium: +(p * 1.5).toFixed(2) },
-          { side: 'sell', type: 'call', strike: K - 5, dte: 90, qty: 1, premium: +(p * 1.1).toFixed(2) },
-          { side: 'sell', type: 'call', strike: K + 5, dte: 90, qty: 1, premium: +(p * 0.7).toFixed(2) },
-          { side: 'buy', type: 'call', strike: K + 15, dte: 90, qty: 1, premium: +(p * 0.35).toFixed(2) }
+          { side: 'buy', type: 'call', strike: K - 15, dte: 90, qty: 1, premium: +(9.4 * unit).toFixed(2) },
+          { side: 'sell', type: 'call', strike: K - 5, dte: 90, qty: 1, premium: +(5.6 * unit).toFixed(2) },
+          { side: 'sell', type: 'call', strike: K + 5, dte: 90, qty: 1, premium: +(3.1 * unit).toFixed(2) },
+          { side: 'buy', type: 'call', strike: K + 15, dte: 90, qty: 1, premium: +(1.5 * unit).toFixed(2) }
         ],
         long_put: [
           { side: 'buy', type: 'put', strike: K, dte: 90, qty: 1, premium: p }
@@ -1249,15 +1303,15 @@
           { side: 'buy', type: 'put', strike: K - 10, dte: 90, qty: 1, premium: +(p * 0.6).toFixed(2) }
         ],
         long_put_butterfly: [
-          { side: 'buy', type: 'put', strike: K - 10, dte: 90, qty: 1, premium: +(p * 0.5).toFixed(2) },
-          { side: 'sell', type: 'put', strike: K, dte: 90, qty: 2, premium: p },
-          { side: 'buy', type: 'put', strike: K + 10, dte: 90, qty: 1, premium: +(p * 1.4).toFixed(2) }
+          { side: 'buy', type: 'put', strike: K - 10, dte: 90, qty: 1, premium: +(1.9 * unit).toFixed(2) },
+          { side: 'sell', type: 'put', strike: K, dte: 90, qty: 2, premium: +(4.2 * unit).toFixed(2) },
+          { side: 'buy', type: 'put', strike: K + 10, dte: 90, qty: 1, premium: +(8.6 * unit).toFixed(2) }
         ],
         put_condor: [
-          { side: 'buy', type: 'put', strike: K + 15, dte: 90, qty: 1, premium: +(p * 1.5).toFixed(2) },
-          { side: 'sell', type: 'put', strike: K + 5, dte: 90, qty: 1, premium: +(p * 1.1).toFixed(2) },
-          { side: 'sell', type: 'put', strike: K - 5, dte: 90, qty: 1, premium: +(p * 0.7).toFixed(2) },
-          { side: 'buy', type: 'put', strike: K - 15, dte: 90, qty: 1, premium: +(p * 0.35).toFixed(2) }
+          { side: 'buy', type: 'put', strike: K + 15, dte: 90, qty: 1, premium: +(9.4 * unit).toFixed(2) },
+          { side: 'sell', type: 'put', strike: K + 5, dte: 90, qty: 1, premium: +(5.6 * unit).toFixed(2) },
+          { side: 'sell', type: 'put', strike: K - 5, dte: 90, qty: 1, premium: +(3.1 * unit).toFixed(2) },
+          { side: 'buy', type: 'put', strike: K - 15, dte: 90, qty: 1, premium: +(1.5 * unit).toFixed(2) }
         ],
         short_straddle: [
           { side: 'sell', type: 'call', strike: K, dte: 45, qty: 1, premium: p },
@@ -2158,6 +2212,180 @@
       el.classList.remove('pl-positive', 'pl-negative');
       el.classList.add(val >= 0 ? 'pl-positive' : 'pl-negative');
     }
+
+    function templateExpirySeries(key) {
+      const raw = makeTemplateLegs(key);
+      if (!raw) return null;
+      const S = parseFloat(document.getElementById('spot').value) || 100;
+      const strikes = raw.filter(function (l) { return l.type !== 'stock'; }).map(function (l) { return l.strike; });
+      const lo = Math.max(1, Math.min(S, strikes.length ? Math.min.apply(null, strikes) : S) * 0.72);
+      const hi = Math.max(S, strikes.length ? Math.max.apply(null, strikes) : S) * 1.28;
+      const n = 48;
+      const xs = [], ys = [];
+      for (let i = 0; i < n; i++) {
+        const x = lo + i / (n - 1) * (hi - lo);
+        xs.push(x);
+        ys.push(expiryPayoff(x, raw));
+      }
+      return { xs: xs, ys: ys, lo: lo, hi: hi };
+    }
+
+    function miniPayoffSVG(ys, w, h) {
+      if (!ys || !ys.length) return '';
+      const pad = 3;
+      let minY = Math.min.apply(null, ys.concat([0]));
+      let maxY = Math.max.apply(null, ys.concat([0]));
+      if (maxY - minY < 1) { maxY += 1; minY -= 1; }
+      const span = maxY - minY;
+      function X(i) { return pad + i / (ys.length - 1) * (w - pad * 2); }
+      function Y(v) { return pad + (1 - (v - minY) / span) * (h - pad * 2); }
+      const z = Y(0);
+      let d = '';
+      let pos = '', neg = '';
+      for (let i = 0; i < ys.length; i++) {
+        const cmd = i ? 'L' : 'M';
+        d += cmd + X(i).toFixed(1) + ' ' + Y(ys[i]).toFixed(1) + ' ';
+      }
+      let areaG = '', areaR = '';
+      for (let i = 0; i < ys.length - 1; i++) {
+        const y0 = ys[i], y1 = ys[i + 1];
+        const x0 = X(i), x1 = X(i + 1);
+        if (y0 >= 0 && y1 >= 0) {
+          areaG += 'M' + x0 + ' ' + z + ' L' + x0 + ' ' + Y(y0) + ' L' + x1 + ' ' + Y(y1) + ' L' + x1 + ' ' + z + ' Z ';
+        } else if (y0 <= 0 && y1 <= 0) {
+          areaR += 'M' + x0 + ' ' + z + ' L' + x0 + ' ' + Y(y0) + ' L' + x1 + ' ' + Y(y1) + ' L' + x1 + ' ' + z + ' Z ';
+        }
+      }
+      return '<svg viewBox="0 0 ' + w + ' ' + h + '" preserveAspectRatio="none" aria-hidden="true">' +
+        '<line x1="0" y1="' + z.toFixed(1) + '" x2="' + w + '" y2="' + z.toFixed(1) + '" stroke="currentColor" opacity="0.2"/>' +
+        '<path d="' + areaG + '" fill="rgba(34,197,94,.28)"/>' +
+        '<path d="' + areaR + '" fill="rgba(239,68,68,.28)"/>' +
+        '<path d="' + d + '" fill="none" stroke="currentColor" stroke-width="1.4" vector-effect="non-scaling-stroke"/></svg>';
+    }
+
+    function bindTemplatePicker(selectId, popId, triggerId) {
+      const sel = document.getElementById(selectId);
+      const pop = document.getElementById(popId);
+      const trigger = document.getElementById(triggerId);
+      if (!sel || !pop || pop.getAttribute('data-bound') === '1') return;
+      pop.setAttribute('data-bound', '1');
+      const listBox = pop.querySelector('.tpl-groups');
+      const peek = pop.querySelector('.tpl-peek');
+      sel.classList.add('tpl-native');
+      sel.setAttribute('tabindex', '-1');
+      sel.setAttribute('aria-hidden', 'true');
+
+      function currentLabel() {
+        const opt = sel.options[sel.selectedIndex];
+        if (opt && opt.value) return opt.textContent;
+        return document.documentElement.lang === 'tr' ? '— Şablon seçin —' : '— Pick a template —';
+      }
+      function syncTrigger() {
+        if (!trigger) return;
+        const lab = trigger.querySelector('.tpl-trigger-label');
+        if (lab) lab.textContent = currentLabel();
+      }
+      function groups() {
+        const out = [];
+        let cur = { label: '', items: [] };
+        Array.from(sel.options).forEach(function (opt) {
+          if (!opt.value) return;
+          const label = (opt.parentElement && opt.parentElement.tagName === 'OPTGROUP') ? opt.parentElement.label : '';
+          if (label !== cur.label) { if (cur.items.length) out.push(cur); cur = { label: label, items: [] }; }
+          cur.items.push({ value: opt.value, text: opt.textContent });
+        });
+        if (cur.items.length) out.push(cur);
+        return out;
+      }
+      function showPeek(key, name) {
+        const series = templateExpirySeries(key);
+        const title = peek.querySelector('.tpl-peek-name');
+        const chart = peek.querySelector('.tpl-peek-chart');
+        const note = peek.querySelector('.tpl-peek-note');
+        if (title) title.textContent = name || key;
+        if (chart) chart.innerHTML = series ? miniPayoffSVG(series.ys, 160, 88) : '';
+        if (note) note.textContent = (document.documentElement.lang === 'tr')
+          ? 'Expiry Payoff · gezinerek bakın · tıklayınca yüklenir'
+          : 'Expiry Payoff · hover to preview · click to load';
+      }
+      function renderList(activeKey) {
+        listBox.innerHTML = groups().map(function (g) {
+          return '<div><div class="tpl-g-label">' + g.label + '</div>' +
+            g.items.map(function (it) {
+              const series = templateExpirySeries(it.value);
+              const spark = series ? miniPayoffSVG(series.ys, 72, 28) : '';
+              const on = it.value === activeKey ? ' active' : '';
+              return '<button type="button" class="tpl-item' + on + '" data-key="' + it.value + '"><span>' + it.text +
+                '</span>' + spark + '</button>';
+            }).join('') + '</div>';
+        }).join('');
+      }
+      function placePop() {
+        const host = trigger || sel;
+        const r = host.getBoundingClientRect();
+        pop.style.position = 'absolute';
+        pop.style.left = '0';
+        pop.style.right = '0';
+        pop.style.top = 'calc(100% + 6px)';
+        pop.style.width = 'auto';
+        pop.style.minWidth = Math.max(r.width, 520) + 'px';
+        pop.style.maxWidth = 'min(720px, calc(100vw - 24px))';
+      }
+      function openPop() {
+        renderList(sel.value);
+        placePop();
+        pop.classList.add('open');
+        if (trigger) trigger.setAttribute('aria-expanded', 'true');
+        const key = sel.value || (sel.options[1] && sel.options[1].value);
+        if (key) {
+          const opt = sel.querySelector('option[value="' + key + '"]');
+          showPeek(key, opt ? opt.textContent : key);
+        }
+      }
+      function closePop() {
+        pop.classList.remove('open');
+        if (trigger) trigger.setAttribute('aria-expanded', 'false');
+      }
+      if (trigger) {
+        trigger.addEventListener('click', function (e) {
+          e.preventDefault();
+          if (pop.classList.contains('open')) closePop(); else openPop();
+        });
+      }
+      pop.addEventListener('mouseover', function (e) {
+        const btn = e.target.closest('.tpl-item');
+        if (!btn) return;
+        pop.querySelectorAll('.tpl-item').forEach(function (b) { b.classList.toggle('active', b === btn); });
+        showPeek(btn.getAttribute('data-key'), btn.querySelector('span').textContent);
+      });
+      pop.addEventListener('click', function (e) {
+        const btn = e.target.closest('.tpl-item');
+        if (!btn) return;
+        sel.value = btn.getAttribute('data-key');
+        syncTrigger();
+        closePop();
+        sel.dispatchEvent(new Event('change'));
+      });
+      document.addEventListener('click', function (e) {
+        if (!pop.classList.contains('open')) return;
+        if (pop.contains(e.target) || (trigger && trigger.contains(e.target))) return;
+        closePop();
+      });
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') closePop();
+      });
+      sel.addEventListener('change', syncTrigger);
+      syncTrigger();
+    }
+
+    function initTemplatePreviews() {
+      bindTemplatePicker('strategyTemplate', 'tplPopover', 'tplTrigger');
+      bindTemplatePicker('strategyTemplateB', 'tplPopoverB', 'tplTriggerB');
+    }
+
+        if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initTemplatePreviews);
+    else initTemplatePreviews();
+
     function liveUpdate() {
       updateSpotSliderRange();
       recalc();
