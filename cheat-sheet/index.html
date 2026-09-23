@@ -13,7 +13,7 @@
   <meta property="og:image" content="https://jsm-options.com/images/og-default.png">
   <meta name="twitter:image" content="https://jsm-options.com/images/og-default.png">
   <meta property="og:type" content="website">
-  <link rel="stylesheet" href="/assets/style.css?v=20260920">
+  <link rel="stylesheet" href="/assets/style.css?v=20260923b">
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-BDL003RCN6"></script>
   <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-BDL003RCN6');</script>
 
@@ -126,10 +126,11 @@
 
     <div class="warn"><strong>Educational only:</strong> Not a broker and not trade advice. Formulas ignore commissions, dividends, and early assignment.</div>
   </div>
-</div>
-<section class="quiz-section" id="page-quiz">
-<div class="section-head"><div class="eyebrow">Quick check</div><h2>Cheat sheet quiz</h2><p>Call vs put, long vs short, and the ×100 habit.</p></div>
-<div class="quiz-card">
+
+<div class="card quiz-card" id="page-quiz">
+    <span class="badge">Quick check</span>
+    <h2>Cheat sheet quiz</h2>
+    <p>Call vs put, long vs short, and the ×100 habit.</p>
 <form id="quizForm" class="quiz-form" data-lang="en" novalidate>
 <div class="quiz-q" data-name="q1">
 <p class="quiz-q-title">1. CALL means the right to:</p>
@@ -160,10 +161,12 @@
 <div class="quiz-result" id="quizResult" hidden>
 <div class="quiz-score" id="quizScore"></div>
 <p id="quizScoreMsg" data-quiz-msg></p>
-<button type="button" class="btn btn-secondary" id="quizRetry" data-quiz-retry>Retake the quiz</button>
-</div></div></section>
+<button type="button" class="btn btn-secondary" id="quizRetry" data-quiz-retry">Retake the quiz</button>
+</div>
 <script type="application/json" id="quizAnswers">{"q1": {"correct": "b", "explain": "Call = buy right. Put = sell right."}, "q2": {"correct": "b", "explain": "Short premium = obligation. That is why assignment and undefined risk matter."}, "q3": {"correct": "b", "explain": "Forget ×100 and every P/L estimate is off by two zeros."}}</script>
 <script>window.JSM_QUIZ_MSGS = {"perfect": "Perfect score — you've got this page down.", "good": "Solid work. Read the notes above, then keep going.", "retry": "No worries. Skim the explanations and try again."};</script>
+</div>
+</div>
 <footer class="site-footer">
   <div class="footer-note">Educational only — not financial advice. Options involve risk of loss.</div>
   <div class="footer-links">
