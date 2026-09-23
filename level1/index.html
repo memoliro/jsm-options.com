@@ -1177,6 +1177,51 @@
   </div>
 </div>
 
+<section class="quiz-section" id="page-quiz">
+<div class="section-head"><div class="eyebrow">Quick check</div><h2>Basics quiz</h2><p>Four questions from this page — reservation ticket, call vs put, premium × 100, and assignment.</p></div>
+<div class="quiz-card">
+<form id="quizForm" class="quiz-form" data-lang="en" novalidate>
+<div class="quiz-q" data-name="q1">
+<p class="quiz-q-title">1. In the sneaker story, the $5 reservation fee is the option’s:</p>
+<label class="quiz-opt"><input type="radio" name="q1" value="a"> Strike price</label>
+<label class="quiz-opt"><input type="radio" name="q1" value="b"> Premium</label>
+<label class="quiz-opt"><input type="radio" name="q1" value="c"> Expiration date</label>
+<label class="quiz-opt"><input type="radio" name="q1" value="d"> Underlying</label>
+<p class="quiz-explain" hidden></p>
+</div>
+<div class="quiz-q" data-name="q2">
+<p class="quiz-q-title">2. A long put is most like:</p>
+<label class="quiz-opt"><input type="radio" name="q2" value="a"> A reservation to buy something later</label>
+<label class="quiz-opt"><input type="radio" name="q2" value="b"> Insurance that pays if the price falls</label>
+<label class="quiz-opt"><input type="radio" name="q2" value="c"> Owning the stock with extra leverage</label>
+<label class="quiz-opt"><input type="radio" name="q2" value="d"> A loan from the exchange</label>
+<p class="quiz-explain" hidden></p>
+</div>
+<div class="quiz-q" data-name="q3">
+<p class="quiz-q-title">3. An option quoted at $1.09 usually costs about how much for one contract?</p>
+<label class="quiz-opt"><input type="radio" name="q3" value="a"> $1.09</label>
+<label class="quiz-opt"><input type="radio" name="q3" value="b"> $10.90</label>
+<label class="quiz-opt"><input type="radio" name="q3" value="c"> $109</label>
+<label class="quiz-opt"><input type="radio" name="q3" value="d"> $1,090</label>
+<p class="quiz-explain" hidden></p>
+</div>
+<div class="quiz-q" data-name="q4">
+<p class="quiz-q-title">4. Who can be assigned?</p>
+<label class="quiz-opt"><input type="radio" name="q4" value="a"> Only the buyer of a call</label>
+<label class="quiz-opt"><input type="radio" name="q4" value="b"> Anyone who is long an option</label>
+<label class="quiz-opt"><input type="radio" name="q4" value="c"> The seller (short) of an option</label>
+<label class="quiz-opt"><input type="radio" name="q4" value="d"> The stock itself</label>
+<p class="quiz-explain" hidden></p>
+</div>
+<button type="submit" class="btn quiz-submit">Check my answers</button>
+</form>
+<div class="quiz-result" id="quizResult" hidden>
+<div class="quiz-score" id="quizScore"></div>
+<p id="quizScoreMsg" data-quiz-msg></p>
+<button type="button" class="btn btn-secondary" id="quizRetry" data-quiz-retry>Retake the quiz</button>
+</div></div></section>
+<script type="application/json" id="quizAnswers">{"q1": {"correct": "b", "explain": "Premium is what you pay for the right. The $100 buy price is the strike."}, "q2": {"correct": "b", "explain": "A put is the right to sell at the strike — useful if the underlying drops, like insurance."}, "q3": {"correct": "c", "explain": "Listed equity options are typically ×100. $1.09 × 100 ≈ $109 before fees."}, "q4": {"correct": "c", "explain": "Assignment hits the short side: the seller may have to buy or sell shares at the strike."}}</script>
+<script>window.JSM_QUIZ_MSGS = {"perfect": "Perfect — the Basics vocabulary is in place.", "good": "Good start. Read the short notes above before Fundamentals.", "retry": "Normal on a first pass. Re-read the sneaker / insurance stories and try again."};</script>
 <footer class="site-footer">
   <div class="footer-note">Educational only — not financial advice. Options involve risk of loss.</div>
   <div class="footer-links">
@@ -1249,5 +1294,6 @@
 
 
 
+<script src="/assets/quiz.js?v=20260923" defer></script>
 </body>
 </html>

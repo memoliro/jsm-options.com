@@ -110,6 +110,43 @@
 </section>
 </main>
 
+<section class="quiz-section" id="page-quiz">
+<div class="section-head"><div class="eyebrow">Quick check</div><h2>Strategy library quiz</h2><p>How to pick a structure from outlook and risk — not from a nickname.</p></div>
+<div class="quiz-card">
+<form id="quizForm" class="quiz-form" data-lang="en" novalidate>
+<div class="quiz-q" data-name="q1">
+<p class="quiz-q-title">1. First filter when choosing a strategy should be:</p>
+<label class="quiz-opt"><input type="radio" name="q1" value="a"> Whatever is trending on social media</label>
+<label class="quiz-opt"><input type="radio" name="q1" value="b"> Your outlook: up, down, range, or big move</label>
+<label class="quiz-opt"><input type="radio" name="q1" value="c"> The strategy with the most legs</label>
+<label class="quiz-opt"><input type="radio" name="q1" value="d"> The one with the prettiest name</label>
+<p class="quiz-explain" hidden></p>
+</div>
+<div class="quiz-q" data-name="q2">
+<p class="quiz-q-title">2. “Defined risk” means:</p>
+<label class="quiz-opt"><input type="radio" name="q2" value="a"> You cannot lose money</label>
+<label class="quiz-opt"><input type="radio" name="q2" value="b"> Max loss is known up front from the structure</label>
+<label class="quiz-opt"><input type="radio" name="q2" value="c"> The broker will close you at breakeven</label>
+<label class="quiz-opt"><input type="radio" name="q2" value="d"> IV cannot change</label>
+<p class="quiz-explain" hidden></p>
+</div>
+<div class="quiz-q" data-name="q3">
+<p class="quiz-q-title">3. After you pick a name from this library, the next useful step is:</p>
+<label class="quiz-opt"><input type="radio" name="q3" value="a"> Trade 10 contracts immediately</label>
+<label class="quiz-opt"><input type="radio" name="q3" value="b"> Test strikes and expiry in the Builder</label>
+<label class="quiz-opt"><input type="radio" name="q3" value="c"> Ignore the payoff diagram</label>
+<label class="quiz-opt"><input type="radio" name="q3" value="d"> Skip reading risk</label>
+<p class="quiz-explain" hidden></p>
+</div>
+<button type="submit" class="btn quiz-submit">Check my answers</button>
+</form>
+<div class="quiz-result" id="quizResult" hidden>
+<div class="quiz-score" id="quizScore"></div>
+<p id="quizScoreMsg" data-quiz-msg></p>
+<button type="button" class="btn btn-secondary" id="quizRetry" data-quiz-retry>Retake the quiz</button>
+</div></div></section>
+<script type="application/json" id="quizAnswers">{"q1": {"correct": "b", "explain": "Structure follows view. A condor is not a substitute for a long call."}, "q2": {"correct": "b", "explain": "You still can lose that known amount. You just should not get a surprise unlimited loss."}, "q3": {"correct": "b", "explain": "The library is a map. The Builder is where you see numbers for your strikes."}}</script>
+<script>window.JSM_QUIZ_MSGS = {"perfect": "You are using the library the way it was designed.", "good": "Good filter. Always pair outlook with max-loss next.", "retry": "Start with outlook, then risk type, then open Builder."};</script>
 <footer class="site-footer">
   <div class="footer-note">Educational only — not financial advice. Options involve risk of loss.</div>
   <div class="footer-links">
@@ -286,4 +323,5 @@ document.querySelectorAll('.filter').forEach(b=>b.addEventListener('click',()=>{
 
 
 
+<script src="/assets/quiz.js?v=20260923" defer></script>
 </body></html>

@@ -111,6 +111,43 @@
   
   </div>
 </div>
+<section class="quiz-section" id="page-quiz">
+<div class="section-head"><div class="eyebrow">Quick check</div><h2>Iron condor quiz</h2><p>A range-bound, defined-risk credit structure.</p></div>
+<div class="quiz-card">
+<form id="quizForm" class="quiz-form" data-lang="en" novalidate>
+<div class="quiz-q" data-name="q1">
+<p class="quiz-q-title">1. An iron condor combines:</p>
+<label class="quiz-opt"><input type="radio" name="q1" value="a"> A call debit spread and a long stock</label>
+<label class="quiz-opt"><input type="radio" name="q1" value="b"> A short call spread and a short put spread</label>
+<label class="quiz-opt"><input type="radio" name="q1" value="c"> Four calls at one strike</label>
+<label class="quiz-opt"><input type="radio" name="q1" value="d"> A covered call plus a wheel</label>
+<p class="quiz-explain" hidden></p>
+</div>
+<div class="quiz-q" data-name="q2">
+<p class="quiz-q-title">2. Max profit is roughly:</p>
+<label class="quiz-opt"><input type="radio" name="q2" value="a"> Unlimited</label>
+<label class="quiz-opt"><input type="radio" name="q2" value="b"> The net credit received</label>
+<label class="quiz-opt"><input type="radio" name="q2" value="c"> The width of both wings added together with no cap</label>
+<label class="quiz-opt"><input type="radio" name="q2" value="d"> The stock price</label>
+<p class="quiz-explain" hidden></p>
+</div>
+<div class="quiz-q" data-name="q3">
+<p class="quiz-q-title">3. The condor loses most when:</p>
+<label class="quiz-opt"><input type="radio" name="q3" value="a"> Price sits still</label>
+<label class="quiz-opt"><input type="radio" name="q3" value="b"> Price closes through a short strike and keeps going through the wing</label>
+<label class="quiz-opt"><input type="radio" name="q3" value="c"> IV slowly falls while price stays put</label>
+<label class="quiz-opt"><input type="radio" name="q3" value="d"> You use defined risk</label>
+<p class="quiz-explain" hidden></p>
+</div>
+<button type="submit" class="btn quiz-submit">Check my answers</button>
+</form>
+<div class="quiz-result" id="quizResult" hidden>
+<div class="quiz-score" id="quizScore"></div>
+<p id="quizScoreMsg" data-quiz-msg></p>
+<button type="button" class="btn btn-secondary" id="quizRetry" data-quiz-retry>Retake the quiz</button>
+</div></div></section>
+<script type="application/json" id="quizAnswers">{"q1": {"correct": "b", "explain": "Two credit spreads, one each side of the expected range."}, "q2": {"correct": "b", "explain": "You collect a credit. That credit is the best-case if price stays inside."}, "q3": {"correct": "b", "explain": "A big directional move tests one side. Defined risk stops at the long wing."}}</script>
+<script>window.JSM_QUIZ_MSGS = {"perfect": "Perfect score — you've got this page down.", "good": "Solid work. Read the notes above, then keep going.", "retry": "No worries. Skim the explanations and try again."};</script>
 <footer class="site-footer">
   <div class="footer-note">Educational only — not financial advice. Options involve risk of loss.</div>
   <div class="footer-links">
@@ -183,5 +220,6 @@
 
 
 
+<script src="/assets/quiz.js?v=20260923" defer></script>
 </body>
 </html>

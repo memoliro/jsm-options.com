@@ -344,7 +344,52 @@
     </div>
     <div class="practice-prompt"><b>Alıştırma:</b> Open <a href="/tr/builder/?template=bear_put_spread">bear put spread</a> and <a href="/tr/builder/?template=iron_condor">iron condor</a>. Drag price into the max-profit zone, then outside a wing — confirm max loss is capped.</div>
   </div>
-</div><footer class="site-footer">
+</div><section class="quiz-section" id="page-quiz">
+<div class="section-head"><div class="eyebrow">Hızlı kontrol</div><h2>Spread testi</h2><p>Tanımlı riskli dikey spread’ler.</p></div>
+<div class="quiz-card">
+<form id="quizForm" class="quiz-form" data-lang="tr" novalidate>
+<div class="quiz-q" data-name="q1">
+<p class="quiz-q-title">1. Dikey spread’de iki opsiyonu birleştiren şey:</p>
+<label class="quiz-opt"><input type="radio" name="q1" value="a"> Aynı strike, farklı dayanak</label>
+<label class="quiz-opt"><input type="radio" name="q1" value="b"> Aynı vade, farklı strike</label>
+<label class="quiz-opt"><input type="radio" name="q1" value="c"> Vadesizlik</label>
+<label class="quiz-opt"><input type="radio" name="q1" value="d"> İki farklı hisse put’u</label>
+<p class="quiz-explain" hidden></p>
+</div>
+<div class="quiz-q" data-name="q2">
+<p class="quiz-q-title">2. Uzun opsiyona kısa bacak eklemenin nedeni:</p>
+<label class="quiz-opt"><input type="radio" name="q2" value="a"> Riski sınırsız yapmak</label>
+<label class="quiz-opt"><input type="radio" name="q2" value="b"> Maliyeti düşürüp hem kârı hem zararı sınırlamak</label>
+<label class="quiz-opt"><input type="radio" name="q2" value="c"> Vadeyi kaldırmak</label>
+<label class="quiz-opt"><input type="radio" name="q2" value="d"> İki kez temettü almak</label>
+<p class="quiz-explain" hidden></p>
+</div>
+<div class="quiz-q" data-name="q3">
+<p class="quiz-q-title">3. Debit call spread’te max zarar kabaca:</p>
+<label class="quiz-opt"><input type="radio" name="q3" value="a"> Sınırsız</label>
+<label class="quiz-opt"><input type="radio" name="q3" value="b"> Ödenen net debit</label>
+<label class="quiz-opt"><input type="radio" name="q3" value="c"> Yüksek strike × 100</label>
+<label class="quiz-opt"><input type="radio" name="q3" value="d"> Sıfır</label>
+<p class="quiz-explain" hidden></p>
+</div>
+<div class="quiz-q" data-name="q4">
+<p class="quiz-q-title">4. Kredi put spread (bull put) en çok ne zaman kâr eder?</p>
+<label class="quiz-opt"><input type="radio" name="q4" value="a"> Hisse iki strike’ı da delerse</label>
+<label class="quiz-opt"><input type="radio" name="q4" value="b"> Hisse kısa put strike’ının üstünde kalırsa</label>
+<label class="quiz-opt"><input type="radio" name="q4" value="c"> Hisse sıfıra giderse</label>
+<label class="quiz-opt"><input type="radio" name="q4" value="d"> Özel temettü gelirse</label>
+<p class="quiz-explain" hidden></p>
+</div>
+<button type="submit" class="btn quiz-submit">Cevapları kontrol et</button>
+</form>
+<div class="quiz-result" id="quizResult" hidden>
+<div class="quiz-score" id="quizScore"></div>
+<p id="quizScoreMsg" data-quiz-msg></p>
+<button type="button" class="btn btn-secondary" id="quizRetry" data-quiz-retry>Tekrar dene</button>
+</div></div></section>
+<script type="application/json" id="quizAnswers">{"q1": {"correct": "b", "explain": "Vertical: aynı sınıf ve vade, farklı strike — biri uzun, biri kısa."}, "q2": {"correct": "b", "explain": "Kısa bacak uzun bacağın maliyetini düşürür. Risk ve getiri tanımlı olur."}, "q3": {"correct": "b", "explain": "Net debit zaten ödendi; yapı bundan fazlasını kaybedemez (komisyon hariç)."}, "q4": {"correct": "b", "explain": "Kısa put’un üstünde kalmasını istersiniz."}}</script>
+<script>window.JSM_QUIZ_MSGS = {"perfect": "Spreads clicked. Next stop: defined-risk multi-leg ideas.", "good": "You have the shape. Review max gain vs max loss on a debit spread.", "retry": "Draw one bull call spread on paper, then retry."};</script>
+<footer class="site-footer">
   <div class="footer-note">Educational only — not financial advice. Options involve risk of loss.</div>
   <div class="footer-links">
     <a href="/">Home</a>
@@ -416,5 +461,6 @@
 
 
 
+<script src="/assets/quiz.js?v=20260923" defer></script>
 </body>
 </html>

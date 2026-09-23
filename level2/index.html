@@ -821,6 +821,51 @@
   </div>
 </div>
 
+<section class="quiz-section" id="page-quiz">
+<div class="section-head"><div class="eyebrow">Quick check</div><h2>Fundamentals quiz</h2><p>Long call, long put, covered call, and why Greeks matter.</p></div>
+<div class="quiz-card">
+<form id="quizForm" class="quiz-form" data-lang="en" novalidate>
+<div class="quiz-q" data-name="q1">
+<p class="quiz-q-title">1. Maximum loss on a long call (one contract, ignoring fees) is:</p>
+<label class="quiz-opt"><input type="radio" name="q1" value="a"> Unlimited</label>
+<label class="quiz-opt"><input type="radio" name="q1" value="b"> The strike × 100</label>
+<label class="quiz-opt"><input type="radio" name="q1" value="c"> The premium you paid</label>
+<label class="quiz-opt"><input type="radio" name="q1" value="d"> The stock price</label>
+<p class="quiz-explain" hidden></p>
+</div>
+<div class="quiz-q" data-name="q2">
+<p class="quiz-q-title">2. A covered call means you:</p>
+<label class="quiz-opt"><input type="radio" name="q2" value="a"> Sell a call against shares you own</label>
+<label class="quiz-opt"><input type="radio" name="q2" value="b"> Buy a call and a put at the same strike</label>
+<label class="quiz-opt"><input type="radio" name="q2" value="c"> Sell a naked call with no shares</label>
+<label class="quiz-opt"><input type="radio" name="q2" value="d"> Buy two calls for every 100 shares</label>
+<p class="quiz-explain" hidden></p>
+</div>
+<div class="quiz-q" data-name="q3">
+<p class="quiz-q-title">3. Delta on a long call is typically:</p>
+<label class="quiz-opt"><input type="radio" name="q3" value="a"> Always 1.00</label>
+<label class="quiz-opt"><input type="radio" name="q3" value="b"> Between 0 and 1, and rises as the call goes in the money</label>
+<label class="quiz-opt"><input type="radio" name="q3" value="c"> Always negative</label>
+<label class="quiz-opt"><input type="radio" name="q3" value="d"> The same as theta</label>
+<p class="quiz-explain" hidden></p>
+</div>
+<div class="quiz-q" data-name="q4">
+<p class="quiz-q-title">4. Time decay (theta) generally:</p>
+<label class="quiz-opt"><input type="radio" name="q4" value="a"> Helps long options every day</label>
+<label class="quiz-opt"><input type="radio" name="q4" value="b"> Works against long options as expiration nears</label>
+<label class="quiz-opt"><input type="radio" name="q4" value="c"> Only affects stock holders</label>
+<label class="quiz-opt"><input type="radio" name="q4" value="d"> Stops if implied volatility is high</label>
+<p class="quiz-explain" hidden></p>
+</div>
+<button type="submit" class="btn quiz-submit">Check my answers</button>
+</form>
+<div class="quiz-result" id="quizResult" hidden>
+<div class="quiz-score" id="quizScore"></div>
+<p id="quizScoreMsg" data-quiz-msg></p>
+<button type="button" class="btn btn-secondary" id="quizRetry" data-quiz-retry>Retake the quiz</button>
+</div></div></section>
+<script type="application/json" id="quizAnswers">{"q1": {"correct": "c", "explain": "A long option cannot lose more than the premium paid plus fees."}, "q2": {"correct": "a", "explain": "Covered = long stock + short call. Premium is income; upside above the strike is capped."}, "q3": {"correct": "b", "explain": "Call delta sits between 0 and 1. ITM calls approach 1; OTM calls approach 0."}, "q4": {"correct": "b", "explain": "Extrinsic value tends to bleed away. Long options fight the clock; short premium collects it."}}</script>
+<script>window.JSM_QUIZ_MSGS = {"perfect": "Clean sweep — Fundamentals are landing.", "good": "Close. Use the notes above, then open one example in the Builder.", "retry": "These pages are dense. Skim the payoff tables once more."};</script>
 <footer class="site-footer">
   <div class="footer-note">Educational only — not financial advice. Options involve risk of loss.</div>
   <div class="footer-links">
@@ -895,5 +940,6 @@
 
 
 
+<script src="/assets/quiz.js?v=20260923" defer></script>
 </body>
 </html>

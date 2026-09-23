@@ -225,6 +225,43 @@
   </div>
 </div>
 
+<section class="quiz-section" id="page-quiz">
+<div class="section-head"><div class="eyebrow">Hızlı kontrol</div><h2>Covered call testi</h2><p>Hisse var, call satılır, prim alınır — tavan kabul edilir.</p></div>
+<div class="quiz-card">
+<form id="quizForm" class="quiz-form" data-lang="tr" novalidate>
+<div class="quiz-q" data-name="q1">
+<p class="quiz-q-title">1. Covered call için gereken:</p>
+<label class="quiz-opt"><input type="radio" name="q1" value="a"> Short hisse + long call</label>
+<label class="quiz-opt"><input type="radio" name="q1" value="b"> Sözleşme başına 100 hisse ve kısa call</label>
+<label class="quiz-opt"><input type="radio" name="q1" value="c"> Hissesiz kısa call</label>
+<label class="quiz-opt"><input type="radio" name="q1" value="d"> Long put hedge</label>
+<p class="quiz-explain" hidden></p>
+</div>
+<div class="quiz-q" data-name="q2">
+<p class="quiz-q-title">2. Hisse kısa call strike’ının epey üstüne çıkarsa:</p>
+<label class="quiz-opt"><input type="radio" name="q2" value="a"> Sınırsız yükseliş sizde kalır</label>
+<label class="quiz-opt"><input type="radio" name="q2" value="b"> Hisse çağrılabilir; yükseliş tavana takılır</label>
+<label class="quiz-opt"><input type="radio" name="q2" value="c"> Call yok olur</label>
+<label class="quiz-opt"><input type="radio" name="q2" value="d"> Ek prim ödersiniz</label>
+<p class="quiz-explain" hidden></p>
+</div>
+<div class="quiz-q" data-name="q3">
+<p class="quiz-q-title">3. Covered call’a en uygun beklenti:</p>
+<label class="quiz-opt"><input type="radio" name="q3" value="a"> Bu hafta füzelenme</label>
+<label class="quiz-opt"><input type="radio" name="q3" value="b"> Hafif yukarı / yatay ve hisse zaten sizde</label>
+<label class="quiz-opt"><input type="radio" name="q3" value="c"> Yarın çöküş</label>
+<label class="quiz-opt"><input type="radio" name="q3" value="d"> Ne hisse ne nakit</label>
+<p class="quiz-explain" hidden></p>
+</div>
+<button type="submit" class="btn quiz-submit">Cevapları kontrol et</button>
+</form>
+<div class="quiz-result" id="quizResult" hidden>
+<div class="quiz-score" id="quizScore"></div>
+<p id="quizScoreMsg" data-quiz-msg></p>
+<button type="button" class="btn btn-secondary" id="quizRetry" data-quiz-retry>Tekrar dene</button>
+</div></div></section>
+<script type="application/json" id="quizAnswers">{"q1": {"correct": "b", "explain": "Örtü hissedir. Standart birim: 100 hisseye 1 kısa call."}, "q2": {"correct": "b", "explain": "Takas budur: şimdi gelir, sonra sınırlı yükseliş."}, "q3": {"correct": "b", "explain": "Hisseyi tutmaya razısınız ve prim için bir miktar yükseliş satarsınız."}}</script>
+<script>window.JSM_QUIZ_MSGS = {"perfect": "Tam puan.", "good": "İyi iş. Notlara bakın.", "retry": "Açıklamaları okuyup tekrar deneyin."};</script>
 <footer class="site-footer">
   <div class="footer-note">Yalnızca eğitim amaçlıdır — yatırım tavsiyesi değildir. Opsiyon işlemleri zarar riski içerir.</div>
   <div class="footer-links">
@@ -288,5 +325,6 @@
   }
 })();
 </script>
+<script src="/assets/quiz.js?v=20260923" defer></script>
 </body>
 </html>

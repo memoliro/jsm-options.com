@@ -1042,7 +1042,52 @@ html[data-theme="light"] #otp-playbook .otp-ico.vi{color:#6d28d9}
     <p>Dersler ve Builder ücretsiz kalır. İşinize yaradıysa bir kahve ısmarlayabilirsiniz.</p>
     <a class="bmc-link" href="https://www.buymeacoffee.com/memoliro" target="_blank" rel="noopener">☕ Bana bir kahve ısmarla</a>
   </div>
-</div><footer class="site-footer">
+</div><section class="quiz-section" id="page-quiz">
+<div class="section-head"><div class="eyebrow">Hızlı kontrol</div><h2>İleri düzey test</h2><p>IV, çok bacaklı yapılar ve sadece yön olmayan risk.</p></div>
+<div class="quiz-card">
+<form id="quizForm" class="quiz-form" data-lang="tr" novalidate>
+<div class="quiz-q" data-name="q1">
+<p class="quiz-q-title">1. Yüksek ima edilen volatilite genelde opsiyonların:</p>
+<label class="quiz-opt"><input type="radio" name="q1" value="a"> Daha ucuz olduğu</label>
+<label class="quiz-opt"><input type="radio" name="q1" value="b"> Daha büyük beklenen hareket için fiyatlandığı</label>
+<label class="quiz-opt"><input type="radio" name="q1" value="c"> Garanti kâr ettiği</label>
+<label class="quiz-opt"><input type="radio" name="q1" value="d"> Theta’dan bağışık olduğu</label>
+<p class="quiz-explain" hidden></p>
+</div>
+<div class="quiz-q" data-name="q2">
+<p class="quiz-q-title">2. Bilanço sonrası IV düşüşü (crush) en çok kimi incitir?</p>
+<label class="quiz-opt"><input type="radio" name="q2" value="a"> Olaydan önce prim almış uzun pozisyonları</label>
+<label class="quiz-opt"><input type="radio" name="q2" value="b"> Yalnızca hisse sahiplerini</label>
+<label class="quiz-opt"><input type="radio" name="q2" value="c"> Hesaptaki nakdi</label>
+<label class="quiz-opt"><input type="radio" name="q2" value="d"> Covered call ile uzun put’u eşit</label>
+<p class="quiz-explain" hidden></p>
+</div>
+<div class="quiz-q" data-name="q3">
+<p class="quiz-q-title">3. Iron condor hangi beklentiye göredir?</p>
+<label class="quiz-opt"><input type="radio" name="q3" value="a"> Tek yönlü dev trend</label>
+<label class="quiz-opt"><input type="radio" name="q3" value="b"> Hissenin bir bantta kalması</label>
+<label class="quiz-opt"><input type="radio" name="q3" value="c"> Şirketin iflası</label>
+<label class="quiz-opt"><input type="radio" name="q3" value="d"> Hisse bölünmesi</label>
+<p class="quiz-explain" hidden></p>
+</div>
+<div class="quiz-q" data-name="q4">
+<p class="quiz-q-title">4. Tanımlı riskli işlem yine zarar eder çünkü:</p>
+<label class="quiz-opt"><input type="radio" name="q4" value="a"> Hisse seçtiğiniz strike’ları deler</label>
+<label class="quiz-opt"><input type="radio" name="q4" value="b"> Limit emir kullanırsınız</label>
+<label class="quiz-opt"><input type="radio" name="q4" value="c"> Küçük lot alırsınız</label>
+<label class="quiz-opt"><input type="radio" name="q4" value="d"> Önce Builder’a bakarsınız</label>
+<p class="quiz-explain" hidden></p>
+</div>
+<button type="submit" class="btn quiz-submit">Cevapları kontrol et</button>
+</form>
+<div class="quiz-result" id="quizResult" hidden>
+<div class="quiz-score" id="quizScore"></div>
+<p id="quizScoreMsg" data-quiz-msg></p>
+<button type="button" class="btn btn-secondary" id="quizRetry" data-quiz-retry>Tekrar dene</button>
+</div></div></section>
+<script type="application/json" id="quizAnswers">{"q1": {"correct": "b", "explain": "Yüksek IV primleri şişirir çünkü piyasa büyük salınım fiyatlar."}, "q2": {"correct": "a", "explain": "Pahalı prim ödeyip IV çökerse, hisse az hareket etse bile opsiyon düşebilir."}, "q3": {"correct": "b", "explain": "Call spread + put spread satarsınız. Fiyat kısa strike’lar arasında kalsın istersiniz."}, "q4": {"correct": "a", "explain": "Tanımlı risk “zarar edemem” demek değildir; tavan koyar."}}</script>
+<script>window.JSM_QUIZ_MSGS = {"perfect": "Advanced ideas are sticking.", "good": "Strong. Revisit IV crush if that question missed.", "retry": "Advanced pages stack concepts. One idea at a time, then retry."};</script>
+<footer class="site-footer">
   <div class="footer-note">Educational only — not financial advice. Options involve risk of loss.</div>
   <div class="footer-links">
     <a href="/">Home</a>
@@ -1115,5 +1160,6 @@ html[data-theme="light"] #otp-playbook .otp-ico.vi{color:#6d28d9}
 
 
 
+<script src="/assets/quiz.js?v=20260923" defer></script>
 </body>
 </html>

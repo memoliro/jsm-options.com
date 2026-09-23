@@ -115,5 +115,43 @@
 
     <p class="disclaimer"><strong>Yalnızca eğitim amaçlıdır:</strong> Tanımlanmış risk “risk yok” demek değildir. Credit’in birkaç katı zarar edebilirsiniz. Yatırım tavsiyesi değildir. JSM Options bir aracı kurum değildir ve hiçbir aracı kurumla bağlı değildir.</p>
   </article>
+<section class="quiz-section" id="page-quiz">
+<div class="section-head"><div class="eyebrow">Hızlı kontrol</div><h2>Iron condor testi</h2><p>Bant bekleyişine tanımlı riskli kredi yapısı.</p></div>
+<div class="quiz-card">
+<form id="quizForm" class="quiz-form" data-lang="tr" novalidate>
+<div class="quiz-q" data-name="q1">
+<p class="quiz-q-title">1. Iron condor birleşimi:</p>
+<label class="quiz-opt"><input type="radio" name="q1" value="a"> Call debit spread + uzun hisse</label>
+<label class="quiz-opt"><input type="radio" name="q1" value="b"> Kısa call spread + kısa put spread</label>
+<label class="quiz-opt"><input type="radio" name="q1" value="c"> Tek strike’ta dört call</label>
+<label class="quiz-opt"><input type="radio" name="q1" value="d"> Covered call + wheel</label>
+<p class="quiz-explain" hidden></p>
+</div>
+<div class="quiz-q" data-name="q2">
+<p class="quiz-q-title">2. Maksimum kâr kabaca:</p>
+<label class="quiz-opt"><input type="radio" name="q2" value="a"> Sınırsız</label>
+<label class="quiz-opt"><input type="radio" name="q2" value="b"> Alınan net kredi</label>
+<label class="quiz-opt"><input type="radio" name="q2" value="c"> Kanatların toplamı, tavan yok</label>
+<label class="quiz-opt"><input type="radio" name="q2" value="d"> Hisse fiyatı</label>
+<p class="quiz-explain" hidden></p>
+</div>
+<div class="quiz-q" data-name="q3">
+<p class="quiz-q-title">3. Condor en çok ne zaman zarar eder?</p>
+<label class="quiz-opt"><input type="radio" name="q3" value="a"> Fiyat yerinde sayınca</label>
+<label class="quiz-opt"><input type="radio" name="q3" value="b"> Fiyat kısa strike’ı aşıp kanadı da geçince</label>
+<label class="quiz-opt"><input type="radio" name="q3" value="c"> IV yavaş düşüp fiyat durunca</label>
+<label class="quiz-opt"><input type="radio" name="q3" value="d"> Tanımlı risk kullanınca</label>
+<p class="quiz-explain" hidden></p>
+</div>
+<button type="submit" class="btn quiz-submit">Cevapları kontrol et</button>
+</form>
+<div class="quiz-result" id="quizResult" hidden>
+<div class="quiz-score" id="quizScore"></div>
+<p id="quizScoreMsg" data-quiz-msg></p>
+<button type="button" class="btn btn-secondary" id="quizRetry" data-quiz-retry>Tekrar dene</button>
+</div></div></section>
+<script type="application/json" id="quizAnswers">{"q1": {"correct": "b", "explain": "Beklenen bandın iki yanında birer kredi spread."}, "q2": {"correct": "b", "explain": "Kredi toplarsınız. Fiyat içeride kalırsa en iyi senaryo odur."}, "q3": {"correct": "b", "explain": "Büyük yönlü hareket bir tarafı test eder. Uzun kanat zararı keser."}}</script>
+<script>window.JSM_QUIZ_MSGS = {"perfect": "Tam puan.", "good": "İyi iş. Notlara bakın.", "retry": "Açıklamaları okuyup tekrar deneyin."};</script>
+<script src="/assets/quiz.js?v=20260923" defer></script>
 </body>
 </html>

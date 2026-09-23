@@ -127,6 +127,43 @@
     <div class="warn"><strong>Educational only:</strong> Not a broker and not trade advice. Formulas ignore commissions, dividends, and early assignment.</div>
   </div>
 </div>
+<section class="quiz-section" id="page-quiz">
+<div class="section-head"><div class="eyebrow">Quick check</div><h2>Cheat sheet quiz</h2><p>Call vs put, long vs short, and the ×100 habit.</p></div>
+<div class="quiz-card">
+<form id="quizForm" class="quiz-form" data-lang="en" novalidate>
+<div class="quiz-q" data-name="q1">
+<p class="quiz-q-title">1. CALL means the right to:</p>
+<label class="quiz-opt"><input type="radio" name="q1" value="a"> Sell the underlying</label>
+<label class="quiz-opt"><input type="radio" name="q1" value="b"> Buy the underlying</label>
+<label class="quiz-opt"><input type="radio" name="q1" value="c"> Cancel expiration</label>
+<label class="quiz-opt"><input type="radio" name="q1" value="d"> Skip the premium</label>
+<p class="quiz-explain" hidden></p>
+</div>
+<div class="quiz-q" data-name="q2">
+<p class="quiz-q-title">2. Short an option means you:</p>
+<label class="quiz-opt"><input type="radio" name="q2" value="a"> Own a right</label>
+<label class="quiz-opt"><input type="radio" name="q2" value="b"> Sold a right and carry an obligation</label>
+<label class="quiz-opt"><input type="radio" name="q2" value="c"> Cannot lose money</label>
+<label class="quiz-opt"><input type="radio" name="q2" value="d"> Must wait until expiration</label>
+<p class="quiz-explain" hidden></p>
+</div>
+<div class="quiz-q" data-name="q3">
+<p class="quiz-q-title">3. Quotes are per share. Cash for one contract is:</p>
+<label class="quiz-opt"><input type="radio" name="q3" value="a"> The quote as-is</label>
+<label class="quiz-opt"><input type="radio" name="q3" value="b"> Quote × 100 (standard equity options)</label>
+<label class="quiz-opt"><input type="radio" name="q3" value="c"> Quote ÷ 100</label>
+<label class="quiz-opt"><input type="radio" name="q3" value="d"> Always $1</label>
+<p class="quiz-explain" hidden></p>
+</div>
+<button type="submit" class="btn quiz-submit">Check my answers</button>
+</form>
+<div class="quiz-result" id="quizResult" hidden>
+<div class="quiz-score" id="quizScore"></div>
+<p id="quizScoreMsg" data-quiz-msg></p>
+<button type="button" class="btn btn-secondary" id="quizRetry" data-quiz-retry>Retake the quiz</button>
+</div></div></section>
+<script type="application/json" id="quizAnswers">{"q1": {"correct": "b", "explain": "Call = buy right. Put = sell right."}, "q2": {"correct": "b", "explain": "Short premium = obligation. That is why assignment and undefined risk matter."}, "q3": {"correct": "b", "explain": "Forget ×100 and every P/L estimate is off by two zeros."}}</script>
+<script>window.JSM_QUIZ_MSGS = {"perfect": "Perfect score — you've got this page down.", "good": "Solid work. Read the notes above, then keep going.", "retry": "No worries. Skim the explanations and try again."};</script>
 <footer class="site-footer">
   <div class="footer-note">Educational only — not financial advice. Options involve risk of loss.</div>
   <div class="footer-links">
@@ -241,5 +278,6 @@
   });
 })();
 </script>
+<script src="/assets/quiz.js?v=20260923" defer></script>
 </body>
 </html>

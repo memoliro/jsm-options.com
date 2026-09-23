@@ -116,6 +116,43 @@
 </section>
 </main>
 
+<section class="quiz-section" id="page-quiz">
+<div class="section-head"><div class="eyebrow">Hızlı kontrol</div><h2>Strateji kütüphanesi testi</h2><p>İsme değil, beklentiye ve riske göre seçin.</p></div>
+<div class="quiz-card">
+<form id="quizForm" class="quiz-form" data-lang="tr" novalidate>
+<div class="quiz-q" data-name="q1">
+<p class="quiz-q-title">1. Strateji seçerken ilk filtre:</p>
+<label class="quiz-opt"><input type="radio" name="q1" value="a"> Sosyal medyada trend olan</label>
+<label class="quiz-opt"><input type="radio" name="q1" value="b"> Beklentiniz: yukarı, aşağı, bant veya büyük hareket</label>
+<label class="quiz-opt"><input type="radio" name="q1" value="c"> En çok bacaklı olan</label>
+<label class="quiz-opt"><input type="radio" name="q1" value="d"> En güzel isimli olan</label>
+<p class="quiz-explain" hidden></p>
+</div>
+<div class="quiz-q" data-name="q2">
+<p class="quiz-q-title">2. “Tanımlı risk” demek:</p>
+<label class="quiz-opt"><input type="radio" name="q2" value="a"> Para kaybedemezsiniz</label>
+<label class="quiz-opt"><input type="radio" name="q2" value="b"> Maksimum zarar yapıdan baştan bellidir</label>
+<label class="quiz-opt"><input type="radio" name="q2" value="c"> Aracı kurum sizi başabaş kapatır</label>
+<label class="quiz-opt"><input type="radio" name="q2" value="d"> IV değişemez</label>
+<p class="quiz-explain" hidden></p>
+</div>
+<div class="quiz-q" data-name="q3">
+<p class="quiz-q-title">3. Kütüphaneden isim seçtikten sonra iyi sonraki adım:</p>
+<label class="quiz-opt"><input type="radio" name="q3" value="a"> Hemen 10 sözleşme açmak</label>
+<label class="quiz-opt"><input type="radio" name="q3" value="b"> Builder’da strike ve vadeyi denemek</label>
+<label class="quiz-opt"><input type="radio" name="q3" value="c"> Getiri grafiğini yok saymak</label>
+<label class="quiz-opt"><input type="radio" name="q3" value="d"> Riski okumamak</label>
+<p class="quiz-explain" hidden></p>
+</div>
+<button type="submit" class="btn quiz-submit">Cevapları kontrol et</button>
+</form>
+<div class="quiz-result" id="quizResult" hidden>
+<div class="quiz-score" id="quizScore"></div>
+<p id="quizScoreMsg" data-quiz-msg></p>
+<button type="button" class="btn btn-secondary" id="quizRetry" data-quiz-retry>Tekrar dene</button>
+</div></div></section>
+<script type="application/json" id="quizAnswers">{"q1": {"correct": "b", "explain": "Yapı görüşü izler. Condor, uzun call’un yerine geçmez."}, "q2": {"correct": "b", "explain": "O bilinen tutarı yine kaybedebilirsiniz; sürpriz sınırsız zarar olmaması hedeflenir."}, "q3": {"correct": "b", "explain": "Kütüphane harita, Builder sayıdır."}}</script>
+<script>window.JSM_QUIZ_MSGS = {"perfect": "You are using the library the way it was designed.", "good": "Good filter. Always pair outlook with max-loss next.", "retry": "Start with outlook, then risk type, then open Builder."};</script>
 <footer class="site-footer">
   <div class="footer-note">Educational only — not financial advice. Options involve risk of loss.</div>
   <div class="footer-links">
@@ -292,4 +329,5 @@ document.querySelectorAll('.filter').forEach(b=>b.addEventListener('click',()=>{
 
 
 
+<script src="/assets/quiz.js?v=20260923" defer></script>
 </body></html>

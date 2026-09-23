@@ -133,6 +133,43 @@
     <div class="warn"><strong>Yalnızca eğitim:</strong> Broker değil, işlem tavsiyesi değil. Formüller komisyon, temettü ve early assignment’ı yok sayar.</div>
   </div>
 </div>
+<section class="quiz-section" id="page-quiz">
+<div class="section-head"><div class="eyebrow">Hızlı kontrol</div><h2>Özet kart testi</h2><p>Call / put, uzun / kısa ve ×100 alışkanlığı.</p></div>
+<div class="quiz-card">
+<form id="quizForm" class="quiz-form" data-lang="tr" novalidate>
+<div class="quiz-q" data-name="q1">
+<p class="quiz-q-title">1. CALL hakkı:</p>
+<label class="quiz-opt"><input type="radio" name="q1" value="a"> Dayanağı satmak</label>
+<label class="quiz-opt"><input type="radio" name="q1" value="b"> Dayanağı almak</label>
+<label class="quiz-opt"><input type="radio" name="q1" value="c"> Vadeyi iptal</label>
+<label class="quiz-opt"><input type="radio" name="q1" value="d"> Primi atlamak</label>
+<p class="quiz-explain" hidden></p>
+</div>
+<div class="quiz-q" data-name="q2">
+<p class="quiz-q-title">2. Opsiyonu short etmek:</p>
+<label class="quiz-opt"><input type="radio" name="q2" value="a"> Hak sahibi olmak</label>
+<label class="quiz-opt"><input type="radio" name="q2" value="b"> Hakkı satıp yükümlülük taşımak</label>
+<label class="quiz-opt"><input type="radio" name="q2" value="c"> Zarar edememektir</label>
+<label class="quiz-opt"><input type="radio" name="q2" value="d"> Vadeyi beklemek zorunda olmaktır</label>
+<p class="quiz-explain" hidden></p>
+</div>
+<div class="quiz-q" data-name="q3">
+<p class="quiz-q-title">3. Kotasyon hisse başınadır. Bir sözleşmenin nakdi:</p>
+<label class="quiz-opt"><input type="radio" name="q3" value="a"> Kotasyonun kendisi</label>
+<label class="quiz-opt"><input type="radio" name="q3" value="b"> Kotasyon × 100 (standart hisse opsiyonu)</label>
+<label class="quiz-opt"><input type="radio" name="q3" value="c"> Kotasyon ÷ 100</label>
+<label class="quiz-opt"><input type="radio" name="q3" value="d"> Hep $1</label>
+<p class="quiz-explain" hidden></p>
+</div>
+<button type="submit" class="btn quiz-submit">Cevapları kontrol et</button>
+</form>
+<div class="quiz-result" id="quizResult" hidden>
+<div class="quiz-score" id="quizScore"></div>
+<p id="quizScoreMsg" data-quiz-msg></p>
+<button type="button" class="btn btn-secondary" id="quizRetry" data-quiz-retry>Tekrar dene</button>
+</div></div></section>
+<script type="application/json" id="quizAnswers">{"q1": {"correct": "b", "explain": "Call = alma hakkı. Put = satma hakkı."}, "q2": {"correct": "b", "explain": "Kısa prim = yükümlülük. Assignment ve tanımsız risk bu yüzden önemli."}, "q3": {"correct": "b", "explain": "×100 unutulursa kâr/zarar iki sıfır kayar."}}</script>
+<script>window.JSM_QUIZ_MSGS = {"perfect": "Tam puan.", "good": "İyi iş. Notlara bakın.", "retry": "Açıklamaları okuyup tekrar deneyin."};</script>
 <footer class="site-footer">
   <div class="footer-note">Educational only — not financial advice. Options involve risk of loss.</div>
   <div class="footer-links">
@@ -247,5 +284,6 @@
   });
 })();
 </script>
+<script src="/assets/quiz.js?v=20260923" defer></script>
 </body>
 </html>

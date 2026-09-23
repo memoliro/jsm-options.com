@@ -219,6 +219,43 @@
   </div>
 </div>
 
+<section class="quiz-section" id="page-quiz">
+<div class="section-head"><div class="eyebrow">Hızlı kontrol</div><h2>Nakit teminatlı put testi</h2><p>Put ancak hisseyi alacak nakit varsa satılır.</p></div>
+<div class="quiz-card">
+<form id="quizForm" class="quiz-form" data-lang="tr" novalidate>
+<div class="quiz-q" data-name="q1">
+<p class="quiz-q-title">1. Cash-secured demek:</p>
+<label class="quiz-opt"><input type="radio" name="q1" value="a"> Borsa put’u sigortalar</label>
+<label class="quiz-opt"><input type="radio" name="q1" value="b"> Atama olursa strike’tan 100 hisse alacak nakit ayırırsınız</label>
+<label class="quiz-opt"><input type="radio" name="q1" value="c"> Hisse zaten sizde</label>
+<label class="quiz-opt"><input type="radio" name="q1" value="d"> Call da sattınız</label>
+<p class="quiz-explain" hidden></p>
+</div>
+<div class="quiz-q" data-name="q2">
+<p class="quiz-q-title">2. Primi ne zaman alırsınız?</p>
+<label class="quiz-opt"><input type="radio" name="q2" value="a"> Yalnızca hisse sıfırlanırsa</label>
+<label class="quiz-opt"><input type="radio" name="q2" value="b"> Put kapanır veya vadesi dolar; atama iade değildir</label>
+<label class="quiz-opt"><input type="radio" name="q2" value="c"> Asla atanmazsınız</label>
+<label class="quiz-opt"><input type="radio" name="q2" value="d"> IV ikiye katlanırsa</label>
+<p class="quiz-explain" hidden></p>
+</div>
+<div class="quiz-q" data-name="q3">
+<p class="quiz-q-title">3. CSP uyumsuzdur eğer:</p>
+<label class="quiz-opt"><input type="radio" name="q3" value="a"> Strike’tan hisse almaktan memnunsanız</label>
+<label class="quiz-opt"><input type="radio" name="q3" value="b"> Hisseyi alacak gücünüz yok, sadece prim istiyorsanız</label>
+<label class="quiz-opt"><input type="radio" name="q3" value="c"> Tek sözleşme aldıysanız</label>
+<label class="quiz-opt"><input type="radio" name="q3" value="d"> Limit emir kullandıysanız</label>
+<p class="quiz-explain" hidden></p>
+</div>
+<button type="submit" class="btn quiz-submit">Cevapları kontrol et</button>
+</form>
+<div class="quiz-result" id="quizResult" hidden>
+<div class="quiz-score" id="quizScore"></div>
+<p id="quizScoreMsg" data-quiz-msg></p>
+<button type="button" class="btn btn-secondary" id="quizRetry" data-quiz-retry>Tekrar dene</button>
+</div></div></section>
+<script type="application/json" id="quizAnswers">{"q1": {"correct": "b", "explain": "Nakit teminattır. Assignment = strike’tan hisse almak."}, "q2": {"correct": "b", "explain": "Prim yükümlülük içindir. Atama ayrı bir hisse alımıdır."}, "q3": {"correct": "b", "explain": "Atama sizi kıracaksa işlem ya fazla büyüktür ya yanlış yapıdır."}}</script>
+<script>window.JSM_QUIZ_MSGS = {"perfect": "Tam puan.", "good": "İyi iş. Notlara bakın.", "retry": "Açıklamaları okuyup tekrar deneyin."};</script>
 <footer class="site-footer">
   <div class="footer-note">Yalnızca eğitim amaçlıdır — yatırım tavsiyesi değildir. Opsiyon işlemleri zarar riski içerir.</div>
   <div class="footer-links">
@@ -282,5 +319,6 @@
   }
 })();
 </script>
+<script src="/assets/quiz.js?v=20260923" defer></script>
 </body>
 </html>

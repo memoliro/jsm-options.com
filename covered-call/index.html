@@ -139,6 +139,43 @@
   
   </div>
 </div>
+<section class="quiz-section" id="page-quiz">
+<div class="section-head"><div class="eyebrow">Quick check</div><h2>Covered call quiz</h2><p>Own shares, sell a call, collect premium — and accept the cap.</p></div>
+<div class="quiz-card">
+<form id="quizForm" class="quiz-form" data-lang="en" novalidate>
+<div class="quiz-q" data-name="q1">
+<p class="quiz-q-title">1. A covered call requires:</p>
+<label class="quiz-opt"><input type="radio" name="q1" value="a"> Short stock and a long call</label>
+<label class="quiz-opt"><input type="radio" name="q1" value="b"> 100 shares (per contract) and a short call</label>
+<label class="quiz-opt"><input type="radio" name="q1" value="c"> Only a short call with no shares</label>
+<label class="quiz-opt"><input type="radio" name="q1" value="d"> A long put hedge</label>
+<p class="quiz-explain" hidden></p>
+</div>
+<div class="quiz-q" data-name="q2">
+<p class="quiz-q-title">2. If the stock rallies well above the short call strike:</p>
+<label class="quiz-opt"><input type="radio" name="q2" value="a"> You keep unlimited upside</label>
+<label class="quiz-opt"><input type="radio" name="q2" value="b"> Shares can be called away; upside is capped</label>
+<label class="quiz-opt"><input type="radio" name="q2" value="c"> The call disappears</label>
+<label class="quiz-opt"><input type="radio" name="q2" value="d"> You owe extra premium</label>
+<p class="quiz-explain" hidden></p>
+</div>
+<div class="quiz-q" data-name="q3">
+<p class="quiz-q-title">3. Best-fit outlook for a covered call is usually:</p>
+<label class="quiz-opt"><input type="radio" name="q3" value="a"> You want a moonshot this week</label>
+<label class="quiz-opt"><input type="radio" name="q3" value="b"> Mildly bullish to sideways, and you already own the stock</label>
+<label class="quiz-opt"><input type="radio" name="q3" value="c"> You expect a crash tomorrow</label>
+<label class="quiz-opt"><input type="radio" name="q3" value="d"> You have no shares and no cash</label>
+<p class="quiz-explain" hidden></p>
+</div>
+<button type="submit" class="btn quiz-submit">Check my answers</button>
+</form>
+<div class="quiz-result" id="quizResult" hidden>
+<div class="quiz-score" id="quizScore"></div>
+<p id="quizScoreMsg" data-quiz-msg></p>
+<button type="button" class="btn btn-secondary" id="quizRetry" data-quiz-retry>Retake the quiz</button>
+</div></div></section>
+<script type="application/json" id="quizAnswers">{"q1": {"correct": "b", "explain": "Coverage is the shares. One short call per 100 shares is the standard unit."}, "q2": {"correct": "b", "explain": "That is the trade-off: income now, capped upside later."}, "q3": {"correct": "b", "explain": "You are fine holding shares and okay selling some upside for premium."}}</script>
+<script>window.JSM_QUIZ_MSGS = {"perfect": "Perfect score — you've got this page down.", "good": "Solid work. Read the notes above, then keep going.", "retry": "No worries. Skim the explanations and try again."};</script>
 <footer class="site-footer">
   <div class="footer-note">Educational only — not financial advice. Options involve risk of loss.</div>
   <div class="footer-links">
@@ -211,5 +248,6 @@
 
 
 
+<script src="/assets/quiz.js?v=20260923" defer></script>
 </body>
 </html>

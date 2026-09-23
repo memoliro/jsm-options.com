@@ -134,6 +134,43 @@
   
   </div>
 </div>
+<section class="quiz-section" id="page-quiz">
+<div class="section-head"><div class="eyebrow">Quick check</div><h2>Cash-secured put quiz</h2><p>Selling a put only when cash is ready to buy the shares.</p></div>
+<div class="quiz-card">
+<form id="quizForm" class="quiz-form" data-lang="en" novalidate>
+<div class="quiz-q" data-name="q1">
+<p class="quiz-q-title">1. Cash-secured means:</p>
+<label class="quiz-opt"><input type="radio" name="q1" value="a"> The put is insured by the exchange</label>
+<label class="quiz-opt"><input type="radio" name="q1" value="b"> You set aside cash to buy 100 shares at the strike if assigned</label>
+<label class="quiz-opt"><input type="radio" name="q1" value="c"> You already own the shares</label>
+<label class="quiz-opt"><input type="radio" name="q1" value="d"> You sold a call too</label>
+<p class="quiz-explain" hidden></p>
+</div>
+<div class="quiz-q" data-name="q2">
+<p class="quiz-q-title">2. You keep the premium if:</p>
+<label class="quiz-opt"><input type="radio" name="q2" value="a"> Only if the stock goes to zero</label>
+<label class="quiz-opt"><input type="radio" name="q2" value="b"> The put expires or you close it; assignment is extra, not a refund</label>
+<label class="quiz-opt"><input type="radio" name="q2" value="c"> You never get assigned under any condition</label>
+<label class="quiz-opt"><input type="radio" name="q2" value="d"> IV doubles</label>
+<p class="quiz-explain" hidden></p>
+</div>
+<div class="quiz-q" data-name="q3">
+<p class="quiz-q-title">3. A CSP is a poor fit if:</p>
+<label class="quiz-opt"><input type="radio" name="q3" value="a"> You would be happy owning the stock at the strike</label>
+<label class="quiz-opt"><input type="radio" name="q3" value="b"> You cannot afford the shares and just want the premium</label>
+<label class="quiz-opt"><input type="radio" name="q3" value="c"> You sized one contract</label>
+<label class="quiz-opt"><input type="radio" name="q3" value="d"> You used a limit order</label>
+<p class="quiz-explain" hidden></p>
+</div>
+<button type="submit" class="btn quiz-submit">Check my answers</button>
+</form>
+<div class="quiz-result" id="quizResult" hidden>
+<div class="quiz-score" id="quizScore"></div>
+<p id="quizScoreMsg" data-quiz-msg></p>
+<button type="button" class="btn btn-secondary" id="quizRetry" data-quiz-retry>Retake the quiz</button>
+</div></div></section>
+<script type="application/json" id="quizAnswers">{"q1": {"correct": "b", "explain": "The cash is the collateral. Assignment = you buy stock at the strike."}, "q2": {"correct": "b", "explain": "Premium is yours for taking the obligation. Assignment is a separate stock purchase."}, "q3": {"correct": "b", "explain": "If assignment would break you, the trade is too big — or the wrong structure."}}</script>
+<script>window.JSM_QUIZ_MSGS = {"perfect": "Perfect score — you've got this page down.", "good": "Solid work. Read the notes above, then keep going.", "retry": "No worries. Skim the explanations and try again."};</script>
 <footer class="site-footer">
   <div class="footer-note">Educational only — not financial advice. Options involve risk of loss.</div>
   <div class="footer-links">
@@ -206,5 +243,6 @@
 
 
 
+<script src="/assets/quiz.js?v=20260923" defer></script>
 </body>
 </html>

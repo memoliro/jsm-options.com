@@ -159,339 +159,53 @@
       <h2>Delta'nın sade bir dille anlamı nedir</h2>
       <p><b>Delta</b>, Underlying hisse 1$ hareket ettiğinde bir opsiyon fiyatının ne kadar değişeceğini tahmin eder. Bir Call'ın Delta'sı 0 ile 1 arasında değişir: Out of the Money olduğunda 0'a yakın, At the Money iken yaklaşık 0,50 ve deep In the Money iken 1'e yaklaşır.</p>
       <p>Bu sayfa aritmetiği basit tutmak için Delta'yı sabit tutar. Gerçek piyasalarda Delta, hisse hareket ettikçe, zaman geçtikçe ve implied volatility değiştikçe kendisi kayar — bu yüzden sonucu küçük hareketler için yakın bir tahmin olarak görün, bir garanti olarak değil.</p>
-      <!---- BEGIN ABSOLUTE BEGINNER QUIZ - paste this whole block before </body> in index_en_cloude.html ---->
-<section id="delta-beginner-quiz" aria-label="Delta Quiz for Absolute Beginners">
-<style>
-  #delta-beginner-quiz{
-    --quiz-bg:#0f172a;
-    --quiz-card:#151f38;
-    --quiz-border:rgba(255,255,255,.08);
-    --quiz-text:#e2e8f0;
-    --quiz-muted:#94a3b8;
-    --quiz-accent:#38bdf8;
-    --quiz-accent-2:#22d3ee;
-    --quiz-good:#22c55e;
-    --quiz-bad:#ef4444;
-    --quiz-radius:18px;
-    max-width: 860px;
-    margin: 48px auto;
-    padding: 0 16px;
-    font-family: ui-sans-system, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
-    color: var(--quiz-text);
-  }
-  #delta-beginner-quiz .quiz-card{
-    background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02)), var(--quiz-card);
-    border: 1px solid var(--quiz-border);
-    border-radius: var(--quiz-radius);
-    overflow:hidden;
-    box-shadow: 0 10px 30px rgba(0,0,0,.35);
-  }
-  #delta-beginner-quiz .quiz-header{
-    padding: 28px 28px 18px;
-    border-bottom: 1px solid var(--quiz-border);
-  }
-  #delta-beginner-quiz .quiz-badge{
-    display:inline-flex; gap:8px; align-items:center;
-    font-size:12px; letter-spacing:.08em; text-transform:uppercase;
-    color: var(--quiz-accent);
-    background: rgba(56,189,248,.12);
-    border: 1px solid rgba(56,189,248,.25);
-    padding: 6px 10px; border-radius: 999px;
-    margin-bottom: 14px;
-  }
-  #delta-beginner-quiz h2{
-    margin:0 0 8px; font-size: clamp(22px, 3vw, 28px); line-height:1.15; font-weight:800;
-  }
-  #delta-beginner-quiz .quiz-sub{
-    color: var(--quiz-muted); font-size: 15px; line-height:1.5; margin:0;
-  }
-  #delta-beginner-quiz .quiz-progress{
-    height: 6px; background: rgba(255,255,255,.06);
-  }
-  #delta-beginner-quiz .quiz-progress > i{
-    display:block; height:100%; width:0%;
-    background: linear-gradient(90deg, var(--quiz-accent), var(--quiz-accent-2));
-    transition: width .45s ease;
-  }
-  #delta-beginner-quiz .quiz-body{ padding: 22px 28px 28px; }
-  #delta-beginner-quiz .q-meta{
-    display:flex; justify-content:space-between; align-items:center;
-    font-size:13px; color: var(--quiz-muted); margin-bottom: 14px;
-  }
-  #delta-beginner-quiz .q-title{
-    font-size: 18px; font-weight:650; line-height:1.35; margin: 0 0 18px;
-  }
-  #delta-beginner-quiz .q-options{ display:grid; gap:10px; }
-  #delta-beginner-quiz .q-opt{
-    text-align:left; width:100%;
-    background: rgba(255,255,255,.03);
-    border: 1px solid var(--quiz-border);
-    border-radius: 12px;
-    padding: 14px 16px;
-    color: var(--quiz-text);
-    font-size: 15px; line-height:1.4;
-    cursor:pointer;
-    transition: all .18s ease;
-  }
-  #delta-beginner-quiz .q-opt:hover{ border-color: rgba(56,189,248,.4); background: rgba(56,189,248,.08); }
-  #delta-beginner-quiz .q-opt:disabled{ cursor:default; opacity:.9; }
-  #delta-beginner-quiz .q-opt.is-correct{
-    border-color: rgba(34,197,94,.5); background: rgba(34,197,94,.12);
-  }
-  #delta-beginner-quiz .q-opt.is-wrong{
-    border-color: rgba(239,68,68,.5); background: rgba(239,68,68,.1);
-  }
-  #delta-beginner-quiz .q-explain{
-    margin-top:16px; padding:14px 16px;
-    border-radius:12px; font-size:14px; line-height:1.5;
-    border:1px solid var(--quiz-border);
-    display:none;
-  }
-  #delta-beginner-quiz .q-explain.show{ display:block; }
-  #delta-beginner-quiz .q-explain.good{ background: rgba(34,197,94,.1); border-color: rgba(34,197,94,.25); }
-  #delta-beginner-quiz .q-explain.bad{ background: rgba(239,68,68,.08); border-color: rgba(239,68,68,.2); }
-  #delta-beginner-quiz .quiz-actions{ margin-top:18px; display:flex; gap:10px; }
-  #delta-beginner-quiz .btn{
-    appearance:none; border:0; border-radius:999px; padding: 10px 18px;
-    font-weight:650; font-size:14px; cursor:pointer;
-    transition: transform .12s ease, opacity .2s;
-  }
-  #delta-beginner-quiz .btn:active{ transform: scale(.98); }
-  #delta-beginner-quiz .btn-primary{
-    background: linear-gradient(90deg, var(--quiz-accent), var(--quiz-accent-2));
-    color:#05202a;
-  }
-  #delta-beginner-quiz .btn-ghost{
-    background: rgba(255,255,255,.06); color: var(--quiz-text);
-    border:1px solid var(--quiz-border);
-  }
-  #delta-beginner-quiz .quiz-result{
-    text-align:center; padding: 28px;
-  }
-  #delta-beginner-quiz .quiz-result h3{ font-size:26px; margin:0 0 10px; }
-  #delta-beginner-quiz .quiz-result p{ color: var(--quiz-muted); margin:0 0 18px; line-height:1.5; }
-  #delta-beginner-quiz .score-ring{
-    width:96px; height:96px; border-radius:50%; display:grid; place-items:center;
-    margin: 8px auto 18px; font-weight:800; font-size:28px;
-    background: conic-gradient(var(--quiz-accent) var(--score-pct), rgba(255,255,255,.08) 0);
-    border:1px solid var(--quiz-border);
-  }
-  #delta-beginner-quiz .score-ring > span{
-    width:78px; height:78px; border-radius:50%; display:grid; place-items:center;
-    background: var(--quiz-card);
-  }
-  #delta-beginner-quiz [data-theme="light"] &,
-  :root[data-theme="light"] #delta-beginner-quiz{
-    --quiz-bg:#f8fafc; --quiz-card:#ffffff; --quiz-text:#0f172a;
-    --quiz-muted:#64748b; --quiz-border:rgba(15,23,42,.08);
-  }
-</style>
-
+      <!---- BEGIN ABSOLUTE BEGINNER QUIZ - paste this whole block before <script src="/assets/quiz.js?v=20260923" defer></script>
+</body> in index_en_cloude.html ---->
+<section class="quiz-section" id="page-quiz">
+<div class="section-head"><div class="eyebrow">Hızlı kontrol</div><h2>Delta testi</h2><p>Call değişimi ≈ hisse değişimi × delta.</p></div>
 <div class="quiz-card">
-  <div class="quiz-header">
-    <div class="quiz-badge">✅ Tamamen Yeni Başlayanlar İçin • Matematik korkusu yok</div>
-    <h2>Hızlı Kontrol: Delta'nın bir Call'ı nasıl hareket ettirdiğini anladınız mı?</h2>
-    <p class="quiz-sub">
-      İnteraktif derste az önce gördüklerinizi tam olarak kapsar — formül
-      <strong style="color:var(--quiz-text)">Call değişimi = Hisse değişimi × Delta</strong>,
-      Call'lar için 0 ile 1 aralığı ve 0,5 / 0,25 örnekleri.
-      Hile yok, sadece 8 kısa soru.
-    </p>
-  </div>
-  <div class="quiz-progress"><i id="quizProgressBar"></i></div>
-  <div class="quiz-body" id="quizBody">
-    <!-- JS injects questions here -->
-  </div>
+<form id="quizForm" class="quiz-form" data-lang="tr" novalidate>
+<div class="quiz-q" data-name="q1">
+<p class="quiz-q-title">1. Call deltası 0,40 ve hisse $1 yükselirse, call (hisse başına) kabaca ne kadar artar?</p>
+<label class="quiz-opt"><input type="radio" name="q1" value="a"> $1,00</label>
+<label class="quiz-opt"><input type="radio" name="q1" value="b"> $0,40</label>
+<label class="quiz-opt"><input type="radio" name="q1" value="c"> $0,04</label>
+<label class="quiz-opt"><input type="radio" name="q1" value="d"> Hiç</label>
+<p class="quiz-explain" hidden></p>
 </div>
-
-<script>
-(function(){
-  const QUESTIONS = [
-    {
-      q: "1) Süper basit kelimelerle, Delta bize ne söyler?",
-      opts: [
-        "Şirketin kaç hissesi olduğu",
-        "Hisse 1$ hareket ettiğinde CALL fiyatı ne kadar hareket eder",
-        "Opsiyonun expiration zamanı ne zaman"
-      ],
-      correct: 1,
-      whyGood: "Kesinlikle! Delta çevirmendir. Delta 0,5 ve hisse +1$ ise, Call ≈ +0,50$. Bu, sürüklediğiniz kaydırıcıdaki temel fikir.",
-      whyBad: "Pek değil. Delta çevirmendir: Hisse hareketi × Delta = Call hareketi. Kaydırıcıyı tekrar deneyin: hisseyi 1$ hareket ettirin, Call'ın Delta kadar hareket ettiğini izleyin."
-    },
-    {
-      q: "2) Bir CALL opsiyon için, Delta her zaman...",
-      opts: [
-        "0 ile 1 arasında (pozitif)",
-        "-1 ile 0 arasında (negatif)",
-        "Her zaman tam olarak 1"
-      ],
-      correct: 0,
-      whyGood: "Evet! Call'lar pozitif 0 ile 1 arasındadır. 0 = neredeyse hiç tepki yok, 1 = neredeyse hisse gibi hareket eder.",
-      whyBad: "CALL'lar için Delta 0 ile 1 arasında ve pozitiftir. Put'lar negatiftir. Yani hisse yükseldiğinde Call yükselir."
-    },
-    {
-      q: "3) Bu dersten altın formül nedir?",
-      opts: [
-        "Call değişimi = Hisse değişimi × Delta",
-        "Call değişimi = Hisse değişimi + Delta",
-        "Call değişimi = Delta ÷ Hisse değişimi"
-      ],
-      correct: 0,
-      whyGood: "Mükemmel — hatırlanması gereken tek formül bu. Onu interaktif kutuda canlı gördünüz.",
-      whyBad: "The lesson shows: Call değişimi = Hisse değişimi × Delta. Multiplication, not addition."
-    },
-    {
-      q: "4) Hızlı matematik: Delta = 0,50, hisse YUKARI 2$ gidiyor. Call ne kadar yükselir (yaklaşık)?",
-      opts: [
-        "Yaklaşık 1,00$",
-        "Yaklaşık 2,00$",
-        "Yaklaşık 0,25$"
-      ],
-      correct: 0,
-      whyGood: "Evet! 2$ × 0,50 = 1$. Bu dersteki 0,50 örneği.",
-      whyBad: "Çarpın: 2$ × 0,50 = 1,00$. Bu klasik 50 cent Delta örneği."
-    },
-    {
-      q: "5) Delta = 0,25, hisse YUKARI 4$ gidiyor. Call ne kadar yükselir?",
-      opts: [
-        "Yaklaşık 1,00$",
-        "Yaklaşık 4,00$",
-        "Yaklaşık 0,00$"
-      ],
-      correct: 0,
-      whyGood: "Doğru! 4$ × 0,25 = 1$. Küçük Delta, Call'ın daha az tepki verdiği anlamına gelir.",
-      whyBad: "4$ × 0,25 = 1$. Daha küçük Delta = daha küçük tepki."
-    },
-    {
-      q: "6) Derin IN-THE-MONEY bir Call (hisse Strike'ın çok üzerinde) Delta'sı şuna yakındır...",
-      opts: [
-        "1,0'a yakın (neredeyse hisse gibi hareket eder)",
-        "0'a yakın",
-        "-1'e yakın"
-      ],
-      correct: 0,
-      whyGood: "Evet! Derin ITM Call ≈ 1. Neredeyse hisseye sahip olmak gibi davranır.",
-      whyBad: "Derin ITM = neredeyse kesin olarak In-the-money bitecek, bu yüzden Call'lar için Delta 1'e yakın."
-    },
-    {
-      q: "7) Uzak OUT-OF-THE-MONEY bir Call (hisse Strike'ın çok altında) Delta'sı şuna yakındır...",
-      opts: [
-        "0'a yakın (neredeyse hiç tepki yok)",
-        "1,0'a yakın",
-        "Her zaman 0,5'e yakın"
-      ],
-      correct: 0,
-      whyGood: "Doğru! Uzak OTM ≈ 0. Hisse biraz hareket eder, Call neredeyse hiç hareket etmez.",
-      whyBad: "Uzak OTM = ITM bitmesi çok düşük ihtimal, bu yüzden Delta 0'a yakın."
-    },
-    {
-      q: "8) Hisse fiyatı YUKARI gitmeye devam ederse, bir Call'ın Delta'sına ne olur?",
-      opts: [
-        "1,0'a doğru yükselir",
-        "0'a doğru düşer",
-        "Hiç değişmez"
-      ],
-      correct: 0,
-      whyGood: "Kesinlikle! Hisse yükseldikçe, Call daha fazla ITM olur, bu yüzden Delta 1'e doğru tırmanır. Delta'nın sonsuza kadar sabit olmamasının nedeni budur.",
-      whyBad: "YUKARI, 1,0'a doğru gider. Call daha fazla ITM hale geldikçe, hisse gibi daha fazla davranır."
-    }
-  ];
-
-  const body = document.getElementById('quizBody');
-  const progressBar = document.getElementById('quizProgressBar');
-  let idx = 0;
-  let score = 0;
-  let answered = false;
-
-  function render(){
-    const pct = (idx / QUESTIONS.length) * 100;
-    progressBar.style.width = pct + "%";
-    progressBar.parentElement.style.setProperty('--score-pct', pct+'%');
-
-    if(idx >= QUESTIONS.length){
-      showResult();
-      return;
-    }
-    const cur = QUESTIONS[idx];
-    answered = false;
-    body.innerHTML = `
-      <div class="q-meta">
-        <span>Question ${idx+1} of ${QUESTIONS.length}</span>
-        <span>Score: ${score}</span>
-      </div>
-      <h3 class="q-title">${cur.q}</h3>
-      <div class="q-options">
-        ${cur.opts.map((o,i)=>`<button class="q-opt" data-i="${i}">${o}</button>`).join('')}
-      </div>
-      <div id="qExplain" class="q-explain"></div>
-      <div class="quiz-actions">
-        <button id="nextBtn" class="btn btn-primary" style="display:none">Next →</button>
-      </div>
-    `;
-
-    body.querySelectorAll('.q-opt').forEach(btn=>{
-      btn.addEventListener('click', onPick);
-    });
-    document.getElementById('nextBtn').addEventListener('click', ()=>{
-      idx++; render();
-    });
-  }
-
-  function onPick(e){
-    if(answered) return;
-    answered = true;
-    const cur = QUESTIONS[idx];
-    const pick = Number(e.currentTarget.dataset.i);
-    const isCorrect = pick === cur.correct;
-    if(isCorrect) score++;
-
-    const opts = body.querySelectorAll('.q-opt');
-    opts.forEach((b,i)=>{
-      b.disabled = true;
-      if(i===cur.correct) b.classList.add('is-correct');
-      if(i===pick && !isCorrect) b.classList.add('is-wrong');
-    });
-
-    const ex = document.getElementById('qExplain');
-    ex.className = 'q-explain show ' + (isCorrect ? 'good' : 'bad');
-    ex.innerHTML = (isCorrect ? '✅ ' : '❌ ') + (isCorrect ? cur.whyGood : cur.whyBad);
-
-    const nextBtn = document.getElementById('nextBtn');
-    nextBtn.style.display = 'inline-block';
-    if(idx === QUESTIONS.length -1) nextBtn.textContent = 'See result →';
-
-    // update progress with partial
-    progressBar.style.width = ((idx+ (isCorrect?1:0.5)) / QUESTIONS.length *100) + '%';
-  }
-
-  function showResult(){
-    const pct = Math.round(score/QUESTIONS.length*100);
-    let msg = "";
-    if(pct===100) msg = "Perfect! You totally got the core idea: Call değişimi = Hisse değişimi × Delta.";
-    else if(pct>=75) msg = "Harika iş! Ana fikri anladınız. 0,25 ve 0,50 örneklerini pekiştirmek için kaydırıcıyı bir kez daha oynatın.";
-    else if(pct>=50) msg = "Güzel başlangıç! Unutmayın: Delta Call'lar için 0 ile 1 arasındadır ve hisse 1$ hareket ettiğinde Call'ın ne kadar hareket edeceğini söyler.";
-    else msg = "Yaklaşıyorsunuz. Anahtar basit: Delta 0,5 ise, Call hissenin yarısı kadar hareket eder. İnteraktifi tekrar sürükleyin, sonra tekrar deneyin.";
-
-    body.innerHTML = `
-      <div class="quiz-result">
-        <div class="score-ring" style="--score-pct:${pct}%"><span>${score}/${QUESTIONS.length}</span></div>
-        <h3>${pct===100?'🎉 Mükemmel!': pct>=75?'👏 Güçlü!': pct>=50?'💪 Devam':'🌱 İyi başlangıç'}</h3>
-        <p>${msg}<br><small style="color:var(--quiz-muted)">You learned: Delta 0→1, Formula: Call değişimi = Hisse değişimi × Delta, ITM ≈1, OTM ≈0, Delta rises when stock rises.</small></p>
-        <div style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap">
-          <button class="btn btn-primary" id="retryBtn">Tekrar dene</button>
-          <button class="btn btn-ghost" id="reviewBtn">Baştan gözden geçir</button>
-        </div>
-      </div>
-    `;
-    progressBar.style.width = '100%';
-    document.getElementById('retryBtn').addEventListener('click', ()=>{ idx=0; score=0; render(); });
-    document.getElementById('reviewBtn').addEventListener('click', ()=>{ idx=0; score=0; render(); window.scrollTo({top: document.getElementById('delta-beginner-quiz').offsetTop - 20, behavior:'smooth'}); });
-  }
-
-  render();
-})();
-</script>
-</section>
+<div class="quiz-q" data-name="q2">
+<p class="quiz-q-title">2. Derin ITM call deltası nereye yakındır?</p>
+<label class="quiz-opt"><input type="radio" name="q2" value="a"> 0</label>
+<label class="quiz-opt"><input type="radio" name="q2" value="b"> 0,15</label>
+<label class="quiz-opt"><input type="radio" name="q2" value="c"> 1</label>
+<label class="quiz-opt"><input type="radio" name="q2" value="d"> −1</label>
+<p class="quiz-explain" hidden></p>
+</div>
+<div class="quiz-q" data-name="q3">
+<p class="quiz-q-title">3. Uzak OTM call deltası nereye yakındır?</p>
+<label class="quiz-opt"><input type="radio" name="q3" value="a"> 1</label>
+<label class="quiz-opt"><input type="radio" name="q3" value="b"> 0</label>
+<label class="quiz-opt"><input type="radio" name="q3" value="c"> 0,80</label>
+<label class="quiz-opt"><input type="radio" name="q3" value="d"> 2</label>
+<p class="quiz-explain" hidden></p>
+</div>
+<div class="quiz-q" data-name="q4">
+<p class="quiz-q-title">4. Hisse yükselirken call deltası genelde:</p>
+<label class="quiz-opt"><input type="radio" name="q4" value="a"> 0’a düşer</label>
+<label class="quiz-opt"><input type="radio" name="q4" value="b"> Sonsuza dek sabit kalır</label>
+<label class="quiz-opt"><input type="radio" name="q4" value="c"> 1’e doğru yükselir</label>
+<label class="quiz-opt"><input type="radio" name="q4" value="d"> Negatif olur</label>
+<p class="quiz-explain" hidden></p>
+</div>
+<button type="submit" class="btn quiz-submit">Cevapları kontrol et</button>
+</form>
+<div class="quiz-result" id="quizResult" hidden>
+<div class="quiz-score" id="quizScore"></div>
+<p id="quizScoreMsg" data-quiz-msg></p>
+<button type="button" class="btn btn-secondary" id="quizRetry" data-quiz-retry>Tekrar dene</button>
+</div></div></section>
+<script type="application/json" id="quizAnswers">{"q1": {"correct": "b", "explain": "Call değişimi ≈ hisse değişimi × delta. $1 × 0,40 = $0,40 (~sözleşme başı $40)."}, "q2": {"correct": "c", "explain": "ITM call hisseye benzer; delta 1’e yaklaşır."}, "q3": {"correct": "b", "explain": "OTM call, hisse yaklaşmadan neredeyse kıpırdamaz."}, "q4": {"correct": "c", "explain": "Delta sabit değildir. Yükseliş call deltasını artırır."}}</script>
+<script>window.JSM_QUIZ_MSGS = {"perfect": "Tam puan.", "good": "İyi iş. Notlara bakın.", "retry": "Açıklamaları okuyup tekrar deneyin."};</script>
 <!---- END QUIZ ---->
 
 

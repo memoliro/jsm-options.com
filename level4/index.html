@@ -1038,7 +1038,52 @@ html[data-theme="light"] #otp-playbook .otp-ico.vi{color:#6d28d9}
     <p>Lessons and the Builder stay free. If they help, you can buy a coffee.</p>
     <a class="bmc-link" href="https://www.buymeacoffee.com/memoliro" target="_blank" rel="noopener">☕ Buy me a coffee</a>
   </div>
-</div><footer class="site-footer">
+</div><section class="quiz-section" id="page-quiz">
+<div class="section-head"><div class="eyebrow">Quick check</div><h2>Advanced quiz</h2><p>IV, multi-leg structures, and risk that is not just “stock go up.”</p></div>
+<div class="quiz-card">
+<form id="quizForm" class="quiz-form" data-lang="en" novalidate>
+<div class="quiz-q" data-name="q1">
+<p class="quiz-q-title">1. Implied volatility being “high” usually means options are:</p>
+<label class="quiz-opt"><input type="radio" name="q1" value="a"> Cheaper than usual</label>
+<label class="quiz-opt"><input type="radio" name="q1" value="b"> Priced for larger expected moves</label>
+<label class="quiz-opt"><input type="radio" name="q1" value="c"> Guaranteed to profit</label>
+<label class="quiz-opt"><input type="radio" name="q1" value="d"> Immune to time decay</label>
+<p class="quiz-explain" hidden></p>
+</div>
+<div class="quiz-q" data-name="q2">
+<p class="quiz-q-title">2. After earnings, IV often falls. That “crush” hurts:</p>
+<label class="quiz-opt"><input type="radio" name="q2" value="a"> Long premium positions bought before the event</label>
+<label class="quiz-opt"><input type="radio" name="q2" value="b"> Only stock holders</label>
+<label class="quiz-opt"><input type="radio" name="q2" value="c"> Cash in your account</label>
+<label class="quiz-opt"><input type="radio" name="q2" value="d"> Covered calls equally with long puts</label>
+<p class="quiz-explain" hidden></p>
+</div>
+<div class="quiz-q" data-name="q3">
+<p class="quiz-q-title">3. An iron condor is built for which outlook?</p>
+<label class="quiz-opt"><input type="radio" name="q3" value="a"> A huge one-way trend</label>
+<label class="quiz-opt"><input type="radio" name="q3" value="b"> A stock staying in a range</label>
+<label class="quiz-opt"><input type="radio" name="q3" value="c"> Bankruptcy of the company</label>
+<label class="quiz-opt"><input type="radio" name="q3" value="d"> A stock split</label>
+<p class="quiz-explain" hidden></p>
+</div>
+<div class="quiz-q" data-name="q4">
+<p class="quiz-q-title">4. Defined-risk multi-leg trades still fail when:</p>
+<label class="quiz-opt"><input type="radio" name="q4" value="a"> You pick strikes that the stock slices through</label>
+<label class="quiz-opt"><input type="radio" name="q4" value="b"> You use a limit order</label>
+<label class="quiz-opt"><input type="radio" name="q4" value="c"> You size small</label>
+<label class="quiz-opt"><input type="radio" name="q4" value="d"> You check the Builder first</label>
+<p class="quiz-explain" hidden></p>
+</div>
+<button type="submit" class="btn quiz-submit">Check my answers</button>
+</form>
+<div class="quiz-result" id="quizResult" hidden>
+<div class="quiz-score" id="quizScore"></div>
+<p id="quizScoreMsg" data-quiz-msg></p>
+<button type="button" class="btn btn-secondary" id="quizRetry" data-quiz-retry>Retake the quiz</button>
+</div></div></section>
+<script type="application/json" id="quizAnswers">{"q1": {"correct": "b", "explain": "High IV inflates premiums because the market is pricing bigger swings."}, "q2": {"correct": "a", "explain": "If you paid a rich premium for a big move and IV collapses, the option can drop even if the stock moves a little."}, "q3": {"correct": "b", "explain": "Short a call spread and a put spread. You want price to stay between the short strikes."}, "q4": {"correct": "a", "explain": "Defined risk is not “cannot lose.” It only caps how much. Direction and range still have to be right."}}</script>
+<script>window.JSM_QUIZ_MSGS = {"perfect": "Advanced ideas are sticking.", "good": "Strong. Revisit IV crush if that question missed.", "retry": "Advanced pages stack concepts. One idea at a time, then retry."};</script>
+<footer class="site-footer">
   <div class="footer-note">Educational only — not financial advice. Options involve risk of loss.</div>
   <div class="footer-links">
     <a href="/">Home</a>
@@ -1111,5 +1156,6 @@ html[data-theme="light"] #otp-playbook .otp-ico.vi{color:#6d28d9}
 
 
 
+<script src="/assets/quiz.js?v=20260923" defer></script>
 </body>
 </html>

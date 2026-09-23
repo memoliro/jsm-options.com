@@ -392,76 +392,67 @@ Bir kontrat = 100 hisse; builder 4.70$’ı 470$ debit olarak işler. Spread ça
 </div>
 </section>
 
-<section class="home-section quiz-section" id="beginner-quiz">
-<div class="section-head"><div><div class="eyebrow">Hızlı kontrol</div><h2>Bilginizi Test Edin</h2><p>Az önce okuduklarınızı kapsayan altı başlangıç sorusu. Hesap gerekmez — ne kadarının aklınızda kaldığını görün.</p></div></div>
+<section class="quiz-section" id="page-quiz">
+<div class="section-head"><div class="eyebrow">Hızlı kontrol</div><h2>Bilginizi Test Edin</h2><p>Az önce okuduklarınızı kapsayan altı başlangıç sorusu. Hesap gerekmez.</p></div>
 <div class="quiz-card">
-<form id="quizForm" novalidate>
-
+<form id="quizForm" class="quiz-form" data-lang="tr" novalidate>
 <div class="quiz-q" data-name="q1">
-<p class="quiz-q-title">1. Bir opsiyon satın aldığınızda aslında ne satın almış olursunuz?</p>
-<label class="quiz-opt"><input type="radio" name="q1" value="a"> Dayanak şirketin hisselerini</label>
+<p class="quiz-q-title">1. Bir opsiyon aldığınızda aslında ne satın alırsınız?</p>
+<label class="quiz-opt"><input type="radio" name="q1" value="a"> Dayanak şirketin hisseleri</label>
 <label class="quiz-opt"><input type="radio" name="q1" value="b"> Size belirli haklar veren bir sözleşme</label>
-<label class="quiz-opt"><input type="radio" name="q1" value="c"> Aracı kurumdan bir kredi</label>
-<label class="quiz-opt"><input type="radio" name="q1" value="d"> Garantili bir kâr</label>
+<label class="quiz-opt"><input type="radio" name="q1" value="c"> Aracı kurumdan kredi</label>
+<label class="quiz-opt"><input type="radio" name="q1" value="d"> Garanti kâr</label>
 <p class="quiz-explain" hidden></p>
 </div>
-
 <div class="quiz-q" data-name="q2">
-<p class="quiz-q-title">2. Bir call opsiyonu alıcıya hangi hakkı verir?</p>
-<label class="quiz-opt"><input type="radio" name="q2" value="a"> Hisseyi strike fiyatından satma</label>
-<label class="quiz-opt"><input type="radio" name="q2" value="b"> Hisseyi strike fiyatından alma</label>
-<label class="quiz-opt"><input type="radio" name="q2" value="c"> Sözleşmeyi iptal edip para iadesi alma</label>
-<label class="quiz-opt"><input type="radio" name="q2" value="d"> Şirketin temettülerini alma</label>
+<p class="quiz-q-title">2. Alım (call) opsiyonu alıcıya ne hakkı verir?</p>
+<label class="quiz-opt"><input type="radio" name="q2" value="a"> Hisseyi kullanım fiyatından satma</label>
+<label class="quiz-opt"><input type="radio" name="q2" value="b"> Hisseyi kullanım fiyatından alma</label>
+<label class="quiz-opt"><input type="radio" name="q2" value="c"> Sözleşmeyi iade etme</label>
+<label class="quiz-opt"><input type="radio" name="q2" value="d"> Temettü alma</label>
 <p class="quiz-explain" hidden></p>
 </div>
-
 <div class="quiz-q" data-name="q3">
-<p class="quiz-q-title">3. Bir put opsiyonu alıcıya hangi hakkı verir?</p>
-<label class="quiz-opt"><input type="radio" name="q3" value="a"> Hisseyi strike fiyatından alma</label>
-<label class="quiz-opt"><input type="radio" name="q3" value="b"> Hisseyi strike fiyatından satma</label>
+<p class="quiz-q-title">3. Satım (put) opsiyonu alıcıya ne hakkı verir?</p>
+<label class="quiz-opt"><input type="radio" name="q3" value="a"> Hisseyi kullanım fiyatından alma</label>
+<label class="quiz-opt"><input type="radio" name="q3" value="b"> Hisseyi kullanım fiyatından satma</label>
 <label class="quiz-opt"><input type="radio" name="q3" value="c"> Satıcıdan hisse ödünç alma</label>
-<label class="quiz-opt"><input type="radio" name="q3" value="d"> Vade tarihini uzatma</label>
+<label class="quiz-opt"><input type="radio" name="q3" value="d"> Vadayi uzatma</label>
 <p class="quiz-explain" hidden></p>
 </div>
-
 <div class="quiz-q" data-name="q4">
-<p class="quiz-q-title">4. "Strike fiyatı (strike price)" nedir?</p>
+<p class="quiz-q-title">4. "Kullanım fiyatı" (strike) nedir?</p>
 <label class="quiz-opt"><input type="radio" name="q4" value="a"> Hissenin güncel piyasa fiyatı</label>
-<label class="quiz-opt"><input type="radio" name="q4" value="b"> Aracı kurumun aldığı komisyon</label>
-<label class="quiz-opt"><input type="radio" name="q4" value="c"> Dayanak varlığın alınıp satılacağı, sözleşmede belirlenen fiyat</label>
-<label class="quiz-opt"><input type="radio" name="q4" value="d"> İşlemde izin verilen maksimum zarar</label>
+<label class="quiz-opt"><input type="radio" name="q4" value="b"> Komisyon</label>
+<label class="quiz-opt"><input type="radio" name="q4" value="c"> Sözleşmede yazılan alım/satım fiyatı</label>
+<label class="quiz-opt"><input type="radio" name="q4" value="d"> İzin verilen en yüksek zarar</label>
 <p class="quiz-explain" hidden></p>
 </div>
-
 <div class="quiz-q" data-name="q5">
-<p class="quiz-q-title">5. Bir sözleşme 100 hisseyi temsil ediyor ve prim 15$. Komisyon hariç bir sözleşme kaça mal olur?</p>
-<label class="quiz-opt"><input type="radio" name="q5" value="a"> 15$</label>
-<label class="quiz-opt"><input type="radio" name="q5" value="b"> 150$</label>
-<label class="quiz-opt"><input type="radio" name="q5" value="c"> 1.500$</label>
-<label class="quiz-opt"><input type="radio" name="q5" value="d"> 15.000$</label>
+<p class="quiz-q-title">5. Sözleşme 100 hisse, prim $15. Bir sözleşmenin ücreti (komisyon hariç) nedir?</p>
+<label class="quiz-opt"><input type="radio" name="q5" value="a"> $15</label>
+<label class="quiz-opt"><input type="radio" name="q5" value="b"> $150</label>
+<label class="quiz-opt"><input type="radio" name="q5" value="c"> $1.500</label>
+<label class="quiz-opt"><input type="radio" name="q5" value="d"> $15.000</label>
 <p class="quiz-explain" hidden></p>
 </div>
-
 <div class="quiz-q" data-name="q6">
-<p class="quiz-q-title">6. Bir opsiyon sözleşmesinde hak yerine yükümlülük üstlenen taraf kimdir?</p>
+<p class="quiz-q-title">6. Opsiyon sözleşmesinde hak yerine yükümlülük kimdedir?</p>
 <label class="quiz-opt"><input type="radio" name="q6" value="a"> Alıcı</label>
 <label class="quiz-opt"><input type="radio" name="q6" value="b"> Satıcı</label>
-<label class="quiz-opt"><input type="radio" name="q6" value="c"> Her iki taraf da eşit şekilde</label>
+<label class="quiz-opt"><input type="radio" name="q6" value="c"> İki taraf eşit</label>
 <label class="quiz-opt"><input type="radio" name="q6" value="d"> Hiçbiri</label>
 <p class="quiz-explain" hidden></p>
 </div>
-
-<button type="submit" class="btn-primary quiz-submit">Cevaplarımı kontrol et</button>
+<button type="submit" class="btn quiz-submit">Cevapları kontrol et</button>
 </form>
-
 <div class="quiz-result" id="quizResult" hidden>
 <div class="quiz-score" id="quizScore"></div>
-<p id="quizScoreMsg"></p>
-<button type="button" class="btn-secondary" id="quizRetry">Testi tekrar çöz</button>
-</div>
-
-</div>
-</section>
+<p id="quizScoreMsg" data-quiz-msg></p>
+<button type="button" class="btn btn-secondary" id="quizRetry" data-quiz-retry>Testi tekrar çöz</button>
+</div></div></section>
+<script type="application/json" id="quizAnswers">{"q1": {"correct": "b", "explain": "Opsiyon hisse değil, dayanak varlığa bağlı haklar veren bir finansal sözleşmedir."}, "q2": {"correct": "b", "explain": "Call, dayanak hisseyi kullanım fiyatından alma hakkıdır."}, "q3": {"correct": "b", "explain": "Put, dayanak hisseyi kullanım fiyatından satma hakkıdır."}, "q4": {"correct": "c", "explain": "Strike, sözleşmede dayanağın alınacağı veya satılacağı fiyattır."}, "q5": {"correct": "c", "explain": "Prim hisse başına kotlanır: $15 × 100 = $1.500."}, "q6": {"correct": "b", "explain": "Alıcı prim ödeyerek hak alır. Satıcı primi alır ve yükümlülük üstlenir."}}</script>
+<script>window.JSM_QUIZ_MSGS = {"perfect": "Tam puan — temeller oturmuş.", "good": "İyi iş. Yukarıdaki açıklamalara bakın, sonra Temeller’e geçin.", "retry": "Sorun değil. Sayfayı bir kez daha okuyup tekrar deneyin."};</script>
 
 <section class="home-section" id="terimler">
 <div class="card">
@@ -558,82 +549,5 @@ Bir kontrat = 100 hisse; builder 4.70$’ı 470$ debit olarak işler. Spread ça
   }
 })();
 </script>
-<script>
-(function(){
-  var ANSWERS = {
-    q1: { correct: 'b', explain: 'Bir opsiyon, hisse sahipliği değil finansal bir sözleşmedir — alıcıya bir dayanak varlıkla ilgili belirli haklar verir.' },
-    q2: { correct: 'b', explain: 'Bir call opsiyonu, alıcısına hisseyi strike fiyatından alma hakkı verir.' },
-    q3: { correct: 'b', explain: 'Bir put opsiyonu, alıcısına hisseyi strike fiyatından satma hakkı verir.' },
-    q4: { correct: 'c', explain: 'strike fiyatı, dayanak varlığın alınıp satılacağı, sözleşmeye yazılan fiyattır.' },
-    q5: { correct: 'c', explain: 'Prim hisse başına belirtilir ve standart bir sözleşme 100 hisseyi kapsar: 15$ × 100 = komisyonlar hariç 1.500$.' },
-    q6: { correct: 'b', explain: 'Alıcı bir hak için prim öder. Satıcı ise bu primi alır ve karşılığında bir yükümlülük üstlenir.' }
-  };
-
-  function init(){
-    var form = document.getElementById('quizForm');
-    if (!form) return;
-    var result = document.getElementById('quizResult');
-    var scoreEl = document.getElementById('quizScore');
-    var msgEl = document.getElementById('quizScoreMsg');
-    var retryBtn = document.getElementById('quizRetry');
-    var submitBtn = form.querySelector('.quiz-submit');
-
-    form.addEventListener('submit', function (e) {
-      e.preventDefault();
-      var names = Object.keys(ANSWERS);
-      var correctCount = 0;
-
-      names.forEach(function (name) {
-        var qWrap = form.querySelector('[data-name="' + name + '"]');
-        if (!qWrap) return;
-        var checked = form.querySelector('input[name="' + name + '"]:checked');
-        var explainEl = qWrap.querySelector('.quiz-explain');
-        var isCorrect = !!checked && checked.value === ANSWERS[name].correct;
-
-        qWrap.classList.remove('is-correct', 'is-incorrect');
-        qWrap.classList.add(isCorrect ? 'is-correct' : 'is-incorrect');
-        if (isCorrect) correctCount++;
-
-        if (explainEl) {
-          var prefix = isCorrect ? 'Doğru — ' : (checked ? 'Yanlış — ' : 'Boş bırakıldı — ');
-          explainEl.textContent = prefix + ANSWERS[name].explain;
-          explainEl.hidden = false;
-        }
-
-        Array.prototype.forEach.call(form.querySelectorAll('input[name="' + name + '"]'), function (input) {
-          input.disabled = true;
-        });
-      });
-
-      var total = names.length;
-      var pct = Math.round((correctCount / total) * 100);
-      scoreEl.textContent = correctCount + ' / ' + total + ' (%' + pct + ')';
-      msgEl.textContent = pct === 100
-        ? 'Mükemmel skor — temelleri gayet iyi kavramışsınız.'
-        : (pct >= 67
-          ? 'Gayet iyi. Yukarıdaki açıklamaları gözden geçirin, hazır olduğunuzda Temeller bölümüne geçebilirsiniz.'
-          : "Sorun değil — opsiyonlar birkaç okumayı gerektirebilir. Yukarıdaki 'Opsiyon Nedir?' bölümünü tekrar okuyup yeniden deneyin.");
-
-      result.hidden = false;
-      if (submitBtn) submitBtn.hidden = true;
-      result.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-    });
-
-    if (retryBtn) {
-      retryBtn.addEventListener('click', function () {
-        form.reset();
-        Array.prototype.forEach.call(form.querySelectorAll('input'), function (input) { input.disabled = false; });
-        Array.prototype.forEach.call(form.querySelectorAll('.quiz-q'), function (q) { q.classList.remove('is-correct', 'is-incorrect'); });
-        Array.prototype.forEach.call(form.querySelectorAll('.quiz-explain'), function (el) { el.hidden = true; });
-        result.hidden = true;
-        if (submitBtn) submitBtn.hidden = false;
-        form.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-      });
-    }
-  }
-
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
-  else init();
-})();
-</script>
+<script src="/assets/quiz.js?v=20260923" defer></script>
 </body></html>

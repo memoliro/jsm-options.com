@@ -338,7 +338,52 @@
     </div>
     <div class="practice-prompt"><b>Practice:</b> Open <a href="/builder/?template=bear_put_spread">bear put spread</a> and <a href="/builder/?template=iron_condor">iron condor</a>. Drag price into the max-profit zone, then outside a wing — confirm max loss is capped.</div>
   </div>
-</div><footer class="site-footer">
+</div><section class="quiz-section" id="page-quiz">
+<div class="section-head"><div class="eyebrow">Quick check</div><h2>Spreads quiz</h2><p>Defined-risk verticals and why you combine two options.</p></div>
+<div class="quiz-card">
+<form id="quizForm" class="quiz-form" data-lang="en" novalidate>
+<div class="quiz-q" data-name="q1">
+<p class="quiz-q-title">1. A vertical spread uses two options that share:</p>
+<label class="quiz-opt"><input type="radio" name="q1" value="a"> The same strike, different underlyings</label>
+<label class="quiz-opt"><input type="radio" name="q1" value="b"> The same expiration, different strikes</label>
+<label class="quiz-opt"><input type="radio" name="q1" value="c"> No expiration</label>
+<label class="quiz-opt"><input type="radio" name="q1" value="d"> Only puts on two stocks</label>
+<p class="quiz-explain" hidden></p>
+</div>
+<div class="quiz-q" data-name="q2">
+<p class="quiz-q-title">2. Why add a short option to a long option?</p>
+<label class="quiz-opt"><input type="radio" name="q2" value="a"> To make risk unlimited</label>
+<label class="quiz-opt"><input type="radio" name="q2" value="b"> To lower cost and cap both gain and loss</label>
+<label class="quiz-opt"><input type="radio" name="q2" value="c"> To remove expiration</label>
+<label class="quiz-opt"><input type="radio" name="q2" value="d"> To collect dividends twice</label>
+<p class="quiz-explain" hidden></p>
+</div>
+<div class="quiz-q" data-name="q3">
+<p class="quiz-q-title">3. Max loss on a debit call spread is about:</p>
+<label class="quiz-opt"><input type="radio" name="q3" value="a"> Unlimited</label>
+<label class="quiz-opt"><input type="radio" name="q3" value="b"> The net debit paid</label>
+<label class="quiz-opt"><input type="radio" name="q3" value="c"> The higher strike × 100</label>
+<label class="quiz-opt"><input type="radio" name="q3" value="d"> Zero if you hold to expiry</label>
+<p class="quiz-explain" hidden></p>
+</div>
+<div class="quiz-q" data-name="q4">
+<p class="quiz-q-title">4. A credit put spread (bull put) profits most if the stock:</p>
+<label class="quiz-opt"><input type="radio" name="q4" value="a"> Crashes through both strikes</label>
+<label class="quiz-opt"><input type="radio" name="q4" value="b"> Stays above the short put strike</label>
+<label class="quiz-opt"><input type="radio" name="q4" value="c"> Goes to zero</label>
+<label class="quiz-opt"><input type="radio" name="q4" value="d"> Pays a special dividend</label>
+<p class="quiz-explain" hidden></p>
+</div>
+<button type="submit" class="btn quiz-submit">Check my answers</button>
+</form>
+<div class="quiz-result" id="quizResult" hidden>
+<div class="quiz-score" id="quizScore"></div>
+<p id="quizScoreMsg" data-quiz-msg></p>
+<button type="button" class="btn btn-secondary" id="quizRetry" data-quiz-retry>Retake the quiz</button>
+</div></div></section>
+<script type="application/json" id="quizAnswers">{"q1": {"correct": "b", "explain": "A vertical is same class and expiry, different strikes — one long, one short."}, "q2": {"correct": "b", "explain": "The short leg finances part of the long leg. Risk and reward both become defined."}, "q3": {"correct": "b", "explain": "You already paid the net debit. That is the most the structure can lose (plus fees)."}, "q4": {"correct": "b", "explain": "You sold the higher-probability put. You want the stock to stay above that short strike."}}</script>
+<script>window.JSM_QUIZ_MSGS = {"perfect": "Spreads clicked. Next stop: defined-risk multi-leg ideas.", "good": "You have the shape. Review max gain vs max loss on a debit spread.", "retry": "Draw one bull call spread on paper, then retry."};</script>
+<footer class="site-footer">
   <div class="footer-note">Educational only — not financial advice. Options involve risk of loss.</div>
   <div class="footer-links">
     <a href="/">Home</a>
@@ -410,5 +455,6 @@
 
 
 
+<script src="/assets/quiz.js?v=20260923" defer></script>
 </body>
 </html>

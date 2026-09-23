@@ -851,6 +851,51 @@
   </div>
 </div>
 
+<section class="quiz-section" id="page-quiz">
+<div class="section-head"><div class="eyebrow">Hızlı kontrol</div><h2>Temeller testi</h2><p>Uzun call, uzun put, covered call ve Yunanlar.</p></div>
+<div class="quiz-card">
+<form id="quizForm" class="quiz-form" data-lang="tr" novalidate>
+<div class="quiz-q" data-name="q1">
+<p class="quiz-q-title">1. Uzun call’da (komisyon hariç) en fazla zarar:</p>
+<label class="quiz-opt"><input type="radio" name="q1" value="a"> Sınırsızdır</label>
+<label class="quiz-opt"><input type="radio" name="q1" value="b"> Strike × 100’dür</label>
+<label class="quiz-opt"><input type="radio" name="q1" value="c"> Ödediğiniz primdir</label>
+<label class="quiz-opt"><input type="radio" name="q1" value="d"> Hisse fiyatıdır</label>
+<p class="quiz-explain" hidden></p>
+</div>
+<div class="quiz-q" data-name="q2">
+<p class="quiz-q-title">2. Covered call demek:</p>
+<label class="quiz-opt"><input type="radio" name="q2" value="a"> Hisse short + call long</label>
+<label class="quiz-opt"><input type="radio" name="q2" value="b"> Sahip olduğunuz hisseye karşı call satmak</label>
+<label class="quiz-opt"><input type="radio" name="q2" value="c"> Hissesiz çıplak call satmak</label>
+<label class="quiz-opt"><input type="radio" name="q2" value="d"> Her 100 hisse için iki call almak</label>
+<p class="quiz-explain" hidden></p>
+</div>
+<div class="quiz-q" data-name="q3">
+<p class="quiz-q-title">3. Uzun call deltası genelde:</p>
+<label class="quiz-opt"><input type="radio" name="q3" value="a"> Hep 1,00</label>
+<label class="quiz-opt"><input type="radio" name="q3" value="b"> 0 ile 1 arasındadır, ITM olunca yükselir</label>
+<label class="quiz-opt"><input type="radio" name="q3" value="c"> Hep negatiftir</label>
+<label class="quiz-opt"><input type="radio" name="q3" value="d"> Theta ile aynıdır</label>
+<p class="quiz-explain" hidden></p>
+</div>
+<div class="quiz-q" data-name="q4">
+<p class="quiz-q-title">4. Zaman aşımı (theta) genelde:</p>
+<label class="quiz-opt"><input type="radio" name="q4" value="a"> Uzun opsiyonlara her gün yardım eder</label>
+<label class="quiz-opt"><input type="radio" name="q4" value="b"> Vade yaklaşırken uzun opsiyonun aleyhine işler</label>
+<label class="quiz-opt"><input type="radio" name="q4" value="c"> Yalnızca hisse sahibini etkiler</label>
+<label class="quiz-opt"><input type="radio" name="q4" value="d"> IV yüksekse durur</label>
+<p class="quiz-explain" hidden></p>
+</div>
+<button type="submit" class="btn quiz-submit">Cevapları kontrol et</button>
+</form>
+<div class="quiz-result" id="quizResult" hidden>
+<div class="quiz-score" id="quizScore"></div>
+<p id="quizScoreMsg" data-quiz-msg></p>
+<button type="button" class="btn btn-secondary" id="quizRetry" data-quiz-retry>Tekrar dene</button>
+</div></div></section>
+<script type="application/json" id="quizAnswers">{"q1": {"correct": "c", "explain": "Uzun opsiyonda zarar prim + komisyonla sınırlıdır."}, "q2": {"correct": "b", "explain": "Covered = uzun hisse + kısa call. Prim gelir; strike üstü yükseliş kesilir."}, "q3": {"correct": "b", "explain": "Call deltası 0–1 aralığındadır. ITM → 1’e, OTM → 0’a yaklaşır."}, "q4": {"correct": "b", "explain": "Dışsal değer erir. Uzun opsiyon saate karşıdır."}}</script>
+<script>window.JSM_QUIZ_MSGS = {"perfect": "Clean sweep — Fundamentals are landing.", "good": "Close. Use the notes above, then open one example in the Builder.", "retry": "These pages are dense. Skim the payoff tables once more."};</script>
 <footer class="site-footer">
   <div class="footer-note">Educational only — not financial advice. Options involve risk of loss.</div>
   <div class="footer-links">
@@ -925,5 +970,6 @@
 
 
 
+<script src="/assets/quiz.js?v=20260923" defer></script>
 </body>
 </html>

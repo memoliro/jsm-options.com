@@ -136,5 +136,43 @@
 
     <p class="disclaimer"><strong>Yalnızca eğitim amaçlıdır:</strong> Yatırım tavsiyesi değildir. Wheel, düşüşlerde yine zarar ettirebilir. Hem opsiyonlar hem hisse sahipliği risk içerir. JSM Options bir aracı kurum değildir ve hiçbir aracı kurumla bağlı değildir.</p>
   </article>
+<section class="quiz-section" id="page-quiz">
+<div class="section-head"><div class="eyebrow">Hızlı kontrol</div><h2>Wheel testi</h2><p>Atanana kadar CSP, sonra covered call, sonra tekrar.</p></div>
+<div class="quiz-card">
+<form id="quizForm" class="quiz-form" data-lang="tr" novalidate>
+<div class="quiz-q" data-name="q1">
+<p class="quiz-q-title">1. Wheel genelde neyle başlar?</p>
+<label class="quiz-opt"><input type="radio" name="q1" value="a"> Uzak OTM call almak</label>
+<label class="quiz-opt"><input type="radio" name="q1" value="b"> Nakit teminatlı put satmak</label>
+<label class="quiz-opt"><input type="radio" name="q1" value="c"> Hisse short</label>
+<label class="quiz-opt"><input type="radio" name="q1" value="d"> Iron condor</label>
+<p class="quiz-explain" hidden></p>
+</div>
+<div class="quiz-q" data-name="q2">
+<p class="quiz-q-title">2. Atamadan sonra tipik adım:</p>
+<label class="quiz-opt"><input type="radio" name="q2" value="a"> Hisseyi her fiyattan atmak</label>
+<label class="quiz-opt"><input type="radio" name="q2" value="b"> Hisseye karşı covered call satmak</label>
+<label class="quiz-opt"><input type="radio" name="q2" value="c"> Nakitsiz çıplak put satmak</label>
+<label class="quiz-opt"><input type="radio" name="q2" value="d"> Pozisyonu unutmak</label>
+<p class="quiz-explain" hidden></p>
+</div>
+<div class="quiz-q" data-name="q3">
+<p class="quiz-q-title">3. Wheel yine zarar eder çünkü:</p>
+<label class="quiz-opt"><input type="radio" name="q3" value="a"> İstediğiniz hissede prim toplarsınız</label>
+<label class="quiz-opt"><input type="radio" name="q3" value="b"> Hisse put strike’ının çok altına iner ve orada kalır</label>
+<label class="quiz-opt"><input type="radio" name="q3" value="c"> Atamadan sonra call’lar değersiz biter</label>
+<label class="quiz-opt"><input type="radio" name="q3" value="d"> Küçük lot kullanırsınız</label>
+<p class="quiz-explain" hidden></p>
+</div>
+<button type="submit" class="btn quiz-submit">Cevapları kontrol et</button>
+</form>
+<div class="quiz-result" id="quizResult" hidden>
+<div class="quiz-score" id="quizScore"></div>
+<p id="quizScoreMsg" data-quiz-msg></p>
+<button type="button" class="btn btn-secondary" id="quizRetry" data-quiz-retry>Tekrar dene</button>
+</div></div></section>
+<script type="application/json" id="quizAnswers">{"q1": {"correct": "b", "explain": "Put primi toplanır; hisse gelince ikinci sahneye geçilir."}, "q2": {"correct": "b", "explain": "Wheel’in ikinci yarısı: hisse dururken call primi."}, "q3": {"correct": "b", "explain": "Prim, zorla alınan hissede büyük düşüşü silmez."}}</script>
+<script>window.JSM_QUIZ_MSGS = {"perfect": "Tam puan.", "good": "İyi iş. Notlara bakın.", "retry": "Açıklamaları okuyup tekrar deneyin."};</script>
+<script src="/assets/quiz.js?v=20260923" defer></script>
 </body>
 </html>
