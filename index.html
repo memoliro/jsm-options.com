@@ -421,11 +421,10 @@ One contract = 100 shares, so the builder treats $4.70 as $470 of debit. Add a s
 </div>
 </section>
 
-<section class="home-section quiz-section" id="beginner-quiz">
-<div class="section-head"><div><div class="eyebrow">Quick check</div><h2>Test Your Knowledge</h2><p>Six beginner questions covering what you just read. No account needed — see how much stuck.</p></div></div>
+<section class="quiz-section" id="page-quiz">
+<div class="section-head"><div class="eyebrow">Quick check</div><h2>Test Your Knowledge</h2><p>Six beginner questions covering what you just read. No account needed.</p></div>
 <div class="quiz-card">
-<form id="quizForm" novalidate>
-
+<form id="quizForm" class="quiz-form" data-lang="en" novalidate>
 <div class="quiz-q" data-name="q1">
 <p class="quiz-q-title">1. When you buy an option, what are you actually buying?</p>
 <label class="quiz-opt"><input type="radio" name="q1" value="a"> Shares of the underlying company</label>
@@ -434,7 +433,6 @@ One contract = 100 shares, so the builder treats $4.70 as $470 of debit. Add a s
 <label class="quiz-opt"><input type="radio" name="q1" value="d"> A guaranteed profit</label>
 <p class="quiz-explain" hidden></p>
 </div>
-
 <div class="quiz-q" data-name="q2">
 <p class="quiz-q-title">2. A call option gives the buyer the right to:</p>
 <label class="quiz-opt"><input type="radio" name="q2" value="a"> Sell the stock at the strike price</label>
@@ -443,7 +441,6 @@ One contract = 100 shares, so the builder treats $4.70 as $470 of debit. Add a s
 <label class="quiz-opt"><input type="radio" name="q2" value="d"> Receive the company's dividends</label>
 <p class="quiz-explain" hidden></p>
 </div>
-
 <div class="quiz-q" data-name="q3">
 <p class="quiz-q-title">3. A put option gives the buyer the right to:</p>
 <label class="quiz-opt"><input type="radio" name="q3" value="a"> Buy the stock at the strike price</label>
@@ -452,7 +449,6 @@ One contract = 100 shares, so the builder treats $4.70 as $470 of debit. Add a s
 <label class="quiz-opt"><input type="radio" name="q3" value="d"> Extend the expiration date</label>
 <p class="quiz-explain" hidden></p>
 </div>
-
 <div class="quiz-q" data-name="q4">
 <p class="quiz-q-title">4. What is the "strike price"?</p>
 <label class="quiz-opt"><input type="radio" name="q4" value="a"> The current market price of the stock</label>
@@ -461,7 +457,6 @@ One contract = 100 shares, so the builder treats $4.70 as $470 of debit. Add a s
 <label class="quiz-opt"><input type="radio" name="q4" value="d"> The maximum loss allowed on the trade</label>
 <p class="quiz-explain" hidden></p>
 </div>
-
 <div class="quiz-q" data-name="q5">
 <p class="quiz-q-title">5. A contract represents 100 shares and the premium is $15. What does one contract cost, before fees?</p>
 <label class="quiz-opt"><input type="radio" name="q5" value="a"> $15</label>
@@ -470,7 +465,6 @@ One contract = 100 shares, so the builder treats $4.70 as $470 of debit. Add a s
 <label class="quiz-opt"><input type="radio" name="q5" value="d"> $15,000</label>
 <p class="quiz-explain" hidden></p>
 </div>
-
 <div class="quiz-q" data-name="q6">
 <p class="quiz-q-title">6. In an option contract, who takes on an obligation instead of a right?</p>
 <label class="quiz-opt"><input type="radio" name="q6" value="a"> The buyer</label>
@@ -479,18 +473,15 @@ One contract = 100 shares, so the builder treats $4.70 as $470 of debit. Add a s
 <label class="quiz-opt"><input type="radio" name="q6" value="d"> Neither side</label>
 <p class="quiz-explain" hidden></p>
 </div>
-
-<button type="submit" class="btn-primary quiz-submit">Check my answers</button>
+<button type="submit" class="btn quiz-submit">Check my answers</button>
 </form>
-
 <div class="quiz-result" id="quizResult" hidden>
 <div class="quiz-score" id="quizScore"></div>
-<p id="quizScoreMsg"></p>
-<button type="button" class="btn-secondary" id="quizRetry">Retake the test</button>
-</div>
-
-</div>
-</section>
+<p id="quizScoreMsg" data-quiz-msg></p>
+<button type="button" class="btn btn-secondary" id="quizRetry" data-quiz-retry>Retake the test</button>
+</div></div></section>
+<script type="application/json" id="quizAnswers">{"q1": {"correct": "b", "explain": "An option is a financial contract, not stock ownership — it gives the buyer certain rights tied to an underlying asset."}, "q2": {"correct": "b", "explain": "A call option gives its buyer the right to buy the underlying stock at the strike price."}, "q3": {"correct": "b", "explain": "A put option gives its buyer the right to sell the underlying stock at the strike price."}, "q4": {"correct": "c", "explain": "The strike price is the price written into the contract for buying or selling the underlying asset."}, "q5": {"correct": "c", "explain": "Premium is quoted per share, and a standard contract covers 100 shares: $15 × 100 = $1,500 before fees."}, "q6": {"correct": "b", "explain": "The buyer pays the premium for a right. The seller receives that premium and takes on an obligation instead."}}</script>
+<script>window.JSM_QUIZ_MSGS = {"perfect": "Perfect score — you've got the basics down cold.", "good": "Solid work. Skim the explanations above, then move on to Basics whenever you’re ready.", "retry": "No worries — options take a couple of passes. Re-read the page and try again."};</script>
 
 <p class="home-note">Educational only — not financial advice. Options involve risk and can result in losses. Examples are simplified and do not account for every real-world factor.</p></main>
 <div id="pwaIosModal" class="pwa-ios-modal" role="dialog" aria-modal="true">
@@ -645,83 +636,6 @@ One contract = 100 shares, so the builder treats $4.70 as $470 of debit. Add a s
   }
 })();
 </script>
-<script>
-(function(){
-  var ANSWERS = {
-    q1: { correct: 'b', explain: 'An option is a financial contract, not stock ownership — it gives the buyer certain rights tied to an underlying asset.' },
-    q2: { correct: 'b', explain: 'A call option gives its buyer the right to buy the underlying stock at the strike price.' },
-    q3: { correct: 'b', explain: 'A put option gives its buyer the right to sell the underlying stock at the strike price.' },
-    q4: { correct: 'c', explain: 'The strike price is the price written into the contract for buying or selling the underlying asset.' },
-    q5: { correct: 'c', explain: 'Premium is quoted per share, and a standard contract covers 100 shares: $15 × 100 = $1,500 before fees.' },
-    q6: { correct: 'b', explain: 'The buyer pays the premium for a right. The seller receives that premium and takes on an obligation instead.' }
-  };
-
-  function init(){
-    var form = document.getElementById('quizForm');
-    if (!form) return;
-    var result = document.getElementById('quizResult');
-    var scoreEl = document.getElementById('quizScore');
-    var msgEl = document.getElementById('quizScoreMsg');
-    var retryBtn = document.getElementById('quizRetry');
-    var submitBtn = form.querySelector('.quiz-submit');
-
-    form.addEventListener('submit', function (e) {
-      e.preventDefault();
-      var names = Object.keys(ANSWERS);
-      var correctCount = 0;
-
-      names.forEach(function (name) {
-        var qWrap = form.querySelector('[data-name="' + name + '"]');
-        if (!qWrap) return;
-        var checked = form.querySelector('input[name="' + name + '"]:checked');
-        var explainEl = qWrap.querySelector('.quiz-explain');
-        var isCorrect = !!checked && checked.value === ANSWERS[name].correct;
-
-        qWrap.classList.remove('is-correct', 'is-incorrect');
-        qWrap.classList.add(isCorrect ? 'is-correct' : 'is-incorrect');
-        if (isCorrect) correctCount++;
-
-        if (explainEl) {
-          var prefix = isCorrect ? 'Correct — ' : (checked ? 'Not quite — ' : 'Skipped — ');
-          explainEl.textContent = prefix + ANSWERS[name].explain;
-          explainEl.hidden = false;
-        }
-
-        Array.prototype.forEach.call(form.querySelectorAll('input[name="' + name + '"]'), function (input) {
-          input.disabled = true;
-        });
-      });
-
-      var total = names.length;
-      var pct = Math.round((correctCount / total) * 100);
-      scoreEl.textContent = correctCount + ' / ' + total + ' (' + pct + '%)';
-      msgEl.textContent = pct === 100
-        ? "Perfect score — you've got the basics down cold."
-        : (pct >= 67
-          ? 'Solid work. Skim the explanations above, then move on to Basics whenever you\u2019re ready.'
-          : "No worries — options take a couple of passes. Re-read \u2018What Is an Option?\u2019 above and try again.");
-
-      result.hidden = false;
-      if (submitBtn) submitBtn.hidden = true;
-      result.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-    });
-
-    if (retryBtn) {
-      retryBtn.addEventListener('click', function () {
-        form.reset();
-        Array.prototype.forEach.call(form.querySelectorAll('input'), function (input) { input.disabled = false; });
-        Array.prototype.forEach.call(form.querySelectorAll('.quiz-q'), function (q) { q.classList.remove('is-correct', 'is-incorrect'); });
-        Array.prototype.forEach.call(form.querySelectorAll('.quiz-explain'), function (el) { el.hidden = true; });
-        result.hidden = true;
-        if (submitBtn) submitBtn.hidden = false;
-        form.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-      });
-    }
-  }
-
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
-  else init();
-})();
-</script>
 <script src="/pwa-install.js"></script>
+<script src="/assets/quiz.js?v=20260923" defer></script>
 </body></html>

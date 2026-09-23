@@ -559,3 +559,25 @@ html[data-theme="light"] .card{box-shadow:0 1px 2px rgba(17,24,39,.04)}
     grid-template-columns: 1fr;
   }
 }
+
+/* Quick-check quizzes (shared across lesson pages) */
+.quiz-section{margin:28px 0 8px}
+.quiz-section .section-head{margin-bottom:14px}
+.quiz-section .eyebrow{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);font-weight:700;margin-bottom:6px}
+.quiz-card{padding:26px;border:1px solid var(--border);border-radius:18px;background:var(--card)}
+.quiz-q{padding:16px 0;border-bottom:1px solid var(--border)}
+.quiz-q:first-child{padding-top:0}
+.quiz-q:last-of-type{border-bottom:0}
+.quiz-q-title{margin:0 0 10px;font-weight:700;color:var(--text);font-size:15px;line-height:1.5}
+.quiz-opt{display:flex;align-items:center;gap:9px;padding:9px 10px;border-radius:10px;margin-bottom:5px;cursor:pointer;font-size:14px;color:var(--muted);transition:.12s background}
+.quiz-opt:hover{background:var(--input)}
+.quiz-opt input{accent-color:var(--accent);width:15px;height:15px;flex:none}
+.quiz-explain{margin:10px 0 0;padding:11px 13px;border-radius:10px;background:var(--input);font-size:13px;line-height:1.55;color:var(--text);border-left:3px solid var(--border)}
+.quiz-q.is-correct .quiz-explain{border-left-color:#22c55e}
+.quiz-q.is-incorrect .quiz-explain{border-left-color:#ef4444}
+.quiz-submit{margin-top:20px;border:0;cursor:pointer;font:inherit}
+.quiz-result{margin-top:20px;padding-top:20px;border-top:1px solid var(--border)}
+.quiz-score{font-size:28px;font-weight:800;color:var(--text)}
+.quiz-result p{color:var(--muted);margin:8px 0 16px;font-size:14px;line-height:1.5}
+.quiz-result .btn-secondary,.quiz-result .btn{cursor:pointer;font:inherit}
+@media(max-width:700px){.quiz-card{padding:18px}}
