@@ -123,7 +123,7 @@
         }
         return '<a href="' + href + '">' + label + '</a>';
       }).join('\n') +
-      '</div>' + toolsHtml + installButtonHtml();
+      '</div>' + toolsHtml;
   }
 
   // Real, native "Install the App" button — no unprompted browser banner.
@@ -314,28 +314,61 @@
 
   function injectTrGlossary() {
     if (lang() !== 'tr') return;
-    if (document.getElementById('terimler')) return;
+    if (document.getElementById('glossaryCard') || document.getElementById('terimler')) return;
     var footer = document.querySelector('.site-footer');
     if (!footer) return;
-    var wrap = document.createElement('div');
-    wrap.className = 'wrap';
-    wrap.innerHTML = '<div class="card" id="terimler"><h2>Bu sitedeki İngilizce terimler</h2><p>Uluslararası borsalarda işlem yapmak için bu terimlere alışmalısınız.</p><dl class="term-glossary">'
-      + '<dt>call</dt><dd>Strike’tan hisse alma hakkı.</dd>'
-      + '<dt>put</dt><dd>Strike’tan hisse satma hakkı.</dd>'
-      + '<dt>strike</dt><dd>Opsiyon kontratında baz alınan fiyat.</dd>'
-      + '<dt>premium</dt><dd>Ödenen veya alınan prim.</dd>'
-      + '<dt>expiry</dt><dd>Vade sonu.</dd>'
-      + '<dt>long / short</dt><dd>Almış / satmış pozisyon.</dd>'
-      + '<dt>Greeks</dt><dd>Delta, theta gibi duyarlılıklar.</dd>'
-      + '<dt>assignment</dt><dd>Kontrat şartlarından olan, hisse alma / satma yükümlülüğünün gerçekleşmesi.</dd>'
-      + '<dt>underlying</dt><dd>Baz alınan varlık (hisse veya ETF).</dd>'
-      + '<dt>Covered Call</dt><dd>Hisse + short call; premium alınır, yükselişten kâr sınırlanır / tavanlanır.</dd>'
-      + '<dt>Cash-Secured Put</dt><dd>Nakit teminatlı short put; assignment durumunda hisse alma yükümlülüğü vardır.</dd>'
-      + '<dt>Iron Condor</dt><dd>İki kanatlı (4 bacaklı), belirlenmiş-risk, yatay / bant beklentisine uygun credit (gelir) stratejisi.</dd>'
-      + '<dt>Bullish / Bearish / Neutral</dt><dd>Boğa / yükseliş · Ayı / düşüş · yatay beklenti.</dd>'
-      + '<dt>Builder</dt><dd>Canlı strateji simülatörü.</dd>'
-      + '</dl></div>';
-    footer.parentNode.insertBefore(wrap, footer);
+    var card = document.createElement('div');
+    card.className = 'card';
+    card.id = 'glossaryCard';
+    card.innerHTML =
+      '<h2>Terimler <span style="font-size:0.72rem;color:var(--muted);font-weight:500;">İngilizce bırakılan sözcüklerin kısa Türkçe açıklaması</span></h2>' +
+      '<p style="font-size:0.78rem;color:var(--muted);margin-bottom:10px;">Bu sitede terimler bilinçli olarak İngilizce durur; aşağıda her birinin anlamı vardır.</p>' +
+      '<dl class="glossary-grid">' +
+      '<div class="glossary-item"><dt>Call</dt><dd>Belirli bir Strike üzerinden Underlying’i alma hakkı veren opsiyon.</dd></div>' +
+      '<div class="glossary-item"><dt>Put</dt><dd>Belirli bir Strike üzerinden Underlying’i satma hakkı veren opsiyon.</dd></div>' +
+      '<div class="glossary-item"><dt>Strike</dt><dd>Opsiyonun alım veya satım hakkı tanıdığı sabit fiyat.</dd></div>' +
+      '<div class="glossary-item"><dt>Expiry / expiration</dt><dd>Kontratın sona erdiği tarih; DTE bu güne kalan gün sayısıdır.</dd></div>' +
+      '<div class="glossary-item"><dt>DTE</dt><dd>Days to expiration: expiration’a kalan takvim günü.</dd></div>' +
+      '<div class="glossary-item"><dt>Moneyness</dt><dd>Strike’ın Underlying fiyatına göre konumu: ITM, ATM veya OTM.</dd></div>' +
+      '<div class="glossary-item"><dt>ITM / In-the-money</dt><dd>Call’da Underlying &gt; Strike; Put’ta Underlying &lt; Strike. İçsel değeri vardır.</dd></div>' +
+      '<div class="glossary-item"><dt>ATM / At-the-money</dt><dd>Strike, Underlying fiyatına çok yakındır.</dd></div>' +
+      '<div class="glossary-item"><dt>OTM / Out-of-the-money</dt><dd>Call’da Underlying &lt; Strike; Put’ta Underlying &gt; Strike. Intrinsic değeri sıfırdır.</dd></div>' +
+      '<div class="glossary-item"><dt>Premium</dt><dd>Opsiyonun pay başına fiyatı; Bid / Ask / Last ile görülür.</dd></div>' +
+      '<div class="glossary-item"><dt>Bid / Ask / Last</dt><dd>Alış teklifi, satış teklifi ve son işlem fiyatı.</dd></div>' +
+      '<div class="glossary-item"><dt>Long / Short</dt><dd>Long = satın almak (hak sahibi); Short = satmak / yazmak (yükümlülük).</dd></div>' +
+      '<div class="glossary-item"><dt>Debit / Credit</dt><dd>Debit: net ödenen prim. Credit: net alınan prim.</dd></div>' +
+      '<div class="glossary-item"><dt>Intrinsic / extrinsic</dt><dd>Intrinsic: ITM kısmı. Extrinsic: zaman ve IV’den gelen Premium artışı.</dd></div>' +
+      '<div class="glossary-item"><dt>Underlying</dt><dd>Opsiyonun dayandığı hisse, endeks veya varlık.</dd></div>' +
+      '<div class="glossary-item"><dt>Greeks</dt><dd>Risk ölçüleri: Delta, Gamma, Theta, Vega.</dd></div>' +
+      '<div class="glossary-item"><dt>Delta</dt><dd>Underlying $1 hareketince opsiyon fiyatının yaklaşık değişimi.</dd></div>' +
+      '<div class="glossary-item"><dt>Gamma</dt><dd>Underlying hareket edince Delta’nın ne kadar değiştiği.</dd></div>' +
+      '<div class="glossary-item"><dt>Theta</dt><dd>Bir gün geçince beklenen zaman aşınması.</dd></div>' +
+      '<div class="glossary-item"><dt>Vega</dt><dd>IV bir puan artınca Premium’un yaklaşık değişimi.</dd></div>' +
+      '<div class="glossary-item"><dt>IV / implied volatility</dt><dd>Piyasanın fiyatladığı beklenen salınım; Premium’u şişirir veya söndürür.</dd></div>' +
+      '<div class="glossary-item"><dt>Payoff</dt><dd>Fiyata göre kâr/zarar eğrisi; genelde expiration anı çizilir.</dd></div>' +
+      '<div class="glossary-item"><dt>Break-Even</dt><dd>Expiration’da işlemin sıfır kâr/zarar ettiği Underlying fiyatı.</dd></div>' +
+      '<div class="glossary-item"><dt>Assignment</dt><dd>Short opsiyonun kullanılması; hisse teslim veya teslim alma yükümlülüğü.</dd></div>' +
+      '<div class="glossary-item"><dt>Spread</dt><dd>Aynı veya yakın vadelerde birden fazla bacaklı yapı.</dd></div>' +
+      '<div class="glossary-item"><dt>Vertical</dt><dd>Aynı expiration, farklı Strike’lı Spread.</dd></div>' +
+      '<div class="glossary-item"><dt>Calendar / horizontal</dt><dd>Aynı Strike, farklı expiration’lı Spread.</dd></div>' +
+      '<div class="glossary-item"><dt>Butterfly</dt><dd>Ortada Short, kanatlarda Long (veya tersi) üç Strike’lı yapı.</dd></div>' +
+      '<div class="glossary-item"><dt>Iron Condor</dt><dd>OTM Put Spread + OTM Call Spread; Neutral, sınırlı risk/kâr.</dd></div>' +
+      '<div class="glossary-item"><dt>Covered Call</dt><dd>Long hisse + Short Call; sınırlı ek gelir, tavanlı yükseliş.</dd></div>' +
+      '<div class="glossary-item"><dt>Cash-Secured Put / CSP</dt><dd>Nakit karşılığı Short Put; düşerse hisse alma taahhüdü.</dd></div>' +
+      '<div class="glossary-item"><dt>Wheel</dt><dd>CSP ile hisse alma, sonra Covered Call yazma döngüsü.</dd></div>' +
+      '<div class="glossary-item"><dt>LEAPS</dt><dd>Uzun vadeli opsiyonlar (genelde 1 yıldan uzun expiration).</dd></div>' +
+      '<div class="glossary-item"><dt>Bullish / Bearish / Neutral</dt><dd>Yükseliş, düşüş veya yatay beklenti.</dd></div>' +
+      '<div class="glossary-item"><dt>Hedge</dt><dd>Mevcut riski azaltmak için alınan karşı pozisyon.</dd></div>' +
+      '<div class="glossary-item"><dt>Liquidity</dt><dd>Dar Bid–Ask ve işlem derinliği; kolay giriş/çıkış.</dd></div>' +
+      '<div class="glossary-item"><dt>Roll / Roll-out</dt><dd>Açık bacağı kapatıp daha ileri expiration’a taşımak.</dd></div>' +
+      '<div class="glossary-item"><dt>Earnings</dt><dd>Bilanço / kazanç açıklaması; IV genelde öncesinde şişer.</dd></div>' +
+      '<div class="glossary-item"><dt>Builder</dt><dd>Bacakları kurup Payoff ve Greeks’i canlı görme aracı.</dd></div>' +
+      '<div class="glossary-item"><dt>FAQ</dt><dd>Sık sorulan sorular bölümü.</dd></div>' +
+      '</dl>';
+
+    var host = document.querySelector('.page-main .wrap') || document.querySelector('main.wrap') || document.querySelector('.wrap') || footer.parentNode;
+    if (host === footer.parentNode) host.insertBefore(card, footer);
+    else host.appendChild(card);
   }
 
 
@@ -376,7 +409,6 @@
     injectTrGlossary();
     initTheme();
     initNavToggle();
-    initInstallButton();
     wrapPageRails();
   }
 
