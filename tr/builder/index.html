@@ -634,9 +634,9 @@
     <div class="top-bar">
       <div class="field wide tpl-wrap">
         <label>Strateji şablonu <span style="font-weight:400;color:var(--muted)">(örnek Premium — zincire göre düzenleyin)</span></label>
-        <button type="button" class="tpl-trigger" id="tplTrigger" aria-haspopup="listbox" aria-expanded="false"><span class="tpl-trigger-label">— Şablon seçin —</span><span class="tpl-caret">▼</span></button>
+        <button type="button" class="tpl-trigger" id="tplTrigger" aria-haspopup="listbox" aria-expanded="false"><span class="tpl-trigger-label">— Strateji seçin —</span><span class="tpl-caret">▼</span></button>
         <select id="strategyTemplate" onchange="applyTemplate()">
-          <option value="">— Şablon seçin —</option>
+          <option value="">— Strateji seçin —</option>
           <optgroup label="Bullish">
             <option value="long_call">Long Call</option>
             <option value="covered_call">Covered Call</option>
@@ -772,9 +772,9 @@
       <div class="top-bar" style="margin-bottom:10px;">
         <div class="field wide tpl-wrap">
           <label>Strateji B şablonu</label>
-          <button type="button" class="tpl-trigger" id="tplTriggerB" aria-haspopup="listbox" aria-expanded="false"><span class="tpl-trigger-label">— Şablon seçin —</span><span class="tpl-caret">▼</span></button>
+          <button type="button" class="tpl-trigger" id="tplTriggerB" aria-haspopup="listbox" aria-expanded="false"><span class="tpl-trigger-label">— Strateji seçin —</span><span class="tpl-caret">▼</span></button>
         <select id="strategyTemplateB" onchange="applyTemplateB()">
-            <option value="">— Şablon seçin —</option>
+            <option value="">— Strateji seçin —</option>
           </select>
         <div class="tpl-pop" id="tplPopoverB">
           <div class="tpl-groups"></div>
@@ -2302,7 +2302,7 @@
       function currentLabel() {
         const opt = sel.options[sel.selectedIndex];
         if (opt && opt.value) return opt.textContent;
-        return document.documentElement.lang === 'tr' ? '— Şablon seçin —' : '— Pick a template —';
+        return document.documentElement.lang === 'tr' ? '— Strateji seçin —' : '— Pick a template —';
       }
       function syncTrigger() {
         if (!trigger) return;
@@ -2924,7 +2924,7 @@
       } else if (legs.length === 1 && hasShort) {
         tip.innerHTML = '<strong>Short opsiyon:</strong> Credit alırsınız. Underlying Strike yakınında kalırsa Theta lehinizedir.';
       } else if (hasLong && hasShort) {
-        tip.innerHTML = '<strong>Çok bacak:</strong> Net Debit/Credit yukarıda. Her alanı canlı düzenleyin — grafik anında güncellenir. Hazır yapılar için şablon seçin.';
+        tip.innerHTML = '<strong>Çok bacak:</strong> Net Debit/Credit yukarıda. Her alanı canlı düzenleyin — grafik anında güncellenir. Hazır yapılar için Strateji seçin.';
       } else {
         tip.innerHTML = 'Bacakları düzenleyin veya bir strateji şablonu seçin. Grafik canlıdır.';
       }
