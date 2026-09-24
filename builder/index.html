@@ -634,9 +634,9 @@
     <div class="top-bar">
       <div class="field wide tpl-wrap">
         <label>Strategy template <span style="font-weight:400;color:var(--muted)">(sample Premium — edit to the chain)</span></label>
-        <button type="button" class="tpl-trigger" id="tplTrigger" aria-haspopup="listbox" aria-expanded="false"><span class="tpl-trigger-label">— Pick a template —</span><span class="tpl-caret">▼</span></button>
+        <button type="button" class="tpl-trigger" id="tplTrigger" aria-haspopup="listbox" aria-expanded="false"><span class="tpl-trigger-label">— Pick a Strategy —</span><span class="tpl-caret">▼</span></button>
         <select id="strategyTemplate" onchange="applyTemplate()">
-          <option value="">— Pick a template —</option>
+          <option value="">— Pick a Strategy —</option>
           <optgroup label="Bullish">
             <option value="long_call">Long Call</option>
             <option value="covered_call">Covered Call</option>
@@ -772,9 +772,9 @@
       <div class="top-bar" style="margin-bottom:10px;">
         <div class="field wide tpl-wrap">
           <label>Strategy B template</label>
-          <button type="button" class="tpl-trigger" id="tplTriggerB" aria-haspopup="listbox" aria-expanded="false"><span class="tpl-trigger-label">— Pick a template —</span><span class="tpl-caret">▼</span></button>
+          <button type="button" class="tpl-trigger" id="tplTriggerB" aria-haspopup="listbox" aria-expanded="false"><span class="tpl-trigger-label">— Pick a Strategy —</span><span class="tpl-caret">▼</span></button>
         <select id="strategyTemplateB" onchange="applyTemplateB()">
-            <option value="">— Pick a template —</option>
+            <option value="">— Pick a Strategy —</option>
           </select>
         <div class="tpl-pop" id="tplPopoverB">
           <div class="tpl-groups"></div>
@@ -2302,7 +2302,7 @@
       function currentLabel() {
         const opt = sel.options[sel.selectedIndex];
         if (opt && opt.value) return opt.textContent;
-        return document.documentElement.lang === 'tr' ? '— Şablon seçin —' : '— Pick a template —';
+        return document.documentElement.lang === 'tr' ? '— Şablon seçin —' : '— Pick a Strategy —';
       }
       function syncTrigger() {
         if (!trigger) return;
