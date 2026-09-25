@@ -1169,6 +1169,7 @@
         }
         rescale(legs);
         rescale(legsB);
+        refreshAllModeledPremiums({ forceStock: true });
         const hh = q.when.toLocaleString('tr-TR', { hour: '2-digit', minute: '2-digit', day: '2-digit', month: 'short' });
         const chg = q.last - q.prev;
         const chgTxt = (chg >= 0 ? '+' : '') + chg.toFixed(2);
@@ -1205,6 +1206,53 @@
         return S * Math.exp(-q * T) * normCDF(d1) - K * Math.exp(-r * T) * normCDF(d2);
       }
       return K * Math.exp(-r * T) * normCDF(-d2) - S * Math.exp(-q * T) * normCDF(-d1);
+    }
+
+    function roundPrem(v) {
+      if (!isFinite(v) || v < 0) return 0;
+      return Math.round(v * 100) / 100;
+    }
+
+    function modeledPremiumForLeg(leg, S) {
+      if (!leg || leg.type === 'stock') return roundPrem(S);
+      const p = getParams();
+      const days = Math.max(0, Number(leg.dte) || 0);
+      const T = days / 365;
+      const K = Math.max(0.01, Number(leg.strike) || S);
+      return roundPrem(blackScholes(S, K, T, p.r, p.q, p.iv, leg.type));
+    }
+
+    // Auto-fill modeled premium unless the user typed a custom premium on that leg.
+    function refreshModeledPremiums(list, opts) {
+      const options = opts || {};
+      const S = parseFloat(document.getElementById('spot').value) || 100;
+      const arr = list || legs;
+      if (!arr || !arr.length) return false;
+      let changed = false;
+      for (let i = 0; i < arr.length; i++) {
+        const leg = arr[i];
+        if (leg.premiumManual && !options.force) continue;
+        const next = modeledPremiumForLeg(leg, S);
+        if (leg.type === 'stock') {
+          if (!leg.premiumManual || options.forceStock) {
+            if (Math.abs((leg.premium || 0) - next) > 1e-9) {
+              leg.premium = next;
+              changed = true;
+            }
+          }
+        } else if (Math.abs((leg.premium || 0) - next) > 1e-9) {
+          leg.premium = next;
+          changed = true;
+        }
+      }
+      return changed;
+    }
+
+    function refreshAllModeledPremiums(opts) {
+      const a = refreshModeledPremiums(legs, opts);
+      const b = (typeof legsB !== 'undefined' && legsB && legsB.length)
+        ? refreshModeledPremiums(legsB, opts) : false;
+      return a || b;
     }
 
     // Finite-difference Greeks (position-level, already × MULTIPLIER via signedQty)
@@ -1257,15 +1305,18 @@
 
     function defaultLongCall() {
       const S = parseFloat(document.getElementById('spot').value) || 100;
-      return [{
+      const leg = {
         id: nextId++,
         side: 'buy',
         type: 'call',
         strike: Math.round(S),
         dte: 90,
         qty: 1,
-        premium: 5.00
-      }];
+        premium: 5.00,
+        premiumManual: false
+      };
+      leg.premium = modeledPremiumForLeg(leg, S);
+      return [leg];
     }
 
     function makeTemplateLegs(key) {
@@ -1411,10 +1462,11 @@
       const key = document.getElementById('strategyTemplate').value;
       const t = makeTemplateLegs(key);
       if (!t) return;
-      legs = t.map(leg => ({ ...leg, id: nextId++ }));
+      legs = t.map(leg => ({ ...leg, id: nextId++, premiumManual: false }));
       if (chart) { try { chart.destroy(); } catch (e) {} chart = null; }
       syncDTESlider();
       updateSpotSliderRange();
+      refreshModeledPremiums(legs);
       renderLegs();
       recalc();
       document.getElementById('strategyTemplate').value = key;
@@ -1476,7 +1528,7 @@
 
     function addEmptyLeg() {
       const S = parseFloat(document.getElementById('spot').value) || 100;
-      legs.push({
+      const draft = {
         id: nextId++,
         side: 'buy',
         type: 'call',
@@ -1484,8 +1536,11 @@
         dte: 90,
         qty: 1,
         premium: 3.00,
-        ticker: currentTicker()
-      });
+        ticker: currentTicker(),
+        premiumManual: false
+      };
+      draft.premium = modeledPremiumForLeg(draft, S);
+      legs.push(draft);
       syncDTESlider();
       renderLegs();
       recalc();
@@ -1534,8 +1589,15 @@
         }
       } else if (field === 'strike' || field === 'premium') {
         leg[field] = parseFloat(value) || 0;
+        if (field === 'premium') leg.premiumManual = true;
       } else if (field === 'dte' || field === 'qty') {
         leg[field] = Math.max(1, parseInt(value, 10) || 1);
+      }
+      if (field === 'strike' || field === 'dte' || field === 'type') {
+        if (!leg.premiumManual) {
+          const S = parseFloat(document.getElementById('spot').value) || 100;
+          leg.premium = modeledPremiumForLeg(leg, S);
+        }
       }
       if (field === 'dte' || field === 'type') syncDTESlider();
       if (field === 'strike' || field === 'type') updateSpotSliderRange();
@@ -1545,8 +1607,26 @@
       } else {
         // Still refresh the cash label under this leg without touching the inputs
         updateLegCashLabel(id);
+        if (field === 'strike' || field === 'dte' || field === 'type') {
+          updateLegPremiumInput(id);
+        }
       }
       recalc();
+    }
+
+    function updateLegPremiumInput(id) {
+      const idx = legs.findIndex(function (l) { return l.id === id; });
+      if (idx < 0) return;
+      const rows = document.querySelectorAll('#legsList .leg-row');
+      const row = rows[idx];
+      if (!row) return;
+      const inputs = row.querySelectorAll('input[type="number"]');
+      // option row: strike, dte, qty, premium — stock row: qty, premium
+      const premInput = inputs[inputs.length - 1];
+      if (premInput && document.activeElement !== premInput) {
+        premInput.value = legs[idx].premium;
+      }
+      updateLegCashLabel(id);
     }
 
     function updateLegCashLabel(id) {
@@ -1950,15 +2030,18 @@
 
     function defaultLongPut() {
       const S = parseFloat(document.getElementById('spot').value) || 100;
-      return [{
+      const leg = {
         id: nextIdB++,
         side: 'buy',
         type: 'put',
         strike: Math.round(S),
         dte: 90,
         qty: 1,
-        premium: 5.00
-      }];
+        premium: 5.00,
+        premiumManual: false
+      };
+      leg.premium = modeledPremiumForLeg(leg, S);
+      return [leg];
     }
 
     function toggleCompareMode() {
@@ -1986,22 +2069,26 @@
       const key = document.getElementById('strategyTemplateB').value;
       const t = makeTemplateLegs(key);
       if (!t) return;
-      legsB = t.map(function (leg) { return Object.assign({}, leg, { id: nextIdB++ }); });
+      legsB = t.map(function (leg) { return Object.assign({}, leg, { id: nextIdB++, premiumManual: false }); });
+      refreshModeledPremiums(legsB);
       renderLegsB();
       recalc();
     }
 
     function addEmptyLegB() {
       const S = parseFloat(document.getElementById('spot').value) || 100;
-      legsB.push({
+      const draft = {
         id: nextIdB++,
         side: 'buy',
         type: 'put',
         strike: Math.round(S),
         dte: 90,
         qty: 1,
-        premium: 3.00
-      });
+        premium: 3.00,
+        premiumManual: false
+      };
+      draft.premium = modeledPremiumForLeg(draft, S);
+      legsB.push(draft);
       renderLegsB();
       recalc();
     }
@@ -2437,6 +2524,10 @@
 
     function liveUpdate() {
       updateSpotSliderRange();
+      if (refreshAllModeledPremiums()) {
+        if (typeof renderLegs === 'function') renderLegs();
+        if (typeof renderLegsB === 'function' && compareMode) renderLegsB();
+      }
       recalc();
     }
 
