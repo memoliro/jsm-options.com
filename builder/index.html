@@ -1170,7 +1170,7 @@
         rescale(legs);
         rescale(legsB);
         refreshAllModeledPremiums({ forceStock: true });
-        const hh = q.when.toLocaleString('tr-TR', { hour: '2-digit', minute: '2-digit', day: '2-digit', month: 'short' });
+        const hh = q.when.toLocaleString('en-US', { hour: '2-digit', minute: '2-digit', day: '2-digit', month: 'short' });
         const chg = q.last - q.prev;
         const chgTxt = (chg >= 0 ? '+' : '') + chg.toFixed(2);
         setQuoteStatus(q.symbol + '  $' + q.last.toFixed(2) + '  (' + chgTxt + ')  ·  ' + q.source + '  ·  ' + hh +
@@ -1726,7 +1726,7 @@
             qtyInput +
             premiumInput +
             '<div class="remove-cell">' +
-              '<button class="btn-danger" onclick="removeLeg(' + l.id + ')" title="Sil">✕</button>' +
+              '<button class="btn-danger" onclick="removeLeg(' + l.id + ')" title="Remove leg">✕</button>' +
             '</div>' +
           '</div>' +
           '<div class="cash-line ' + cashCls + '">' + cashLabel + '</div>'
@@ -1881,9 +1881,11 @@
         ctx.moveTo(x, top);
         ctx.lineTo(x, bottom);
         ctx.stroke();
-        // horizontal at current P/L
+        // horizontal at current P/L — same color drives both the line and its
+        // label; darker amber in light theme so it stays readable on a light background
+        var plColor = light ? 'rgba(146, 64, 14, 0.95)' : 'rgba(250, 204, 21, 0.95)';
         if (y >= top && y <= bottom) {
-          ctx.strokeStyle = light ? 'rgba(180, 83, 9, 0.95)' : 'rgba(250, 204, 21, 0.95)';
+          ctx.strokeStyle = plColor;
           ctx.beginPath();
           ctx.moveTo(left, y);
           ctx.lineTo(right, y);
@@ -1895,7 +1897,7 @@
         ctx.fillStyle = 'rgba(148, 163, 184, 0.95)';
         const priceLbl = '$' + crosshairS.toFixed(1);
         ctx.fillText(priceLbl, Math.min(x + 4, right - 48), top + 12);
-        ctx.fillStyle = 'rgba(250, 204, 21, 0.95)';
+        ctx.fillStyle = plColor;
         const plLbl = (crosshairPL >= 0 ? '+' : '') + '$' + crosshairPL.toFixed(0);
         ctx.fillText(plLbl, left + 4, Math.max(y - 4, top + 12));
         ctx.restore();
@@ -3217,11 +3219,25 @@
 <script>
 (function(){
   function stripOffline(){
-    var needle = 'Çevrimdışı uygulamayı etkinleştir';
+    // Matches the offline/PWA-install banner regardless of the visitor's browser
+    // language: the original Turkish string plus its English equivalent are
+    // checked exactly, and a locale-agnostic fallback (has "offline" and
+    // "enable"/"app") catches any other translated variant of the same banner.
+    var exactNeedles = ['Çevrimdışı uygulamayı etkinleştir', 'Enable offline app'];
     var nodes = document.querySelectorAll('button, a, label, p, div, span, li');
     for (var i = 0; i < nodes.length; i++) {
       var el = nodes[i];
-      if (!el.childElementCount && el.textContent && el.textContent.indexOf(needle) !== -1) {
+      if (el.childElementCount || !el.textContent) continue;
+      var text = el.textContent;
+      var lower = text.toLowerCase();
+      var isMatch = false;
+      for (var n = 0; n < exactNeedles.length; n++) {
+        if (text.indexOf(exactNeedles[n]) !== -1) { isMatch = true; break; }
+      }
+      if (!isMatch && lower.indexOf('offline') !== -1 && (lower.indexOf('enable') !== -1 || lower.indexOf('app') !== -1)) {
+        isMatch = true;
+      }
+      if (isMatch) {
         var box = el.closest('p, label, div, li, button') || el;
         box.style.display = 'none';
       }
