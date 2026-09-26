@@ -582,14 +582,15 @@
     .glossary-item dd{font-size:0.75rem;color:var(--muted);line-height:1.4;margin:0;}
 
     .chain-table{width:100%;border-collapse:collapse;font-size:13px}
-    .chain-table th{position:sticky;top:0;background:var(--card);z-index:1;padding:6px 8px;text-align:right;border-bottom:1px solid var(--border);color:var(--muted);font-weight:600;font-size:11px;letter-spacing:.06em;text-transform:uppercase}
-    .chain-table th:first-child,.chain-table td:first-child{text-align:left}
-    .chain-table td{padding:5px 8px;text-align:right;border-bottom:1px solid rgba(45,58,79,.5)}
-    .chain-table td.strike{font-weight:700;text-align:center;color:var(--text)}
-    .chain-table tr.atm{background:rgba(59,130,246,.12)}
-    .chain-table .btn-add{border:1px solid var(--border);background:var(--bg);color:var(--text);border-radius:6px;padding:2px 7px;font-size:11px;cursor:pointer}
-    .chain-table .btn-add:hover{border-color:var(--accent);color:var(--accent)}
-    .chain-table .price{font-variant-numeric:tabular-nums}
+    .chain-table th{position:sticky;top:0;background:var(--card);z-index:2;padding:8px 8px;text-align:right;border-bottom:1px solid var(--border);color:var(--muted);font-weight:700;font-size:11px;letter-spacing:.06em;text-transform:uppercase}
+    .chain-table th:first-child,.chain-table td:first-child{text-align:right}
+    .chain-table td{padding:6px 8px;text-align:right;border-bottom:1px solid rgba(45,58,79,.4);font-variant-numeric:tabular-nums}
+    .chain-table td.strike{font-weight:800;text-align:center;color:var(--text);background:rgba(255,255,255,.02)}
+    .chain-table tr.atm td.strike{background:rgba(59,130,246,.18)}
+    .chain-table .btn-add{border:1px solid var(--border);background:var(--bg);color:var(--text);border-radius:6px;padding:3px 8px;font-size:11px;cursor:pointer;font-weight:600}
+    .chain-table .btn-add:hover{border-color:var(--accent);color:var(--accent);background:rgba(59,130,246,.1)}
+    .chain-table .price{color:var(--muted)}
+    .chain-table .price.has{color:var(--text)}
 
     </style>
 
@@ -698,7 +699,7 @@
       </div>
       <div class="field" style="min-width:auto">
         <label>&nbsp;</label>
-        <button type="button" class="btn-secondary" onclick="loadDelayedQuote()">Load delayed quote</button>
+        <button type="button" class="btn-secondary" onclick="loadCboeChain()">Load Chain (CBOE)</button>
       </div>
       <div class="field">
         <label>Underlying price ($)</label>
@@ -711,6 +712,17 @@
       <div class="field">
         <label>Rate (%)</label>
         <input id="rate" type="number" value="5" step="0.25" min="0" max="20" oninput="liveUpdate()" />
+      </div>
+      
+      <div class="field">
+        <label>Chain filter</label>
+        <select id="chainFilterTop" onchange="renderChainTable()">
+          <option value="atm30" selected>ATM ±30%</option>
+          <option value="atm20">ATM ±20%</option>
+          <option value="atm10">ATM ±10%</option>
+          <option value="atm5">ATM ±5%</option>
+          <option value="all">All strikes</option>
+        </select>
       </div>
       <div class="field">
         <label>Dividend (%)</label>
@@ -725,29 +737,20 @@
       <h2>Live chain — CBOE delayed (educational) <span style="font-size:0.72rem;color:var(--muted);font-weight:500">free • ~15min delayed • S/IV/Rate/Div stay manual</span></h2>
       <div class="top-bar" style="margin-bottom:8px">
         <div class="field">
-          <label>Expiration</label>
+          <label>Expiration (CBOE)</label>
           <select id="chainExpiration" onchange="onChainExpChange()"></select>
-        </div>
-        <div class="field" style="min-width:auto">
-          <label>&nbsp;</label>
-          <button type="button" class="btn-secondary" onclick="loadCboeChain()">Load chain (CBOE)</button>
         </div>
         <div class="field">
           <label>Spot ref (CBOE)</label>
           <input id="chainSpotRef" type="text" readonly placeholder="—" style="opacity:.8" />
         </div>
-        <div class="field">
-          <label>Filter</label>
-          <select id="chainFilter" onchange="renderChainTable()">
-            <option value="all">All strikes</option>
-            <option value="atm20" selected>ATM ±20</option>
-            <option value="atm10">ATM ±10</option>
-          </select>
+        <div class="field wide">
+          <label>Info</label>
+          <div id="chainStatus" class="quote-status" style="padding:6px 8px;background:var(--bg);border-radius:6px">Enter SPY and Load Chain (CBOE). Manual S/IV/Rate/Div below drive model.</div>
         </div>
       </div>
-      <div id="chainStatus" class="quote-status">Enter SPY / QQQ / AAPL etc. and Load chain. Underlying, IV, Rate, Dividend remain manual inputs above.</div>
-      <div id="chainTableWrap" style="max-height:460px;overflow:auto;margin-top:8px;border:1px solid var(--border);border-radius:8px"></div>
-      <p style="font-size:0.7rem;color:var(--muted);margin-top:6px">Source: cdn.cboe.com/api/global/delayed_quotes — free, no key, ~15m delayed. This is educational display only. Premium from chain is used to prefill leg cost, but Black-Scholes model uses your manual S/IV/Rate/Dividend for payoff/Greeks.</p>
+      <div id="chainTableWrap" style="max-height:520px;overflow:auto;border:1px solid var(--border);border-radius:8px"></div>
+      <p style="font-size:0.7rem;color:var(--muted);margin-top:6px">Data: cdn.cboe.com — free, no key, ~15m delayed. Premium from chain prefills leg cost. Black-Scholes model uses your manual S/IV/Rate/Dividend for payoff/Greeks.</p>
     </div>
 
   <div class="main-grid">
@@ -3165,10 +3168,11 @@
     })();
 
 
-    // ===== CBOE CHAIN - KEEPS S/IV/Rate/Div MANUAL =====
+    // ===== CBOE CHAIN - FIXED PARSER - KEEPS S/IV/Rate/Div MANUAL =====
     window._cboeData = null;
     function onChainExpChange(){ renderChainTable(); }
     function midPrice(c){
+      if(!c) return 0;
       const b = Number(c.bid), a = Number(c.ask), l = Number(c.last);
       if (isFinite(b) && isFinite(a) && b>0 && a>0) return (b+a)/2;
       if (isFinite(l) && l>0) return l;
@@ -3176,90 +3180,152 @@
       if (isFinite(b) && b>0) return b;
       return 0;
     }
+    function parseOccExpiry(occ){
+      const m = occ.match(/(\d{6})([CP])(\d{8})$/);
+      if(!m) return null;
+      const yymmdd = m[1];
+      const yy = parseInt(yymmdd.slice(0,2),10);
+      const mm = yymmdd.slice(2,4);
+      const dd = yymmdd.slice(4,6);
+      const yyyy = yy >= 70 ? 1900+yy : 2000+yy;
+      return `${yyyy}-${mm}-${dd}`;
+    }
     async function loadCboeChain(){
       const sym = currentTicker();
       const statusEl = document.getElementById('chainStatus');
       const spotRefEl = document.getElementById('chainSpotRef');
+      const spotInput = document.getElementById('spot');
       if (!sym){ statusEl.textContent='Enter ticker first (SPY, QQQ, AAPL)'; statusEl.className='quote-status err'; return; }
       statusEl.textContent = sym + ' chain loading… (CBOE delayed)';
       statusEl.className='quote-status warn';
       try{
         let data = null;
-        // 1) Try Cloudflare Function /api/cboe/chain
         try{
           const r = await fetch(`/api/cboe/chain?symbol=${encodeURIComponent(sym)}`, { cache: 'no-store' });
-          if (r.ok){ data = await r.json(); if (data.error) throw new Error(data.error); }
-          else throw new Error('local proxy '+r.status);
+          if (!r.ok) throw new Error('proxy '+r.status);
+          data = await r.json();
+          if (data.error) throw new Error(data.error);
         }catch(e){
-          // 2) Fallback: direct CBOE via allorigins (for local file preview)
           console.log('Local proxy failed, fallback to allorigins', e);
           const cboeUrl = `https://cdn.cboe.com/api/global/delayed_quotes/options/${encodeURIComponent(sym)}.json`;
           const proxy = `https://api.allorigins.win/raw?url=${encodeURIComponent(cboeUrl)}`;
           const r2 = await fetch(proxy);
           if (!r2.ok) throw new Error('CBOE fetch failed '+r2.status);
           const raw = await r2.json();
-          const rawOptions = (raw && raw.data && raw.data.options) || raw.options || {};
-          const spot = (raw && raw.data && (raw.data.close || raw.data.current_price)) || raw.close || null;
-          data = { symbol: sym, cboeSymbol: sym, spot, expirations: Object.keys(rawOptions).sort(), rawOptions, source: 'CBOE via allorigins (fallback)' };
+          const d = raw && raw.data ? raw.data : raw;
+          const spot = d.close ?? d.current_price ?? null;
+          const arr = Array.isArray(d.options) ? d.options : [];
+          const expMap = new Map();
+          const re = /(\d{6})([CP])(\d{8})$/;
+          for (const o of arr){
+            const occ = o.option || o.symbol || '';
+            const mm = occ.match(re);
+            if(!mm) continue;
+            const yymmdd = mm[1];
+            const cp = mm[2];
+            const strikeRaw = mm[3];
+            const yy = parseInt(yymmdd.slice(0,2),10);
+            const mm2 = yymmdd.slice(2,4);
+            const dd = yymmdd.slice(4,6);
+            const yyyy = yy>=70?1900+yy:2000+yy;
+            const expISO = `${yyyy}-${mm2}-${dd}`;
+            const strike = parseInt(strikeRaw,10)/1000;
+            if(!expMap.has(expISO)) expMap.set(expISO,{calls:new Map(),puts:new Map()});
+            const bucket = expMap.get(expISO);
+            const simp = {strike, bid:o.bid, ask:o.ask, last:o.last, iv:o.iv, oi:o.open_interest, vol:o.volume};
+            if(cp==='C') bucket.calls.set(strike,simp); else bucket.puts.set(strike,simp);
+          }
+          const expirations = Array.from(expMap.keys()).sort();
+          const chains = {};
+          for(const exp of expirations){
+            const b = expMap.get(exp);
+            const cSt = Array.from(b.calls.keys()).sort((a,b)=>a-b);
+            const pSt = Array.from(b.puts.keys()).sort((a,b)=>a-b);
+            chains[exp]={calls:cSt.map(k=>b.calls.get(k)), puts:pSt.map(k=>b.puts.get(k)), strikes:Array.from(new Set([...cSt,...pSt])).sort((a,b)=>a-b)};
+          }
+          data={symbol:sym, spot, expirations, chains, source:'CBOE via allorigins (fallback)'};
         }
-        if (!data || !data.expirations || !data.expirations.length) throw new Error('No expirations returned');
+        if (!data || !data.expirations || !data.expirations.length) throw new Error('No expirations returned (try SPY, QQQ, AAPL)');
         const sel = document.getElementById('chainExpiration');
         sel.innerHTML = '';
         data.expirations.forEach(exp=>{
           const opt = document.createElement('option');
           opt.value = exp;
-          opt.textContent = exp;
+          const d = new Date(exp);
+          const label = isNaN(d) ? exp : exp + ' (' + Math.max(0, Math.round((d - new Date())/86400000)) + 'd)';
+          opt.textContent = label;
           sel.appendChild(opt);
         });
         window._cboeData = data;
         if (spotRefEl) spotRefEl.value = data.spot ? '$' + Number(data.spot).toFixed(2) : '—';
+        // Auto-fill underlying price with SPY ref as default, but keep editable
+        if (spotInput && data.spot){
+          const cur = parseFloat(spotInput.value);
+          // If current is default 100 or empty, or user just changed ticker, update to CBOE spot
+          if (!cur || cur===100 || document.getElementById('ticker').value.toUpperCase()==='SPY'){
+            // Only auto-fill if within reasonable range or first load
+            if (Math.abs(cur - data.spot) > 1 || cur===100){
+              spotInput.value = Number(data.spot).toFixed(2);
+              if (typeof liveUpdate==='function') liveUpdate();
+            }
+          }
+        }
         renderChainTable();
-        statusEl.textContent = `${data.symbol} • CBOE spot ref $${data.spot ? Number(data.spot).toFixed(2) : '?'} • ${data.expirations.length} expirations • ${data.source} • Manual S/IV/Rate/Div preserved`;
+        const qStatus = document.getElementById('quoteStatus');
+        if (qStatus){
+          qStatus.textContent = `${data.symbol} $${data.spot ? Number(data.spot).toFixed(2) : '?'} • ${data.expirations.length} expirations • ${data.source} • S/IV/Rate/Div stay manual`;
+          qStatus.className='quote-status ok';
+        }
+        statusEl.textContent = `${data.symbol} spot ref $${data.spot ? Number(data.spot).toFixed(2) : '?'} • ${data.expirations.length} expirations • ${data.source} • Filter ATM ±30% default`;
         statusEl.className='quote-status ok';
       }catch(err){
         console.error(err);
-        statusEl.textContent = 'Chain load failed: ' + (err && err.message ? err.message : err) + ' — Try SPY, QQQ, AAPL (CBOE only covers popular underlyings)';
+        const qStatus = document.getElementById('quoteStatus');
+        if(qStatus){ qStatus.textContent='Chain failed: '+err.message; qStatus.className='quote-status err'; }
+        statusEl.textContent = 'Chain load failed: ' + (err && err.message ? err.message : err) + ' — CBOE covers SPY, QQQ, SPX, AAPL, NVDA etc.';
         statusEl.className='quote-status err';
       }
     }
     function renderChainTable(){
       const wrap = document.getElementById('chainTableWrap');
       const sel = document.getElementById('chainExpiration');
-      const filterSel = document.getElementById('chainFilter');
+      const filterTop = document.getElementById('chainFilterTop');
       const data = window._cboeData;
-      if (!data || !sel || !sel.value){ wrap.innerHTML='<div style="padding:12px;color:var(--muted)">Load chain first</div>'; return; }
+      if (!data || !sel || !sel.value){ wrap.innerHTML='<div style="padding:14px;color:var(--muted)">Load Chain (CBOE) first — try SPY</div>'; return; }
       const exp = sel.value;
-      const chain = data.rawOptions[exp] || [];
-      if (!chain.length){ wrap.innerHTML='<div style="padding:12px">Empty chain for '+exp+'</div>'; return; }
-      // split calls/puts
-      const calls = {}, puts = {};
-      chain.forEach(c=>{
-        const strike = Number(c.strike || c.strike_price);
-        const type = (c.option_type || c.type || '').toLowerCase();
-        if (type.startsWith('c')) calls[strike]=c; else puts[strike]=c;
-      });
-      const strikes = Object.keys({...calls,...puts}).map(Number).sort((a,b)=>a-b);
-      const spot = Number(data.spot) || parseFloat(document.getElementById('spot').value) || 100;
-      // filter
-      let visibleStrikes = strikes;
-      const filt = filterSel ? filterSel.value : 'atm20';
+      const chain = data.chains ? data.chains[exp] : null;
+      if (!chain){ wrap.innerHTML='<div style="padding:14px">Empty chain for '+exp+'</div>'; return; }
+      // Build maps for fast lookup
+      const callMap = new Map(chain.calls.map(c=>[c.strike,c]));
+      const putMap = new Map(chain.puts.map(p=>[p.strike,p]));
+      let strikes = chain.strikes;
+      // Filter ATM ±30% etc.
+      const spotManual = parseFloat(document.getElementById('spot').value) || Number(data.spot) || 100;
+      const filt = filterTop ? filterTop.value : 'atm30';
+      let visible = strikes;
       if (filt!=='all'){
-        const n = filt==='atm10'?10:20;
-        const withDist = strikes.map(k=>({k, d: Math.abs(k-spot)})).sort((a,b)=>a.d-b.d).slice(0,n).map(x=>x.k).sort((a,b)=>a-b);
-        visibleStrikes = withDist;
+        const pct = filt==='atm5'?0.05 : filt==='atm10'?0.10 : filt==='atm20'?0.20 : 0.30;
+        const lo = spotManual * (1-pct);
+        const hi = spotManual * (1+pct);
+        visible = strikes.filter(s=>s>=lo && s<=hi);
+        if (!visible.length){
+          // fallback: closest N
+          visible = strikes.map(k=>({k,d:Math.abs(k-spotManual)})).sort((a,b)=>a.d-b.d).slice(0, Math.round(strikes.length*0.3)).map(x=>x.k).sort((a,b)=>a-b);
+        }
       }
-      let html = '<table class="chain-table"><thead><tr><th>Call</th><th>Add</th><th>Strike</th><th>Add</th><th>Put</th></tr></thead><tbody>';
-      visibleStrikes.forEach(strike=>{
-        const c = calls[strike], p = puts[strike];
-        const cPrice = c ? midPrice(c) : null;
-        const pPrice = p ? midPrice(p) : null;
-        const isATM = Math.abs(strike-spot) < 0.5;
+      let html = '<table class="chain-table"><thead><tr><th>Call</th><th></th><th>Strike</th><th></th><th>Put</th></tr></thead><tbody>';
+      visible.forEach(strike=>{
+        const c = callMap.get(strike);
+        const p = putMap.get(strike);
+        const cPrice = c ? midPrice(c) : 0;
+        const pPrice = p ? midPrice(p) : 0;
+        const isATM = Math.abs(strike-spotManual) < spotManual*0.015;
         html += `<tr class="${isATM?'atm':''}">`;
-        html += `<td class="price">${cPrice!=null? '$'+cPrice.toFixed(2):'—'}</td>`;
+        html += `<td class="price ${cPrice?'has':''}">${cPrice? '$'+cPrice.toFixed(2):'—'}</td>`;
         html += `<td><button class="btn-add" onclick="addLegFromChain('call', ${strike}, ${cPrice||0}, '${exp}')">+C</button></td>`;
         html += `<td class="strike">${strike}</td>`;
         html += `<td><button class="btn-add" onclick="addLegFromChain('put', ${strike}, ${pPrice||0}, '${exp}')">+P</button></td>`;
-        html += `<td class="price">${pPrice!=null? '$'+pPrice.toFixed(2):'—'}</td>`;
+        html += `<td class="price ${pPrice?'has':''}">${pPrice? '$'+pPrice.toFixed(2):'—'}</td>`;
         html += `</tr>`;
       });
       html += '</tbody></table>';
@@ -3282,26 +3348,14 @@
         ticker: currentTicker()
       };
       legs.push(leg);
-      // do NOT touch spot/iv/rate/divYield - keep manual
       renderLegs();
       recalc();
-      resetSimulation();
-      setQuoteStatus(`Added ${type.toUpperCase()} ${strike} ${expStr} (DTE ${dte}) • Edit premium/Side/Qty if needed. S/IV/Rate/Div still manual.`, 'ok');
-      // scroll to legs
+      if (typeof resetSimulation==='function') resetSimulation();
+      const qs = document.getElementById('quoteStatus');
+      if(qs){ qs.textContent = `Added ${type.toUpperCase()} ${strike} exp ${expStr} (DTE ${dte}) • S/IV/Rate/Div remain manual editable`; qs.className='quote-status ok'; }
       document.getElementById('legsList')?.scrollIntoView({behavior:'smooth', block:'center'});
     }
-    // override loadDelayedQuote to KEEP manual IV/Rate/Div - only spot optional
-    const _origLoadDelayedQuote = loadDelayedQuote;
-    loadDelayedQuote = async function(){
-      const sym = currentTicker();
-      const spotEl = document.getElementById('spot');
-      const prevSpot = spotEl.value;
-      await _origLoadDelayedQuote();
-      // keep IV/Rate/Div untouched - already the case, but ensure we don't rescale them
-      // if user had manual spot they want to keep, they can re-enter - we show note
-      setQuoteStatus(document.getElementById('quoteStatus').textContent + ' — IV/Rate/Div kept manual.', 'ok');
-    };
-    
+
     (function bootBuilder() {
       var params = null;
       try { params = new URLSearchParams(window.location.search); } catch (e) {}
