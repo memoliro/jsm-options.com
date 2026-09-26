@@ -589,6 +589,7 @@
     .chain-table .btn-add{border:1px solid var(--border);background:var(--bg);color:var(--text);border-radius:6px;padding:3px 8px;font-size:11px;cursor:pointer;font-weight:600}
     .chain-table .btn-add:hover{border-color:var(--accent);color:var(--accent);background:rgba(59,130,246,.1)}
     .chain-table .price.has{color:var(--text)}
+    .chain-table td.delta{color:var(--muted);font-size:11px}
     select#ticker, select#chainFilterTop, select#chainExpiration{background:var(--card);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:8px}
 
     </style>
@@ -743,8 +744,8 @@
       <div class="field">
         <label>Chain filter</label>
         <select id="chainFilterTop" onchange="renderChainTable()">
-          <option value="atm30" selected>ATM ±30%</option>
-          <option value="atm20">ATM ±20%</option>
+          <option value="atm30">ATM ±30%</option>
+          <option value="atm20" selected>ATM ±20%</option>
           <option value="atm10">ATM ±10%</option>
           <option value="atm5">ATM ±5%</option>
           <option value="all">All strikes</option>
@@ -1281,6 +1282,21 @@
         return S * Math.exp(-q * T) * normCDF(d1) - K * Math.exp(-r * T) * normCDF(d2);
       }
       return K * Math.exp(-r * T) * normCDF(-d2) - S * Math.exp(-q * T) * normCDF(-d1);
+    }
+
+    // Standalone Black-Scholes delta for an arbitrary strike/type — used by the
+    // option-chain table, independent of any leg object.
+    function bsDelta(S, K, T, r, q, sigma, type) {
+      if (type === 'stock') return 1;
+      if (T <= 0.0001) {
+        const itm = type === 'call' ? S > K : S < K;
+        if (!itm) return 0;
+        return type === 'call' ? 1 : -1;
+      }
+      const sqrtT = Math.sqrt(T);
+      const d1 = (Math.log(S / K) + (r - q + 0.5 * sigma * sigma) * T) / (sigma * sqrtT);
+      const eqT = Math.exp(-q * T);
+      return type === 'call' ? eqT * normCDF(d1) : eqT * (normCDF(d1) - 1);
     }
 
     function roundPrem(v) {
@@ -3224,9 +3240,21 @@
       today.setHours(0, 0, 0, 0);
       return Math.max(0, Math.round((d - today) / 86400000));
     }
-    function pickDefaultExpiration(exps, preferDte) {
+    function pickDefaultExpiration(exps, preferDte, atLeast) {
       if (!exps || !exps.length) return '';
       const target = preferDte == null ? 30 : preferDte;
+      if (atLeast) {
+        // Prefer the smallest expiration that is at least `target` days out;
+        // fall back to the closest-available if none qualify.
+        let smallestQualifying = null;
+        for (let i = 0; i < exps.length; i++) {
+          const dte = expirationDte(exps[i]);
+          if (dte >= target && (smallestQualifying == null || dte < expirationDte(smallestQualifying))) {
+            smallestQualifying = exps[i];
+          }
+        }
+        if (smallestQualifying) return smallestQualifying;
+      }
       let best = exps[0];
       let bestDiff = Infinity;
       for (let i = 0; i < exps.length; i++) {
@@ -3347,6 +3375,20 @@
       if (typeof resetSimulation === 'function') resetSimulation();
       else if (typeof recalc === 'function') recalc();
     }
+    // If the current position is still exactly the untouched single default
+    // leg (never priced from a chain, never manually edited), re-anchor its
+    // strike to the freshly loaded spot before snapping to a listed strike.
+    // Without this, a leg created before the chain loaded (e.g. against the
+    // page's placeholder spot) snaps to the nearest *listed* strike to its
+    // stale value — which can be the lowest strike on the whole chain if the
+    // real spot is much higher — instead of landing at-the-money.
+    function reanchorDefaultLegStrike(list, spot) {
+      if (!list || list.length !== 1 || !spot) return;
+      const leg = list[0];
+      if (leg.type === 'call' && leg.side === 'buy' && !leg.premiumManual && !leg.premiumFromChain) {
+        leg.strike = Math.round(spot);
+      }
+    }
     async function loadCboeChain(){
       const tickerEl = document.getElementById('ticker');
       const sym = (tickerEl && tickerEl.value || 'SPY').toUpperCase();
@@ -3417,7 +3459,7 @@
         });
         const prefer = keepExp && data.expirations.indexOf(keepExp) >= 0
           ? keepExp
-          : pickDefaultExpiration(data.expirations, 30);
+          : pickDefaultExpiration(data.expirations, 45, true);
         if (prefer) sel.value = prefer;
         window._cboeData = data;
         if (spotRefEl) spotRefEl.value = data.spot ? '$' + Number(data.spot).toFixed(2) : '—';
@@ -3425,6 +3467,8 @@
           spotInput.value = Number(data.spot).toFixed(2);
         }
         seedIvFromAtm(data, sel.value);
+        reanchorDefaultLegStrike(legs, data.spot);
+        reanchorDefaultLegStrike(legsB, data.spot);
         applyChainQuotesToLegs(legs, { snapStrikes: true, setDte: true, force: false });
         if (typeof legsB !== 'undefined' && legsB && legsB.length) {
           applyChainQuotesToLegs(legsB, { snapStrikes: true, setDte: true, force: false });
@@ -3442,7 +3486,9 @@
           qStatus.textContent = `${data.symbol} $${data.spot ? Number(data.spot).toFixed(2) : '?'} • exp ${sel.value} (${dteNow}d) • ${data.expirations.length} expirations • ${data.source || 'CBOE'} — fields stay editable`;
           qStatus.className='quote-status ok';
         }
-        statusEl.textContent = `${data.symbol} spot $${data.spot ? Number(data.spot).toFixed(2) : '?'} • default exp ${sel.value} (${dteNow}d) • Filter ATM ±30%`;
+        const filterSel = document.getElementById('chainFilterTop');
+        const filterLabel = filterSel && filterSel.selectedIndex >= 0 ? filterSel.options[filterSel.selectedIndex].text : 'ATM ±20%';
+        statusEl.textContent = `${data.symbol} spot $${data.spot ? Number(data.spot).toFixed(2) : '?'} • default exp ${sel.value} (${dteNow}d) • Filter ${filterLabel}`;
         statusEl.className='quote-status ok';
       }catch(err){
         console.error(err);
@@ -3463,7 +3509,7 @@
       const putMap = new Map(chain.puts.map(p=>[p.strike,p]));
       let strikes = chain.strikes;
       const spotManual = parseFloat(document.getElementById('spot').value) || Number(data.spot) || 100;
-      const filt = filterTop ? filterTop.value : 'atm30';
+      const filt = filterTop ? filterTop.value : 'atm20';
       let visible = strikes;
       if (filt!=='all'){
         const pct = filt==='atm5'?0.05 : filt==='atm10'?0.10 : filt==='atm20'?0.20 : 0.30;
@@ -3474,19 +3520,32 @@
           visible = strikes.map(k=>({k,d:Math.abs(k-spotManual)})).sort((a,b)=>a.d-b.d).slice(0, Math.min(40, strikes.length)).map(x=>x.k).sort((a,b)=>a-b);
         }
       }
-      let html = '<table class="chain-table"><thead><tr><th>Call</th><th></th><th>Strike</th><th></th><th>Put</th></tr></thead><tbody>';
+      const p = getParams();
+      const T = Math.max(0, expirationDte(exp)) / 365;
+      function deltaFor(q, type, strikeVal) {
+        if (!q) return '—';
+        const ivPct = quoteIvPct(q);
+        const sigma = (ivPct ? ivPct : p.iv * 100) / 100;
+        if (!sigma || sigma <= 0) return '—';
+        const d = bsDelta(spotManual, strikeVal, T, p.r, p.q, sigma, type);
+        if (!isFinite(d)) return '—';
+        return d.toFixed(2);
+      }
+      let html = '<table class="chain-table"><thead><tr><th>Δ</th><th>Call</th><th></th><th>Strike</th><th></th><th>Put</th><th>Δ</th></tr></thead><tbody>';
       visible.forEach(strike=>{
         const c = callMap.get(strike);
-        const p = putMap.get(strike);
+        const p2 = putMap.get(strike);
         const cPrice = c ? midPrice(c) : 0;
-        const pPrice = p ? midPrice(p) : 0;
+        const pPrice = p2 ? midPrice(p2) : 0;
         const isATM = Math.abs(strike-spotManual) < spotManual*0.02;
         html += `<tr class="${isATM?'atm':''}">`;
+        html += `<td class="delta">${deltaFor(c, 'call', strike)}</td>`;
         html += `<td class="price ${cPrice?'has':''}">${cPrice? '$'+cPrice.toFixed(2):'—'}</td>`;
         html += `<td><button class="btn-add" onclick="addLegFromChain('call', ${strike}, ${cPrice||0}, '${exp}')">+C</button></td>`;
         html += `<td class="strike">${strike}</td>`;
         html += `<td><button class="btn-add" onclick="addLegFromChain('put', ${strike}, ${pPrice||0}, '${exp}')">+P</button></td>`;
         html += `<td class="price ${pPrice?'has':''}">${pPrice? '$'+pPrice.toFixed(2):'—'}</td>`;
+        html += `<td class="delta">${deltaFor(p2, 'put', strike)}</td>`;
         html += `</tr>`;
       });
       html += '</tbody></table>';
