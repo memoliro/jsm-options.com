@@ -580,7 +580,18 @@
     [data-theme="light"] .glossary-item{background:var(--input,#f1f5f9);}
     .glossary-item dt{font-size:0.8rem;font-weight:700;color:#93c5fd;margin-bottom:3px;}
     .glossary-item dd{font-size:0.75rem;color:var(--muted);line-height:1.4;margin:0;}
-</style>
+
+    .chain-table{width:100%;border-collapse:collapse;font-size:13px}
+    .chain-table th{position:sticky;top:0;background:var(--card);z-index:1;padding:6px 8px;text-align:right;border-bottom:1px solid var(--border);color:var(--muted);font-weight:600;font-size:11px;letter-spacing:.06em;text-transform:uppercase}
+    .chain-table th:first-child,.chain-table td:first-child{text-align:left}
+    .chain-table td{padding:5px 8px;text-align:right;border-bottom:1px solid rgba(45,58,79,.5)}
+    .chain-table td.strike{font-weight:700;text-align:center;color:var(--text)}
+    .chain-table tr.atm{background:rgba(59,130,246,.12)}
+    .chain-table .btn-add{border:1px solid var(--border);background:var(--bg);color:var(--text);border-radius:6px;padding:2px 7px;font-size:11px;cursor:pointer}
+    .chain-table .btn-add:hover{border-color:var(--accent);color:var(--accent)}
+    .chain-table .price{font-variant-numeric:tabular-nums}
+
+    </style>
 
 <style id="jsm-mobile-nav">
 .nav-toggle{display:none;box-sizing:border-box;width:44px;height:44px;min-width:44px;min-height:44px;padding:0;border:1px solid var(--border,#2d3a4f);border-radius:10px;background:var(--card,#1a2332);color:var(--text,#e7ecf3);cursor:pointer;align-items:center;justify-content:center;flex-direction:column;gap:5px;-webkit-tap-highlight-color:transparent;touch-action:manipulation;position:relative;z-index:40}
@@ -709,7 +720,38 @@
     <p id="quoteStatus" class="quote-status">Delayed quote (~15 min). Empty leg Symbol inherits the strategy ticker. Educational — not for trading.</p>
   </div>
 
+  
+  <div class="card" id="chainCard" style="border:1px solid var(--border)">
+      <h2>Live chain — CBOE delayed (educational) <span style="font-size:0.72rem;color:var(--muted);font-weight:500">free • ~15min delayed • S/IV/Rate/Div stay manual</span></h2>
+      <div class="top-bar" style="margin-bottom:8px">
+        <div class="field">
+          <label>Expiration</label>
+          <select id="chainExpiration" onchange="onChainExpChange()"></select>
+        </div>
+        <div class="field" style="min-width:auto">
+          <label>&nbsp;</label>
+          <button type="button" class="btn-secondary" onclick="loadCboeChain()">Load chain (CBOE)</button>
+        </div>
+        <div class="field">
+          <label>Spot ref (CBOE)</label>
+          <input id="chainSpotRef" type="text" readonly placeholder="—" style="opacity:.8" />
+        </div>
+        <div class="field">
+          <label>Filter</label>
+          <select id="chainFilter" onchange="renderChainTable()">
+            <option value="all">All strikes</option>
+            <option value="atm20" selected>ATM ±20</option>
+            <option value="atm10">ATM ±10</option>
+          </select>
+        </div>
+      </div>
+      <div id="chainStatus" class="quote-status">Enter SPY / QQQ / AAPL etc. and Load chain. Underlying, IV, Rate, Dividend remain manual inputs above.</div>
+      <div id="chainTableWrap" style="max-height:460px;overflow:auto;margin-top:8px;border:1px solid var(--border);border-radius:8px"></div>
+      <p style="font-size:0.7rem;color:var(--muted);margin-top:6px">Source: cdn.cboe.com/api/global/delayed_quotes — free, no key, ~15m delayed. This is educational display only. Premium from chain is used to prefill leg cost, but Black-Scholes model uses your manual S/IV/Rate/Dividend for payoff/Greeks.</p>
+    </div>
+
   <div class="main-grid">
+
     <!-- Current Legs, with the strategy's static metrics moved alongside it -->
     <div class="card">
       <h2>Current legs <span class="slot-tag">A</span></h2>
@@ -3122,6 +3164,144 @@
       });
     })();
 
+
+    // ===== CBOE CHAIN - KEEPS S/IV/Rate/Div MANUAL =====
+    window._cboeData = null;
+    function onChainExpChange(){ renderChainTable(); }
+    function midPrice(c){
+      const b = Number(c.bid), a = Number(c.ask), l = Number(c.last);
+      if (isFinite(b) && isFinite(a) && b>0 && a>0) return (b+a)/2;
+      if (isFinite(l) && l>0) return l;
+      if (isFinite(a) && a>0) return a;
+      if (isFinite(b) && b>0) return b;
+      return 0;
+    }
+    async function loadCboeChain(){
+      const sym = currentTicker();
+      const statusEl = document.getElementById('chainStatus');
+      const spotRefEl = document.getElementById('chainSpotRef');
+      if (!sym){ statusEl.textContent='Enter ticker first (SPY, QQQ, AAPL)'; statusEl.className='quote-status err'; return; }
+      statusEl.textContent = sym + ' chain loading… (CBOE delayed)';
+      statusEl.className='quote-status warn';
+      try{
+        let data = null;
+        // 1) Try Cloudflare Function /api/cboe/chain
+        try{
+          const r = await fetch(`/api/cboe/chain?symbol=${encodeURIComponent(sym)}`, { cache: 'no-store' });
+          if (r.ok){ data = await r.json(); if (data.error) throw new Error(data.error); }
+          else throw new Error('local proxy '+r.status);
+        }catch(e){
+          // 2) Fallback: direct CBOE via allorigins (for local file preview)
+          console.log('Local proxy failed, fallback to allorigins', e);
+          const cboeUrl = `https://cdn.cboe.com/api/global/delayed_quotes/options/${encodeURIComponent(sym)}.json`;
+          const proxy = `https://api.allorigins.win/raw?url=${encodeURIComponent(cboeUrl)}`;
+          const r2 = await fetch(proxy);
+          if (!r2.ok) throw new Error('CBOE fetch failed '+r2.status);
+          const raw = await r2.json();
+          const rawOptions = (raw && raw.data && raw.data.options) || raw.options || {};
+          const spot = (raw && raw.data && (raw.data.close || raw.data.current_price)) || raw.close || null;
+          data = { symbol: sym, cboeSymbol: sym, spot, expirations: Object.keys(rawOptions).sort(), rawOptions, source: 'CBOE via allorigins (fallback)' };
+        }
+        if (!data || !data.expirations || !data.expirations.length) throw new Error('No expirations returned');
+        const sel = document.getElementById('chainExpiration');
+        sel.innerHTML = '';
+        data.expirations.forEach(exp=>{
+          const opt = document.createElement('option');
+          opt.value = exp;
+          opt.textContent = exp;
+          sel.appendChild(opt);
+        });
+        window._cboeData = data;
+        if (spotRefEl) spotRefEl.value = data.spot ? '$' + Number(data.spot).toFixed(2) : '—';
+        renderChainTable();
+        statusEl.textContent = `${data.symbol} • CBOE spot ref $${data.spot ? Number(data.spot).toFixed(2) : '?'} • ${data.expirations.length} expirations • ${data.source} • Manual S/IV/Rate/Div preserved`;
+        statusEl.className='quote-status ok';
+      }catch(err){
+        console.error(err);
+        statusEl.textContent = 'Chain load failed: ' + (err && err.message ? err.message : err) + ' — Try SPY, QQQ, AAPL (CBOE only covers popular underlyings)';
+        statusEl.className='quote-status err';
+      }
+    }
+    function renderChainTable(){
+      const wrap = document.getElementById('chainTableWrap');
+      const sel = document.getElementById('chainExpiration');
+      const filterSel = document.getElementById('chainFilter');
+      const data = window._cboeData;
+      if (!data || !sel || !sel.value){ wrap.innerHTML='<div style="padding:12px;color:var(--muted)">Load chain first</div>'; return; }
+      const exp = sel.value;
+      const chain = data.rawOptions[exp] || [];
+      if (!chain.length){ wrap.innerHTML='<div style="padding:12px">Empty chain for '+exp+'</div>'; return; }
+      // split calls/puts
+      const calls = {}, puts = {};
+      chain.forEach(c=>{
+        const strike = Number(c.strike || c.strike_price);
+        const type = (c.option_type || c.type || '').toLowerCase();
+        if (type.startsWith('c')) calls[strike]=c; else puts[strike]=c;
+      });
+      const strikes = Object.keys({...calls,...puts}).map(Number).sort((a,b)=>a-b);
+      const spot = Number(data.spot) || parseFloat(document.getElementById('spot').value) || 100;
+      // filter
+      let visibleStrikes = strikes;
+      const filt = filterSel ? filterSel.value : 'atm20';
+      if (filt!=='all'){
+        const n = filt==='atm10'?10:20;
+        const withDist = strikes.map(k=>({k, d: Math.abs(k-spot)})).sort((a,b)=>a.d-b.d).slice(0,n).map(x=>x.k).sort((a,b)=>a-b);
+        visibleStrikes = withDist;
+      }
+      let html = '<table class="chain-table"><thead><tr><th>Call</th><th>Add</th><th>Strike</th><th>Add</th><th>Put</th></tr></thead><tbody>';
+      visibleStrikes.forEach(strike=>{
+        const c = calls[strike], p = puts[strike];
+        const cPrice = c ? midPrice(c) : null;
+        const pPrice = p ? midPrice(p) : null;
+        const isATM = Math.abs(strike-spot) < 0.5;
+        html += `<tr class="${isATM?'atm':''}">`;
+        html += `<td class="price">${cPrice!=null? '$'+cPrice.toFixed(2):'—'}</td>`;
+        html += `<td><button class="btn-add" onclick="addLegFromChain('call', ${strike}, ${cPrice||0}, '${exp}')">+C</button></td>`;
+        html += `<td class="strike">${strike}</td>`;
+        html += `<td><button class="btn-add" onclick="addLegFromChain('put', ${strike}, ${pPrice||0}, '${exp}')">+P</button></td>`;
+        html += `<td class="price">${pPrice!=null? '$'+pPrice.toFixed(2):'—'}</td>`;
+        html += `</tr>`;
+      });
+      html += '</tbody></table>';
+      wrap.innerHTML = html;
+    }
+    function addLegFromChain(type, strike, premium, expStr){
+      const today = new Date(); today.setHours(0,0,0,0);
+      const expDate = new Date(expStr);
+      if (isNaN(expDate)) { alert('Invalid expiration'); return; }
+      const dte = Math.max(0, Math.round((expDate - today)/(1000*60*60*24)));
+      const leg = {
+        id: nextId++,
+        side: 'buy',
+        type: type,
+        strike: Number(strike),
+        dte: dte,
+        qty: 1,
+        premium: Number(premium) ? Math.round(Number(premium)*100)/100 : 0.05,
+        premiumManual: true,
+        ticker: currentTicker()
+      };
+      legs.push(leg);
+      // do NOT touch spot/iv/rate/divYield - keep manual
+      renderLegs();
+      recalc();
+      resetSimulation();
+      setQuoteStatus(`Added ${type.toUpperCase()} ${strike} ${expStr} (DTE ${dte}) • Edit premium/Side/Qty if needed. S/IV/Rate/Div still manual.`, 'ok');
+      // scroll to legs
+      document.getElementById('legsList')?.scrollIntoView({behavior:'smooth', block:'center'});
+    }
+    // override loadDelayedQuote to KEEP manual IV/Rate/Div - only spot optional
+    const _origLoadDelayedQuote = loadDelayedQuote;
+    loadDelayedQuote = async function(){
+      const sym = currentTicker();
+      const spotEl = document.getElementById('spot');
+      const prevSpot = spotEl.value;
+      await _origLoadDelayedQuote();
+      // keep IV/Rate/Div untouched - already the case, but ensure we don't rescale them
+      // if user had manual spot they want to keep, they can re-enter - we show note
+      setQuoteStatus(document.getElementById('quoteStatus').textContent + ' — IV/Rate/Div kept manual.', 'ok');
+    };
+    
     (function bootBuilder() {
       var params = null;
       try { params = new URLSearchParams(window.location.search); } catch (e) {}
