@@ -1418,85 +1418,101 @@
       const p = Math.max(0.5, +(S * 0.04 * (iv / 25)).toFixed(2));
       const unit = Math.max(0.25, +(S / 100).toFixed(4));
 
+      // Strike offsets below were originally hardcoded in flat dollars (K+10,
+      // K±15, K±20 …), sized for a ~$100 stock. That made every spread look
+      // unrealistically narrow (or wide) once the underlying moved away from
+      // $100 — e.g. a $10-wide iron condor on a $771 stock is only ~1.3% OTM
+      // per side instead of a sane ~10%. `off` scales the same relative
+      // widths (0.5x / 1x / 1.5x / 2x) to the actual spot, then `strikeAt`
+      // snaps the result to a sensible strike increment for that price level.
+      const stepSize = S >= 300 ? 5 : S >= 50 ? 1 : 0.5;
+      const off = Math.max(0.5, +(unit * 10).toFixed(4));
+      function strikeAt(mult) {
+        if (!mult) return K;
+        const raw = K + mult * off;
+        const snapped = Math.round(raw / stepSize) * stepSize;
+        return Math.max(stepSize, +snapped.toFixed(2));
+      }
+
       const templates = {
         long_call: [
           { side: 'buy', type: 'call', strike: K, dte: 90, qty: 1, premium: p }
         ],
         covered_call: [
           { side: 'buy', type: 'stock', strike: 0, dte: 0, qty: 100, premium: +S.toFixed(2) },
-          { side: 'sell', type: 'call', strike: K + 10, dte: 45, qty: 1, premium: +(p * 0.55).toFixed(2) }
+          { side: 'sell', type: 'call', strike: strikeAt(1), dte: 45, qty: 1, premium: +(p * 0.55).toFixed(2) }
         ],
         cash_secured_put: [
           { side: 'sell', type: 'put', strike: K, dte: 90, qty: 1, premium: +(p * 0.9).toFixed(2) }
         ],
         bull_call_spread: [
           { side: 'buy', type: 'call', strike: K, dte: 90, qty: 1, premium: +(p * 1.2).toFixed(2) },
-          { side: 'sell', type: 'call', strike: K + 10, dte: 90, qty: 1, premium: +(p * 0.6).toFixed(2) }
+          { side: 'sell', type: 'call', strike: strikeAt(1), dte: 90, qty: 1, premium: +(p * 0.6).toFixed(2) }
         ],
         long_straddle: [
           { side: 'buy', type: 'call', strike: K, dte: 90, qty: 1, premium: p },
           { side: 'buy', type: 'put', strike: K, dte: 90, qty: 1, premium: p }
         ],
         long_strangle: [
-          { side: 'buy', type: 'call', strike: K + 10, dte: 90, qty: 1, premium: +(p * 0.6).toFixed(2) },
-          { side: 'buy', type: 'put', strike: K - 10, dte: 90, qty: 1, premium: +(p * 0.6).toFixed(2) }
+          { side: 'buy', type: 'call', strike: strikeAt(1), dte: 90, qty: 1, premium: +(p * 0.6).toFixed(2) },
+          { side: 'buy', type: 'put', strike: strikeAt(-1), dte: 90, qty: 1, premium: +(p * 0.6).toFixed(2) }
         ],
         long_call_butterfly: [
-          { side: 'buy', type: 'call', strike: K - 10, dte: 90, qty: 1, premium: +(8.6 * unit).toFixed(2) },
+          { side: 'buy', type: 'call', strike: strikeAt(-1), dte: 90, qty: 1, premium: +(8.6 * unit).toFixed(2) },
           { side: 'sell', type: 'call', strike: K, dte: 90, qty: 2, premium: +(4.2 * unit).toFixed(2) },
-          { side: 'buy', type: 'call', strike: K + 10, dte: 90, qty: 1, premium: +(1.9 * unit).toFixed(2) }
+          { side: 'buy', type: 'call', strike: strikeAt(1), dte: 90, qty: 1, premium: +(1.9 * unit).toFixed(2) }
         ],
         call_condor: [
-          { side: 'buy', type: 'call', strike: K - 15, dte: 90, qty: 1, premium: +(9.4 * unit).toFixed(2) },
-          { side: 'sell', type: 'call', strike: K - 5, dte: 90, qty: 1, premium: +(5.6 * unit).toFixed(2) },
-          { side: 'sell', type: 'call', strike: K + 5, dte: 90, qty: 1, premium: +(3.1 * unit).toFixed(2) },
-          { side: 'buy', type: 'call', strike: K + 15, dte: 90, qty: 1, premium: +(1.5 * unit).toFixed(2) }
+          { side: 'buy', type: 'call', strike: strikeAt(-1.5), dte: 90, qty: 1, premium: +(9.4 * unit).toFixed(2) },
+          { side: 'sell', type: 'call', strike: strikeAt(-0.5), dte: 90, qty: 1, premium: +(5.6 * unit).toFixed(2) },
+          { side: 'sell', type: 'call', strike: strikeAt(0.5), dte: 90, qty: 1, premium: +(3.1 * unit).toFixed(2) },
+          { side: 'buy', type: 'call', strike: strikeAt(1.5), dte: 90, qty: 1, premium: +(1.5 * unit).toFixed(2) }
         ],
         long_put: [
           { side: 'buy', type: 'put', strike: K, dte: 90, qty: 1, premium: p }
         ],
         bear_put_spread: [
           { side: 'buy', type: 'put', strike: K, dte: 90, qty: 1, premium: +(p * 1.2).toFixed(2) },
-          { side: 'sell', type: 'put', strike: K - 10, dte: 90, qty: 1, premium: +(p * 0.6).toFixed(2) }
+          { side: 'sell', type: 'put', strike: strikeAt(-1), dte: 90, qty: 1, premium: +(p * 0.6).toFixed(2) }
         ],
         long_straddle_bear: [
           { side: 'buy', type: 'call', strike: K, dte: 90, qty: 1, premium: p },
           { side: 'buy', type: 'put', strike: K, dte: 90, qty: 1, premium: p }
         ],
         long_strangle_bear: [
-          { side: 'buy', type: 'call', strike: K + 10, dte: 90, qty: 1, premium: +(p * 0.6).toFixed(2) },
-          { side: 'buy', type: 'put', strike: K - 10, dte: 90, qty: 1, premium: +(p * 0.6).toFixed(2) }
+          { side: 'buy', type: 'call', strike: strikeAt(1), dte: 90, qty: 1, premium: +(p * 0.6).toFixed(2) },
+          { side: 'buy', type: 'put', strike: strikeAt(-1), dte: 90, qty: 1, premium: +(p * 0.6).toFixed(2) }
         ],
         long_put_butterfly: [
-          { side: 'buy', type: 'put', strike: K - 10, dte: 90, qty: 1, premium: +(1.9 * unit).toFixed(2) },
+          { side: 'buy', type: 'put', strike: strikeAt(-1), dte: 90, qty: 1, premium: +(1.9 * unit).toFixed(2) },
           { side: 'sell', type: 'put', strike: K, dte: 90, qty: 2, premium: +(4.2 * unit).toFixed(2) },
-          { side: 'buy', type: 'put', strike: K + 10, dte: 90, qty: 1, premium: +(8.6 * unit).toFixed(2) }
+          { side: 'buy', type: 'put', strike: strikeAt(1), dte: 90, qty: 1, premium: +(8.6 * unit).toFixed(2) }
         ],
         put_condor: [
-          { side: 'buy', type: 'put', strike: K + 15, dte: 90, qty: 1, premium: +(9.4 * unit).toFixed(2) },
-          { side: 'sell', type: 'put', strike: K + 5, dte: 90, qty: 1, premium: +(5.6 * unit).toFixed(2) },
-          { side: 'sell', type: 'put', strike: K - 5, dte: 90, qty: 1, premium: +(3.1 * unit).toFixed(2) },
-          { side: 'buy', type: 'put', strike: K - 15, dte: 90, qty: 1, premium: +(1.5 * unit).toFixed(2) }
+          { side: 'buy', type: 'put', strike: strikeAt(1.5), dte: 90, qty: 1, premium: +(9.4 * unit).toFixed(2) },
+          { side: 'sell', type: 'put', strike: strikeAt(0.5), dte: 90, qty: 1, premium: +(5.6 * unit).toFixed(2) },
+          { side: 'sell', type: 'put', strike: strikeAt(-0.5), dte: 90, qty: 1, premium: +(3.1 * unit).toFixed(2) },
+          { side: 'buy', type: 'put', strike: strikeAt(-1.5), dte: 90, qty: 1, premium: +(1.5 * unit).toFixed(2) }
         ],
         short_straddle: [
           { side: 'sell', type: 'call', strike: K, dte: 45, qty: 1, premium: p },
           { side: 'sell', type: 'put', strike: K, dte: 45, qty: 1, premium: p }
         ],
         short_strangle: [
-          { side: 'sell', type: 'call', strike: K + 10, dte: 45, qty: 1, premium: +(p * 0.55).toFixed(2) },
-          { side: 'sell', type: 'put', strike: K - 10, dte: 45, qty: 1, premium: +(p * 0.55).toFixed(2) }
+          { side: 'sell', type: 'call', strike: strikeAt(1), dte: 45, qty: 1, premium: +(p * 0.55).toFixed(2) },
+          { side: 'sell', type: 'put', strike: strikeAt(-1), dte: 45, qty: 1, premium: +(p * 0.55).toFixed(2) }
         ],
         iron_condor: [
-          { side: 'sell', type: 'put', strike: K - 10, dte: 45, qty: 1, premium: +(p * 0.7).toFixed(2) },
-          { side: 'buy', type: 'put', strike: K - 20, dte: 45, qty: 1, premium: +(p * 0.3).toFixed(2) },
-          { side: 'sell', type: 'call', strike: K + 10, dte: 45, qty: 1, premium: +(p * 0.7).toFixed(2) },
-          { side: 'buy', type: 'call', strike: K + 20, dte: 45, qty: 1, premium: +(p * 0.3).toFixed(2) }
+          { side: 'sell', type: 'put', strike: strikeAt(-1), dte: 45, qty: 1, premium: +(p * 0.7).toFixed(2) },
+          { side: 'buy', type: 'put', strike: strikeAt(-2), dte: 45, qty: 1, premium: +(p * 0.3).toFixed(2) },
+          { side: 'sell', type: 'call', strike: strikeAt(1), dte: 45, qty: 1, premium: +(p * 0.7).toFixed(2) },
+          { side: 'buy', type: 'call', strike: strikeAt(2), dte: 45, qty: 1, premium: +(p * 0.3).toFixed(2) }
         ],
         iron_butterfly: [
           { side: 'sell', type: 'put', strike: K, dte: 45, qty: 1, premium: p },
-          { side: 'buy', type: 'put', strike: K - 10, dte: 45, qty: 1, premium: +(p * 0.4).toFixed(2) },
+          { side: 'buy', type: 'put', strike: strikeAt(-1), dte: 45, qty: 1, premium: +(p * 0.4).toFixed(2) },
           { side: 'sell', type: 'call', strike: K, dte: 45, qty: 1, premium: p },
-          { side: 'buy', type: 'call', strike: K + 10, dte: 45, qty: 1, premium: +(p * 0.4).toFixed(2) }
+          { side: 'buy', type: 'call', strike: strikeAt(1), dte: 45, qty: 1, premium: +(p * 0.4).toFixed(2) }
         ],
         calendar_call: [
           { side: 'sell', type: 'call', strike: K, dte: 30, qty: 1, premium: +(p * 0.55).toFixed(2) },
@@ -1505,25 +1521,25 @@
         // Short OTM put + short call spread. Structured so net credit often
         // exceeds the call-spread width → theoretically no upside risk.
         jade_lizard: [
-          { side: 'sell', type: 'put', strike: K - 10, dte: 45, qty: 1, premium: +(p * 0.75).toFixed(2) },
-          { side: 'sell', type: 'call', strike: K + 10, dte: 45, qty: 1, premium: +(p * 0.55).toFixed(2) },
-          { side: 'buy', type: 'call', strike: K + 20, dte: 45, qty: 1, premium: +(p * 0.22).toFixed(2) }
+          { side: 'sell', type: 'put', strike: strikeAt(-1), dte: 45, qty: 1, premium: +(p * 0.75).toFixed(2) },
+          { side: 'sell', type: 'call', strike: strikeAt(1), dte: 45, qty: 1, premium: +(p * 0.55).toFixed(2) },
+          { side: 'buy', type: 'call', strike: strikeAt(2), dte: 45, qty: 1, premium: +(p * 0.22).toFixed(2) }
         ],
         // Long deep-ITM LEAP call + short near-term OTM call (covered call
         // without owning the shares).
         pmcc: [
-          { side: 'buy', type: 'call', strike: Math.max(1, K - 15), dte: 180, qty: 1, premium: +(Math.max(p * 2.2, 15 + p * 0.7)).toFixed(2) },
-          { side: 'sell', type: 'call', strike: K + 10, dte: 30, qty: 1, premium: +(p * 0.5).toFixed(2) }
+          { side: 'buy', type: 'call', strike: Math.max(stepSize, strikeAt(-1.5)), dte: 180, qty: 1, premium: +(Math.max(p * 2.2, 15 + p * 0.7)).toFixed(2) },
+          { side: 'sell', type: 'call', strike: strikeAt(1), dte: 30, qty: 1, premium: +(p * 0.5).toFixed(2) }
         ],
         // Front-ratio call: long 1 ATM, short 2 OTM. Credit or small debit;
         // unlimited upside risk on the extra short call.
         call_ratio_spread: [
           { side: 'buy', type: 'call', strike: K, dte: 45, qty: 1, premium: p },
-          { side: 'sell', type: 'call', strike: K + 10, dte: 45, qty: 2, premium: +(p * 0.55).toFixed(2) }
+          { side: 'sell', type: 'call', strike: strikeAt(1), dte: 45, qty: 2, premium: +(p * 0.55).toFixed(2) }
         ],
         put_ratio_spread: [
           { side: 'buy', type: 'put', strike: K, dte: 45, qty: 1, premium: p },
-          { side: 'sell', type: 'put', strike: K - 10, dte: 45, qty: 2, premium: +(p * 0.55).toFixed(2) }
+          { side: 'sell', type: 'put', strike: strikeAt(-1), dte: 45, qty: 2, premium: +(p * 0.55).toFixed(2) }
         ],
         // Long call + short put, same strike/expiry ≈ long 100 shares.
         synthetic_long: [
@@ -1538,8 +1554,8 @@
         // OTM call long + OTM put short: directional synthetic with less
         // premium outlay than an ATM synthetic.
         risk_reversal: [
-          { side: 'buy', type: 'call', strike: K + 10, dte: 90, qty: 1, premium: +(p * 0.6).toFixed(2) },
-          { side: 'sell', type: 'put', strike: K - 10, dte: 90, qty: 1, premium: +(p * 0.6).toFixed(2) }
+          { side: 'buy', type: 'call', strike: strikeAt(1), dte: 90, qty: 1, premium: +(p * 0.6).toFixed(2) },
+          { side: 'sell', type: 'put', strike: strikeAt(-1), dte: 90, qty: 1, premium: +(p * 0.6).toFixed(2) }
         ]
       };
 
