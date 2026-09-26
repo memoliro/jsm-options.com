@@ -232,7 +232,7 @@
       font-size: 0.78rem;
     }
     .leg-row {
-      <!-- background: #0f172a; -->
+      <!--background: #0f172a; -->
       border: 1px solid var(--border);
       border-radius: 7px;
       padding: 5px 5px;
@@ -580,7 +580,20 @@
     [data-theme="light"] .glossary-item{background:var(--input,#f1f5f9);}
     .glossary-item dt{font-size:0.8rem;font-weight:700;color:#93c5fd;margin-bottom:3px;}
     .glossary-item dd{font-size:0.75rem;color:var(--muted);line-height:1.4;margin:0;}
-</style>
+
+    .chain-table{width:100%;border-collapse:collapse;font-size:13px}
+    .chain-table th{position:sticky;top:0;background:var(--card);z-index:2;padding:8px 8px;text-align:right;border-bottom:1px solid var(--border);color:var(--muted);font-weight:700;font-size:11px;letter-spacing:.06em;text-transform:uppercase}
+    .chain-table td{padding:6px 8px;text-align:right;border-bottom:1px solid rgba(45,58,79,.4);font-variant-numeric:tabular-nums}
+    .chain-table td.strike{font-weight:800;text-align:center;color:var(--text);background:rgba(148,163,184,.10)}
+    .chain-table tr.atm td.strike{background:rgba(59,130,246,.18)}
+    .chain-table .btn-add{border:1px solid var(--border);background:var(--bg);color:var(--text);border-radius:6px;padding:3px 6px;font-size:10px;cursor:pointer;font-weight:600;white-space:nowrap}
+    .chain-table .btn-add:hover{border-color:var(--accent);color:var(--accent);background:rgba(59,130,246,.1)}
+    .chain-table .price.has{color:var(--text)}
+    .chain-table td.delta{color:var(--muted);font-size:11px;background:rgba(59,130,246,.06)}
+    .chain-table tr.atm td.delta{background:rgba(59,130,246,.14)}
+    select#ticker, select#chainFilterTop, select#chainExpiration{background:var(--card);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:8px}
+
+    </style>
 
 <style id="jsm-mobile-nav">
 .nav-toggle{display:none;box-sizing:border-box;width:44px;height:44px;min-width:44px;min-height:44px;padding:0;border:1px solid var(--border,#2d3a4f);border-radius:10px;background:var(--card,#1a2332);color:var(--text,#e7ecf3);cursor:pointer;align-items:center;justify-content:center;flex-direction:column;gap:5px;-webkit-tap-highlight-color:transparent;touch-action:manipulation;position:relative;z-index:40}
@@ -624,11 +637,11 @@
 </head>
 <body>
     <header class="site-header"><div class="site-header-inner"><a class="logo logo-link" href="/" aria-label="JSM Options Ana sayfa"><div class="logo-icon">JSM</div><div><div style="font-weight:700">JSM Options</div><div class="brand-sub">jsm-options.com · Eğitim</div></div></a><div class="header-right"><nav class="nav" aria-label="Ana menü"><a href="/">Ana sayfa</a><a href="/level1/">Temeller</a><a href="/level2/">Altyapı</a><a href="/level3/">Spreads</a><a href="/level4/">İleri düzey</a><a href="/strategies/">Stratejiler</a><a href="/cheat-sheet/">Özet kart</a><a href="/builder/" class="active">Builder</a></nav><button type="button" class="nav-toggle" id="navToggle" aria-label="Menüyü aç" aria-expanded="false"><span></span><span></span><span></span></button><button type="button" class="theme-toggle" id="themeToggle" aria-label="Tema değiştir"><span id="themeIcon" class="theme-icon">☼</span><span id="themeLabel" class="theme-label">Koyu</span></button></div></div></header>
-<nav class="breadcrumbs" aria-label="Sayfa yolu"><a href="/">Ana sayfa</a><span aria-hidden="true">/</span><span aria-current="page">Builder</span></nav>
+<nav class="breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span aria-hidden="true">/</span><span aria-current="page">Builder</span></nav>
 
   <div class="builder-wrap">
-  <h1>Options Strategy Builder &amp; Simülatör</h1>
-  <p class="subtitle">Tam etkileşimli · ×100 kontrat çarpanı · Yeşil = kâr · Kırmızı = zarar</p>
+  <h1>Options Strategy Builder &amp; Simulator</h1>
+  <p class="subtitle">Fully interactive · equity options ×100 · futures options use contract-specific multipliers · Green = profit · Red = loss</p>
 
   <div class="card" style="margin-bottom:12px;">
     <div class="top-bar">
@@ -681,13 +694,63 @@
           </div>
         </div>
       </div>
-      <div class="field ticker-field">
+            <div class="field ticker-field" style="min-width:200px">
         <label>Symbol / Ticker</label>
-        <input id="ticker" type="text" value="SPY" maxlength="12" autocomplete="off" spellcheck="false" placeholder="SPY" onchange="syncStrategyTicker()" />
+        <select id="ticker" onchange="onTickerChange()">
+          <option value="SPY" selected>SPY – S&P 500 ETF</option>
+          <option value="QQQ">QQQ – Nasdaq 100 ETF</option>
+          <option value="IWM">IWM – Russell 2000 ETF</option>
+          <option value="DIA">DIA – Dow 30 ETF</option>
+          <option value="SPX">SPX – S&P 500 Index (_SPX)</option>
+          <option value="NDX">NDX – Nasdaq 100 Index (_NDX)</option>
+          <option value="RUT">RUT – Russell 2000 Index (_RUT)</option>
+          <option value="VIX">VIX – Volatility Index (_VIX)</option>
+          <option value="AAPL">AAPL – Apple</option>
+          <option value="MSFT">MSFT – Microsoft</option>
+          <option value="NVDA">NVDA – Nvidia</option>
+          <option value="TSLA">TSLA – Tesla</option>
+          <option value="META">META – Meta Platforms</option>
+          <option value="AMZN">AMZN – Amazon</option>
+          <option value="GOOGL">GOOGL – Alphabet</option>
+          <option value="NFLX">NFLX – Netflix</option>
+          <option value="AMD">AMD – AMD</option>
+          <option value="BA">BA – Boeing</option>
+          <option value="JPM">JPM – JPMorgan</option>
+          <option value="XLF">XLF – Financials ETF</option>
+          <option value="TLT">TLT – 20Y Treasury ETF</option>
+          <option value="GLD">GLD – Gold ETF</option>
+          <option value="SLV">SLV – Silver ETF</option>
+          <option value="USO">USO – Oil ETF</option>
+          <option value="XLK">XLK – Tech ETF</option>
+          <option value="XLE">XLE – Energy ETF</option>
+          <optgroup label="Futures options (CME / futures contracts)">
+            <option value="/ES">/ES – E-mini S&amp;P 500</option>
+            <option value="/MES">/MES – Micro E-mini S&amp;P 500</option>
+            <option value="/NQ">/NQ – E-mini Nasdaq-100</option>
+            <option value="/MNQ">/MNQ – Micro E-mini Nasdaq-100</option>
+            <option value="/RTY">/RTY – E-mini Russell 2000</option>
+            <option value="/M2K">/M2K – Micro E-mini Russell 2000</option>
+            <option value="/YM">/YM – E-mini Dow</option>
+            <option value="/MYM">/MYM – Micro E-mini Dow</option>
+            <option value="/CL">/CL – Crude Oil</option>
+            <option value="/MCL">/MCL – Micro Crude Oil</option>
+            <option value="/NG">/NG – Natural Gas</option>
+            <option value="/GC">/GC – Gold</option>
+            <option value="/MGC">/MGC – Micro Gold</option>
+            <option value="/SI">/SI – Silver</option>
+            <option value="/SIL">/SIL – Micro Silver</option>
+            <option value="/ZB">/ZB – 30Y Treasury Bond</option>
+            <option value="/ZN">/ZN – 10Y Treasury Note</option>
+            <option value="/ZF">/ZF – 5Y Treasury Note</option>
+            <option value="/ZT">/ZT – 2Y Treasury Note</option>
+            <option value="/6E">/6E – Euro FX</option>
+            <option value="/6J">/6J – Japanese Yen FX</option>
+          </optgroup>
+        </select>
       </div>
       <div class="field" style="min-width:auto">
         <label>&nbsp;</label>
-        <button type="button" class="btn-secondary" onclick="loadDelayedQuote()">Gecikmeli fiyat</button>
+        <button type="button" class="btn-secondary" id="loadChainBtn" onclick="loadCboeChain()">Zinciri Yükle</button>
       </div>
       <div class="field">
         <label>Hisse fiyatı ($)</label>
@@ -701,15 +764,48 @@
         <label>Faiz (%)</label>
         <input id="rate" type="number" value="5" step="0.25" min="0" max="20" oninput="liveUpdate()" />
       </div>
+      
+      <div class="field">
+        <label>Zincir filtresi</label>
+        <select id="chainFilterTop" onchange="renderChainTable()">
+          <option value="atm30">ATM ±30%</option>
+          <option value="atm20" selected>ATM ±20%</option>
+          <option value="atm10">ATM ±10%</option>
+          <option value="atm5">ATM ±5%</option>
+          <option value="all">All strikes</option>
+        </select>
+      </div>
       <div class="field">
         <label>Temettü (%)</label>
         <input id="divYield" type="number" value="0" step="0.1" min="0" max="15" oninput="liveUpdate()" />
       </div>
     </div>
-    <p id="quoteStatus" class="quote-status">Gecikmeli kotasyon (~15 dk). Bacakta Symbol boşsa strateji ticker’ı kullanılır. Eğitim — işlem için değil.</p>
+    <p id="quoteStatus" class="quote-status">Varsayılan ticker için CBOE gecikmeli zincir yükleniyor… Eğitim amaçlı — işlem için değil.</p>
   </div>
 
+  
+  <div class="card" id="chainCard" style="border:1px solid var(--border)">
+      <h2>Canlı zincir — piyasa verisi (eğitim amaçlı) <span style="font-size:0.72rem;color:var(--muted);font-weight:500">açılışta yüklenir • ~15dk gecikmeli • her alanı düzenleyebilirsiniz</span></h2>
+      <div class="top-bar" style="margin-bottom:8px">
+        <div class="field">
+          <label>Vade</label>
+          <select id="chainExpiration" onchange="onChainExpChange()"></select>
+        </div>
+        <div class="field">
+          <label>Spot ref (CBOE)</label>
+          <input id="chainSpotRef" type="text" readonly placeholder="—" style="opacity:.8" />
+        </div>
+        <div class="field wide">
+          <label>Bilgi</label>
+          <div id="chainStatus" class="quote-status" style="padding:6px 8px;background:var(--bg);border-radius:6px">SPY zinciri ile açılıyor. Ticker veya vadeyi istediğiniz zaman değiştirin.</div>
+        </div>
+      </div>
+      <div id="chainTableWrap" style="max-height:520px;overflow:auto;border:1px solid var(--border);border-radius:8px"></div>
+      <p style="font-size:0.7rem;color:var(--muted);margin-top:6px">Listelenen opsiyon verisi: CBOE gecikmeli. Vadeli opsiyonlar ayrı vadeli kontrat özelliklerini kullanır ve bu CBOE yolu üzerinden yüklenmez. Yüklemede spot / ATM IV / strike / DTE / premium zincirden gelir. Her alanı geçersiz kılabilirsiniz. +C / +P piyasa fiyatlı bacak ekler.</p>
+    </div>
+
   <div class="main-grid">
+
     <!-- Current Legs, with the strategy's static metrics moved alongside it -->
     <div class="card">
       <h2>Mevcut bacaklar <span class="slot-tag">A</span></h2>
@@ -731,7 +827,7 @@
             <button class="btn-secondary btn-sm" onclick="clearLegs()">Tümünü sil</button>
           </div>
           <p style="font-size:0.7rem;color:var(--muted);margin-top:8px;">
-            Debit = ödersiniz · Credit = alırsınız · <strong>Opsiyon:</strong> adet = kontrat (×100) · <strong>Hisse:</strong> adet = pay sayısı, maliyet = giriş fiyatı (Strike ve DTE yok sayılır)
+            Debit = ödersiniz · Credit = alırsınız · <strong>Listelenen opsiyon:</strong> adet = kontrat (×100) · <strong>Vadeli opsiyon:</strong> kontrat bazlı çarpan · <strong>Hisse:</strong> adet = pay sayısı, maliyet = giriş fiyatı (Strike ve DTE yok sayılır)
           </p>
         </div>
         <div class="legs-summary-col">
@@ -848,11 +944,11 @@
       </div>
       <div class="legend-note">
         <span><span class="dot green"></span> A Expiry (yeşil / kırmızı)</span>
-        <span><span class="dot dotted"></span> A kalan süreyle</span>
+        <span><span class="dot dotted"></span> A kalan süreli</span>
         <span><span class="dot" style="background:#a78bfa;"></span> B Expiry (karşılaştırma)</span>
-        <span><span class="dot dotted" style="background:repeating-linear-gradient(90deg,#c4b5fd 0 3px,transparent 3px 6px);"></span> B kalan süreyle</span>
+        <span><span class="dot dotted" style="background:repeating-linear-gradient(90deg,#c4b5fd 0 3px,transparent 3px 6px);"></span> B kalan süreli</span>
       </div>
-      <p class="gesture-hint">Telefon / tablet: sürükleyerek fiyatı kaydırın · pinch ile Payoff eksenini yakınlaştırın · çift dokunuşla sıfırlayın · iki parmakla kaydırın.</p>
+      <p class="gesture-hint">Telefon / tablet: fiyatı hareket ettirmek için sürükleyin · Payoff eksenini yakınlaştırmak için sıkıştırın · sıfırlamak için çift dokunun · iki parmakla kaydırın.</p>
       <div class="compare-metrics" id="compareMetrics">
         <div class="compare-col a" id="compareColA"></div>
         <div class="compare-col b" id="compareColB"></div>
@@ -863,7 +959,7 @@
            as separate sliders since Advance Day covers that job now. -->
       <div class="hidden-controls">
         <div class="slider-group">
-          <label>Kalan gün <strong id="daysLeftLabel">90</strong></label>
+          <label>Days remaining <strong id="daysLeftLabel">90</strong></label>
           <input type="range" id="daysLeft" min="0" max="90" value="90" oninput="onDaysChange()" />
         </div>
         <div class="slider-group" style="margin-top:6px;">
@@ -882,19 +978,19 @@
           <svg id="simSvg" viewBox="0 0 600 200" preserveAspectRatio="none"></svg>
           <div class="sim-tooltip" id="simTooltip"></div>
         </div>
-        <div class="sim-readout" id="simReadout">0 / 90. gün · K/Z şu an $0</div>
+        <div class="sim-readout" id="simReadout">Day 0 / 90 · P/L now $0</div>
         <div class="btn-row">
-          <button class="btn-play btn-sm" id="simAdvance1" onclick="advanceSimDays(1)">▶ 1 gün ilerlet</button>
-          <button class="btn-secondary btn-sm" id="simAdvance5" onclick="advanceSimDays(5)">▶▶ 5 gün ilerlet</button>
-          <button class="btn-secondary btn-sm" onclick="resetSimulation()">Simülasyonu sıfırla</button>
+          <button class="btn-play btn-sm" id="simAdvance1" onclick="advanceSimDays(1)">▶ Advance 1 day</button>
+          <button class="btn-secondary btn-sm" id="simAdvance5" onclick="advanceSimDays(5)">▶▶ Advance 5 days</button>
+          <button class="btn-secondary btn-sm" onclick="resetSimulation()">Reset simulation</button>
         </div>
         <div class="controls-compact" style="margin-top:10px;">
           <div class="slider-group">
-            <label>Simüle volatilite <strong id="simVolLabel">25%</strong></label>
+            <label>Simulated volatility <strong id="simVolLabel">25%</strong></label>
             <input type="range" id="simVol" min="5" max="120" step="1" value="25" oninput="onSimVolChange()" />
           </div>
           <div class="slider-group">
-            <label>Simüle drift (yıllık) <strong id="simDriftLabel">0%</strong></label>
+            <label>Simulated drift (annual) <strong id="simDriftLabel">0%</strong></label>
             <input type="range" id="simDrift" min="-40" max="40" step="1" value="0" oninput="onSimDriftChange()" />
           </div>
         </div>
@@ -918,11 +1014,11 @@
             <div class="val" id="posNetPremium">$0</div>
           </div>
           <div class="metric">
-            <div class="label">Pozisyon Delta</div>
+            <div class="label">Position Delta</div>
             <div class="val" id="posDelta">—</div>
           </div>
           <div class="metric">
-            <div class="label">Theta / gün</div>
+            <div class="label">Theta / day</div>
             <div class="val" id="posTheta">—</div>
           </div>
         </div>
@@ -934,31 +1030,31 @@
 
     <!-- Option Greeks -->
     <div class="card">
-      <h2>Option Greeks <span style="font-size:0.72rem;color:var(--muted);font-weight:500;">(pozisyon toplamı · ×100)</span></h2>
+      <h2>Option Greeks <span style="font-size:0.72rem;color:var(--muted);font-weight:500;">(pozisyon toplamı · çarpan)</span></h2>
       <div class="greeks-grid">
         <div class="greek-card">
           <div class="g-name">Δ Delta</div>
           <div class="g-val" id="gDelta">—</div>
-          <div class="g-impact" id="gDeltaImpact">Fiyat duyarlılığı: Underlying $1 hareket ederse K/Z ne kadar değişir.</div>
+          <div class="g-impact" id="gDeltaImpact">Price sensitivity: how much P/L moves if Underlying moves $1.</div>
         </div>
         <div class="greek-card">
           <div class="g-name">Γ Gamma</div>
           <div class="g-val" id="gGamma">—</div>
-          <div class="g-impact" id="gGammaImpact">Dışbükeylik: Underlying hareket edince Delta ne kadar hızlı değişir.</div>
+          <div class="g-impact" id="gGammaImpact">Convexity: how fast Delta changes when Underlying moves.</div>
         </div>
         <div class="greek-card">
           <div class="g-name">Θ Theta</div>
           <div class="g-val" id="gTheta">—</div>
-          <div class="g-impact" id="gThetaImpact">Zaman aşınması: başka bir şey değişmezse günde beklenen K/Z.</div>
+          <div class="g-impact" id="gThetaImpact">Time decay: expected P/L per day if nothing else changes.</div>
         </div>
         <div class="greek-card">
           <div class="g-name">ν Vega</div>
           <div class="g-val" id="gVega">—</div>
-          <div class="g-impact" id="gVegaImpact">Volatilite duyarlılığı: IV 1 puan artarsa K/Z değişimi.</div>
+          <div class="g-impact" id="gVegaImpact">Volatility sensitivity: P/L change if IV rises 1 point.</div>
         </div>
       </div>
       <div class="edu-tip" id="eduTip" style="margin-top:10px;">
-        Varsayılan olarak Long Call yüklü. Her alanı düzenleyin — grafik ve Greeks anında güncellenir. Covered Call için şablonu seçin veya Hisse (adet 100) + Short Call (adet 1) ekleyin.
+        A Long Call is loaded by default. Edit any field — the chart and Greeks update live. For a Covered Call pick the template, or add Stock (qty 100) + a Short Call (qty 1).
       </div>
     </div>
   </div>
@@ -1042,6 +1138,64 @@
 
   <script>
     const MULTIPLIER = 100;
+    // Futures-option contracts do NOT use the equity-option ×100 convention.
+    // Keep the futures contract specification separate so pricing/cash/Greeks
+    // never silently reuse stock-option assumptions.
+    const FUTURES_CONTRACTS = {
+      '/ES': { root: 'ES', multiplier: 50, strikeStep: 5, venue: 'CME' },
+      '/MES': { root: 'MES', multiplier: 5, strikeStep: 5, venue: 'CME' },
+      '/NQ': { root: 'NQ', multiplier: 20, strikeStep: 25, venue: 'CME' },
+      '/MNQ': { root: 'MNQ', multiplier: 2, strikeStep: 25, venue: 'CME' },
+      '/RTY': { root: 'RTY', multiplier: 50, strikeStep: 5, venue: 'CME' },
+      '/M2K': { root: 'M2K', multiplier: 5, strikeStep: 5, venue: 'CME' },
+      '/YM': { root: 'YM', multiplier: 5, strikeStep: 50, venue: 'CBOT' },
+      '/MYM': { root: 'MYM', multiplier: 0.5, strikeStep: 50, venue: 'CBOT' },
+      '/CL': { root: 'CL', multiplier: 1000, strikeStep: 0.5, venue: 'NYMEX' },
+      '/MCL': { root: 'MCL', multiplier: 100, strikeStep: 0.5, venue: 'NYMEX' },
+      '/NG': { root: 'NG', multiplier: 10000, strikeStep: 0.025, venue: 'NYMEX' },
+      '/GC': { root: 'GC', multiplier: 100, strikeStep: 5, venue: 'COMEX' },
+      '/MGC': { root: 'MGC', multiplier: 10, strikeStep: 5, venue: 'COMEX' },
+      '/SI': { root: 'SI', multiplier: 5000, strikeStep: 0.25, venue: 'COMEX' },
+      '/SIL': { root: 'SIL', multiplier: 1000, strikeStep: 0.25, venue: 'COMEX' },
+      '/ZB': { root: 'ZB', multiplier: 1000, strikeStep: 1/32, venue: 'CBOT' },
+      '/ZN': { root: 'ZN', multiplier: 1000, strikeStep: 1/32, venue: 'CBOT' },
+      '/ZF': { root: 'ZF', multiplier: 1000, strikeStep: 1/32, venue: 'CBOT' },
+      '/ZT': { root: 'ZT', multiplier: 2000, strikeStep: 1/32, venue: 'CBOT' },
+      '/6E': { root: '6E', multiplier: 125000, strikeStep: 0.005, venue: 'CME' },
+      '/6J': { root: '6J', multiplier: 12500000, strikeStep: 0.0000005, venue: 'CME' }
+    };
+
+    function normalizeTicker(ticker) {
+      const raw = (ticker || '').toString().trim().toUpperCase();
+      if (!raw) return '';
+      if (FUTURES_CONTRACTS[raw]) return raw;
+      const slash = raw.charAt(0) === '/' ? raw : '/' + raw;
+      return FUTURES_CONTRACTS[slash] ? slash : raw;
+    }
+    function isFuturesTicker(ticker) {
+      const t = normalizeTicker(ticker);
+      return !!FUTURES_CONTRACTS[t];
+    }
+    function futuresSpec(ticker) {
+      return FUTURES_CONTRACTS[normalizeTicker(ticker)] || null;
+    }
+    function futuresStrikeStep(ticker) {
+      const spec = futuresSpec(ticker);
+      return spec && spec.strikeStep ? spec.strikeStep : 0.25;
+    }
+    function roundToStep(value, step) {
+      const n = Number(value);
+      const s = Number(step) || 1;
+      return Math.round(n / s) * s;
+    }
+    function legIsFuturesOption(leg) {
+      return !!(leg && leg.type !== 'stock' && isFuturesTicker(leg.ticker || currentTicker()));
+    }
+    function legMultiplier(leg) {
+      if (!leg || leg.type === 'stock') return 1;
+      const spec = futuresSpec(leg.ticker || currentTicker());
+      return spec ? spec.multiplier : MULTIPLIER;
+    }
     let legs = [];
     let chart = null;
     // Anchors the payoff graph's x-axis (price range shown) so the fixed
@@ -1103,8 +1257,43 @@
       const tkr = currentTicker();
       [legs, legsB].forEach(function (list) {
         if (!list) return;
-        list.forEach(function (leg) { if (!leg.ticker) leg.ticker = tkr; });
+        list.forEach(function (leg) { if (!leg.tickerManual) leg.ticker = tkr; });
       });
+    }
+    function onTickerChange() {
+      const tkr = normalizeTicker(currentTicker());
+      const futures = isFuturesTicker(tkr);
+      // A strategy-level ticker change means inherited legs belong to the new
+      // underlying. Clear chain pricing/strike anchoring so the old ticker's
+      // strike can never survive into the new ticker. Manually overridden leg
+      // symbols remain untouched.
+      [legs, legsB].forEach(function(list) {
+        if (!list) return;
+        list.forEach(function(leg) {
+          if (leg.tickerManual) return;
+          leg.ticker = tkr;
+          if (leg.type !== 'stock') {
+            leg.strike = null;
+            leg._tickerReanchorPending = true;
+            leg.premiumFromChain = false;
+            leg.premiumManual = false;
+          } else {
+            leg.premiumFromChain = false;
+            leg.premiumManual = false;
+          }
+        });
+      });
+      window._cboeData = null;
+      const chainStatus = document.getElementById('chainStatus');
+      if (chainStatus) {
+        chainStatus.textContent = futures
+          ? `${tkr} selected — futures-option mode (Black-76 / contract multiplier). Loading a CBOE equity chain is disabled.`
+          : `${tkr} selected — loading listed-option chain…`;
+        chainStatus.className = 'quote-status warn';
+      }
+      renderLegs();
+      if (typeof renderLegsB === 'function' && typeof compareMode !== 'undefined' && compareMode) renderLegsB();
+      if (typeof loadCboeChain === 'function') loadCboeChain();
     }
     function setQuoteStatus(msg, kind) {
       const el = document.getElementById('quoteStatus');
@@ -1114,10 +1303,10 @@
     }
     function parseYahooChart(json) {
       const res = json && json.chart && json.chart.result && json.chart.result[0];
-      if (!res || !res.meta) throw new Error('Boş kotasyon');
+      if (!res || !res.meta) throw new Error('Empty quote');
       const meta = res.meta;
       const last = Number(meta.regularMarketPrice || meta.chartPreviousClose || meta.previousClose);
-      if (!last || !isFinite(last)) throw new Error('Fiyat yok');
+      if (!last || !isFinite(last)) throw new Error('No price');
       const ts = meta.regularMarketTime ? new Date(meta.regularMarketTime * 1000) : new Date();
       return {
         symbol: meta.symbol || currentTicker(),
@@ -1126,7 +1315,7 @@
         currency: meta.currency || 'USD',
         exchange: meta.fullExchangeName || meta.exchangeName || '',
         when: ts,
-        source: 'Yahoo Finance (gecikmeli)'
+        source: 'Yahoo Finance (delayed)'
       };
     }
     async function fetchDelayedQuote(sym) {
@@ -1145,12 +1334,12 @@
           return parseYahooChart(await r.json());
         } catch (e) { lastErr = e; }
       }
-      throw lastErr || new Error('Kotasyon alınamadı');
+      throw lastErr || new Error('Quote failed');
     }
     async function loadDelayedQuote() {
       const sym = currentTicker();
-      if (!sym) { setQuoteStatus('Symbol girin (ör. SPY, AAPL).', 'err'); return; }
-      setQuoteStatus(sym + ' yükleniyor…', 'warn');
+      if (!sym) { setQuoteStatus('Enter a Symbol (e.g. SPY, AAPL).', 'err'); return; }
+      setQuoteStatus(sym + ' loading…', 'warn');
       try {
         const q = await fetchDelayedQuote(sym);
         const spotEl = document.getElementById('spot');
@@ -1160,7 +1349,7 @@
         function rescale(list) {
           if (!list) return;
           list.forEach(function (leg) {
-            if (!leg.ticker) leg.ticker = q.symbol;
+            if (!leg.tickerManual) leg.ticker = q.symbol;
             if (leg.type !== 'stock' && Math.abs(ratio - 1) > 0.02) {
               leg.strike = Math.round(leg.strike * ratio * 2) / 2;
             }
@@ -1170,17 +1359,17 @@
         rescale(legs);
         rescale(legsB);
         refreshAllModeledPremiums({ forceStock: true });
-        const hh = q.when.toLocaleString('tr-TR', { hour: '2-digit', minute: '2-digit', day: '2-digit', month: 'short' });
+        const hh = q.when.toLocaleString('en-US', { hour: '2-digit', minute: '2-digit', day: '2-digit', month: 'short' });
         const chg = q.last - q.prev;
         const chgTxt = (chg >= 0 ? '+' : '') + chg.toFixed(2);
         setQuoteStatus(q.symbol + '  $' + q.last.toFixed(2) + '  (' + chgTxt + ')  ·  ' + q.source + '  ·  ' + hh +
-          (q.exchange ? '  ·  ' + q.exchange : '') + '  — Bid/Ask zinciri yok; Premium modelde kalır.', 'ok');
+          (q.exchange ? '  ·  ' + q.exchange : '') + '  — No Bid/Ask chain; Premium stays modeled.', 'ok');
         renderLegs();
         if (typeof renderLegsB === 'function') renderLegsB();
         if (typeof resetSimulation === 'function') resetSimulation();
         recalc();
       } catch (e) {
-        setQuoteStatus('Kotasyon alınamadı (' + (e && e.message ? e.message : e) + '). Spot’u elle girin.', 'err');
+        setQuoteStatus('Quote failed (' + (e && e.message ? e.message : e) + '). Enter Spot manually.', 'err');
       }
     }
 
@@ -1192,6 +1381,33 @@
       const t = 1 / (1 + p * x);
       const y = 1 - (((((a5 * t + a4) * t) + a3) * t + a2) * t + a1) * t * Math.exp(-x * x);
       return 0.5 * (1 + sign * y);
+    }
+
+    // Black-76 is used for options on futures. The underlying input is the
+    // futures price, so the futures carry is not modeled as stock dividend yield.
+    function black76(F, K, T, r, sigma, type) {
+      if (T <= 0.0001) {
+        return type === 'call' ? Math.max(F - K, 0) : Math.max(K - F, 0);
+      }
+      if (!F || !K || !sigma || sigma <= 0) return 0;
+      const sqrtT = Math.sqrt(T);
+      const d1 = (Math.log(F / K) + 0.5 * sigma * sigma * T) / (sigma * sqrtT);
+      const d2 = d1 - sigma * sqrtT;
+      const df = Math.exp(-r * T);
+      if (type === 'call') return df * (F * normCDF(d1) - K * normCDF(d2));
+      return df * (K * normCDF(-d2) - F * normCDF(-d1));
+    }
+
+    function black76Delta(F, K, T, r, sigma, type) {
+      if (T <= 0.0001) {
+        const itm = type === 'call' ? F > K : F < K;
+        if (!itm) return 0;
+        return type === 'call' ? 1 : -1;
+      }
+      if (!F || !K || !sigma || sigma <= 0) return 0;
+      const d1 = (Math.log(F / K) + 0.5 * sigma * sigma * T) / (sigma * Math.sqrt(T));
+      const df = Math.exp(-r * T);
+      return type === 'call' ? df * normCDF(d1) : df * (normCDF(d1) - 1);
     }
 
     function blackScholes(S, K, T, r, q, sigma, type) {
@@ -1208,6 +1424,21 @@
       return K * Math.exp(-r * T) * normCDF(-d2) - S * Math.exp(-q * T) * normCDF(-d1);
     }
 
+    // Standalone Black-Scholes delta for an arbitrary strike/type — used by the
+    // option-chain table, independent of any leg object.
+    function bsDelta(S, K, T, r, q, sigma, type) {
+      if (type === 'stock') return 1;
+      if (T <= 0.0001) {
+        const itm = type === 'call' ? S > K : S < K;
+        if (!itm) return 0;
+        return type === 'call' ? 1 : -1;
+      }
+      const sqrtT = Math.sqrt(T);
+      const d1 = (Math.log(S / K) + (r - q + 0.5 * sigma * sigma) * T) / (sigma * sqrtT);
+      const eqT = Math.exp(-q * T);
+      return type === 'call' ? eqT * normCDF(d1) : eqT * (normCDF(d1) - 1);
+    }
+
     function roundPrem(v) {
       if (!isFinite(v) || v < 0) return 0;
       return Math.round(v * 100) / 100;
@@ -1219,6 +1450,9 @@
       const days = Math.max(0, Number(leg.dte) || 0);
       const T = days / 365;
       const K = Math.max(0.01, Number(leg.strike) || S);
+      if (legIsFuturesOption(leg)) {
+        return roundPrem(black76(S, K, T, p.r, p.iv, leg.type));
+      }
       return roundPrem(blackScholes(S, K, T, p.r, p.q, p.iv, leg.type));
     }
 
@@ -1231,7 +1465,7 @@
       let changed = false;
       for (let i = 0; i < arr.length; i++) {
         const leg = arr[i];
-        if (leg.premiumManual && !options.force) continue;
+        if ((leg.premiumManual || leg.premiumFromChain) && !options.force) continue;
         const next = modeledPremiumForLeg(leg, S);
         if (leg.type === 'stock') {
           if (!leg.premiumManual || options.forceStock) {
@@ -1282,7 +1516,9 @@
             vps = Ss;
           } else {
             const residualDays = Math.max(0, leg.dte - elapsed);
-            vps = blackScholes(Ss, leg.strike, residualDays / 365, r, q, vol, leg.type);
+            vps = legIsFuturesOption(leg)
+              ? black76(Ss, leg.strike, residualDays / 365, r, vol, leg.type)
+              : blackScholes(Ss, leg.strike, residualDays / 365, r, q, vol, leg.type);
           }
           total += signedQty(leg) * vps * legShareMult(leg);
         }
@@ -1327,85 +1563,101 @@
       const p = Math.max(0.5, +(S * 0.04 * (iv / 25)).toFixed(2));
       const unit = Math.max(0.25, +(S / 100).toFixed(4));
 
+      // Strike offsets below were originally hardcoded in flat dollars (K+10,
+      // K±15, K±20 …), sized for a ~$100 stock. That made every spread look
+      // unrealistically narrow (or wide) once the underlying moved away from
+      // $100 — e.g. a $10-wide iron condor on a $771 stock is only ~1.3% OTM
+      // per side instead of a sane ~10%. `off` scales the same relative
+      // widths (0.5x / 1x / 1.5x / 2x) to the actual spot, then `strikeAt`
+      // snaps the result to a sensible strike increment for that price level.
+      const stepSize = S >= 300 ? 5 : S >= 50 ? 1 : 0.5;
+      const off = Math.max(0.5, +(unit * 10).toFixed(4));
+      function strikeAt(mult) {
+        if (!mult) return K;
+        const raw = K + mult * off;
+        const snapped = Math.round(raw / stepSize) * stepSize;
+        return Math.max(stepSize, +snapped.toFixed(2));
+      }
+
       const templates = {
         long_call: [
           { side: 'buy', type: 'call', strike: K, dte: 90, qty: 1, premium: p }
         ],
         covered_call: [
           { side: 'buy', type: 'stock', strike: 0, dte: 0, qty: 100, premium: +S.toFixed(2) },
-          { side: 'sell', type: 'call', strike: K + 10, dte: 45, qty: 1, premium: +(p * 0.55).toFixed(2) }
+          { side: 'sell', type: 'call', strike: strikeAt(1), dte: 45, qty: 1, premium: +(p * 0.55).toFixed(2) }
         ],
         cash_secured_put: [
           { side: 'sell', type: 'put', strike: K, dte: 90, qty: 1, premium: +(p * 0.9).toFixed(2) }
         ],
         bull_call_spread: [
           { side: 'buy', type: 'call', strike: K, dte: 90, qty: 1, premium: +(p * 1.2).toFixed(2) },
-          { side: 'sell', type: 'call', strike: K + 10, dte: 90, qty: 1, premium: +(p * 0.6).toFixed(2) }
+          { side: 'sell', type: 'call', strike: strikeAt(1), dte: 90, qty: 1, premium: +(p * 0.6).toFixed(2) }
         ],
         long_straddle: [
           { side: 'buy', type: 'call', strike: K, dte: 90, qty: 1, premium: p },
           { side: 'buy', type: 'put', strike: K, dte: 90, qty: 1, premium: p }
         ],
         long_strangle: [
-          { side: 'buy', type: 'call', strike: K + 10, dte: 90, qty: 1, premium: +(p * 0.6).toFixed(2) },
-          { side: 'buy', type: 'put', strike: K - 10, dte: 90, qty: 1, premium: +(p * 0.6).toFixed(2) }
+          { side: 'buy', type: 'call', strike: strikeAt(1), dte: 90, qty: 1, premium: +(p * 0.6).toFixed(2) },
+          { side: 'buy', type: 'put', strike: strikeAt(-1), dte: 90, qty: 1, premium: +(p * 0.6).toFixed(2) }
         ],
         long_call_butterfly: [
-          { side: 'buy', type: 'call', strike: K - 10, dte: 90, qty: 1, premium: +(8.6 * unit).toFixed(2) },
+          { side: 'buy', type: 'call', strike: strikeAt(-1), dte: 90, qty: 1, premium: +(8.6 * unit).toFixed(2) },
           { side: 'sell', type: 'call', strike: K, dte: 90, qty: 2, premium: +(4.2 * unit).toFixed(2) },
-          { side: 'buy', type: 'call', strike: K + 10, dte: 90, qty: 1, premium: +(1.9 * unit).toFixed(2) }
+          { side: 'buy', type: 'call', strike: strikeAt(1), dte: 90, qty: 1, premium: +(1.9 * unit).toFixed(2) }
         ],
         call_condor: [
-          { side: 'buy', type: 'call', strike: K - 15, dte: 90, qty: 1, premium: +(9.4 * unit).toFixed(2) },
-          { side: 'sell', type: 'call', strike: K - 5, dte: 90, qty: 1, premium: +(5.6 * unit).toFixed(2) },
-          { side: 'sell', type: 'call', strike: K + 5, dte: 90, qty: 1, premium: +(3.1 * unit).toFixed(2) },
-          { side: 'buy', type: 'call', strike: K + 15, dte: 90, qty: 1, premium: +(1.5 * unit).toFixed(2) }
+          { side: 'buy', type: 'call', strike: strikeAt(-1.5), dte: 90, qty: 1, premium: +(9.4 * unit).toFixed(2) },
+          { side: 'sell', type: 'call', strike: strikeAt(-0.5), dte: 90, qty: 1, premium: +(5.6 * unit).toFixed(2) },
+          { side: 'sell', type: 'call', strike: strikeAt(0.5), dte: 90, qty: 1, premium: +(3.1 * unit).toFixed(2) },
+          { side: 'buy', type: 'call', strike: strikeAt(1.5), dte: 90, qty: 1, premium: +(1.5 * unit).toFixed(2) }
         ],
         long_put: [
           { side: 'buy', type: 'put', strike: K, dte: 90, qty: 1, premium: p }
         ],
         bear_put_spread: [
           { side: 'buy', type: 'put', strike: K, dte: 90, qty: 1, premium: +(p * 1.2).toFixed(2) },
-          { side: 'sell', type: 'put', strike: K - 10, dte: 90, qty: 1, premium: +(p * 0.6).toFixed(2) }
+          { side: 'sell', type: 'put', strike: strikeAt(-1), dte: 90, qty: 1, premium: +(p * 0.6).toFixed(2) }
         ],
         long_straddle_bear: [
           { side: 'buy', type: 'call', strike: K, dte: 90, qty: 1, premium: p },
           { side: 'buy', type: 'put', strike: K, dte: 90, qty: 1, premium: p }
         ],
         long_strangle_bear: [
-          { side: 'buy', type: 'call', strike: K + 10, dte: 90, qty: 1, premium: +(p * 0.6).toFixed(2) },
-          { side: 'buy', type: 'put', strike: K - 10, dte: 90, qty: 1, premium: +(p * 0.6).toFixed(2) }
+          { side: 'buy', type: 'call', strike: strikeAt(1), dte: 90, qty: 1, premium: +(p * 0.6).toFixed(2) },
+          { side: 'buy', type: 'put', strike: strikeAt(-1), dte: 90, qty: 1, premium: +(p * 0.6).toFixed(2) }
         ],
         long_put_butterfly: [
-          { side: 'buy', type: 'put', strike: K - 10, dte: 90, qty: 1, premium: +(1.9 * unit).toFixed(2) },
+          { side: 'buy', type: 'put', strike: strikeAt(-1), dte: 90, qty: 1, premium: +(1.9 * unit).toFixed(2) },
           { side: 'sell', type: 'put', strike: K, dte: 90, qty: 2, premium: +(4.2 * unit).toFixed(2) },
-          { side: 'buy', type: 'put', strike: K + 10, dte: 90, qty: 1, premium: +(8.6 * unit).toFixed(2) }
+          { side: 'buy', type: 'put', strike: strikeAt(1), dte: 90, qty: 1, premium: +(8.6 * unit).toFixed(2) }
         ],
         put_condor: [
-          { side: 'buy', type: 'put', strike: K + 15, dte: 90, qty: 1, premium: +(9.4 * unit).toFixed(2) },
-          { side: 'sell', type: 'put', strike: K + 5, dte: 90, qty: 1, premium: +(5.6 * unit).toFixed(2) },
-          { side: 'sell', type: 'put', strike: K - 5, dte: 90, qty: 1, premium: +(3.1 * unit).toFixed(2) },
-          { side: 'buy', type: 'put', strike: K - 15, dte: 90, qty: 1, premium: +(1.5 * unit).toFixed(2) }
+          { side: 'buy', type: 'put', strike: strikeAt(1.5), dte: 90, qty: 1, premium: +(9.4 * unit).toFixed(2) },
+          { side: 'sell', type: 'put', strike: strikeAt(0.5), dte: 90, qty: 1, premium: +(5.6 * unit).toFixed(2) },
+          { side: 'sell', type: 'put', strike: strikeAt(-0.5), dte: 90, qty: 1, premium: +(3.1 * unit).toFixed(2) },
+          { side: 'buy', type: 'put', strike: strikeAt(-1.5), dte: 90, qty: 1, premium: +(1.5 * unit).toFixed(2) }
         ],
         short_straddle: [
           { side: 'sell', type: 'call', strike: K, dte: 45, qty: 1, premium: p },
           { side: 'sell', type: 'put', strike: K, dte: 45, qty: 1, premium: p }
         ],
         short_strangle: [
-          { side: 'sell', type: 'call', strike: K + 10, dte: 45, qty: 1, premium: +(p * 0.55).toFixed(2) },
-          { side: 'sell', type: 'put', strike: K - 10, dte: 45, qty: 1, premium: +(p * 0.55).toFixed(2) }
+          { side: 'sell', type: 'call', strike: strikeAt(1), dte: 45, qty: 1, premium: +(p * 0.55).toFixed(2) },
+          { side: 'sell', type: 'put', strike: strikeAt(-1), dte: 45, qty: 1, premium: +(p * 0.55).toFixed(2) }
         ],
         iron_condor: [
-          { side: 'sell', type: 'put', strike: K - 10, dte: 45, qty: 1, premium: +(p * 0.7).toFixed(2) },
-          { side: 'buy', type: 'put', strike: K - 20, dte: 45, qty: 1, premium: +(p * 0.3).toFixed(2) },
-          { side: 'sell', type: 'call', strike: K + 10, dte: 45, qty: 1, premium: +(p * 0.7).toFixed(2) },
-          { side: 'buy', type: 'call', strike: K + 20, dte: 45, qty: 1, premium: +(p * 0.3).toFixed(2) }
+          { side: 'sell', type: 'put', strike: strikeAt(-1), dte: 45, qty: 1, premium: +(p * 0.7).toFixed(2) },
+          { side: 'buy', type: 'put', strike: strikeAt(-2), dte: 45, qty: 1, premium: +(p * 0.3).toFixed(2) },
+          { side: 'sell', type: 'call', strike: strikeAt(1), dte: 45, qty: 1, premium: +(p * 0.7).toFixed(2) },
+          { side: 'buy', type: 'call', strike: strikeAt(2), dte: 45, qty: 1, premium: +(p * 0.3).toFixed(2) }
         ],
         iron_butterfly: [
           { side: 'sell', type: 'put', strike: K, dte: 45, qty: 1, premium: p },
-          { side: 'buy', type: 'put', strike: K - 10, dte: 45, qty: 1, premium: +(p * 0.4).toFixed(2) },
+          { side: 'buy', type: 'put', strike: strikeAt(-1), dte: 45, qty: 1, premium: +(p * 0.4).toFixed(2) },
           { side: 'sell', type: 'call', strike: K, dte: 45, qty: 1, premium: p },
-          { side: 'buy', type: 'call', strike: K + 10, dte: 45, qty: 1, premium: +(p * 0.4).toFixed(2) }
+          { side: 'buy', type: 'call', strike: strikeAt(1), dte: 45, qty: 1, premium: +(p * 0.4).toFixed(2) }
         ],
         calendar_call: [
           { side: 'sell', type: 'call', strike: K, dte: 30, qty: 1, premium: +(p * 0.55).toFixed(2) },
@@ -1414,25 +1666,25 @@
         // Short OTM put + short call spread. Structured so net credit often
         // exceeds the call-spread width → theoretically no upside risk.
         jade_lizard: [
-          { side: 'sell', type: 'put', strike: K - 10, dte: 45, qty: 1, premium: +(p * 0.75).toFixed(2) },
-          { side: 'sell', type: 'call', strike: K + 10, dte: 45, qty: 1, premium: +(p * 0.55).toFixed(2) },
-          { side: 'buy', type: 'call', strike: K + 20, dte: 45, qty: 1, premium: +(p * 0.22).toFixed(2) }
+          { side: 'sell', type: 'put', strike: strikeAt(-1), dte: 45, qty: 1, premium: +(p * 0.75).toFixed(2) },
+          { side: 'sell', type: 'call', strike: strikeAt(1), dte: 45, qty: 1, premium: +(p * 0.55).toFixed(2) },
+          { side: 'buy', type: 'call', strike: strikeAt(2), dte: 45, qty: 1, premium: +(p * 0.22).toFixed(2) }
         ],
         // Long deep-ITM LEAP call + short near-term OTM call (covered call
         // without owning the shares).
         pmcc: [
-          { side: 'buy', type: 'call', strike: Math.max(1, K - 15), dte: 180, qty: 1, premium: +(Math.max(p * 2.2, 15 + p * 0.7)).toFixed(2) },
-          { side: 'sell', type: 'call', strike: K + 10, dte: 30, qty: 1, premium: +(p * 0.5).toFixed(2) }
+          { side: 'buy', type: 'call', strike: Math.max(stepSize, strikeAt(-1.5)), dte: 180, qty: 1, premium: +(Math.max(p * 2.2, 15 + p * 0.7)).toFixed(2) },
+          { side: 'sell', type: 'call', strike: strikeAt(1), dte: 30, qty: 1, premium: +(p * 0.5).toFixed(2) }
         ],
         // Front-ratio call: long 1 ATM, short 2 OTM. Credit or small debit;
         // unlimited upside risk on the extra short call.
         call_ratio_spread: [
           { side: 'buy', type: 'call', strike: K, dte: 45, qty: 1, premium: p },
-          { side: 'sell', type: 'call', strike: K + 10, dte: 45, qty: 2, premium: +(p * 0.55).toFixed(2) }
+          { side: 'sell', type: 'call', strike: strikeAt(1), dte: 45, qty: 2, premium: +(p * 0.55).toFixed(2) }
         ],
         put_ratio_spread: [
           { side: 'buy', type: 'put', strike: K, dte: 45, qty: 1, premium: p },
-          { side: 'sell', type: 'put', strike: K - 10, dte: 45, qty: 2, premium: +(p * 0.55).toFixed(2) }
+          { side: 'sell', type: 'put', strike: strikeAt(-1), dte: 45, qty: 2, premium: +(p * 0.55).toFixed(2) }
         ],
         // Long call + short put, same strike/expiry ≈ long 100 shares.
         synthetic_long: [
@@ -1447,15 +1699,14 @@
         // OTM call long + OTM put short: directional synthetic with less
         // premium outlay than an ATM synthetic.
         risk_reversal: [
-          { side: 'buy', type: 'call', strike: K + 10, dte: 90, qty: 1, premium: +(p * 0.6).toFixed(2) },
-          { side: 'sell', type: 'put', strike: K - 10, dte: 90, qty: 1, premium: +(p * 0.6).toFixed(2) }
+          { side: 'buy', type: 'call', strike: strikeAt(1), dte: 90, qty: 1, premium: +(p * 0.6).toFixed(2) },
+          { side: 'sell', type: 'put', strike: strikeAt(-1), dte: 90, qty: 1, premium: +(p * 0.6).toFixed(2) }
         ]
       };
 
       const raw = templates[key];
       if (!raw) return null;
-      const tkr = currentTicker();
-      return raw.map(function (leg) { return Object.assign({ ticker: tkr }, leg); });
+      return raw.map(function (leg) { return Object.assign({}, leg); });
     }
 
     function applyTemplate() {
@@ -1467,6 +1718,7 @@
       syncDTESlider();
       updateSpotSliderRange();
       refreshModeledPremiums(legs);
+      if (typeof applyChainQuotesToLegs === 'function') applyChainQuotesToLegs(legs, { snapStrikes: true, setDte: true });
       renderLegs();
       recalc();
       document.getElementById('strategyTemplate').value = key;
@@ -1476,30 +1728,30 @@
 
     // Lesson bridges for deep-linked templates
     const TEMPLATE_LESSONS = {
-      long_call: { title: 'Long Call', href: '/level2/', label: 'Altyapı' },
-      long_put: { title: 'Long Put', href: '/level2/', label: 'Altyapı' },
-      covered_call: { title: 'Covered Call', href: '/covered-call/', label: 'Covered Call rehberi' },
-      cash_secured_put: { title: 'Cash-Secured Put', href: '/cash-secured-put/', label: 'CSP rehberi' },
+      long_call: { title: 'Long Call', href: '/level2/', label: 'Fundamentals' },
+      long_put: { title: 'Long Put', href: '/level2/', label: 'Fundamentals' },
+      covered_call: { title: 'Covered Call', href: '/covered-call/', label: 'Covered Call guide' },
+      cash_secured_put: { title: 'Cash-Secured Put', href: '/cash-secured-put/', label: 'CSP guide' },
       bull_call_spread: { title: 'Bull Call Spread', href: '/level3/', label: 'Spreads' },
       bear_put_spread: { title: 'Bear Put Spread', href: '/level3/', label: 'Spreads' },
-      iron_condor: { title: 'Iron Condor', href: '/iron-condor/', label: 'Iron Condor rehberi' },
-      iron_butterfly: { title: 'Iron Butterfly', href: '/strategies/', label: 'Stratejiler' },
-      long_straddle: { title: 'Long Straddle', href: '/strategies/', label: 'Stratejiler' },
-      short_straddle: { title: 'Short Straddle', href: '/strategies/', label: 'Stratejiler' },
-      long_strangle: { title: 'Long Strangle', href: '/strategies/', label: 'Stratejiler' },
-      short_strangle: { title: 'Short Strangle', href: '/strategies/', label: 'Stratejiler' },
-      calendar_call: { title: 'Calendar Spread (Call)', href: '/level4/', label: 'İleri düzey' },
-      long_call_butterfly: { title: 'Call Butterfly', href: '/strategies/', label: 'Stratejiler' },
-      call_condor: { title: 'Call Condor', href: '/strategies/', label: 'Stratejiler' },
-      long_put_butterfly: { title: 'Put Butterfly', href: '/strategies/', label: 'Stratejiler' },
-      put_condor: { title: 'Put Condor', href: '/strategies/', label: 'Stratejiler' },
-      jade_lizard: { title: 'Jade Lizard', href: '/strategies/', label: 'Stratejiler' },
-      pmcc: { title: "Poor Man's Covered Call", href: '/level4/', label: 'İleri düzey' },
-      call_ratio_spread: { title: 'Call Ratio Spread (1×2)', href: '/level4/', label: 'İleri düzey' },
-      put_ratio_spread: { title: 'Put Ratio Spread (1×2)', href: '/level4/', label: 'İleri düzey' },
-      synthetic_long: { title: 'Synthetic Long', href: '/level4/', label: 'İleri düzey' },
-      synthetic_short: { title: 'Synthetic Short', href: '/level4/', label: 'İleri düzey' },
-      risk_reversal: { title: 'Risk Reversal', href: '/level4/', label: 'İleri düzey' }
+      iron_condor: { title: 'Iron Condor', href: '/iron-condor/', label: 'Iron Condor guide' },
+      iron_butterfly: { title: 'Iron Butterfly', href: '/strategies/', label: 'Strategies' },
+      long_straddle: { title: 'Long Straddle', href: '/strategies/', label: 'Strategies' },
+      short_straddle: { title: 'Short Straddle', href: '/strategies/', label: 'Strategies' },
+      long_strangle: { title: 'Long Strangle', href: '/strategies/', label: 'Strategies' },
+      short_strangle: { title: 'Short Strangle', href: '/strategies/', label: 'Strategies' },
+      calendar_call: { title: 'Calendar Spread (Call)', href: '/level4/', label: 'Advanced' },
+      long_call_butterfly: { title: 'Call Butterfly', href: '/strategies/', label: 'Strategies' },
+      call_condor: { title: 'Call Condor', href: '/strategies/', label: 'Strategies' },
+      long_put_butterfly: { title: 'Put Butterfly', href: '/strategies/', label: 'Strategies' },
+      put_condor: { title: 'Put Condor', href: '/strategies/', label: 'Strategies' },
+      jade_lizard: { title: 'Jade Lizard', href: '/strategies/', label: 'Strategies' },
+      pmcc: { title: "Poor Man's Covered Call", href: '/level4/', label: 'Advanced' },
+      call_ratio_spread: { title: 'Call Ratio Spread (1×2)', href: '/level4/', label: 'Advanced' },
+      put_ratio_spread: { title: 'Put Ratio Spread (1×2)', href: '/level4/', label: 'Advanced' },
+      synthetic_long: { title: 'Synthetic Long', href: '/level4/', label: 'Advanced' },
+      synthetic_short: { title: 'Synthetic Short', href: '/level4/', label: 'Advanced' },
+      risk_reversal: { title: 'Risk Reversal', href: '/level4/', label: 'Advanced' }
     };
 
     function setTemplateTip(key) {
@@ -1507,9 +1759,9 @@
       if (!tip) return;
       const meta = TEMPLATE_LESSONS[key];
       if (meta) {
-        tip.innerHTML = 'Şu an bir <strong>' + meta.title + '</strong> görüyorsunuz — <a href="' + meta.href + '">' + meta.label + '</a> dersine bakın veya bacakları aşağıda düzenleyin.';
+        tip.innerHTML = 'You are viewing a <strong>' + meta.title + '</strong> — <a href="' + meta.href + '">' + meta.label + '</a> lesson, or edit the legs below.';
       } else {
-        tip.innerHTML = 'Şablon yüklendi. Her alanı düzenleyin — grafik ve Greeks anında güncellenir.';
+        tip.innerHTML = 'Template loaded. Edit any field — chart and Greeks update live.';
       }
     }
 
@@ -1517,9 +1769,10 @@
       return leg.side === 'buy' ? leg.qty : -leg.qty;
     }
 
-    // Options: Qty = contracts → ×100 shares. Stock: Qty = actual number of shares (no extra ×100).
+    // Stock qty is shares; regular listed options are ×100; futures options use
+    // their own contract multiplier (e.g. /ES = $50/point, /CL = 1,000 barrels).
     function legShareMult(leg) {
-      return leg.type === 'stock' ? 1 : MULTIPLIER;
+      return legMultiplier(leg);
     }
 
     function legCash(leg) {
@@ -1568,8 +1821,14 @@
       const leg = legs.find(l => l.id === id);
       if (!leg) return;
       if (field === 'ticker') {
-        leg.ticker = (value || '').toString().trim().toUpperCase();
+        leg.ticker = normalizeTicker(value);
+        leg.tickerManual = !!leg.ticker;
       } else if (field === 'side' || field === 'type') {
+        // A futures underlying is an option on a futures contract, not a stock
+        // leg. Convert an accidental Stock selection back to a Call.
+        if (field === 'type' && value === 'stock' && isFuturesTicker(leg.ticker || currentTicker())) {
+          value = 'call';
+        }
         leg[field] = value;
         // When switching to Stock: use current spot as cost basis; Qty = shares (default 100)
         if (field === 'type' && value === 'stock') {
@@ -1589,12 +1848,22 @@
         }
       } else if (field === 'strike' || field === 'premium') {
         leg[field] = parseFloat(value) || 0;
-        if (field === 'premium') leg.premiumManual = true;
+        if (field === 'premium') {
+          leg.premiumManual = true;
+          leg.premiumFromChain = false;
+        }
       } else if (field === 'dte' || field === 'qty') {
         leg[field] = Math.max(1, parseInt(value, 10) || 1);
       }
+      if (field === 'ticker' && leg.type !== 'stock' && isFuturesTicker(leg.ticker)) {
+        const S = parseFloat(document.getElementById('spot').value) || 100;
+        if (!leg.strike || leg.strike <= 0) leg.strike = roundToStep(S, futuresStrikeStep(leg.ticker));
+        leg.premiumFromChain = false;
+        if (!leg.premiumManual) leg.premium = modeledPremiumForLeg(leg, S);
+      }
       if (field === 'strike' || field === 'dte' || field === 'type') {
-        if (!leg.premiumManual) {
+        const fromChain = (typeof tryFillLegFromChain === 'function') ? tryFillLegFromChain(leg) : false;
+        if (!fromChain && !leg.premiumManual) {
           const S = parseFloat(document.getElementById('spot').value) || 100;
           leg.premium = modeledPremiumForLeg(leg, S);
         }
@@ -1642,8 +1911,8 @@
       const cashCls = cash >= 0 ? 'cash-debit' : 'cash-credit';
       const cashTxt = (cash >= 0 ? '+' : '') + cash.toFixed(0);
       const cashLabel = isStock
-        ? (leg.side === 'buy' ? 'Hisse maliyeti ' : 'Hisse Credit ') + cashTxt + ' (' + leg.qty + ' pay)'
-        : (cash >= 0 ? 'Debit' : 'Credit') + ' ' + cashTxt + ' (×100)';
+        ? (leg.side === 'buy' ? 'Stock cost ' : 'Stock Credit ') + cashTxt + ' (' + leg.qty + ' pay)'
+        : (cash >= 0 ? 'Debit' : 'Credit') + ' ' + cashTxt + ' (×' + legShareMult(leg) + ')';
       cashLines[idx].className = 'cash-line ' + cashCls;
       cashLines[idx].textContent = cashLabel;
     }
@@ -1661,7 +1930,7 @@
     function renderLegs() {
       const container = document.getElementById('legsList');
       if (!legs.length) {
-        container.innerHTML = '<p style="color:var(--muted);font-size:0.82rem;">Bacak yok.</p>';
+        container.innerHTML = '<p style="color:var(--muted);font-size:0.82rem;">No legs.</p>';
         return;
       }
       container.innerHTML = legs.map(function(l) {
@@ -1674,26 +1943,29 @@
         const sideSell = l.side === 'sell' ? ' selected' : '';
         const typeCall = l.type === 'call' ? ' selected' : '';
         const typePut = l.type === 'put' ? ' selected' : '';
-        const typeStock = isStock ? ' selected' : '';
+        const futuresLeg = isFuturesTicker(l.ticker || currentTicker());
+        const typeStock = isStock && !futuresLeg ? ' selected' : '';
+        const stockOption = futuresLeg ? '' : '<option value=\"stock\"' + typeStock + '>Stock</option>';
         const debitCredit = cash >= 0 ? 'Debit' : 'Credit';
         const cashLabel = isStock
-          ? (l.side === 'buy' ? 'Hisse maliyeti ' : 'Hisse Credit ') + cashTxt + ' (' + l.qty + ' pay)'
+          ? (l.side === 'buy' ? 'Stock cost ' : 'Stock Credit ') + cashTxt + ' (' + l.qty + ' pay)'
           : debitCredit + ' ' + cashTxt + ' (×100)';
 
         // Strike & DTE disabled for stock; premium becomes Cost/Share
         // oninput → liveTyping=true (update graph, keep focus)
         // onchange → liveTyping=false (re-render cash labels / structure)
+        const strikeStep = futuresLeg ? futuresStrikeStep(l.ticker || currentTicker()) : 0.5;
         const strikeInput = isStock
-          ? '<input type="text" value="—" disabled title="Hisse için kullanılmaz" style="opacity:0.45;cursor:not-allowed;" />'
-          : '<input type="number" value="' + l.strike + '" step="0.5" min="0.5" ' +
+          ? '<input type="text" value="—" disabled title="Not used for stock" style="opacity:0.45;cursor:not-allowed;" />'
+          : '<input type="number" value="' + (l.strike == null ? '' : l.strike) + '" step="' + strikeStep + '" min="0.000001" ' +
               'onchange="updateLegField(' + l.id + ',\'strike\',this.value,false)" ' +
               'oninput="updateLegField(' + l.id + ',\'strike\',this.value,true)" />';
         const dteInput = isStock
-          ? '<input type="text" value="—" disabled title="Hisse için kullanılmaz" style="opacity:0.45;cursor:not-allowed;" />'
+          ? '<input type="text" value="—" disabled title="Not used for stock" style="opacity:0.45;cursor:not-allowed;" />'
           : '<input type="number" value="' + l.dte + '" min="1" max="730" ' +
               'onchange="updateLegField(' + l.id + ',\'dte\',this.value,false)" ' +
               'oninput="updateLegField(' + l.id + ',\'dte\',this.value,true)" />';
-        const premiumTitle = isStock ? 'Pay başına maliyet (giriş fiyatı)' : 'Pay başına opsiyon Premium';
+        const premiumTitle = isStock ? 'Cost per share (entry)' : 'Option Premium per share';
         const premiumInput =
           '<input type="number" value="' + l.premium + '" step="0.05" min="0" title="' + premiumTitle + '" ' +
             'onchange="updateLegField(' + l.id + ',\'premium\',this.value,false)" ' +
@@ -1706,19 +1978,19 @@
         const tickerVal = (l.ticker || '').toString().toUpperCase();
         const tickerInput =
           '<input type="text" maxlength="8" spellcheck="false" placeholder="' + inherited + '" value="' + tickerVal + '" ' +
-            'title="Bacak Symbol; boşsa strateji ticker" style="text-transform:uppercase" ' +
+            'title="Leg Symbol; blank uses strategy ticker" style="text-transform:uppercase" ' +
             'onchange="updateLegField(' + l.id + ',\'ticker\',this.value,false)" />';
 
         return (
           '<div class="leg-row ' + rowCls + '">' +
             '<select onchange="updateLegField(' + l.id + ',\'side\',this.value,false)">' +
-              '<option value="buy"' + sideBuy + '>Al (Long)</option>' +
-              '<option value="sell"' + sideSell + '>Sat (Short)</option>' +
+              '<option value="buy"' + sideBuy + '>Buy (Long)</option>' +
+              '<option value="sell"' + sideSell + '>Sell (Short)</option>' +
             '</select>' +
             '<select onchange="updateLegField(' + l.id + ',\'type\',this.value,false)">' +
               '<option value="call"' + typeCall + '>Call</option>' +
               '<option value="put"' + typePut + '>Put</option>' +
-              '<option value="stock"' + typeStock + '>Hisse</option>' +
+              stockOption +
             '</select>' +
             tickerInput +
             strikeInput +
@@ -1726,7 +1998,7 @@
             qtyInput +
             premiumInput +
             '<div class="remove-cell">' +
-              '<button class="btn-danger" onclick="removeLeg(' + l.id + ')" title="Sil">✕</button>' +
+              '<button class="btn-danger" onclick="removeLeg(' + l.id + ')" title="Remove leg">✕</button>' +
             '</div>' +
           '</div>' +
           '<div class="cash-line ' + cashCls + '">' + cashLabel + '</div>'
@@ -1781,7 +2053,9 @@
             const elapsed = Math.max(0, minDte - daysLeft);
             residualDays = Math.max(0, leg.dte - elapsed);
           }
-          valPerShare = blackScholes(S, leg.strike, residualDays / 365, params.r, params.q, params.iv, leg.type);
+          valPerShare = legIsFuturesOption(leg)
+            ? black76(S, leg.strike, residualDays / 365, params.r, params.iv, leg.type)
+            : blackScholes(S, leg.strike, residualDays / 365, params.r, params.q, params.iv, leg.type);
         }
         total += signedQty(leg) * valPerShare * legShareMult(leg);
       }
@@ -1920,7 +2194,7 @@
           segment: { borderColor: function(ctx) { return segmentColor(ctx, gS, rS); } }
         },
         {
-          label: compareMode ? 'A · kalan süre' : 'Teorik (kalan süre)',
+          label: compareMode ? 'A · time left' : 'Theoretical (time left)',
           data: data.theoretical,
           borderColor: gD,
           borderWidth: 2,
@@ -1942,7 +2216,7 @@
           fill: false
         });
         sets.push({
-          label: 'B · kalan süre',
+          label: 'B · time left',
           data: data.theoreticalB,
           borderColor: bD,
           borderWidth: 2,
@@ -2052,7 +2326,7 @@
       const btn = document.getElementById('compareToggleBtn');
       if (btn) {
         btn.classList.toggle('btn-toggle-on', compareMode);
-        btn.textContent = compareMode ? 'Karşılaştırmayı kapat' : 'İki stratejiyi karşılaştır';
+        btn.textContent = compareMode ? 'Exit compare' : 'İki stratejiyi karşılaştır';
       }
       const metrics = document.getElementById('compareMetrics');
       if (metrics) metrics.classList.toggle('on', compareMode);
@@ -2073,6 +2347,7 @@
       if (!t) return;
       legsB = t.map(function (leg) { return Object.assign({}, leg, { id: nextIdB++, premiumManual: false }); });
       refreshModeledPremiums(legsB);
+      if (typeof applyChainQuotesToLegs === 'function') applyChainQuotesToLegs(legsB, { snapStrikes: true, setDte: true });
       renderLegsB();
       recalc();
     }
@@ -2142,9 +2417,9 @@
       let maxLossText = formatMoney(minP);
       if (expiry.length > 2) {
         const lastSlope = expiry[expiry.length - 1] - expiry[expiry.length - 2];
-        if (lastSlope > 15 && maxP > 2000) maxProfitText = 'Sınırsız';
+        if (lastSlope > 15 && maxP > 2000) maxProfitText = 'Unlimited';
         const firstSlope = expiry[1] - expiry[0];
-        if (firstSlope < -15 && minP < -2000) maxLossText = 'Sınırsız';
+        if (firstSlope < -15 && minP < -2000) maxLossText = 'Unlimited';
       }
       const bes = [];
       for (let i = 1; i < expiry.length; i++) {
@@ -2202,12 +2477,12 @@
       const plA = plAt(S, daysLeft, legs);
       if (colA) {
         colA.innerHTML = '<h3>Strateji A · Underlying $' + S.toFixed(2) + '</h3>' +
-          'K/Z şimdi ' + formatMoney(plA) + '<br>Maks. kâr ' + sumA.maxProfit +
+          'P/L now ' + formatMoney(plA) + '<br>Maks. kâr ' + sumA.maxProfit +
           '<br>Maks. zarar ' + sumA.maxLoss + '<br>Break-Even ' + sumA.breakevens;
       }
       if (colB) {
         colB.innerHTML = '<h3>Strateji B · Underlying $' + S.toFixed(2) + '</h3>' +
-          'K/Z şimdi ' + formatMoney(plB) + '<br>Maks. kâr ' + sumB.maxProfit +
+          'P/L now ' + formatMoney(plB) + '<br>Maks. kâr ' + sumB.maxProfit +
           '<br>Maks. zarar ' + sumB.maxLoss + '<br>Break-Even ' + sumB.breakevens;
       }
     }
@@ -2224,7 +2499,7 @@
         a.click();
         document.body.removeChild(a);
       } catch (e) {
-        alert('Bu tarayıcıda grafik dışa aktarılamadı.');
+        alert('This browser cannot export the chart.');
       }
     }
 
@@ -2391,7 +2666,7 @@
       function currentLabel() {
         const opt = sel.options[sel.selectedIndex];
         if (opt && opt.value) return opt.textContent;
-        return document.documentElement.lang === 'tr' ? '— Strateji seçin —' : '— Pick a template —';
+        return document.documentElement.lang === 'tr' ? '— Şablon seçin —' : '— Strateji seçin —';
       }
       function syncTrigger() {
         if (!trigger) return;
@@ -2452,7 +2727,7 @@
         if (narrow) {
           pop.style.position = 'fixed';
           pop.style.left = '10px';
-          pop.style.right = '10px';
+          pop.style.right = '30px';
           pop.style.top = 'auto';
           pop.style.bottom = '10px';
           pop.style.width = 'auto';
@@ -2465,8 +2740,8 @@
           pop.style.top = 'calc(100% + 6px)';
           pop.style.bottom = 'auto';
           pop.style.width = 'auto';
-          pop.style.minWidth = Math.max(r.width, 360) + 'px';
-          pop.style.maxWidth = 'min(500px, calc(100vw - 24px))';
+          pop.style.minWidth = Math.max(r.width, 420) + 'px';
+          pop.style.maxWidth = 'min(560px, calc(100vw - 24px))';
         }
       }
       function openPop() {
@@ -2566,9 +2841,9 @@
       let maxLossText = formatMoney(minP);
       if (data.expiry.length > 2) {
         const lastSlope = data.expiry[data.expiry.length - 1] - data.expiry[data.expiry.length - 2];
-        if (lastSlope > 15 && maxP > 2000) maxProfitText = 'Sınırsız';
+        if (lastSlope > 15 && maxP > 2000) maxProfitText = 'Unlimited';
         const firstSlope = data.expiry[1] - data.expiry[0];
-        if (firstSlope < -15 && minP < -2000) maxLossText = 'Sınırsız';
+        if (firstSlope < -15 && minP < -2000) maxLossText = 'Unlimited';
       }
       document.getElementById('maxProfit').textContent = maxProfitText;
       document.getElementById('maxLoss').textContent = maxLossText;
@@ -2625,21 +2900,21 @@
       const th = g.theta;
       const vg = g.vega;
       document.getElementById('gDeltaImpact').textContent =
-        d > 5 ? 'Bullish eğilim: Underlying $1 yükselirse K/Z yaklaşık $' + Math.abs(d).toFixed(0) + ' artar.'
-        : d < -5 ? 'Bearish eğilim: Underlying $1 düşerse K/Z yaklaşık $' + Math.abs(d).toFixed(0) + ' artar.'
-        : 'Delta-nötre yakın: küçük fiyat hareketinin yön etkisi sınırlıdır.';
+        d > 5 ? 'Bullish tilt: if Underlying rises $1, P/L ≈ $' + Math.abs(d).toFixed(0) + ' artar.'
+        : d < -5 ? 'Bearish tilt: if Underlying drops $1, P/L ≈ $' + Math.abs(d).toFixed(0) + ' artar.'
+        : 'Near delta-neutral: a small price move has little directional P/L.';
       document.getElementById('gGammaImpact').textContent =
         Math.abs(g.gamma) > 1
-          ? 'Yüksek Gamma: Underlying hareket edince Delta hızlı kayar — K/Z ivmelenebilir.'
-          : 'Düşük Gamma: küçük fiyat hareketlerinde Delta görece durağandır.';
+          ? 'High Gamma: Delta shifts fast when Underlying moves — P/L can accelerate.'
+          : 'Low Gamma: on small price moves Delta stays relatively stable.';
       document.getElementById('gThetaImpact').textContent =
-        th < -5 ? 'Zaman aleyhinize: günde yaklaşık $' + Math.abs(th).toFixed(0) + ' Theta aşınması beklenir.'
-        : th > 5 ? 'Zaman lehinize: günde yaklaşık $' + Math.abs(th).toFixed(0) + ' Theta kazancı beklenir.'
-        : 'Mevcut ayarlarda günlük Theta etkisi küçük.';
+        th < -5 ? 'Time against you: about $' + Math.abs(th).toFixed(0) + ' of Theta decay expected.'
+        : th > 5 ? 'Time in your favor: about $' + Math.abs(th).toFixed(0) + ' of Theta expected.'
+        : 'Daily Theta is small at these settings.';
       document.getElementById('gVegaImpact').textContent =
-        vg > 5 ? 'Long volatilite: +1% IV pozisyona yaklaşık $' + Math.abs(vg).toFixed(0) + ' ekler.'
-        : vg < -5 ? 'Short volatilite: +1% IV yaklaşık $' + Math.abs(vg).toFixed(0) + ' kaybettirir; IV düşünce kâr edersiniz.'
-        : 'Düşük Vega: IV değişiminin etkisi şu an sınırlı.';
+        vg > 5 ? 'Long volatility: +1% IV is about $' + Math.abs(vg).toFixed(0) + ' ekler.'
+        : vg < -5 ? 'Short volatility: +1% IV is about $' + Math.abs(vg).toFixed(0) + ' of loss; you profit if IV falls.'
+        : 'Low Vega: IV moves matter little right now.';
     }
 
     function onDaysChange() {
@@ -2815,8 +3090,8 @@
           (chg >= 0 ? '+' : '') + chg.toFixed(2) + ' (' + (pct >= 0 ? '+' : '') + pct.toFixed(1) + '%)</span>';
       }
 
-      el.innerHTML = '<strong>' + simDayIndex + '</strong> / ' + maxDTE + '. gün' +
-        ' · K/Z şimdi <strong class="' + (pl >= 0 ? 'up' : 'down') + '">' + (pl >= 0 ? '+' : '') + formatMoney(pl) + '</strong>' +
+      el.innerHTML = '<strong>' + simDayIndex + '</strong> / ' + maxDTE + '. day' +
+        ' · P/L now <strong class="' + (pl >= 0 ? 'up' : 'down') + '">' + (pl >= 0 ? '+' : '') + formatMoney(pl) + '</strong>' +
         (atEnd ? ' · <em>expiration geldi</em>' : '');
     }
 
@@ -2829,7 +3104,7 @@
       }
       el.innerHTML = simPLLog.slice(-8).reverse().map(function (row) {
         const cls = row.pl >= 0 ? 'pos' : 'neg';
-        return '<div class="sim-log-row"><span>Gün ' + row.day + '</span><span>$' + row.price.toFixed(2) + '</span>' +
+        return '<div class="sim-log-row"><span>Day ' + row.day + '</span><span>$' + row.price.toFixed(2) + '</span>' +
           '<span class="sl-pl ' + cls + '">' + (row.pl >= 0 ? '+' : '') + formatMoney(row.pl) + '</span></div>';
       }).join('');
     }
@@ -2907,8 +3182,8 @@
         tip.style.top = '8px';
         tip.style.opacity = '1';
         const color = nearest.close >= nearest.open ? 'var(--green)' : 'var(--red)';
-        tip.innerHTML = '<div style="color:var(--muted);">Gün ' + nearest.day + '</div>' +
-          '<div style="color:' + color + ';font-weight:700;">Kapanış $' + nearest.close.toFixed(2) + '</div>' +
+        tip.innerHTML = '<div style="color:var(--muted);">Day ' + nearest.day + '</div>' +
+          '<div style="color:' + color + ';font-weight:700;">Close $' + nearest.close.toFixed(2) + '</div>' +
           '<div style="color:var(--muted);font-size:0.65rem;">O ' + nearest.open.toFixed(2) + ' H ' + nearest.high.toFixed(2) + ' L ' + nearest.low.toFixed(2) + '</div>';
       };
       svg.onmouseleave = function () { tip.style.opacity = '0'; };
@@ -2961,7 +3236,7 @@
             plugins: { legend: { display: false } },
             scales: {
               x: {
-                title: { display: true, text: 'Simülasyon günü', color: tc.text, font: { size: 10 } },
+                title: { display: true, text: 'Simulation day', color: tc.text, font: { size: 10 } },
                 ticks: { color: tc.text, font: { size: 10 } },
                 grid: { color: tc.grid }
               },
@@ -3009,17 +3284,17 @@
       const hasShort = legs.some(function(l) { return l.side === 'sell'; });
       const hasStock = legs.some(function(l) { return l.type === 'stock'; });
       if (hasStock && hasShort) {
-        tip.innerHTML = '<strong>Hisse + opsiyon:</strong> Hisse adedi = pay sayısı, maliyet = giriş fiyatı. Opsiyon adedi = kontrat (×100). Covered Call için 100 pay + 1 Short Call kullanın. <a href="/level2/">Altyapı dersi</a>';
+        tip.innerHTML = '<strong>Hisse + opsiyon:</strong> Stock qty = shares, cost = entry price. Listed option qty = contracts (×100); futures options use the contract multiplier. For a Covered Call use 100 shares + 1 Short Call. <a href="/level2/">Fundamentals lesson</a>';
       } else if (hasStock) {
-        tip.innerHTML = '<strong>Hisse bacağı:</strong> Adet = pay sayısı, maliyet = giriş fiyatı. Strike ve DTE yok sayılır. Covered Call için 1 Short Call ekleyin.';
+        tip.innerHTML = '<strong>Stock leg:</strong> Qty = shares, cost = entry price. Strike and DTE are unused. Add 1 Short Call for a Covered Call.';
       } else if (legs.length === 1 && hasLong) {
-        tip.innerHTML = '<strong>Long opsiyon:</strong> Debit ödersiniz. Düz çizgi = Expiry Payoff. Kesikli çizgi zaman değerini içerir. Theta aşınmasını gün ilerleterek izleyin.';
+        tip.innerHTML = '<strong>Long opsiyon:</strong> You pay a Debit. Solid line = Expiry Payoff. Dotted line still has time value. Step days to watch Theta.';
       } else if (legs.length === 1 && hasShort) {
-        tip.innerHTML = '<strong>Short opsiyon:</strong> Credit alırsınız. Underlying Strike yakınında kalırsa Theta lehinizedir.';
+        tip.innerHTML = '<strong>Short opsiyon:</strong> You collect a Credit. Theta helps if Underlying stays near the Strike.';
       } else if (hasLong && hasShort) {
-        tip.innerHTML = '<strong>Çok bacak:</strong> Net Debit/Credit yukarıda. Her alanı canlı düzenleyin — grafik anında güncellenir. Hazır yapılar için Strateji seçin.';
+        tip.innerHTML = '<strong>Multi-leg:</strong> Net Debit/Credit is above. Edit any field live — the chart updates. Use a template for a ready structure.';
       } else {
-        tip.innerHTML = 'Bacakları düzenleyin veya bir strateji şablonu seçin. Grafik canlıdır.';
+        tip.innerHTML = 'Edit the legs or pick a strategy template. The chart is live.';
       }
     }
 
@@ -3057,7 +3332,8 @@
             strike: Number(l.strike) || 100,
             dte: Number(l.dte) || 30,
             qty: Number(l.qty) || 1,
-            premium: Number(l.premium) || 0
+            premium: Number(l.premium) || 0,
+            premiumManual: true
           };
         });
         if (obj.S && document.getElementById('spot')) {
@@ -3087,12 +3363,12 @@
         updateShareUrlQuiet();
         var link = window.location.href;
         var status = document.getElementById('shareStatus');
-        function ok() { if (status) status.textContent = 'Link copied — paste to share this setup.'; }
+        function ok() { if (status) status.textContent = 'Link kopyalandı — bu kurulumu paylaşmak için yapıştırın.'; }
         if (navigator.clipboard && navigator.clipboard.writeText) {
           navigator.clipboard.writeText(link).then(ok).catch(function () {
-            if (status) status.textContent = 'Copy from the address bar.';
+            if (status) status.textContent = 'Adres çubuğundan kopyalayın.';
           });
-        } else if (status) status.textContent = 'Copy from the address bar.';
+        } else if (status) status.textContent = 'Adres çubuğundan kopyalayın.';
       });
     }
 
@@ -3122,6 +3398,408 @@
       });
     })();
 
+
+    // ===== CBOE CHAIN — drives default spot / IV / DTE / premium =====
+    window._cboeData = null;
+    function midPrice(c){
+      if(!c) return 0;
+      const b = Number(c.bid), a = Number(c.ask), l = Number(c.last);
+      if (isFinite(b) && isFinite(a) && b>0 && a>0) return (b+a)/2;
+      if (isFinite(l) && l>0) return l;
+      if (isFinite(a) && a>0) return a;
+      if (isFinite(b) && b>0) return b;
+      return 0;
+    }
+    function expirationDte(exp) {
+      if (!exp) return 0;
+      const d = new Date(String(exp) + 'T00:00:00');
+      if (isNaN(d.getTime())) return 0;
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      return Math.max(0, Math.round((d - today) / 86400000));
+    }
+    function pickDefaultExpiration(exps, preferDte, atLeast) {
+      if (!exps || !exps.length) return '';
+      const target = preferDte == null ? 30 : preferDte;
+      if (atLeast) {
+        // Prefer the smallest expiration that is at least `target` days out;
+        // fall back to the closest-available if none qualify.
+        let smallestQualifying = null;
+        for (let i = 0; i < exps.length; i++) {
+          const dte = expirationDte(exps[i]);
+          if (dte >= target && (smallestQualifying == null || dte < expirationDte(smallestQualifying))) {
+            smallestQualifying = exps[i];
+          }
+        }
+        if (smallestQualifying) return smallestQualifying;
+      }
+      let best = exps[0];
+      let bestDiff = Infinity;
+      for (let i = 0; i < exps.length; i++) {
+        const dte = expirationDte(exps[i]);
+        if (dte < 1) continue;
+        const diff = Math.abs(dte - target);
+        if (diff < bestDiff) {
+          best = exps[i];
+          bestDiff = diff;
+        }
+      }
+      return best;
+    }
+    function selectedExpiration() {
+      const sel = document.getElementById('chainExpiration');
+      return (sel && sel.value) || '';
+    }
+    function currentChainSlice(exp) {
+      const data = window._cboeData;
+      if (!data || !data.chains) return null;
+      const key = exp || selectedExpiration();
+      return key ? data.chains[key] : null;
+    }
+    function nearestListedStrike(strike, chain) {
+      if (!chain || !chain.strikes || !chain.strikes.length) return strike;
+      let best = chain.strikes[0];
+      let bestDiff = Math.abs(best - strike);
+      for (let i = 1; i < chain.strikes.length; i++) {
+        const k = chain.strikes[i];
+        const d = Math.abs(k - strike);
+        if (d < bestDiff) {
+          best = k;
+          bestDiff = d;
+        }
+      }
+      return best;
+    }
+    function findChainContract(type, strike, exp) {
+      const chain = currentChainSlice(exp);
+      if (!chain || type === 'stock') return null;
+      const list = type === 'put' ? chain.puts : chain.calls;
+      if (!list || !list.length) return null;
+      const want = Number(strike);
+      let found = null;
+      for (let i = 0; i < list.length; i++) {
+        if (Math.abs(Number(list[i].strike) - want) < 1e-6) {
+          found = list[i];
+          break;
+        }
+      }
+      return found;
+    }
+    function quoteIvPct(q) {
+      const v = Number(q && q.iv);
+      if (!isFinite(v) || v <= 0) return null;
+      const pct = v <= 3 ? v * 100 : v;
+      return Math.max(1, Math.min(200, Math.round(pct)));
+    }
+    function seedIvFromAtm(data, exp) {
+      const ivEl = document.getElementById('iv');
+      if (!ivEl) return;
+      const S = parseFloat(document.getElementById('spot').value) || Number(data && data.spot) || 0;
+      const chain = currentChainSlice(exp);
+      if (!chain || !S) return;
+      const k = nearestListedStrike(S, chain);
+      const call = findChainContract('call', k, exp);
+      const put = findChainContract('put', k, exp);
+      const iv = quoteIvPct(call) || quoteIvPct(put);
+      if (iv) ivEl.value = iv;
+    }
+    function tryFillLegFromChain(leg, opts) {
+      const options = opts || {};
+      if (!leg || leg.type === 'stock') {
+        if (leg && leg.type === 'stock' && window._cboeData && window._cboeData.spot && (!leg.premiumManual || options.force)) {
+          leg.premium = Math.round(Number(window._cboeData.spot) * 100) / 100;
+          return true;
+        }
+        return false;
+      }
+      const exp = selectedExpiration();
+      const chain = currentChainSlice(exp);
+      if (!chain) return false;
+      if (options.snapStrikes) {
+        leg.strike = nearestListedStrike(leg.strike || parseFloat(document.getElementById('spot').value) || 100, chain);
+      }
+      if (options.setDte && exp) leg.dte = Math.max(1, expirationDte(exp));
+      const q = findChainContract(leg.type, leg.strike, exp);
+      const px = midPrice(q);
+      if (px > 0 && (!leg.premiumManual || options.force)) {
+        leg.premium = Math.round(px * 100) / 100;
+        leg.premiumFromChain = true;
+        return true;
+      }
+      return false;
+    }
+    function applyChainQuotesToLegs(list, opts) {
+      const arr = list || legs;
+      if (!arr || !arr.length || !window._cboeData) return false;
+      let changed = false;
+      for (let i = 0; i < arr.length; i++) {
+        if (tryFillLegFromChain(arr[i], opts)) changed = true;
+      }
+      return changed;
+    }
+    function onChainExpChange() {
+      renderChainTable();
+      const dte = expirationDte(selectedExpiration());
+      applyChainQuotesToLegs(legs, { setDte: true });
+      if (typeof compareMode !== 'undefined' && compareMode) {
+        applyChainQuotesToLegs(legsB, { setDte: true });
+      }
+      if (dte && document.getElementById('daysLeft')) {
+        syncDTESlider();
+      }
+      seedIvFromAtm(window._cboeData, selectedExpiration());
+      renderLegs();
+      if (typeof renderLegsB === 'function' && compareMode) renderLegsB();
+      if (typeof resetSimulation === 'function') resetSimulation();
+      else if (typeof recalc === 'function') recalc();
+    }
+    // If the current position is still exactly the untouched single default
+    // leg (never priced from a chain, never manually edited), re-anchor its
+    // strike to the freshly loaded spot before snapping to a listed strike.
+    // Without this, a leg created before the chain loaded (e.g. against the
+    // page's placeholder spot) snaps to the nearest *listed* strike to its
+    // stale value — which can be the lowest strike on the whole chain if the
+    // real spot is much higher — instead of landing at-the-money.
+    function reanchorDefaultLegStrike(list, spot) {
+      if (!list || list.length !== 1 || !spot) return;
+      const leg = list[0];
+      if (leg.type === 'call' && leg.side === 'buy' && !leg.premiumManual && !leg.premiumFromChain) {
+        leg.strike = Math.round(spot);
+      }
+    }
+    async function loadCboeChain(){
+      const tickerEl = document.getElementById('ticker');
+      const sym = normalizeTicker(tickerEl && tickerEl.value || 'SPY');
+      const statusEl = document.getElementById('chainStatus');
+      const spotRefEl = document.getElementById('chainSpotRef');
+      const spotInput = document.getElementById('spot');
+      if (!sym){ statusEl.textContent='Bir ticker seçin'; return; }
+      const futures = isFuturesTicker(sym);
+      const loadBtn = document.getElementById('loadChainBtn');
+      if (futures) {
+        window._cboeData = null;
+        if (loadBtn) loadBtn.textContent = 'Vadeli Zinciri Yükle';
+        if (statusEl) {
+          const spec = futuresSpec(sym);
+          statusEl.textContent = `${sym} bir vadeli opsiyon. CBOE hisse/endeks zincir yüklemesi devre dışı; zincir için CME vadeli opsiyon veri kaynağı kullanın. Kontrat çarpanı: ${spec.multiplier}.`;
+          statusEl.className = 'quote-status warn';
+        }
+        const spotInput = document.getElementById('spot');
+        const S = parseFloat(spotInput && spotInput.value) || 100;
+        [legs, legsB].forEach(function(list){
+          if (!list) return;
+          list.forEach(function(leg){
+            if (leg.tickerManual) return;
+            leg.ticker = sym;
+            if (leg.type !== 'stock' && (!leg.strike || leg.strike <= 0)) leg.strike = roundToStep(S, futuresStrikeStep(sym));
+            if (leg.type === 'stock') { leg.premium = S; leg.premiumManual = false; }
+            else if (!leg.premiumManual) leg.premium = modeledPremiumForLeg(leg, S);
+          });
+        });
+        renderLegs();
+        if (typeof renderLegsB === 'function' && compareMode) renderLegsB();
+        syncDTESlider();
+        updateSpotSliderRange();
+        if (typeof resetSimulation === 'function') resetSimulation(); else if (typeof recalc === 'function') recalc();
+        return;
+      }
+      if (loadBtn) loadBtn.textContent = 'Zinciri Yükle';
+      statusEl.textContent = sym + ' zinciri yükleniyor… (CBOE gecikmeli)';
+      statusEl.className='quote-status warn';
+      try{
+        let data = null;
+        // Try Pages Function
+        try{
+          const r = await fetch(`/api/cboe/chain?symbol=${encodeURIComponent(sym)}`, { cache: 'no-store' });
+          if (!r.ok) throw new Error('proxy '+r.status);
+          data = await r.json();
+          if (data.error) throw new Error(data.error);
+        }catch(e){
+          console.log('Proxy failed, fallback to allorigins', e);
+          const cboeUrl = `https://cdn.cboe.com/api/global/delayed_quotes/options/${encodeURIComponent(sym.startsWith('_')?sym: (sym==='SPX'?'_SPX': sym==='NDX'?'_NDX': sym==='RUT'?'_RUT': sym==='VIX'?'_VIX': sym))}.json`;
+          const proxy = `https://api.allorigins.win/raw?url=${encodeURIComponent(cboeUrl)}`;
+          const r2 = await fetch(proxy);
+          if (!r2.ok) throw new Error('CBOE fetch failed '+r2.status);
+          const raw = await r2.json();
+          const d = raw && raw.data ? raw.data : raw;
+          const spot = d.close ?? d.current_price ?? null;
+          const arr = Array.isArray(d.options) ? d.options : [];
+          const expMap = new Map();
+          const re = /(\d{6})([CP])(\d{8})$/;
+          for (const o of arr){
+            const occ = o.option || o.symbol || '';
+            const mm = occ.match(re);
+            if(!mm) continue;
+            const yymmdd = mm[1];
+            const cp = mm[2];
+            const strikeRaw = mm[3];
+            const yy = parseInt(yymmdd.slice(0,2),10);
+            const mm2 = yymmdd.slice(2,4);
+            const dd = yymmdd.slice(4,6);
+            const yyyy = yy>=70?1900+yy:2000+yy;
+            const expISO = `${yyyy}-${mm2}-${dd}`;
+            const strike = parseInt(strikeRaw,10)/1000;
+            if(!expMap.has(expISO)) expMap.set(expISO,{calls:new Map(),puts:new Map()});
+            const bucket = expMap.get(expISO);
+            const simp = {strike, bid:o.bid, ask:o.ask, last:o.last, iv:o.iv, oi:o.open_interest, vol:o.volume};
+            if(cp==='C') bucket.calls.set(strike,simp); else bucket.puts.set(strike,simp);
+          }
+          const expirations = Array.from(expMap.keys()).sort();
+          const chains = {};
+          for(const exp of expirations){
+            const b = expMap.get(exp);
+            const cSt = Array.from(b.calls.keys()).sort((a,b)=>a-b);
+            const pSt = Array.from(b.puts.keys()).sort((a,b)=>a-b);
+            chains[exp]={calls:cSt.map(k=>b.calls.get(k)), puts:pSt.map(k=>b.puts.get(k)), strikes:Array.from(new Set([...cSt,...pSt])).sort((a,b)=>a-b)};
+          }
+          data={symbol:sym, spot, expirations, chains, source:'CBOE via allorigins'};
+        }
+        if (!data || !data.expirations || !data.expirations.length) throw new Error('No expirations (try SPY, QQQ, AAPL)');
+        const sel = document.getElementById('chainExpiration');
+        const keepExp = sel && sel.value;
+        sel.innerHTML = '';
+        data.expirations.forEach(exp=>{
+          const opt = document.createElement('option');
+          opt.value = exp;
+          const days = expirationDte(exp);
+          opt.textContent = exp + (days?` (${days}d)`:'');
+          sel.appendChild(opt);
+        });
+        const prefer = keepExp && data.expirations.indexOf(keepExp) >= 0
+          ? keepExp
+          : pickDefaultExpiration(data.expirations, 45, true);
+        if (prefer) sel.value = prefer;
+        window._cboeData = data;
+        if (spotRefEl) spotRefEl.value = data.spot ? '$' + Number(data.spot).toFixed(2) : '—';
+        if (spotInput && data.spot){
+          spotInput.value = Number(data.spot).toFixed(2);
+        }
+        seedIvFromAtm(data, sel.value);
+        // The selected ticker owns inherited legs. Re-anchor every inherited
+        // option to the new underlying before snapping to the new chain.
+        [legs, legsB].forEach(function(list) {
+          if (!list || !data.spot) return;
+          list.forEach(function(leg) {
+            if (leg.tickerManual || leg.type === 'stock') return;
+            if (!leg.strike || leg.premiumFromChain || leg._tickerReanchorPending) {
+              leg.strike = Number(data.spot);
+            }
+            leg._tickerReanchorPending = false;
+          });
+        });
+        reanchorDefaultLegStrike(legs, data.spot);
+        reanchorDefaultLegStrike(legsB, data.spot);
+        applyChainQuotesToLegs(legs, { snapStrikes: true, setDte: true, force: true });
+        if (typeof legsB !== 'undefined' && legsB && legsB.length) {
+          applyChainQuotesToLegs(legsB, { snapStrikes: true, setDte: true, force: false });
+        }
+        syncDTESlider();
+        updateSpotSliderRange();
+        renderLegs();
+        if (typeof renderLegsB === 'function' && compareMode) renderLegsB();
+        renderChainTable();
+        if (typeof resetSimulation === 'function') resetSimulation();
+        else if (typeof liveUpdate === 'function') liveUpdate();
+        const dteNow = expirationDte(sel.value);
+        const qStatus = document.getElementById('quoteStatus');
+        if (qStatus){
+          qStatus.textContent = `${data.symbol} $${data.spot ? Number(data.spot).toFixed(2) : '?'} • vade ${sel.value} (${dteNow}d) • ${data.expirations.length} vade • ${data.source || 'CBOE'} — alanlar düzenlenebilir`;
+          qStatus.className='quote-status ok';
+        }
+        const filterSel = document.getElementById('chainFilterTop');
+        const filterLabel = filterSel && filterSel.selectedIndex >= 0 ? filterSel.options[filterSel.selectedIndex].text : 'ATM ±20%';
+        statusEl.textContent = `${data.symbol} spot $${data.spot ? Number(data.spot).toFixed(2) : '?'} • varsayılan vade ${sel.value} (${dteNow}d) • Filtre ${filterLabel}`;
+        statusEl.className='quote-status ok';
+      }catch(err){
+        console.error(err);
+        statusEl.textContent = 'Zincir başarısız: ' + err.message + ' — SPY, QQQ, AAPL veya SPX gibi listelenen bir hisse/endeks ticker’ı deneyin';
+        statusEl.className='quote-status err';
+      }
+    }
+    function renderChainTable(){
+      const wrap = document.getElementById('chainTableWrap');
+      const sel = document.getElementById('chainExpiration');
+      const filterTop = document.getElementById('chainFilterTop');
+      const data = window._cboeData;
+      if (!data || !sel || !sel.value){ wrap.innerHTML='<div style="padding:14px;color:var(--muted)">Select ticker and Zinciri Yükle (CBOE)</div>'; return; }
+      const exp = sel.value;
+      const chain = data.chains ? data.chains[exp] : null;
+      if (!chain){ wrap.innerHTML='<div style="padding:14px">Boş zincir: '+exp+'</div>'; return; }
+      const callMap = new Map(chain.calls.map(c=>[c.strike,c]));
+      const putMap = new Map(chain.puts.map(p=>[p.strike,p]));
+      let strikes = chain.strikes;
+      const spotManual = parseFloat(document.getElementById('spot').value) || Number(data.spot) || 100;
+      const filt = filterTop ? filterTop.value : 'atm20';
+      let visible = strikes;
+      if (filt!=='all'){
+        const pct = filt==='atm5'?0.05 : filt==='atm10'?0.10 : filt==='atm20'?0.20 : 0.30;
+        const lo = spotManual * (1-pct);
+        const hi = spotManual * (1+pct);
+        visible = strikes.filter(s=>s>=lo && s<=hi);
+        if (!visible.length){
+          visible = strikes.map(k=>({k,d:Math.abs(k-spotManual)})).sort((a,b)=>a.d-b.d).slice(0, Math.min(40, strikes.length)).map(x=>x.k).sort((a,b)=>a-b);
+        }
+      }
+      const p = getParams();
+      const T = Math.max(0, expirationDte(exp)) / 365;
+      function deltaFor(q, type, strikeVal) {
+        if (!q) return '—';
+        const ivPct = quoteIvPct(q);
+        const sigma = (ivPct ? ivPct : p.iv * 100) / 100;
+        if (!sigma || sigma <= 0) return '—';
+        const d = isFuturesTicker(data.symbol)
+          ? black76Delta(spotManual, strikeVal, T, p.r, sigma, type)
+          : bsDelta(spotManual, strikeVal, T, p.r, p.q, sigma, type);
+        if (!isFinite(d)) return '—';
+        return d.toFixed(2);
+      }
+      let html = '<table class="chain-table"><thead><tr><th>Δ</th><th>Call</th><th></th><th>Strike</th><th></th><th>Put</th><th>Δ</th></tr></thead><tbody>';
+      visible.slice().reverse().forEach(strike=>{
+        const c = callMap.get(strike);
+        const p2 = putMap.get(strike);
+        const cPrice = c ? midPrice(c) : 0;
+        const pPrice = p2 ? midPrice(p2) : 0;
+        const isATM = Math.abs(strike-spotManual) < spotManual*0.02;
+        html += `<tr class="${isATM?'atm':''}"${isATM?' data-atm="1"':''}>`;
+        html += `<td class="delta">${deltaFor(c, 'call', strike)}</td>`;
+        html += `<td class="price ${cPrice?'has':''}">${cPrice? '$'+cPrice.toFixed(2):'—'}</td>`;
+        html += `<td><button class="btn-add" onclick="addLegFromChain('call', ${strike}, ${cPrice||0}, '${exp}')">Call Ekle</button></td>`;
+        html += `<td class="strike">${strike}</td>`;
+        html += `<td><button class="btn-add" onclick="addLegFromChain('put', ${strike}, ${pPrice||0}, '${exp}')">Put Ekle</button></td>`;
+        html += `<td class="price ${pPrice?'has':''}">${pPrice? '$'+pPrice.toFixed(2):'—'}</td>`;
+        html += `<td class="delta">${deltaFor(p2, 'put', strike)}</td>`;
+        html += `</tr>`;
+      });
+      html += '</tbody></table>';
+      wrap.innerHTML = html;
+      const atmRow = wrap.querySelector('tr[data-atm="1"]');
+      if (atmRow && atmRow.scrollIntoView) {
+        atmRow.scrollIntoView({ block: 'center' });
+      }
+    }
+    function addLegFromChain(type, strike, premium, expStr){
+      const today = new Date(); today.setHours(0,0,0,0);
+      const expDate = new Date(expStr);
+      const dte = Math.max(0, Math.round((expDate - today)/86400000));
+      const leg = {
+        id: nextId++,
+        side: 'buy',
+        type: type,
+        strike: Number(strike),
+        dte: dte,
+        qty: 1,
+        premium: Number(premium) ? Math.round(Number(premium)*100)/100 : 0.05,
+        premiumManual: true,
+        ticker: normalizeTicker(document.getElementById('ticker').value)
+      };
+      legs.push(leg);
+      renderLegs();
+      recalc();
+      if (typeof resetSimulation==='function') resetSimulation();
+      const qs = document.getElementById('quoteStatus');
+      if(qs){ qs.textContent = `Eklendi: ${type.toUpperCase()} ${strike} vade ${expStr} (DTE ${dte}) @ $${leg.premium} — düzenlenebilir`; qs.className='quote-status ok'; }
+      if (typeof syncDTESlider === 'function') syncDTESlider();
+    }
     (function bootBuilder() {
       var params = null;
       try { params = new URLSearchParams(window.location.search); } catch (e) {}
@@ -3138,6 +3816,7 @@
         resetSimulation();
         var tip = document.getElementById('templateTip');
         if (tip) tip.innerHTML = 'URL’den paylaşılan kurulum yüklendi. Serbestçe düzenleyin.';
+        if (typeof loadCboeChain === 'function') loadCboeChain();
         return;
       }
 
@@ -3155,6 +3834,7 @@
         }
         if (found && typeof applyTemplate === 'function') {
           applyTemplate();
+          if (typeof loadCboeChain === 'function') loadCboeChain();
           return;
         }
       }
@@ -3164,6 +3844,7 @@
       renderLegs();
       recalc();
       resetSimulation();
+      if (typeof loadCboeChain === 'function') loadCboeChain();
     })();
 
 </script>
