@@ -18,7 +18,7 @@
   <meta property="og:image" content="https://jsm-options.com/images/og-default.png">
   <meta name="twitter:image" content="https://jsm-options.com/images/og-default.png">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Free Options Strategy Builder">
+  <meta name="twitter:title" content="Free Options Strategy Builder &amp; Payoff Calculator">
   <meta name="twitter:description" content="Live Payoff chart and Greeks. Educational options strategy builder.">
   <link rel="stylesheet" href="/assets/style.css?v=20260922">
 <!-- Google tag (gtag.js) -->
@@ -972,7 +972,7 @@
     <!-- Stock simulator (left) + Position Summary (right), same size -->
     <div class="charts-row">
       <div class="card">
-        <h2>📈 Simulate underlying price ( Hypothetically ) <span style="font-size:0.72rem;color:var(--muted);font-weight:500;">(step the trade day by day)</span></h2>
+        <h2>📈 📈 Simulate underlying price ( Hypothetically ) <span style="font-size:0.72rem;color:var(--muted);font-weight:500;">(işlemi gün gün izleyin)</span></h2>
         <div class="sim-price-big" id="simPriceBig">$100.00</div>
         <div class="sim-chart-wrap" id="simChartWrap">
           <svg id="simSvg" viewBox="0 0 600 200" preserveAspectRatio="none"></svg>
@@ -1061,7 +1061,7 @@
 
   <div class="card bmc-card">
     <h2>Support the site</h2>
-    <p>Lessons and the Builder stay free. If they help, you can buy a coffee.</p>
+    <p>Lessons and the Builder stay free. İşinize yaradıysa bir kahve ısmarlayabilirsiniz.</p>
     <a class="bmc-link" href="https://www.buymeacoffee.com/memoliro" target="_blank" rel="noopener">☕ Buy me a coffee</a>
   </div>
 
@@ -1134,6 +1134,10 @@
       <a href="https://jsm-video.com/" target="_blank" rel="noopener">JSM Video</a> ·
       <a href="https://jsm-loudness.com/" target="_blank" rel="noopener">JSM Loudness</a>
     </div>
+  <div class="footer-seo" style="margin-top:18px;font-size:0.78rem;color:var(--muted);line-height:1.55;max-width:900px;text-align:left;border-top:1px solid var(--border);padding-top:12px">
+    <p>JSM Options Strategy Builder is a free and fully interactive options strategy builder and simulator. Create and analyze multi-leg options strategies including spreads, straddles, strangles, iron condors, and custom structures. View payoff charts, Greeks, profit/loss, break-even, probability of profit, and expected move all in one clean interface. Designed for SPX and equity options traders who want a fast, ad-free, beginner-friendly yet powerful options strategy builder.</p>
+  </div>
+
 </footer>
 
   <script>
@@ -3363,12 +3367,12 @@
         updateShareUrlQuiet();
         var link = window.location.href;
         var status = document.getElementById('shareStatus');
-        function ok() { if (status) status.textContent = 'Link copied — paste to share this setup.'; }
+        function ok() { if (status) status.textContent = 'Link kopyalandı — bu kurulumu paylaşmak için yapıştırın.'; }
         if (navigator.clipboard && navigator.clipboard.writeText) {
           navigator.clipboard.writeText(link).then(ok).catch(function () {
-            if (status) status.textContent = 'Copy from the address bar.';
+            if (status) status.textContent = 'Adres çubuğundan kopyalayın.';
           });
-        } else if (status) status.textContent = 'Copy from the address bar.';
+        } else if (status) status.textContent = 'Adres çubuğundan kopyalayın.';
       });
     }
 
@@ -3578,10 +3582,10 @@
       const loadBtn = document.getElementById('loadChainBtn');
       if (futures) {
         window._cboeData = null;
-        if (loadBtn) loadBtn.textContent = 'Load Futures Chain';
+        if (loadBtn) loadBtn.textContent = 'Vadeli Load Chain';
         if (statusEl) {
           const spec = futuresSpec(sym);
-          statusEl.textContent = `${sym} is a futures option. CBOE equity/index chain loading is disabled; use a CME futures-option data source for the chain. Contract multiplier: ${spec.multiplier}.`;
+          statusEl.textContent = `${sym} bir vadeli opsiyon. CBOE hisse/endeks zincir yüklemesi devre dışı; zincir için CME vadeli opsiyon veri kaynağı kullanın. Kontrat çarpanı: ${spec.multiplier}.`;
           statusEl.className = 'quote-status warn';
         }
         const spotInput = document.getElementById('spot');
@@ -3604,7 +3608,7 @@
         return;
       }
       if (loadBtn) loadBtn.textContent = 'Load Chain';
-      statusEl.textContent = sym + ' chain loading… (CBOE delayed)';
+      statusEl.textContent = sym + '  chain loading… (CBOE delayed)';
       statusEl.className='quote-status warn';
       try{
         let data = null;
@@ -3703,16 +3707,16 @@
         const dteNow = expirationDte(sel.value);
         const qStatus = document.getElementById('quoteStatus');
         if (qStatus){
-          qStatus.textContent = `${data.symbol} $${data.spot ? Number(data.spot).toFixed(2) : '?'} • exp ${sel.value} (${dteNow}d) • ${data.expirations.length} expirations • ${data.source || 'CBOE'} — fields stay editable`;
+          qStatus.textContent = `${data.symbol} $${data.spot ? Number(data.spot).toFixed(2) : '?'} • vade ${sel.value} (${dteNow}d) • ${data.expirations.length} vade • ${data.source || 'CBOE'} — fields stay — editable`;
           qStatus.className='quote-status ok';
         }
         const filterSel = document.getElementById('chainFilterTop');
         const filterLabel = filterSel && filterSel.selectedIndex >= 0 ? filterSel.options[filterSel.selectedIndex].text : 'ATM ±20%';
-        statusEl.textContent = `${data.symbol} spot $${data.spot ? Number(data.spot).toFixed(2) : '?'} • default exp ${sel.value} (${dteNow}d) • Filter ${filterLabel}`;
+        statusEl.textContent = `${data.symbol} spot $${data.spot ? Number(data.spot).toFixed(2) : '?'} • varsayılan vade ${sel.value} (${dteNow}d) • Filtre ${filterLabel}`;
         statusEl.className='quote-status ok';
       }catch(err){
         console.error(err);
-        statusEl.textContent = 'Chain failed: ' + err.message + ' — Try a listed equity/index ticker such as SPY, QQQ, AAPL, or SPX';
+        statusEl.textContent = 'Chain failed: ' + err.message + ' — SPY, QQQ, AAPL veya SPX gibi listelenen bir hisse/endeks ticker’ı deneyin';
         statusEl.className='quote-status err';
       }
     }
@@ -3797,7 +3801,7 @@
       recalc();
       if (typeof resetSimulation==='function') resetSimulation();
       const qs = document.getElementById('quoteStatus');
-      if(qs){ qs.textContent = `Added ${type.toUpperCase()} ${strike} exp ${expStr} (DTE ${dte}) @ $${leg.premium} — editable`; qs.className='quote-status ok'; }
+      if(qs){ qs.textContent = `Eklendi: ${type.toUpperCase()} ${strike} exp ${expStr} (DTE ${dte}) @ $${leg.premium} — — editable`; qs.className='quote-status ok'; }
       if (typeof syncDTESlider === 'function') syncDTESlider();
     }
     (function bootBuilder() {
@@ -3815,7 +3819,7 @@
         recalc();
         resetSimulation();
         var tip = document.getElementById('templateTip');
-        if (tip) tip.innerHTML = 'Shared setup loaded from the URL. Edit freely.';
+        if (tip) tip.innerHTML = 'URL’den paylaşılan kurulum yüklendi. Serbestçe düzenleyin.';
         if (typeof loadCboeChain === 'function') loadCboeChain();
         return;
       }
