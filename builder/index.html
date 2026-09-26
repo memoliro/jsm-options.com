@@ -583,14 +583,13 @@
 
     .chain-table{width:100%;border-collapse:collapse;font-size:13px}
     .chain-table th{position:sticky;top:0;background:var(--card);z-index:2;padding:8px 8px;text-align:right;border-bottom:1px solid var(--border);color:var(--muted);font-weight:700;font-size:11px;letter-spacing:.06em;text-transform:uppercase}
-    .chain-table th:first-child,.chain-table td:first-child{text-align:right}
     .chain-table td{padding:6px 8px;text-align:right;border-bottom:1px solid rgba(45,58,79,.4);font-variant-numeric:tabular-nums}
     .chain-table td.strike{font-weight:800;text-align:center;color:var(--text);background:rgba(255,255,255,.02)}
     .chain-table tr.atm td.strike{background:rgba(59,130,246,.18)}
     .chain-table .btn-add{border:1px solid var(--border);background:var(--bg);color:var(--text);border-radius:6px;padding:3px 8px;font-size:11px;cursor:pointer;font-weight:600}
     .chain-table .btn-add:hover{border-color:var(--accent);color:var(--accent);background:rgba(59,130,246,.1)}
-    .chain-table .price{color:var(--muted)}
     .chain-table .price.has{color:var(--text)}
+    select#ticker, select#chainFilterTop, select#chainExpiration{background:var(--card);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:8px}
 
     </style>
 
@@ -693,9 +692,36 @@
           </div>
         </div>
       </div>
-      <div class="field ticker-field">
-        <label>Symbol / Ticker</label>
-        <input id="ticker" type="text" value="SPY" maxlength="12" autocomplete="off" spellcheck="false" placeholder="SPY" onchange="syncStrategyTicker()" />
+            <div class="field ticker-field" style="min-width:200px">
+        <label>Symbol / Ticker (CBOE)</label>
+        <select id="ticker" onchange="syncStrategyTicker()">
+          <option value="SPY" selected>SPY – S&P 500 ETF</option>
+          <option value="QQQ">QQQ – Nasdaq 100 ETF</option>
+          <option value="IWM">IWM – Russell 2000 ETF</option>
+          <option value="DIA">DIA – Dow 30 ETF</option>
+          <option value="SPX">SPX – S&P 500 Index (_SPX)</option>
+          <option value="NDX">NDX – Nasdaq 100 Index (_NDX)</option>
+          <option value="RUT">RUT – Russell 2000 Index (_RUT)</option>
+          <option value="VIX">VIX – Volatility Index (_VIX)</option>
+          <option value="AAPL">AAPL – Apple</option>
+          <option value="MSFT">MSFT – Microsoft</option>
+          <option value="NVDA">NVDA – Nvidia</option>
+          <option value="TSLA">TSLA – Tesla</option>
+          <option value="META">META – Meta Platforms</option>
+          <option value="AMZN">AMZN – Amazon</option>
+          <option value="GOOGL">GOOGL – Alphabet</option>
+          <option value="NFLX">NFLX – Netflix</option>
+          <option value="AMD">AMD – AMD</option>
+          <option value="BA">BA – Boeing</option>
+          <option value="JPM">JPM – JPMorgan</option>
+          <option value="XLF">XLF – Financials ETF</option>
+          <option value="TLT">TLT – 20Y Treasury ETF</option>
+          <option value="GLD">GLD – Gold ETF</option>
+          <option value="SLV">SLV – Silver ETF</option>
+          <option value="USO">USO – Oil ETF</option>
+          <option value="XLK">XLK – Tech ETF</option>
+          <option value="XLE">XLE – Energy ETF</option>
+        </select>
       </div>
       <div class="field" style="min-width:auto">
         <label>&nbsp;</label>
@@ -746,7 +772,7 @@
         </div>
         <div class="field wide">
           <label>Info</label>
-          <div id="chainStatus" class="quote-status" style="padding:6px 8px;background:var(--bg);border-radius:6px">Enter SPY and Load Chain (CBOE). Manual S/IV/Rate/Div below drive model.</div>
+          <div id="chainStatus" class="quote-status" style="padding:6px 8px;background:var(--bg);border-radius:6px">Select SPY/QQQ/AAPL from dropdown and click Load Chain (CBOE). Manual S/IV/Rate/Div drive model.</div>
         </div>
       </div>
       <div id="chainTableWrap" style="max-height:520px;overflow:auto;border:1px solid var(--border);border-radius:8px"></div>
@@ -3168,7 +3194,7 @@
     })();
 
 
-    // ===== CBOE CHAIN - FIXED PARSER - KEEPS S/IV/Rate/Div MANUAL =====
+    // ===== CBOE CHAIN - FIXED - TICKER IS <SELECT> ONLY =====
     window._cboeData = null;
     function onChainExpChange(){ renderChainTable(); }
     function midPrice(c){
@@ -3180,34 +3206,26 @@
       if (isFinite(b) && b>0) return b;
       return 0;
     }
-    function parseOccExpiry(occ){
-      const m = occ.match(/(\d{6})([CP])(\d{8})$/);
-      if(!m) return null;
-      const yymmdd = m[1];
-      const yy = parseInt(yymmdd.slice(0,2),10);
-      const mm = yymmdd.slice(2,4);
-      const dd = yymmdd.slice(4,6);
-      const yyyy = yy >= 70 ? 1900+yy : 2000+yy;
-      return `${yyyy}-${mm}-${dd}`;
-    }
     async function loadCboeChain(){
-      const sym = currentTicker();
+      const tickerEl = document.getElementById('ticker');
+      const sym = (tickerEl && tickerEl.value || 'SPY').toUpperCase();
       const statusEl = document.getElementById('chainStatus');
       const spotRefEl = document.getElementById('chainSpotRef');
       const spotInput = document.getElementById('spot');
-      if (!sym){ statusEl.textContent='Enter ticker first (SPY, QQQ, AAPL)'; statusEl.className='quote-status err'; return; }
+      if (!sym){ statusEl.textContent='Select a ticker'; return; }
       statusEl.textContent = sym + ' chain loading… (CBOE delayed)';
       statusEl.className='quote-status warn';
       try{
         let data = null;
+        // Try Pages Function
         try{
           const r = await fetch(`/api/cboe/chain?symbol=${encodeURIComponent(sym)}`, { cache: 'no-store' });
           if (!r.ok) throw new Error('proxy '+r.status);
           data = await r.json();
           if (data.error) throw new Error(data.error);
         }catch(e){
-          console.log('Local proxy failed, fallback to allorigins', e);
-          const cboeUrl = `https://cdn.cboe.com/api/global/delayed_quotes/options/${encodeURIComponent(sym)}.json`;
+          console.log('Proxy failed, fallback to allorigins', e);
+          const cboeUrl = `https://cdn.cboe.com/api/global/delayed_quotes/options/${encodeURIComponent(sym.startsWith('_')?sym: (sym==='SPX'?'_SPX': sym==='NDX'?'_NDX': sym==='RUT'?'_RUT': sym==='VIX'?'_VIX': sym))}.json`;
           const proxy = `https://api.allorigins.win/raw?url=${encodeURIComponent(cboeUrl)}`;
           const r2 = await fetch(proxy);
           if (!r2.ok) throw new Error('CBOE fetch failed '+r2.status);
@@ -3243,46 +3261,37 @@
             const pSt = Array.from(b.puts.keys()).sort((a,b)=>a-b);
             chains[exp]={calls:cSt.map(k=>b.calls.get(k)), puts:pSt.map(k=>b.puts.get(k)), strikes:Array.from(new Set([...cSt,...pSt])).sort((a,b)=>a-b)};
           }
-          data={symbol:sym, spot, expirations, chains, source:'CBOE via allorigins (fallback)'};
+          data={symbol:sym, spot, expirations, chains, source:'CBOE via allorigins'};
         }
-        if (!data || !data.expirations || !data.expirations.length) throw new Error('No expirations returned (try SPY, QQQ, AAPL)');
+        if (!data || !data.expirations || !data.expirations.length) throw new Error('No expirations (try SPY, QQQ, AAPL)');
         const sel = document.getElementById('chainExpiration');
         sel.innerHTML = '';
         data.expirations.forEach(exp=>{
           const opt = document.createElement('option');
           opt.value = exp;
           const d = new Date(exp);
-          const label = isNaN(d) ? exp : exp + ' (' + Math.max(0, Math.round((d - new Date())/86400000)) + 'd)';
-          opt.textContent = label;
+          const days = isNaN(d) ? 0 : Math.max(0, Math.round((d - new Date())/86400000));
+          opt.textContent = exp + (days?` (${days}d)`:'');
           sel.appendChild(opt);
         });
         window._cboeData = data;
         if (spotRefEl) spotRefEl.value = data.spot ? '$' + Number(data.spot).toFixed(2) : '—';
-        // Auto-fill underlying price with SPY ref as default, but keep editable
         if (spotInput && data.spot){
-          const cur = parseFloat(spotInput.value);
-          // If current is default 100 or empty, or user just changed ticker, update to CBOE spot
-          if (!cur || cur===100 || document.getElementById('ticker').value.toUpperCase()==='SPY'){
-            // Only auto-fill if within reasonable range or first load
-            if (Math.abs(cur - data.spot) > 1 || cur===100){
-              spotInput.value = Number(data.spot).toFixed(2);
-              if (typeof liveUpdate==='function') liveUpdate();
-            }
-          }
+          // Auto-fill underlying price with CBOE spot as default, still editable
+          spotInput.value = Number(data.spot).toFixed(2);
+          if (typeof liveUpdate==='function') liveUpdate();
         }
         renderChainTable();
         const qStatus = document.getElementById('quoteStatus');
         if (qStatus){
-          qStatus.textContent = `${data.symbol} $${data.spot ? Number(data.spot).toFixed(2) : '?'} • ${data.expirations.length} expirations • ${data.source} • S/IV/Rate/Div stay manual`;
+          qStatus.textContent = `${data.symbol} $${data.spot ? Number(data.spot).toFixed(2) : '?'} • ${data.expirations.length} expirations • ${data.source} • S/IV/Rate/Div manual`;
           qStatus.className='quote-status ok';
         }
-        statusEl.textContent = `${data.symbol} spot ref $${data.spot ? Number(data.spot).toFixed(2) : '?'} • ${data.expirations.length} expirations • ${data.source} • Filter ATM ±30% default`;
+        statusEl.textContent = `${data.symbol} spot $${data.spot ? Number(data.spot).toFixed(2) : '?'} • ${data.expirations.length} expirations • Filter ATM ±30%`;
         statusEl.className='quote-status ok';
       }catch(err){
         console.error(err);
-        const qStatus = document.getElementById('quoteStatus');
-        if(qStatus){ qStatus.textContent='Chain failed: '+err.message; qStatus.className='quote-status err'; }
-        statusEl.textContent = 'Chain load failed: ' + (err && err.message ? err.message : err) + ' — CBOE covers SPY, QQQ, SPX, AAPL, NVDA etc.';
+        statusEl.textContent = 'Chain failed: ' + err.message + ' — Try SPY, QQQ, AAPL, SPX';
         statusEl.className='quote-status err';
       }
     }
@@ -3291,15 +3300,13 @@
       const sel = document.getElementById('chainExpiration');
       const filterTop = document.getElementById('chainFilterTop');
       const data = window._cboeData;
-      if (!data || !sel || !sel.value){ wrap.innerHTML='<div style="padding:14px;color:var(--muted)">Load Chain (CBOE) first — try SPY</div>'; return; }
+      if (!data || !sel || !sel.value){ wrap.innerHTML='<div style="padding:14px;color:var(--muted)">Select ticker and Load Chain (CBOE)</div>'; return; }
       const exp = sel.value;
       const chain = data.chains ? data.chains[exp] : null;
       if (!chain){ wrap.innerHTML='<div style="padding:14px">Empty chain for '+exp+'</div>'; return; }
-      // Build maps for fast lookup
       const callMap = new Map(chain.calls.map(c=>[c.strike,c]));
       const putMap = new Map(chain.puts.map(p=>[p.strike,p]));
       let strikes = chain.strikes;
-      // Filter ATM ±30% etc.
       const spotManual = parseFloat(document.getElementById('spot').value) || Number(data.spot) || 100;
       const filt = filterTop ? filterTop.value : 'atm30';
       let visible = strikes;
@@ -3309,8 +3316,7 @@
         const hi = spotManual * (1+pct);
         visible = strikes.filter(s=>s>=lo && s<=hi);
         if (!visible.length){
-          // fallback: closest N
-          visible = strikes.map(k=>({k,d:Math.abs(k-spotManual)})).sort((a,b)=>a.d-b.d).slice(0, Math.round(strikes.length*0.3)).map(x=>x.k).sort((a,b)=>a-b);
+          visible = strikes.map(k=>({k,d:Math.abs(k-spotManual)})).sort((a,b)=>a.d-b.d).slice(0, Math.min(40, strikes.length)).map(x=>x.k).sort((a,b)=>a-b);
         }
       }
       let html = '<table class="chain-table"><thead><tr><th>Call</th><th></th><th>Strike</th><th></th><th>Put</th></tr></thead><tbody>';
@@ -3319,7 +3325,7 @@
         const p = putMap.get(strike);
         const cPrice = c ? midPrice(c) : 0;
         const pPrice = p ? midPrice(p) : 0;
-        const isATM = Math.abs(strike-spotManual) < spotManual*0.015;
+        const isATM = Math.abs(strike-spotManual) < spotManual*0.02;
         html += `<tr class="${isATM?'atm':''}">`;
         html += `<td class="price ${cPrice?'has':''}">${cPrice? '$'+cPrice.toFixed(2):'—'}</td>`;
         html += `<td><button class="btn-add" onclick="addLegFromChain('call', ${strike}, ${cPrice||0}, '${exp}')">+C</button></td>`;
@@ -3334,8 +3340,7 @@
     function addLegFromChain(type, strike, premium, expStr){
       const today = new Date(); today.setHours(0,0,0,0);
       const expDate = new Date(expStr);
-      if (isNaN(expDate)) { alert('Invalid expiration'); return; }
-      const dte = Math.max(0, Math.round((expDate - today)/(1000*60*60*24)));
+      const dte = Math.max(0, Math.round((expDate - today)/86400000));
       const leg = {
         id: nextId++,
         side: 'buy',
@@ -3345,15 +3350,19 @@
         qty: 1,
         premium: Number(premium) ? Math.round(Number(premium)*100)/100 : 0.05,
         premiumManual: true,
-        ticker: currentTicker()
+        ticker: document.getElementById('ticker').value
       };
       legs.push(leg);
       renderLegs();
       recalc();
       if (typeof resetSimulation==='function') resetSimulation();
       const qs = document.getElementById('quoteStatus');
-      if(qs){ qs.textContent = `Added ${type.toUpperCase()} ${strike} exp ${expStr} (DTE ${dte}) • S/IV/Rate/Div remain manual editable`; qs.className='quote-status ok'; }
-      document.getElementById('legsList')?.scrollIntoView({behavior:'smooth', block:'center'});
+      if(qs){ qs.textContent = `Added ${type.toUpperCase()} ${strike} exp ${expStr} (DTE ${dte}) • S/IV/Rate/Div still manual`; qs.className='quote-status ok'; }
+    }
+    // Make ticker dropdown drive sync
+    function currentTicker(){
+      const el = document.getElementById('ticker');
+      return ((el && el.value) || 'SPY').trim().toUpperCase();
     }
 
     (function bootBuilder() {
