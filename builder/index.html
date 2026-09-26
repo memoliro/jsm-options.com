@@ -641,7 +641,7 @@
 
   <div class="builder-wrap">
   <h1>Options Strategy Builder &amp; Simulator</h1>
-  <p class="subtitle">Fully interactive · ×100 multiplier · Green = profit · Red = loss</p>
+  <p class="subtitle">Fully interactive · equity options ×100 · futures options use contract-specific multipliers · Green = profit · Red = loss</p>
 
   <div class="card" style="margin-bottom:12px;">
     <div class="top-bar">
@@ -695,7 +695,7 @@
         </div>
       </div>
             <div class="field ticker-field" style="min-width:200px">
-        <label>Symbol / Ticker (CBOE)</label>
+        <label>Symbol / Ticker</label>
         <select id="ticker" onchange="onTickerChange()">
           <option value="SPY" selected>SPY – S&P 500 ETF</option>
           <option value="QQQ">QQQ – Nasdaq 100 ETF</option>
@@ -723,11 +723,34 @@
           <option value="USO">USO – Oil ETF</option>
           <option value="XLK">XLK – Tech ETF</option>
           <option value="XLE">XLE – Energy ETF</option>
+          <optgroup label="Futures options (CME / futures contracts)">
+            <option value="/ES">/ES – E-mini S&amp;P 500</option>
+            <option value="/MES">/MES – Micro E-mini S&amp;P 500</option>
+            <option value="/NQ">/NQ – E-mini Nasdaq-100</option>
+            <option value="/MNQ">/MNQ – Micro E-mini Nasdaq-100</option>
+            <option value="/RTY">/RTY – E-mini Russell 2000</option>
+            <option value="/M2K">/M2K – Micro E-mini Russell 2000</option>
+            <option value="/YM">/YM – E-mini Dow</option>
+            <option value="/MYM">/MYM – Micro E-mini Dow</option>
+            <option value="/CL">/CL – Crude Oil</option>
+            <option value="/MCL">/MCL – Micro Crude Oil</option>
+            <option value="/NG">/NG – Natural Gas</option>
+            <option value="/GC">/GC – Gold</option>
+            <option value="/MGC">/MGC – Micro Gold</option>
+            <option value="/SI">/SI – Silver</option>
+            <option value="/SIL">/SIL – Micro Silver</option>
+            <option value="/ZB">/ZB – 30Y Treasury Bond</option>
+            <option value="/ZN">/ZN – 10Y Treasury Note</option>
+            <option value="/ZF">/ZF – 5Y Treasury Note</option>
+            <option value="/ZT">/ZT – 2Y Treasury Note</option>
+            <option value="/6E">/6E – Euro FX</option>
+            <option value="/6J">/6J – Japanese Yen FX</option>
+          </optgroup>
         </select>
       </div>
       <div class="field" style="min-width:auto">
         <label>&nbsp;</label>
-        <button type="button" class="btn-secondary" onclick="loadCboeChain()">Load Chain (CBOE)</button>
+        <button type="button" class="btn-secondary" id="loadChainBtn" onclick="loadCboeChain()">Load Chain</button>
       </div>
       <div class="field">
         <label>Underlying price ($)</label>
@@ -762,10 +785,10 @@
 
   
   <div class="card" id="chainCard" style="border:1px solid var(--border)">
-      <h2>Live chain — CBOE delayed (educational) <span style="font-size:0.72rem;color:var(--muted);font-weight:500">loads on open • ~15min delayed • edit any field after</span></h2>
+      <h2>Live chain — market data (educational) <span style="font-size:0.72rem;color:var(--muted);font-weight:500">loads on open • ~15min delayed • edit any field after</span></h2>
       <div class="top-bar" style="margin-bottom:8px">
         <div class="field">
-          <label>Expiration (CBOE)</label>
+          <label>Expiration</label>
           <select id="chainExpiration" onchange="onChainExpChange()"></select>
         </div>
         <div class="field">
@@ -774,11 +797,11 @@
         </div>
         <div class="field wide">
           <label>Info</label>
-          <div id="chainStatus" class="quote-status" style="padding:6px 8px;background:var(--bg);border-radius:6px">Opening with SPY CBOE chain. Change ticker or expiration anytime.</div>
+          <div id="chainStatus" class="quote-status" style="padding:6px 8px;background:var(--bg);border-radius:6px">Opening with SPY chain. Change ticker or expiration anytime.</div>
         </div>
       </div>
       <div id="chainTableWrap" style="max-height:520px;overflow:auto;border:1px solid var(--border);border-radius:8px"></div>
-      <p style="font-size:0.7rem;color:var(--muted);margin-top:6px">Data: cdn.cboe.com — free, no key, ~15m delayed. On load, spot / ATM IV / strike / DTE / premium come from the chain. You can override any field. +C / +P adds a market-priced leg.</p>
+      <p style="font-size:0.7rem;color:var(--muted);margin-top:6px">Listed-option data: CBOE delayed. Futures options use separate futures-contract specifications and are not loaded through this CBOE path. On load, spot / ATM IV / strike / DTE / premium come from the chain. You can override any field. +C / +P adds a market-priced leg.</p>
     </div>
 
   <div class="main-grid">
@@ -804,7 +827,7 @@
             <button class="btn-secondary btn-sm" onclick="clearLegs()">Clear all</button>
           </div>
           <p style="font-size:0.7rem;color:var(--muted);margin-top:8px;">
-            Debit = you pay · Credit = you receive · <strong>Option:</strong> qty = contracts (×100) · <strong>Hisse:</strong> qty = share count, cost = entry price (Strike and DTE unused)
+            Debit = you pay · Credit = you receive · <strong>Listed option:</strong> qty = contracts (×100) · <strong>Futures option:</strong> contract-specific multiplier · <strong>Hisse:</strong> qty = share count, cost = entry price (Strike and DTE unused)
           </p>
         </div>
         <div class="legs-summary-col">
@@ -1007,7 +1030,7 @@
 
     <!-- Option Greeks -->
     <div class="card">
-      <h2>Option Greeks <span style="font-size:0.72rem;color:var(--muted);font-weight:500;">(position total · ×100)</span></h2>
+      <h2>Option Greeks <span style="font-size:0.72rem;color:var(--muted);font-weight:500;">(position total · contract multiplier)</span></h2>
       <div class="greeks-grid">
         <div class="greek-card">
           <div class="g-name">Δ Delta</div>
@@ -1115,6 +1138,64 @@
 
   <script>
     const MULTIPLIER = 100;
+    // Futures-option contracts do NOT use the equity-option ×100 convention.
+    // Keep the futures contract specification separate so pricing/cash/Greeks
+    // never silently reuse stock-option assumptions.
+    const FUTURES_CONTRACTS = {
+      '/ES': { root: 'ES', multiplier: 50, strikeStep: 5, venue: 'CME' },
+      '/MES': { root: 'MES', multiplier: 5, strikeStep: 5, venue: 'CME' },
+      '/NQ': { root: 'NQ', multiplier: 20, strikeStep: 25, venue: 'CME' },
+      '/MNQ': { root: 'MNQ', multiplier: 2, strikeStep: 25, venue: 'CME' },
+      '/RTY': { root: 'RTY', multiplier: 50, strikeStep: 5, venue: 'CME' },
+      '/M2K': { root: 'M2K', multiplier: 5, strikeStep: 5, venue: 'CME' },
+      '/YM': { root: 'YM', multiplier: 5, strikeStep: 50, venue: 'CBOT' },
+      '/MYM': { root: 'MYM', multiplier: 0.5, strikeStep: 50, venue: 'CBOT' },
+      '/CL': { root: 'CL', multiplier: 1000, strikeStep: 0.5, venue: 'NYMEX' },
+      '/MCL': { root: 'MCL', multiplier: 100, strikeStep: 0.5, venue: 'NYMEX' },
+      '/NG': { root: 'NG', multiplier: 10000, strikeStep: 0.025, venue: 'NYMEX' },
+      '/GC': { root: 'GC', multiplier: 100, strikeStep: 5, venue: 'COMEX' },
+      '/MGC': { root: 'MGC', multiplier: 10, strikeStep: 5, venue: 'COMEX' },
+      '/SI': { root: 'SI', multiplier: 5000, strikeStep: 0.25, venue: 'COMEX' },
+      '/SIL': { root: 'SIL', multiplier: 1000, strikeStep: 0.25, venue: 'COMEX' },
+      '/ZB': { root: 'ZB', multiplier: 1000, strikeStep: 1/32, venue: 'CBOT' },
+      '/ZN': { root: 'ZN', multiplier: 1000, strikeStep: 1/32, venue: 'CBOT' },
+      '/ZF': { root: 'ZF', multiplier: 1000, strikeStep: 1/32, venue: 'CBOT' },
+      '/ZT': { root: 'ZT', multiplier: 2000, strikeStep: 1/32, venue: 'CBOT' },
+      '/6E': { root: '6E', multiplier: 125000, strikeStep: 0.005, venue: 'CME' },
+      '/6J': { root: '6J', multiplier: 12500000, strikeStep: 0.0000005, venue: 'CME' }
+    };
+
+    function normalizeTicker(ticker) {
+      const raw = (ticker || '').toString().trim().toUpperCase();
+      if (!raw) return '';
+      if (FUTURES_CONTRACTS[raw]) return raw;
+      const slash = raw.charAt(0) === '/' ? raw : '/' + raw;
+      return FUTURES_CONTRACTS[slash] ? slash : raw;
+    }
+    function isFuturesTicker(ticker) {
+      const t = normalizeTicker(ticker);
+      return !!FUTURES_CONTRACTS[t];
+    }
+    function futuresSpec(ticker) {
+      return FUTURES_CONTRACTS[normalizeTicker(ticker)] || null;
+    }
+    function futuresStrikeStep(ticker) {
+      const spec = futuresSpec(ticker);
+      return spec && spec.strikeStep ? spec.strikeStep : 0.25;
+    }
+    function roundToStep(value, step) {
+      const n = Number(value);
+      const s = Number(step) || 1;
+      return Math.round(n / s) * s;
+    }
+    function legIsFuturesOption(leg) {
+      return !!(leg && leg.type !== 'stock' && isFuturesTicker(leg.ticker || currentTicker()));
+    }
+    function legMultiplier(leg) {
+      if (!leg || leg.type === 'stock') return 1;
+      const spec = futuresSpec(leg.ticker || currentTicker());
+      return spec ? spec.multiplier : MULTIPLIER;
+    }
     let legs = [];
     let chart = null;
     // Anchors the payoff graph's x-axis (price range shown) so the fixed
@@ -1180,7 +1261,36 @@
       });
     }
     function onTickerChange() {
-      syncStrategyTicker();
+      const tkr = normalizeTicker(currentTicker());
+      const futures = isFuturesTicker(tkr);
+      // A strategy-level ticker change means inherited legs belong to the new
+      // underlying. Clear chain pricing/strike anchoring so the old ticker's
+      // strike can never survive into the new ticker. Manually overridden leg
+      // symbols remain untouched.
+      [legs, legsB].forEach(function(list) {
+        if (!list) return;
+        list.forEach(function(leg) {
+          if (leg.tickerManual) return;
+          leg.ticker = tkr;
+          if (leg.type !== 'stock') {
+            leg.strike = null;
+            leg._tickerReanchorPending = true;
+            leg.premiumFromChain = false;
+            leg.premiumManual = false;
+          } else {
+            leg.premiumFromChain = false;
+            leg.premiumManual = false;
+          }
+        });
+      });
+      window._cboeData = null;
+      const chainStatus = document.getElementById('chainStatus');
+      if (chainStatus) {
+        chainStatus.textContent = futures
+          ? `${tkr} selected — futures-option mode (Black-76 / contract multiplier). Loading a CBOE equity chain is disabled.`
+          : `${tkr} selected — loading listed-option chain…`;
+        chainStatus.className = 'quote-status warn';
+      }
       renderLegs();
       if (typeof renderLegsB === 'function' && typeof compareMode !== 'undefined' && compareMode) renderLegsB();
       if (typeof loadCboeChain === 'function') loadCboeChain();
@@ -1273,6 +1383,33 @@
       return 0.5 * (1 + sign * y);
     }
 
+    // Black-76 is used for options on futures. The underlying input is the
+    // futures price, so the futures carry is not modeled as stock dividend yield.
+    function black76(F, K, T, r, sigma, type) {
+      if (T <= 0.0001) {
+        return type === 'call' ? Math.max(F - K, 0) : Math.max(K - F, 0);
+      }
+      if (!F || !K || !sigma || sigma <= 0) return 0;
+      const sqrtT = Math.sqrt(T);
+      const d1 = (Math.log(F / K) + 0.5 * sigma * sigma * T) / (sigma * sqrtT);
+      const d2 = d1 - sigma * sqrtT;
+      const df = Math.exp(-r * T);
+      if (type === 'call') return df * (F * normCDF(d1) - K * normCDF(d2));
+      return df * (K * normCDF(-d2) - F * normCDF(-d1));
+    }
+
+    function black76Delta(F, K, T, r, sigma, type) {
+      if (T <= 0.0001) {
+        const itm = type === 'call' ? F > K : F < K;
+        if (!itm) return 0;
+        return type === 'call' ? 1 : -1;
+      }
+      if (!F || !K || !sigma || sigma <= 0) return 0;
+      const d1 = (Math.log(F / K) + 0.5 * sigma * sigma * T) / (sigma * Math.sqrt(T));
+      const df = Math.exp(-r * T);
+      return type === 'call' ? df * normCDF(d1) : df * (normCDF(d1) - 1);
+    }
+
     function blackScholes(S, K, T, r, q, sigma, type) {
       if (type === 'stock') return S;
       if (T <= 0.0001) {
@@ -1313,6 +1450,9 @@
       const days = Math.max(0, Number(leg.dte) || 0);
       const T = days / 365;
       const K = Math.max(0.01, Number(leg.strike) || S);
+      if (legIsFuturesOption(leg)) {
+        return roundPrem(black76(S, K, T, p.r, p.iv, leg.type));
+      }
       return roundPrem(blackScholes(S, K, T, p.r, p.q, p.iv, leg.type));
     }
 
@@ -1376,7 +1516,9 @@
             vps = Ss;
           } else {
             const residualDays = Math.max(0, leg.dte - elapsed);
-            vps = blackScholes(Ss, leg.strike, residualDays / 365, r, q, vol, leg.type);
+            vps = legIsFuturesOption(leg)
+              ? black76(Ss, leg.strike, residualDays / 365, r, vol, leg.type)
+              : blackScholes(Ss, leg.strike, residualDays / 365, r, q, vol, leg.type);
           }
           total += signedQty(leg) * vps * legShareMult(leg);
         }
@@ -1627,9 +1769,10 @@
       return leg.side === 'buy' ? leg.qty : -leg.qty;
     }
 
-    // Options: Qty = contracts → ×100 shares. Stock: Qty = actual number of shares (no extra ×100).
+    // Stock qty is shares; regular listed options are ×100; futures options use
+    // their own contract multiplier (e.g. /ES = $50/point, /CL = 1,000 barrels).
     function legShareMult(leg) {
-      return leg.type === 'stock' ? 1 : MULTIPLIER;
+      return legMultiplier(leg);
     }
 
     function legCash(leg) {
@@ -1678,9 +1821,14 @@
       const leg = legs.find(l => l.id === id);
       if (!leg) return;
       if (field === 'ticker') {
-        leg.ticker = (value || '').toString().trim().toUpperCase();
+        leg.ticker = normalizeTicker(value);
         leg.tickerManual = !!leg.ticker;
       } else if (field === 'side' || field === 'type') {
+        // A futures underlying is an option on a futures contract, not a stock
+        // leg. Convert an accidental Stock selection back to a Call.
+        if (field === 'type' && value === 'stock' && isFuturesTicker(leg.ticker || currentTicker())) {
+          value = 'call';
+        }
         leg[field] = value;
         // When switching to Stock: use current spot as cost basis; Qty = shares (default 100)
         if (field === 'type' && value === 'stock') {
@@ -1706,6 +1854,12 @@
         }
       } else if (field === 'dte' || field === 'qty') {
         leg[field] = Math.max(1, parseInt(value, 10) || 1);
+      }
+      if (field === 'ticker' && leg.type !== 'stock' && isFuturesTicker(leg.ticker)) {
+        const S = parseFloat(document.getElementById('spot').value) || 100;
+        if (!leg.strike || leg.strike <= 0) leg.strike = roundToStep(S, futuresStrikeStep(leg.ticker));
+        leg.premiumFromChain = false;
+        if (!leg.premiumManual) leg.premium = modeledPremiumForLeg(leg, S);
       }
       if (field === 'strike' || field === 'dte' || field === 'type') {
         const fromChain = (typeof tryFillLegFromChain === 'function') ? tryFillLegFromChain(leg) : false;
@@ -1758,7 +1912,7 @@
       const cashTxt = (cash >= 0 ? '+' : '') + cash.toFixed(0);
       const cashLabel = isStock
         ? (leg.side === 'buy' ? 'Stock cost ' : 'Stock Credit ') + cashTxt + ' (' + leg.qty + ' pay)'
-        : (cash >= 0 ? 'Debit' : 'Credit') + ' ' + cashTxt + ' (×100)';
+        : (cash >= 0 ? 'Debit' : 'Credit') + ' ' + cashTxt + ' (×' + legShareMult(leg) + ')';
       cashLines[idx].className = 'cash-line ' + cashCls;
       cashLines[idx].textContent = cashLabel;
     }
@@ -1789,7 +1943,9 @@
         const sideSell = l.side === 'sell' ? ' selected' : '';
         const typeCall = l.type === 'call' ? ' selected' : '';
         const typePut = l.type === 'put' ? ' selected' : '';
-        const typeStock = isStock ? ' selected' : '';
+        const futuresLeg = isFuturesTicker(l.ticker || currentTicker());
+        const typeStock = isStock && !futuresLeg ? ' selected' : '';
+        const stockOption = futuresLeg ? '' : '<option value=\"stock\"' + typeStock + '>Stock</option>';
         const debitCredit = cash >= 0 ? 'Debit' : 'Credit';
         const cashLabel = isStock
           ? (l.side === 'buy' ? 'Stock cost ' : 'Stock Credit ') + cashTxt + ' (' + l.qty + ' pay)'
@@ -1798,9 +1954,10 @@
         // Strike & DTE disabled for stock; premium becomes Cost/Share
         // oninput → liveTyping=true (update graph, keep focus)
         // onchange → liveTyping=false (re-render cash labels / structure)
+        const strikeStep = futuresLeg ? futuresStrikeStep(l.ticker || currentTicker()) : 0.5;
         const strikeInput = isStock
           ? '<input type="text" value="—" disabled title="Not used for stock" style="opacity:0.45;cursor:not-allowed;" />'
-          : '<input type="number" value="' + l.strike + '" step="0.5" min="0.5" ' +
+          : '<input type="number" value="' + (l.strike == null ? '' : l.strike) + '" step="' + strikeStep + '" min="0.000001" ' +
               'onchange="updateLegField(' + l.id + ',\'strike\',this.value,false)" ' +
               'oninput="updateLegField(' + l.id + ',\'strike\',this.value,true)" />';
         const dteInput = isStock
@@ -1833,7 +1990,7 @@
             '<select onchange="updateLegField(' + l.id + ',\'type\',this.value,false)">' +
               '<option value="call"' + typeCall + '>Call</option>' +
               '<option value="put"' + typePut + '>Put</option>' +
-              '<option value="stock"' + typeStock + '>Stock</option>' +
+              stockOption +
             '</select>' +
             tickerInput +
             strikeInput +
@@ -1896,7 +2053,9 @@
             const elapsed = Math.max(0, minDte - daysLeft);
             residualDays = Math.max(0, leg.dte - elapsed);
           }
-          valPerShare = blackScholes(S, leg.strike, residualDays / 365, params.r, params.q, params.iv, leg.type);
+          valPerShare = legIsFuturesOption(leg)
+            ? black76(S, leg.strike, residualDays / 365, params.r, params.iv, leg.type)
+            : blackScholes(S, leg.strike, residualDays / 365, params.r, params.q, params.iv, leg.type);
         }
         total += signedQty(leg) * valPerShare * legShareMult(leg);
       }
@@ -3125,7 +3284,7 @@
       const hasShort = legs.some(function(l) { return l.side === 'sell'; });
       const hasStock = legs.some(function(l) { return l.type === 'stock'; });
       if (hasStock && hasShort) {
-        tip.innerHTML = '<strong>Hisse + opsiyon:</strong> Stock qty = shares, cost = entry price. Option qty = contracts (×100). For a Covered Call use 100 shares + 1 Short Call. <a href="/level2/">Fundamentals lesson</a>';
+        tip.innerHTML = '<strong>Hisse + opsiyon:</strong> Stock qty = shares, cost = entry price. Listed option qty = contracts (×100); futures options use the contract multiplier. For a Covered Call use 100 shares + 1 Short Call. <a href="/level2/">Fundamentals lesson</a>';
       } else if (hasStock) {
         tip.innerHTML = '<strong>Stock leg:</strong> Qty = shares, cost = entry price. Strike and DTE are unused. Add 1 Short Call for a Covered Call.';
       } else if (legs.length === 1 && hasLong) {
@@ -3410,11 +3569,41 @@
     }
     async function loadCboeChain(){
       const tickerEl = document.getElementById('ticker');
-      const sym = (tickerEl && tickerEl.value || 'SPY').toUpperCase();
+      const sym = normalizeTicker(tickerEl && tickerEl.value || 'SPY');
       const statusEl = document.getElementById('chainStatus');
       const spotRefEl = document.getElementById('chainSpotRef');
       const spotInput = document.getElementById('spot');
       if (!sym){ statusEl.textContent='Select a ticker'; return; }
+      const futures = isFuturesTicker(sym);
+      const loadBtn = document.getElementById('loadChainBtn');
+      if (futures) {
+        window._cboeData = null;
+        if (loadBtn) loadBtn.textContent = 'Load Futures Chain';
+        if (statusEl) {
+          const spec = futuresSpec(sym);
+          statusEl.textContent = `${sym} is a futures option. CBOE equity/index chain loading is disabled; use a CME futures-option data source for the chain. Contract multiplier: ${spec.multiplier}.`;
+          statusEl.className = 'quote-status warn';
+        }
+        const spotInput = document.getElementById('spot');
+        const S = parseFloat(spotInput && spotInput.value) || 100;
+        [legs, legsB].forEach(function(list){
+          if (!list) return;
+          list.forEach(function(leg){
+            if (leg.tickerManual) return;
+            leg.ticker = sym;
+            if (leg.type !== 'stock' && (!leg.strike || leg.strike <= 0)) leg.strike = roundToStep(S, futuresStrikeStep(sym));
+            if (leg.type === 'stock') { leg.premium = S; leg.premiumManual = false; }
+            else if (!leg.premiumManual) leg.premium = modeledPremiumForLeg(leg, S);
+          });
+        });
+        renderLegs();
+        if (typeof renderLegsB === 'function' && compareMode) renderLegsB();
+        syncDTESlider();
+        updateSpotSliderRange();
+        if (typeof resetSimulation === 'function') resetSimulation(); else if (typeof recalc === 'function') recalc();
+        return;
+      }
+      if (loadBtn) loadBtn.textContent = 'Load Chain';
       statusEl.textContent = sym + ' chain loading… (CBOE delayed)';
       statusEl.className='quote-status warn';
       try{
@@ -3486,9 +3675,21 @@
           spotInput.value = Number(data.spot).toFixed(2);
         }
         seedIvFromAtm(data, sel.value);
+        // The selected ticker owns inherited legs. Re-anchor every inherited
+        // option to the new underlying before snapping to the new chain.
+        [legs, legsB].forEach(function(list) {
+          if (!list || !data.spot) return;
+          list.forEach(function(leg) {
+            if (leg.tickerManual || leg.type === 'stock') return;
+            if (!leg.strike || leg.premiumFromChain || leg._tickerReanchorPending) {
+              leg.strike = Number(data.spot);
+            }
+            leg._tickerReanchorPending = false;
+          });
+        });
         reanchorDefaultLegStrike(legs, data.spot);
         reanchorDefaultLegStrike(legsB, data.spot);
-        applyChainQuotesToLegs(legs, { snapStrikes: true, setDte: true, force: false });
+        applyChainQuotesToLegs(legs, { snapStrikes: true, setDte: true, force: true });
         if (typeof legsB !== 'undefined' && legsB && legsB.length) {
           applyChainQuotesToLegs(legsB, { snapStrikes: true, setDte: true, force: false });
         }
@@ -3511,7 +3712,7 @@
         statusEl.className='quote-status ok';
       }catch(err){
         console.error(err);
-        statusEl.textContent = 'Chain failed: ' + err.message + ' — Try SPY, QQQ, AAPL, SPX';
+        statusEl.textContent = 'Chain failed: ' + err.message + ' — Try a listed equity/index ticker such as SPY, QQQ, AAPL, or SPX';
         statusEl.className='quote-status err';
       }
     }
@@ -3546,7 +3747,9 @@
         const ivPct = quoteIvPct(q);
         const sigma = (ivPct ? ivPct : p.iv * 100) / 100;
         if (!sigma || sigma <= 0) return '—';
-        const d = bsDelta(spotManual, strikeVal, T, p.r, p.q, sigma, type);
+        const d = isFuturesTicker(data.symbol)
+          ? black76Delta(spotManual, strikeVal, T, p.r, sigma, type)
+          : bsDelta(spotManual, strikeVal, T, p.r, p.q, sigma, type);
         if (!isFinite(d)) return '—';
         return d.toFixed(2);
       }
@@ -3587,7 +3790,7 @@
         qty: 1,
         premium: Number(premium) ? Math.round(Number(premium)*100)/100 : 0.05,
         premiumManual: true,
-        ticker: document.getElementById('ticker').value
+        ticker: normalizeTicker(document.getElementById('ticker').value)
       };
       legs.push(leg);
       renderLegs();
