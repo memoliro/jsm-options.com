@@ -314,7 +314,8 @@
 
   function injectTrGlossary() {
     if (lang() !== 'tr') return;
-    if (document.getElementById('glossaryCard') || document.getElementById('terimler')) return;
+    var oldTerimler = document.getElementById('terimler'); if (oldTerimler) oldTerimler.remove();
+    if (document.getElementById('glossaryCard')) return;
     var footer = document.querySelector('.site-footer');
     if (!footer) return;
     var card = document.createElement('div');
