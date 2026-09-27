@@ -207,14 +207,14 @@
     /* Leg rows - horizontal on desktop */
     .legs-header, .leg-row {
       display: grid;
-      grid-template-columns: 72px 72px 58px 70px 56px 48px 78px 36px;
+      grid-template-columns: 72px 72px 58px 70px 96px 48px 78px 36px;
       gap: 8px;
       align-items: center;
       margin-bottom: 4px;
     }
     @media (min-width: 700px) {
       .legs-header, .leg-row {
-        grid-template-columns: 90px 90px 72px 110px 80px 70px 100px 44px;
+        grid-template-columns: 90px 90px 72px 110px 140px 70px 100px 44px;
       }
     }
     .quote-status{font-size:0.72rem;color:var(--muted);margin-top:6px;min-height:1.1em}
@@ -244,6 +244,7 @@
       color: var(--muted);
       padding: 0 2px;
       margin-bottom: 2px;
+      text-align: center;
     }
     .leg-row input, .leg-row select {
       margin: 0;
@@ -671,7 +672,7 @@
     .glossary-item dd{font-size:0.75rem;color:var(--muted);line-height:1.4;margin:0;}
 
     .chain-table{width:100%;border-collapse:collapse;font-size:13px}
-    .chain-table th{position:sticky;top:0;background:var(--card);z-index:2;padding:8px 8px;text-align:right;border-bottom:1px solid var(--border);color:var(--muted);font-weight:700;font-size:11px;letter-spacing:.06em;text-transform:uppercase}
+    .chain-table th{position:sticky;top:0;background:var(--card);z-index:2;padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);color:var(--muted);font-weight:700;font-size:11px;letter-spacing:.06em;text-transform:uppercase}
     .chain-table td{padding:6px 8px;text-align:right;border-bottom:1px solid rgba(45,58,79,.4);font-variant-numeric:tabular-nums}
     .chain-table td.strike{font-weight:800;text-align:center;color:var(--text);background:rgba(148,163,184,.10)}
     .chain-table tr.atm td.strike{background:rgba(59,130,246,.18)}
@@ -836,7 +837,7 @@
 
   
   <div class="card" id="chainCard" style="border:1px solid var(--border)">
-      <h2>Live chain — market data (educational) <span style="font-size:0.72rem;color:var(--muted);font-weight:500">loads on open • ~15min delayed • edit any field after</span></h2>
+      <h2>Options Chain <span style="font-size:0.72rem;color:var(--muted);font-weight:500">market data (educational) • ~15min delayed • edit any field after</span></h2>
       <div class="top-bar" style="margin-bottom:8px">
         <div class="field">
           <label>Expiration</label>
