@@ -408,7 +408,7 @@ const el = (els, id) => els.get(id);
     }
     if (!html.includes('data-plmetric="risk"') || !html.includes('data-plmetric="cost"')) throw new Error('metric buttons missing');
   });
-  check('F1 table: view toggle renders 11 rows; cols = Today + each leg DTE (no chain)', () => {
+  check('F1 table: view toggle renders 21 rows; cols = Today + each leg DTE (no chain)', () => {
     vm.runInContext("setChartView('table')", ctx);
     if (el(els, 'plTableWrap').style.display === 'none') throw new Error('wrap hidden');
     if (el(els, 'chartContainer').style.display !== 'none') throw new Error('chart not hidden');
@@ -416,11 +416,11 @@ const el = (els, id) => els.get(id);
     if (/NaN/.test(html)) throw new Error('NaN in table');
     const body = html.split('<tbody>')[1].split('</tbody>')[0];
     const rows = body.split('</tr>').filter(s => s.indexOf('<td') >= 0);
-    if (rows.length !== 11) throw new Error('rows=' + rows.length);
+    if (rows.length !== 21) throw new Error('rows=' + rows.length);
     // no chain in this env -> fallback = unique leg DTEs (default leg: 90) ->
     // Today + D-90 = 2 date columns
     const tds = (body.match(/<td/g) || []).length;
-    if (tds !== 22) throw new Error('tds=' + tds);
+    if (tds !== 42) throw new Error('tds=' + tds);
     const ths = (html.split('<thead>')[1].split('</thead>')[0].match(/<th/g) || []).length;
     if (ths !== 3) throw new Error('header cols=' + ths); // Price + Today + D-90
     if (html.indexOf('>Today<') < 0) throw new Error('no Today header');
@@ -537,7 +537,7 @@ const el = (els, id) => els.get(id);
     if (thead.indexOf('200') >= 0) throw new Error('far expiry leaked into headers');
     const body = html.split('<tbody>')[1].split('</tbody>')[0];
     const tds = (body.match(/<td/g) || []).length;
-    if (tds !== 44) throw new Error('tds=' + tds + ' (want 44)');
+    if (tds !== 84) throw new Error('tds=' + tds + ' (want 84)');
   });
   check('F9 table: expiry headers carry month-day labels in ascending order', () => {
     const { ctx: c2, els: e2 } = expCtxSetup();
@@ -670,10 +670,10 @@ const el = (els, id) => els.get(id);
         var px = rows.map(function(r){ return parseFloat(r.match(/<th>\\$([0-9.]+)/)[1]); });
         var spotIdx = -1;
         rows.forEach(function(r, i){ if (r.indexOf('spot-row') >= 0) spotIdx = i; });
-        return JSON.stringify({ spotIdx: spotIdx, mid: px[5], S: getParams().S });
+        return JSON.stringify({ spotIdx: spotIdx, mid: px[10], S: getParams().S });
       })()`, c2);
       const o = JSON.parse(info);
-      if (o.spotIdx !== 5) throw new Error('pct=' + pct + ': spot row at index ' + o.spotIdx + ', not middle');
+      if (o.spotIdx !== 10) throw new Error('pct=' + pct + ': spot row at index ' + o.spotIdx + ', not middle');
       if (Math.abs(o.mid - o.S) > o.S * 0.001) throw new Error('pct=' + pct + ': middle row ' + o.mid + ' != S ' + o.S);
     });
   });
@@ -1504,7 +1504,10 @@ async function runAsyncDiscoveryTests() {
   const j = (expr) => vm.runInContext(expr, ctx);
   const set = (id, v) => j('document.getElementById("' + id + '").value = "' + v + '"');
   j(`(function(){
-    function dstr(days){ var d = new Date(); d.setDate(d.getDate() + days); return d.toISOString().slice(0,10); }
+    // DST-safe: build the date string from UTC parts so the local->UTC
+    // conversion can't push it a day forward when the span crosses a
+    // DST boundary (e.g. EDT evening + 60d lands on EST, +1h -> next UTC day).
+    function dstr(days){ var n = new Date(); var d = new Date(Date.UTC(n.getUTCFullYear(), n.getUTCMonth(), n.getUTCDate() + days)); return d.toISOString().slice(0,10); }
     window.__exp30 = dstr(30); window.__exp60 = dstr(60);
     window.__seedRollChain = function(){
       window._cboeData = {

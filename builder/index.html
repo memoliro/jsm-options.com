@@ -1215,7 +1215,7 @@
           <input type="range" id="chartRange" min="5" max="100" step="1" value="20" oninput="onRangeChange()" title="Price range for the P&L table and payoff chart (± this % around the underlying price)" />
         </div>
       </div>
-      <div id="plTableWrap" style="display:none;max-height:520px;overflow:auto;border:1px solid var(--border);border-radius:8px;margin-top:8px">
+      <div id="plTableWrap" style="display:none;max-height:min(700px,84vh);overflow:auto;border:1px solid var(--border);border-radius:8px;margin-top:8px">
         <table class="pl-table" id="plTable" aria-label="Profit and loss by underlying price and date"></table>
       </div>
       <p class="legend-note" id="plTableNote" style="display:none;margin-top:6px">Position A · one column per listed expiry (through your furthest leg) · values use the current IV shock · <span id="plTableModeNote"></span></p>
@@ -1388,7 +1388,7 @@ and custom structures. View payoff charts, Greeks, profit/loss, break-even, prob
     </div>
     <div class="guide-body" id="guideBody"></div>
   </aside>
-  <script src="/assets/jsm-options-engine.js?v=4ebc715a"></script>
+  <script src="/assets/jsm-options-engine.js?v=d60f4e47"></script>
 <script>
 (function(){
   function initNav(){

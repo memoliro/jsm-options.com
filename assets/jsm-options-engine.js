@@ -4224,7 +4224,7 @@
       const params = getParams();
       const S = params.S;
       const win = chartXWindowA();
-      const ROWS = 11;
+      const ROWS = 21;
       // One column per listed expiration (plus Today). positionValueAt()
       // treats daysLeft as "days left until the nearest expiry", so a column
       // for an expiration d days out uses daysLeft = minDte - d — negative
