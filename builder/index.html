@@ -1156,6 +1156,23 @@
       <div id="rollResults" class="disc-results"><p class="disc-empty">Pick a leg, a new expiry and strike — the modeled cost and the new stats appear here.</p></div>
     </div>
 
+    <!-- Round 2 item 10: paper trades — a slim hypothetical journal. Save the
+         current build, watch how it would have done as the delayed chain
+         reprices it. No real positions, no orders. Placed with the discovery
+         card so it stays on the builder page through the partition.py cut. -->
+    <div class="card" id="paperCard">
+      <h2>Paper trades <span style="font-size:0.72rem;color:var(--muted);font-weight:500;">hypothetical journal · not real positions</span></h2>
+      <p class="disc-note" style="margin-top:0">Save the current build as a paper trade and see how it would have done. Values reprice from the delayed chain when it's loaded, otherwise from the model. Nothing here is a real position and nothing places a trade.</p>
+      <div class="disc-form">
+        <label style="flex:2">Note
+          <input id="paperNote" type="text" maxlength="80" placeholder="e.g. SPY bull call — earnings week" />
+        </label>
+        <button type="button" class="btn-primary btn-sm" onclick="savePaperTrade()">Save as paper trade</button>
+        <button type="button" class="btn-sm" onclick="renderPaperTrades()">Refresh values</button>
+      </div>
+      <div id="paperList" class="disc-results"><p class="disc-empty">No paper trades yet — build a position above and save it here to track how it would have done.</p></div>
+    </div>
+
     <!-- Payoff Graph — full width, the primary chart. The solid "at expiry"
          line is fixed to the trade's own strikes/entry price, so it holds
          still as days pass; only the dashed "today" line and the crosshair
@@ -1358,7 +1375,7 @@ and custom structures. View payoff charts, Greeks, profit/loss, break-even, prob
     </div>
     <div class="guide-body" id="guideBody"></div>
   </aside>
-  <script src="/assets/jsm-options-engine.js?v=e7a35bf4"></script>
+  <script src="/assets/jsm-options-engine.js?v=22e79892"></script>
 <script>
 (function(){
   function initNav(){

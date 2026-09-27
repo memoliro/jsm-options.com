@@ -1518,6 +1518,102 @@ async function runAsyncDiscoveryTests() {
   });
 }
 
+// ---------- S: Round 2 item 10 — paper trades ----------
+{
+  const { ctx, els } = run('builder', '');
+  const j = (expr) => vm.runInContext(expr, ctx);
+  const set = (id, v) => j('document.getElementById("' + id + '").value = "' + v + '"');
+  j(`(function(){
+    function dstr(days){ var d = new Date(); d.setDate(d.getDate() + days); return d.toISOString().slice(0,10); }
+    window.__exp30 = dstr(30);
+    window._cboeData = {
+      symbol: 'TEST', spot: 100,
+      expirations: [window.__exp30],
+      chains: {}
+    };
+    window._cboeData.chains[window.__exp30] = { strikes: [100, 110],
+      calls: [{strike:100,bid:2.00,ask:2.20,last:2.10,iv:0.25},{strike:110,bid:1.00,ask:1.15,last:1.08,iv:0.25}],
+      puts: [] };
+    document.getElementById('spot').value = '100';
+  })()`);
+  const buyCall100 = () => j(`legs = [{ side: 'buy', type: 'call', strike: 100, dte: 30, qty: 1, premium: 2.10, ticker: 'TEST' }]`);
+  const savedId = () => j(`loadPaperTrades()[0].id`);
+  check('S1 savePaperTrade stores the legs and renders the journal', () => {
+    j('window.localStorage.removeItem("jsmPaperTradesV1")');
+    buyCall100();
+    set('paperNote', 'test bull');
+    j('savePaperTrade()');
+    const n = j('loadPaperTrades().length');
+    if (n !== 1) throw new Error('stored=' + n);
+    const t = JSON.parse(j('JSON.stringify(loadPaperTrades()[0])'));
+    if (t.legs.length !== 1 || t.legs[0].strike !== 100 || t.note !== 'test bull') throw new Error('snapshot wrong: ' + JSON.stringify(t).slice(0, 160));
+    if (t.status !== 'open') throw new Error('status=' + t.status);
+    const html = j('document.getElementById("paperList").innerHTML');
+    if (html.indexOf('test bull') < 0 || html.indexOf('Debit $210') < 0) throw new Error('journal missing entry: ' + html.slice(0, 200));
+  });
+  check('S2 unrealized P/L reprices a long off the chain mid', () => {
+    // chain mid moves 2.10 -> 3.10: long gains $100
+    j('window._cboeData.chains[window.__exp30].calls[0].bid = 3.00');
+    j('window._cboeData.chains[window.__exp30].calls[0].ask = 3.20');
+    j('renderPaperTrades()');
+    const html = j('document.getElementById("paperList").innerHTML');
+    if (html.indexOf('+$100') < 0) throw new Error('expected +$100, got: ' + html.slice(0, 250));
+  });
+  check('S3 unrealized P/L has the right sign for a short leg', () => {
+    j('window.localStorage.removeItem("jsmPaperTradesV1")');
+    j(`legs = [{ side: 'sell', type: 'call', strike: 100, dte: 30, qty: 1, premium: 2.10, ticker: 'TEST' }]`);
+    j('savePaperTrade()');
+    j('renderPaperTrades()');
+    const html = j('document.getElementById("paperList").innerHTML');
+    // short into a rising mid: -1 * (3.10-2.10) * 100 = -$100 (unicode minus)
+    if (html.indexOf('−$100') < 0) throw new Error('expected −$100, got: ' + html.slice(0, 250));
+    if (html.indexOf('Credit $210') < 0) throw new Error('entry should show Credit $210');
+  });
+  check('S4 close is two-step and records realized P/L', () => {
+    const id = savedId();
+    j(`armPaperTrade("${id}", "close")`);
+    if (j('loadPaperTrades()[0].status') !== 'open') throw new Error('armed click must not close yet');
+    j(`armPaperTrade("${id}", "close")`);
+    const t = JSON.parse(j('JSON.stringify(loadPaperTrades()[0])'));
+    if (t.status !== 'closed') throw new Error('status=' + t.status);
+    if (Math.abs(t.realized - (-100)) > 1e-9) throw new Error('realized=' + t.realized + ' (want -100)');
+    const html = j('document.getElementById("paperList").innerHTML');
+    if (html.indexOf('realized') < 0) throw new Error('no realized line: ' + html.slice(0, 200));
+  });
+  check('S5 delete is two-step and removes the trade', () => {
+    const id = savedId();
+    j(`armPaperTrade("${id}", "delete")`);
+    if (j('loadPaperTrades().length') !== 1) throw new Error('armed click must not delete yet');
+    j(`armPaperTrade("${id}", "delete")`);
+    if (j('loadPaperTrades().length') !== 0) throw new Error('not deleted');
+  });
+  check('S6 no chain -> modeled fallback, no crash', () => {
+    j('window._cboeData = null');
+    buyCall100();
+    j('savePaperTrade()');
+    j('renderPaperTrades()');
+    const html = j('document.getElementById("paperList").innerHTML');
+    if (html.indexOf('partly modeled') < 0) throw new Error('expected modeled note, got: ' + html.slice(0, 250));
+  });
+  check('S7 save with no legs shows the empty hint', () => {
+    j('window.localStorage.removeItem("jsmPaperTradesV1")');
+    j('legs = []');
+    j('savePaperTrade()');
+    if (j('loadPaperTrades().length') !== 0) throw new Error('should not save');
+    const html = j('document.getElementById("paperList").innerHTML');
+    if (html.indexOf('Nothing to save') < 0) throw new Error('got: ' + html.slice(0, 150));
+  });
+  check('S8 journal persists across renders (localStorage round-trip)', () => {
+    buyCall100();
+    j('savePaperTrade()');
+    const before = j('JSON.stringify(loadPaperTrades())');
+    j('renderPaperTrades()');
+    const after = j('JSON.stringify(loadPaperTrades())');
+    if (before !== after) throw new Error('storage changed across render');
+    if (j('loadPaperTrades().length') !== 1) throw new Error('lost the trade');
+  });
+}
+
 runAsyncDiscoveryTests().then(() => {
   console.log(failures ? `\n${failures} FAILURES` : '\nALL PASS');
   process.exit(failures ? 1 : 0);

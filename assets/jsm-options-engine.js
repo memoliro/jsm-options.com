@@ -3367,6 +3367,196 @@
       modelRoll();
     }
     function disarmRoll() { disarmRollQuiet(); }
+    // ===== Round 2 item 10: paper trades (slim hypothetical journal) =====
+    const PAPER_KEY = 'jsmPaperTradesV1';
+    const PAPER_MAX = 20;
+    // id of the trade with an armed inline confirm ("Confirm close/delete")
+    let paperArmedId = null;
+    let paperArmedAction = null;
+    function loadPaperTrades() {
+      try {
+        const raw = window.localStorage ? window.localStorage.getItem(PAPER_KEY) : null;
+        const arr = raw ? JSON.parse(raw) : [];
+        return Array.isArray(arr) ? arr : [];
+      } catch (e) { return []; }
+    }
+    function persistPaperTrades(list) {
+      try {
+        if (window.localStorage) window.localStorage.setItem(PAPER_KEY, JSON.stringify(list));
+      } catch (e) { /* storage full/blocked — journal just won't persist */ }
+    }
+    function paperLegLabel(l) {
+      if (l.type === 'stock') return (l.side === 'buy' ? 'Long' : 'Short') + ' stock';
+      return (l.side === 'buy' ? 'Buy ' : 'Sell ') + l.type + ' ' + l.strike + ' (' + l.dte + 'd)';
+    }
+    // Current per-share value of a paper leg: chain mid when available,
+    // otherwise the same Black-Scholes model the chain fallback uses.
+    // Stock legs track the spot input.
+    function paperQuote(leg) {
+      if (leg.type === 'stock') {
+        const px = parseFloat((document.getElementById('spot') || {}).value) || 0;
+        return { px: px, src: 'spot' };
+      }
+      const expStr = nearestExpiryForDte(leg.dte);
+      const q = findChainContract(leg.type, leg.strike, expStr);
+      const m = midPrice(q);
+      if (m > 0) return { px: m, src: 'chain' };
+      const uni = discoveryUniverse(expStr, leg.dte);
+      const px = discoveryPremium(leg.type, leg.strike, uni);
+      return { px: px > 0 ? px : 0, src: uni.usedChain ? 'modeled @ chain IV' : 'modeled' };
+    }
+    // Hypothetical P/L of one leg between two per-share prices.
+    function paperLegPnl(leg, pxThen, pxNow) {
+      const dir = leg.side === "buy" ? 1 : -1;
+      return dir * (pxNow - pxThen) * (leg.qty || 1) * 100;
+    }
+    function paperEntryCash(legsArr) {
+      // >0 = net credit received, <0 = net debit paid (per whole position)
+      let c = 0;
+      legsArr.forEach(function (l) {
+        c += (l.side === 'sell' ? 1 : -1) * (Number(l.premium) || 0) * (l.qty || 1) * 100;
+      });
+      return c;
+    }
+    function savePaperTrade() {
+      const box = document.getElementById('paperList');
+      paperArmedId = null; paperArmedAction = null;
+      if (!legs.length) {
+        if (box) box.innerHTML = '<p class="disc-empty">Nothing to save — add at least one leg first.</p>';
+        return;
+      }
+      const list = loadPaperTrades();
+      if (list.length >= PAPER_MAX) {
+        if (box) box.innerHTML = '<p class="disc-empty">The journal is full (20 trades) — close or delete an old one first.</p>';
+        return;
+      }
+      const noteEl = document.getElementById('paperNote');
+      const note = noteEl ? noteEl.value.trim().slice(0, 80) : '';
+      const S = parseFloat((document.getElementById('spot') || {}).value) || 0;
+      const t = {
+        id: 'pt' + Date.now().toString(36) + Math.floor(Math.random() * 1e4).toString(36),
+        note: note,
+        createdAt: Date.now(),
+        ticker: (legs[0] && legs[0].ticker) || currentTicker() || '',
+        entrySpot: Math.round(S * 100) / 100,
+        legs: legs.map(function (l) {
+          return { side: l.side, type: l.type, strike: l.strike, dte: l.dte, qty: l.qty, premium: Math.round(Number(l.premium) * 100) / 100 };
+        }),
+        status: 'open',
+        exitPx: null,
+        closedAt: null
+      };
+      list.unshift(t);
+      persistPaperTrades(list);
+      if (noteEl) noteEl.value = '';
+      renderPaperTrades();
+    }
+    function paperTradeById(id) {
+      const list = loadPaperTrades();
+      for (let i = 0; i < list.length; i++) if (list[i].id === id) return { t: list[i], list: list, idx: i };
+      return null;
+    }
+    function paperUnrealized(t) {
+      let pnl = 0, modeled = false;
+      t.legs.forEach(function (l) {
+        const q = paperQuote(l);
+        if (q.src === 'modeled') modeled = true;
+        pnl += paperLegPnl(l, l.premium, q.px);
+      });
+      return { pnl: pnl, modeled: modeled };
+    }
+    function paperDaysHeld(t) {
+      const end = t.status === 'closed' && t.closedAt ? t.closedAt : Date.now();
+      return Math.max(0, Math.round((end - t.createdAt) / 86400000));
+    }
+    function paperDateStr(ts) {
+      try { return new Date(ts).toLocaleDateString(); } catch (e) { return ''; }
+    }
+    function renderPaperTrades() {
+      const box = document.getElementById('paperList');
+      if (!box) return;
+      const list = loadPaperTrades();
+      if (!list.length) {
+        box.innerHTML = '<p class="disc-empty">No paper trades yet — build a position above and save it here to track how it would have done.</p>';
+        return;
+      }
+      let h = '';
+      list.forEach(function (t) {
+        const legsTxt = t.legs.map(paperLegLabel).join(' · ');
+        const entryCash = paperEntryCash(t.legs);
+        const entryTxt = (entryCash >= 0 ? 'Credit ' : 'Debit ') + formatMoney(Math.abs(entryCash));
+        const days = paperDaysHeld(t);
+        const dayTxt = days === 1 ? '1 day' : days + ' days';
+        h += '<div class="disc-card" style="margin-bottom:10px">';
+        h += '<div class="disc-title">' + escapeHtml(t.note || 'Paper trade') +
+          ' <span class="disc-sub">' + escapeHtml(t.ticker || '') + ' · ' + paperDateStr(t.createdAt) + ' · ' + dayTxt + '</span></div>';
+        h += '<div class="disc-note">' + escapeHtml(legsTxt) + '</div>';
+        h += '<div class="disc-note">Entry: ' + entryTxt + ' @ spot ' + formatMoney(t.entrySpot) + '</div>';
+        if (t.status === 'open') {
+          const u = paperUnrealized(t);
+          const cls = u.pnl >= 0 ? 'var(--green)' : 'var(--red)';
+          h += '<div class="disc-note">Now: <b style="color:' + cls + '">' + (u.pnl >= 0 ? '+' : '−') + formatMoney(Math.abs(u.pnl)) + '</b>' +
+            (u.modeled ? ' <span class="disc-sub">(partly modeled)</span>' : ' <span class="disc-sub">(chain)</span>') + '</div>';
+          const armedClose = paperArmedId === t.id && paperArmedAction === 'close';
+          const armedDel = paperArmedId === t.id && paperArmedAction === 'delete';
+          h += '<p style="margin:6px 0 0">' +
+            '<button type="button" class="btn-sm" onclick="armPaperTrade(\'' + t.id + '\',\'close\')">' + (armedClose ? 'Confirm close' : 'Close trade') + '</button> ' +
+            '<button type="button" class="btn-sm" onclick="armPaperTrade(\'' + t.id + '\',\'delete\')">' + (armedDel ? 'Confirm delete' : 'Delete') + '</button>' +
+            (armedClose || armedDel ? ' <button type="button" class="btn-sm" onclick="disarmPaperTrade()">Cancel</button>' : '') +
+            '</p>';
+        } else {
+          const rpnl = t.realized || 0;
+          const cls = rpnl >= 0 ? 'var(--green)' : 'var(--red)';
+          h += '<div class="disc-note">Closed ' + paperDateStr(t.closedAt) + ': <b style="color:' + cls + '">' + (rpnl >= 0 ? '+' : '−') + formatMoney(Math.abs(rpnl)) + '</b> realized</div>';
+          h += '<p style="margin:6px 0 0"><button type="button" class="btn-sm" onclick="armPaperTrade(\'' + t.id + '\',\'delete\')">' +
+            (paperArmedId === t.id ? 'Confirm delete' : 'Delete') + '</button>' +
+            (paperArmedId === t.id ? ' <button type="button" class="btn-sm" onclick="disarmPaperTrade()">Cancel</button>' : '') + '</p>';
+        }
+        h += '</div>';
+      });
+      box.innerHTML = h;
+    }
+    // Inline two-step confirm for close/delete (same pattern as the roll card:
+    // no native dialogs). First click arms and repaints; second executes.
+    function armPaperTrade(id, action) {
+      if (paperArmedId === id && paperArmedAction === action) {
+        if (action === 'close') closePaperTrade(id);
+        else deletePaperTrade(id);
+        return;
+      }
+      paperArmedId = id; paperArmedAction = action;
+      renderPaperTrades();
+    }
+    function disarmPaperTrade() {
+      paperArmedId = null; paperArmedAction = null;
+      renderPaperTrades();
+    }
+    function closePaperTrade(id) {
+      const found = paperTradeById(id);
+      paperArmedId = null; paperArmedAction = null;
+      if (!found || found.t.status !== 'open') { renderPaperTrades(); return; }
+      const exitPx = {};
+      let rpnl = 0;
+      found.t.legs.forEach(function (l, i) {
+        const q = paperQuote(l);
+        exitPx[i] = Math.round(q.px * 100) / 100;
+        rpnl += paperLegPnl(l, l.premium, q.px);
+      });
+      found.t.status = 'closed';
+      found.t.closedAt = Date.now();
+      found.t.exitPx = exitPx;
+      found.t.realized = Math.round(rpnl * 100) / 100;
+      persistPaperTrades(found.list);
+      renderPaperTrades();
+    }
+    function deletePaperTrade(id) {
+      const found = paperTradeById(id);
+      paperArmedId = null; paperArmedAction = null;
+      if (!found) { renderPaperTrades(); return; }
+      found.list.splice(found.idx, 1);
+      persistPaperTrades(found.list);
+      renderPaperTrades();
+    }
     function applyRoll() {
       if (!lastRoll) return;
       if (!rollArmed) {
