@@ -574,18 +574,19 @@ builder_body = builder_body[:builder_body.find(charts_comment)] + builder_body[b
 builder_body = builder_body.replace(greeks_card, '')
 # visible chart controls
 builder_body = builder_body.replace(
-    """      <!-- Days Remaining / Underlying still drive the math (and stay in
-           sync with the simulator below); they're just no longer shown
-           as separate sliders since Advance Day covers that job now. -->
+    """      <!-- Days Remaining drives the math (and stays in sync with the simulator
+           below); it's just no longer shown as a separate slider since
+           Advance Day covers that job now. The Implied volatility slider
+           below replaces the old Underlying slider (per user request). -->
       <div class="hidden-controls">""",
-    """      <!-- Days remaining & underlying price drive the dashed "with time
+    """      <!-- Days remaining & implied volatility drive the dashed "with time
            left" payoff line. -->
       <div class="chart-controls">""")
 builder_body = builder_body.replace(
     '''        <div class="slider-group" style="margin-top:6px;">
-          <label>Underlying <strong id="spotLabel">$100.00</strong></label>''',
+          <label>Implied volatility <strong id="ivSliderLabel">25%</strong></label>''',
     '''        <div class="slider-group">
-          <label>Underlying <strong id="spotLabel">$100.00</strong></label>''')
+          <label>Implied volatility <strong id="ivSliderLabel">25%</strong></label>''')
 # analyze button next to share
 builder_body = builder_body.replace(
     '''<button class="btn-secondary btn-sm" id="shareSetup">🔗 Share link</button>''',

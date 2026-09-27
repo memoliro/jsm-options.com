@@ -4098,6 +4098,7 @@
     else initTemplatePreviews();
 
     function liveUpdate() {
+      syncIvSlider();
       updateSpotSliderRange();
       if (refreshAllModeledPremiums()) {
         if (typeof renderLegs === 'function') renderLegs();
@@ -4107,15 +4108,26 @@
     }
 
     // Manual spot entry asserts a new current price, so it re-anchors the ±1σ
-    // expected-move band. The Underlying slider writes to the same field via
-    // onSpotSlide(), which deliberately does NOT re-anchor — the slider is a
-    // what-if scenario tool, not a price assertion.
+    // expected-move band. (The old Underlying slider wrote to the same field
+    // via onSpotSlide(), which deliberately did NOT re-anchor — the slider
+    // was a what-if scenario tool, not a price assertion. The slider has been
+    // replaced by the Implied volatility slider; chart drag remains as the
+    // what-if path and still bypasses the anchor.)
+    //
+    // Range slider locks the X window: keep it fixed while the price moves
+    // inside it; recenter only if the new spot would leave the window.
+    function recenterRangeIfSpotEscaped(S) {
+      if (rangeZoomActive && chartZoom && (S < chartZoom.min || S > chartZoom.max)) applyRangeZoom(S);
+    }
     function onSpotInput() {
       const v = parseFloat(document.getElementById('spot').value);
-      if (v > 0) emAnchorSpot = v;
-      // Builder has the Underlying slider + chain UI: full live update.
+      if (v > 0) {
+        emAnchorSpot = v;
+        recenterRangeIfSpotEscaped(v);
+      }
+      // Builder has the chart UI: full live update.
       // Simulator has neither, so a plain recalc suffices there.
-      if (document.getElementById('spotSlider')) liveUpdate();
+      if (document.getElementById('chartContainer')) liveUpdate();
       else recalc();
     }
 
@@ -4193,8 +4205,9 @@
     function formatPlMetric(v) {
       if (!isFinite(v)) return '—';
       if (plMetric === '$') {
+        // No $ sign in table cells (user preference): plain signed numbers.
         const a = Math.abs(v);
-        return (v < 0 ? '-' : (v > 0 ? '+' : '')) + '$' + (a >= 100 ? a.toFixed(0) : a.toFixed(2));
+        return (v < 0 ? '-' : (v > 0 ? '+' : '')) + (a >= 100 ? a.toFixed(0) : a.toFixed(2));
       }
       const d = plMetricDenom();
       if (!(d > 0)) return '—';
@@ -4305,7 +4318,7 @@
         const vals = colDefs.map(function(c) { return plAt(p, c.daysLeft, legs); });
         let mx = 0;
         for (let j = 0; j < vals.length; j++) if (isFinite(vals[j])) mx = Math.max(mx, Math.abs(vals[j]));
-        html += '<tr' + (i === spotRow ? ' class="spot-row"' : '') + '><th>$' + p.toFixed(1) +
+        html += '<tr' + (i === spotRow ? ' class="spot-row"' : '') + '><th>' + p.toFixed(1) +
           ' <span style="color:var(--muted);font-weight:400">(' + (pctMove >= 0 ? '+' : '') + pctMove.toFixed(0) + '%)</span></th>';
         for (let j = 0; j < vals.length; j++) {
           const v = vals[j];
@@ -4322,6 +4335,8 @@
       tbl.innerHTML = html;
       const note = document.getElementById('plTableModeNote');
       if (note) note.textContent = 'mode: ' + (plMetric === '$' ? 'dollars' : (plMetric === 'risk' ? '% of max risk' : '% of entry cost'));
+      const ivNote = document.getElementById('plTableIvNote');
+      if (ivNote) ivNote.textContent = 'values at IV ' + Math.round(params.iv * 100) + '%';
     }
 
     function recalc() {
@@ -4505,12 +4520,15 @@
     }
 
     function onSpotSlide() {
-      const v = parseFloat(document.getElementById('spotSlider').value);
+      // Legacy: the Underlying slider was replaced by the Implied volatility
+      // slider. Kept so any external caller still works.
+      const el = document.getElementById('spotSlider');
+      if (!el) return;
+      const v = parseFloat(el.value);
       document.getElementById('spot').value = v.toFixed(1);
-      document.getElementById('spotLabel').textContent = '$' + v.toFixed(2);
       // Range slider locks the X window: keep it fixed while the price marker
       // travels inside it; recenter only if the price would leave the window.
-      if (rangeZoomActive && chartZoom && (v < chartZoom.min || v > chartZoom.max)) applyRangeZoom(v);
+      recenterRangeIfSpotEscaped(v);
       recalc();
     }
 
@@ -4523,6 +4541,29 @@
       chartZoom = { min: Math.max(0, S * (1 - r)), max: S * (1 + r) };
     }
 
+    // Implied volatility slider (builder chart controls): drives the same #iv
+    // field the setup card uses, so the theoretical P/L curve, the P&L table
+    // and modeled premiums all reprice together. Two-way synced: chain loads
+    // (seedIvFromAtm) and manual #iv edits move the thumb via syncIvSlider().
+    function onIvSliderChange() {
+      const slider = document.getElementById('ivSlider');
+      const v = slider ? (parseFloat(slider.value) || 25) : 25;
+      const ivEl = document.getElementById('iv');
+      if (ivEl) ivEl.value = v;
+      const lbl = document.getElementById('ivSliderLabel');
+      if (lbl) lbl.textContent = v + '%';
+      liveUpdate();
+    }
+    function syncIvSlider() {
+      const ivEl = document.getElementById('iv');
+      const slider = document.getElementById('ivSlider');
+      if (!ivEl || !slider) return;
+      const v = parseFloat(ivEl.value);
+      if (!(v > 0)) return;
+      slider.value = Math.max(parseFloat(slider.min) || 5, Math.min(parseFloat(slider.max) || 120, Math.round(v)));
+      const lbl = document.getElementById('ivSliderLabel');
+      if (lbl) lbl.textContent = Math.round(v) + '%';
+    }
     function onRangeChange() {
       const pct = parseFloat(document.getElementById('chartRange').value) || 20;
       const lbl = document.getElementById('rangeLabel');
@@ -4563,8 +4604,10 @@
       const shock = (Math.random() * 2 - 1) * (iv / Math.sqrt(365)) * S * 2.5;
       S = Math.max(1, S + shock);
       document.getElementById('spot').value = S.toFixed(1);
-      document.getElementById('spotSlider').value = S;
-      document.getElementById('spotLabel').textContent = '$' + S.toFixed(2);
+      const _sl = document.getElementById('spotSlider');
+      if (_sl) _sl.value = S;
+      const _slbl = document.getElementById('spotLabel');
+      if (_slbl) _slbl.textContent = '$' + S.toFixed(2);
       recalc();
     }
 
@@ -5386,6 +5429,7 @@
       const put = findChainContract('put', k, exp);
       const iv = quoteIvPct(call) || quoteIvPct(put);
       if (iv) ivEl.value = iv;
+      if (typeof syncIvSlider === 'function') syncIvSlider();
     }
     function tryFillLegFromChain(leg, opts) {
       const options = opts || {};

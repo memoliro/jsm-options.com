@@ -303,7 +303,10 @@
     .seg-btn:hover { color: var(--text); }
     .seg-btn.active { background: var(--accent); color: #fff; }
     .pl-table { width: 100%; border-collapse: collapse; font-size: 12px; }
-    .pl-table th, .pl-table td { padding: 6px 8px; text-align: right; border-bottom: 1px solid rgba(45,58,79,.4); font-variant-numeric: tabular-nums; white-space: nowrap; }
+    /* Borderless cells (user preference): no horizontal or vertical grid
+       lines — the green/red shading and the spot-row highlight carry the
+       structure. */
+    .pl-table th, .pl-table td { padding: 6px 8px; text-align: right; border: none; font-variant-numeric: tabular-nums; white-space: nowrap; }
     .pl-table thead th { position: sticky; top: 0; background: var(--card); z-index: 2; color: var(--muted); font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; }
     .pl-table tbody th { position: sticky; left: 0; background: var(--card); z-index: 1; color: var(--text); }
     .pl-table td.pv-pos { color: var(--green); font-weight: 600; }
@@ -1218,7 +1221,7 @@
       <div id="plTableWrap" style="display:none;max-height:min(700px,84vh);overflow:auto;border:1px solid var(--border);border-radius:8px;margin-top:8px">
         <table class="pl-table" id="plTable" aria-label="Profit and loss by underlying price and date"></table>
       </div>
-      <p class="legend-note" id="plTableNote" style="display:none;margin-top:6px">Position A · one column per listed expiry (through your furthest leg) · values use the current IV shock · <span id="plTableModeNote"></span></p>
+      <p class="legend-note" id="plTableNote" style="display:none;margin-top:6px">Position A · one column per listed expiry (through your furthest leg) · <span id="plTableIvNote">values at IV 25%</span> · <span id="plTableModeNote"></span></p>
       <div class="legend-note">
         <span><span class="dot green"></span> A Expiry (green / red)</span>
         <span><span class="dot dotted"></span> A with time left</span>
@@ -1231,7 +1234,7 @@
         <div class="compare-col b" id="compareColB"></div>
       </div>
 
-      <!-- Days remaining & underlying price drive the dashed "with time
+      <!-- Days remaining & implied volatility drive the dashed "with time
            left" payoff line. -->
       <div class="chart-controls">
         <div class="slider-group">
@@ -1239,8 +1242,8 @@
           <input type="range" id="daysLeft" min="0" max="90" value="90" oninput="onDaysChange()" />
         </div>
         <div class="slider-group">
-          <label>Underlying <strong id="spotLabel">$100.00</strong></label>
-          <input type="range" id="spotSlider" min="40" max="180" step="0.5" value="100" oninput="onSpotSlide()" />
+          <label>Implied volatility <strong id="ivSliderLabel">25%</strong></label>
+          <input type="range" id="ivSlider" min="5" max="120" step="1" value="25" oninput="onIvSliderChange()" title="Implied volatility used to reprice the theoretical P/L curve and table" />
         </div>
       </div>
       <!-- Round 2, Item 5: price slices — touch odds + expiry odds at target prices.
@@ -1388,7 +1391,7 @@ and custom structures. View payoff charts, Greeks, profit/loss, break-even, prob
     </div>
     <div class="guide-body" id="guideBody"></div>
   </aside>
-  <script src="/assets/jsm-options-engine.js?v=5589759c"></script>
+  <script src="/assets/jsm-options-engine.js?v=d01ec77f"></script>
 <script>
 (function(){
   function initNav(){

@@ -303,7 +303,10 @@
     .seg-btn:hover { color: var(--text); }
     .seg-btn.active { background: var(--accent); color: #fff; }
     .pl-table { width: 100%; border-collapse: collapse; font-size: 12px; }
-    .pl-table th, .pl-table td { padding: 6px 8px; text-align: right; border-bottom: 1px solid rgba(45,58,79,.4); font-variant-numeric: tabular-nums; white-space: nowrap; }
+    /* Borderless cells (user preference): no horizontal or vertical grid
+       lines — the green/red shading and the spot-row highlight carry the
+       structure. */
+    .pl-table th, .pl-table td { padding: 6px 8px; text-align: right; border: none; font-variant-numeric: tabular-nums; white-space: nowrap; }
     .pl-table thead th { position: sticky; top: 0; background: var(--card); z-index: 2; color: var(--muted); font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; }
     .pl-table tbody th { position: sticky; left: 0; background: var(--card); z-index: 1; color: var(--text); }
     .pl-table td.pv-pos { color: var(--green); font-weight: 600; }
@@ -960,7 +963,7 @@
 
   </div>
   </div>
-  <script src="/assets/jsm-options-engine.js?v=5589759c"></script>
+  <script src="/assets/jsm-options-engine.js?v=d01ec77f"></script>
 <script>
 (function(){
   function initNav(){

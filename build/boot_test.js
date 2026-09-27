@@ -383,12 +383,12 @@ const el = (els, id) => els.get(id);
       onRangeChange();
       var lo1 = chartZoom.min, hi1 = chartZoom.max;
       if (!(hi1 > lo1)) return 'bad lock ' + lo1 + ',' + hi1;
-      var spot = document.getElementById('spotSlider');
+      var spot = document.getElementById('spot');
       spot.value = String((lo1 + hi1) / 2); // inside the locked window
-      onSpotSlide();
+      onSpotInput();
       if (chartZoom.min !== lo1 || chartZoom.max !== hi1) return 'window moved with spot';
       spot.value = String(hi1 * 3); // far outside the window
-      onSpotSlide();
+      onSpotInput();
       if (chartZoom.min === lo1 && chartZoom.max === hi1) return 'window did not follow escaped spot';
       var v = hi1 * 3;
       if (!(chartZoom.min < v && chartZoom.max > v)) return 'escaped spot still outside window';
@@ -437,7 +437,7 @@ const el = (els, id) => els.get(id);
       var body = html.split('<tbody>')[1].split('</tbody>')[0];
       var rows = body.split('</tr>').filter(function(s){ return s.indexOf('<td') >= 0; });
       var data = rows.map(function(rh){
-        var pm = rh.match(/<th>\\$([0-9.]+)/);
+        var pm = rh.match(/<th>\\$?([0-9.]+)/);
         var cells = rh.split('</td>');
         var tm = cells[cells.length - 2].match(/>([^<>]*)$/);
         return { price: parseFloat(pm[1]), txt: tm[1].trim() };
@@ -469,7 +469,7 @@ const el = (els, id) => els.get(id);
       var html = document.getElementById('plTable').innerHTML;
       var body = html.split('<tbody>')[1].split('</tbody>')[0];
       var first = body.split('</tr>').filter(function(s){ return s.indexOf('<td') >= 0; })[0];
-      var price = parseFloat(first.match(/<th>\\$([0-9.]+)/)[1]);
+      var price = parseFloat(first.match(/<th>\\$?([0-9.]+)/)[1]);
       var minDte = 0;
       for (var i = 0; i < legs.length; i++) {
         var d = legs[i].dte;
@@ -565,7 +565,7 @@ const el = (els, id) => els.get(id);
       var rows = body.split('</tr>').filter(function(s){ return s.indexOf('<td') >= 0; });
       var bad = [];
       rows.forEach(function(rh, ri){
-        var pm = rh.match(/<th>\\$([0-9.]+)/);
+        var pm = rh.match(/<th>\\$?([0-9.]+)/);
         var price = parseFloat(pm[1]);
         var cells = rh.split('</td>').slice(0, -1).map(function(c){ var tm = c.match(/>([^<>]*)$/); return tm[1].trim(); });
         cells.forEach(function(txt, j){
@@ -622,7 +622,7 @@ const el = (els, id) => els.get(id);
       var html = document.getElementById('plTable').innerHTML;
       var body = html.split('<tbody>')[1].split('</tbody>')[0];
       var first = body.split('</tr>').filter(function(s){ return s.indexOf('<td') >= 0; })[0];
-      return parseFloat(first.match(/<th>\\$([0-9.]+)/)[1]);
+      return parseFloat(first.match(/<th>\\$?([0-9.]+)/)[1]);
     })()`, c2);
     const before = firstRowPrice();
     vm.runInContext(`(function(){
@@ -650,7 +650,7 @@ const el = (els, id) => els.get(id);
       var html = document.getElementById('plTable').innerHTML;
       var body = html.split('<tbody>')[1].split('</tbody>')[0];
       var rows = body.split('</tr>').filter(function(s){ return s.indexOf('<td') >= 0; });
-      var px = rows.map(function(r){ return parseFloat(r.match(/<th>\\$([0-9.]+)/)[1]); });
+      var px = rows.map(function(r){ return parseFloat(r.match(/<th>\\$?([0-9.]+)/)[1]); });
       return JSON.stringify({ hi: px[0], lo: px[px.length - 1] });
     })()`, c2);
     const o = JSON.parse(edge);
@@ -667,7 +667,7 @@ const el = (els, id) => els.get(id);
         var html = document.getElementById('plTable').innerHTML;
         var body = html.split('<tbody>')[1].split('</tbody>')[0];
         var rows = body.split('</tr>').filter(function(s){ return s.indexOf('<td') >= 0; });
-        var px = rows.map(function(r){ return parseFloat(r.match(/<th>\\$([0-9.]+)/)[1]); });
+        var px = rows.map(function(r){ return parseFloat(r.match(/<th>\\$?([0-9.]+)/)[1]); });
         var spotIdx = -1;
         rows.forEach(function(r, i){ if (r.indexOf('spot-row') >= 0) spotIdx = i; });
         return JSON.stringify({ spotIdx: spotIdx, mid: px[10], S: getParams().S });
@@ -708,6 +708,49 @@ const el = (els, id) => els.get(id);
     const o = JSON.parse(res);
     if (!(o.xmin === o.zmin && o.xmax === o.zmax)) throw new Error('creation did not apply zoom: ' + res);
     if (Math.abs((o.xmin + o.xmax) / 2 - o.S) / o.S > 1e-9) throw new Error('created chart off-center: ' + res);
+  });
+  check('F18 IV slider replaces the Underlying slider; reprices table; no $ in cells', () => {
+    const html = fs.readFileSync(path.join(SITE, 'builder', 'index.html'), 'utf8');
+    if (html.indexOf('id="ivSlider"') < 0) throw new Error('ivSlider missing from builder HTML');
+    if (html.indexOf('id="spotSlider"') >= 0) throw new Error('spotSlider still in builder HTML');
+    if (!/id="ivSlider"[^>]*min="5"[^>]*max="120"/.test(html)) throw new Error('ivSlider range wrong');
+    // Structural: the slider lives outside the chart/table toggled sections,
+    // so it stays visible in both views.
+    const iChart = html.indexOf('id="chartContainer"');
+    const iTable = html.indexOf('id="plTableWrap"');
+    const iIv = html.indexOf('id="ivSlider"');
+    if (!(iChart > 0 && iTable > iChart && iIv > iTable)) throw new Error('ivSlider not outside the toggled views');
+    const res = vm.runInContext(`(function(){
+      // two-way sync: manual #iv edit moves the thumb + label
+      document.getElementById('iv').value = '40';
+      syncIvSlider();
+      var sl = document.getElementById('ivSlider');
+      if (parseFloat(sl.value) !== 40) return 'thumb=' + sl.value;
+      if (document.getElementById('ivSliderLabel').textContent !== '40%') return 'label wrong';
+      // repricing: move the slider, table + #iv must follow
+      setChartView('table');
+      function firstCell() {
+        var h = document.getElementById('plTable').innerHTML;
+        var body = h.split('<tbody>')[1].split('</tbody>')[0];
+        var first = body.split('</tr>').filter(function(s){ return s.indexOf('<td') >= 0; })[0];
+        var tm = first.split('</td>')[0].match(/>([^<>]*)$/);
+        return tm[1].trim();
+      }
+      var before = firstCell();
+      sl.value = '100';
+      onIvSliderChange();
+      var after = firstCell();
+      if (String(document.getElementById('iv').value) !== '100') return 'iv not synced';
+      if (document.getElementById('ivSliderLabel').textContent !== '100%') return 'label not synced';
+      if (before === after) return 'table did not reprice: ' + before;
+      var note = document.getElementById('plTableIvNote').textContent;
+      if (note.indexOf('100%') < 0) return 'note=' + note;
+      // no $ signs anywhere in the table body (cells or row headers)
+      var bodyHtml = document.getElementById('plTable').innerHTML.split('<tbody>')[1].split('</tbody>')[0];
+      if (bodyHtml.indexOf('$') >= 0) return '$ found in table body';
+      return 'ok';
+    })()`, ctx);
+    if (res !== 'ok') throw new Error(res);
   });
 }
 
@@ -956,12 +999,15 @@ const el = (els, id) => els.get(id);
     const a = j('emRefSpot()');
     if (Math.abs(a - 105) > 1e-9) throw new Error('anchor=' + a);
   });
-  check('J2 band: slider drag does not move band center or width', () => {
+  check('J2 band: what-if spot move does not move band center or width', () => {
     const before = jj(`JSON.stringify({em: expectedMove(), c: emRefSpot()})`);
     if (!(before.em > 0)) throw new Error('no EM before: ' + before.em);
-    j(`(function(){ var sl = document.getElementById('spotSlider'); sl.value = 150; onSpotSlide(); })()`);
+    // What-if path (chart drag sets #spot + recalc directly, bypassing the
+    // manual-input anchor): the old Underlying slider did the same via
+    // onSpotSlide, but the slider has been replaced by the IV slider.
+    j(`(function(){ document.getElementById('spot').value = '150'; recalc(); })()`);
     const after = jj(`JSON.stringify({em: expectedMove(), c: emRefSpot(), spot: parseFloat(document.getElementById('spot').value)})`);
-    if (Math.abs(after.spot - 150) > 1e-9) throw new Error('slider did not move spot: ' + after.spot);
+    if (Math.abs(after.spot - 150) > 1e-9) throw new Error('spot did not move: ' + after.spot);
     if (Math.abs(after.c - before.c) > 1e-9) throw new Error('band center moved: ' + before.c + ' -> ' + after.c);
     if (Math.abs(after.em - before.em) > 1e-9) throw new Error('band width moved: ' + before.em + ' -> ' + after.em);
   });
@@ -980,13 +1026,13 @@ const el = (els, id) => els.get(id);
     const want = 200 * 0.50 * Math.sqrt(30 / 365); // IV was set to 50 in J3
     if (Math.abs(em - want) / want > 1e-9) throw new Error('em=' + em + ' want=' + want);
   });
-  check('J5 band: stat tile follows the anchor, not the slider', () => {
-    j(`(function(){ var sl = document.getElementById('spotSlider'); sl.value = 120; onSpotSlide(); })()`);
+  check('J5 band: stat tile follows the anchor, not the what-if spot', () => {
+    j(`(function(){ document.getElementById('spot').value = '120'; recalc(); })()`);
     // The Expected-move tile lives on the simulator page; the builder shows
     // the band on the chart instead. The overlay reads the same emRefSpot(),
     // already covered by J1-J4, so assert the anchor is untouched here.
     const a = j('emRefSpot()');
-    if (Math.abs(a - 200) > 1e-9) throw new Error('anchor moved by slider: ' + a);
+    if (Math.abs(a - 200) > 1e-9) throw new Error('anchor moved by what-if spot: ' + a);
   });
 }
 
@@ -1133,16 +1179,15 @@ const el = (els, id) => els.get(id);
 {
   const { ctx, els } = run('builder', '?setup=' + TOKEN);
   const j = (expr) => vm.runInContext(expr, ctx);
-  check('M1 slider: updateSpotSliderRange keeps the thumb on the current spot', () => {
+  check('M1 slider: updateSpotSliderRange is a harmless no-op (Underlying slider removed)', () => {
     const v = j(`(function(){
       document.getElementById('spot').value = '771.35';
-      var sl = document.getElementById('spotSlider');
-      sl.min = '40'; sl.max = '180'; sl.value = '100'; // stale pre-chain state
-      updateSpotSliderRange();
-      return sl.value + '|' + sl.min + '|' + sl.max;
+      if (document.getElementById('spotSlider')) return 'slider still present';
+      updateSpotSliderRange(); // must not throw without the slider
+      liveUpdate(); // full update path must not throw either
+      return 'ok';
     })()`);
-    const val = parseFloat(String(v).split('|')[0]);
-    if (val !== 771.35) throw new Error('thumb did not follow spot: ' + v);
+    if (v !== 'ok') throw new Error(v);
   });
   check('M2 range: chart loads with the Range window locked (±20% of spot)', () => {
     const o = JSON.parse(j('JSON.stringify({min: chartZoom.min, max: chartZoom.max, active: rangeZoomActive})'));
