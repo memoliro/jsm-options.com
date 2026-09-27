@@ -7,7 +7,7 @@
   <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48.png">
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
 
-  <title>Free Options Strategy Builder &amp; Payoff Calculator</title>
+  <title>Position Analyzer &amp; Simulator | JSM Options</title>
   <meta name="description" content="Free options strategy Builder and simulator: Long Call, Covered Call, Iron Condor, Spreads and more. Live Payoff chart and Greeks. Educational only.">
   <link rel="canonical" href="https://jsm-options.com/builder/">
   <meta property="og:type" content="website">
@@ -438,14 +438,6 @@
        longer shown directly — the stock simulator and quick-action buttons
        are the visible way to move price/time now. */
     .hidden-controls { display: none; }
-    .chart-controls {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 10px;
-      margin-top: 12px;
-      padding-top: 10px;
-      border-top: 1px solid var(--border);
-    }
 
     #posSummaryChartContainer {
       position: relative;
@@ -714,448 +706,175 @@
 <script src="/assets/site.js?v=20260922" defer></script>
 </head>
 <body>
-    <header class="site-header"><div class="site-header-inner"><a class="logo logo-link" href="/" aria-label="JSM Options Home"><div class="logo-icon">JSM</div><div><div style="font-weight:700">JSM Options</div><div class="brand-sub">jsm-options.com · Educational</div></div></a><div class="header-right"><nav class="nav" aria-label="Primary navigation"><a href="/">Home</a><a href="/level1/">Basics</a><a href="/level2/">Fundamentals</a><a href="/level3/">Spreads</a><a href="/level4/">Advanced</a><a href="/strategies/">Strategies</a><a href="/cheat-sheet/">Cheat sheet</a><a href="/builder/" class="active">Builder</a></nav><button type="button" class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button><button type="button" class="theme-toggle" id="themeToggle" aria-label="Toggle color theme"><span id="themeIcon" class="theme-icon">☼</span><span id="themeLabel" class="theme-label">Dark</span></button></div></div></header>
-<nav class="breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span aria-hidden="true">/</span><span aria-current="page">Builder</span></nav>
-
+    <header class="site-header"><div class="site-header-inner"><a class="logo logo-link" href="/" aria-label="JSM Options Home"><div class="logo-icon">JSM</div><div><div style="font-weight:700">JSM Options</div><div class="brand-sub">jsm-options.com · Educational</div></div></a><div class="header-right"><nav class="nav" aria-label="Primary navigation"><a href="/">Home</a><a href="/level1/">Basics</a><a href="/level2/">Fundamentals</a><a href="/level3/">Spreads</a><a href="/level4/">Advanced</a><a href="/strategies/">Strategies</a><a href="/cheat-sheet/">Cheat sheet</a><a href="/builder/">Builder</a><a href="/simulator/" class="active">Simulator</a></nav><button type="button" class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button><button type="button" class="theme-toggle" id="themeToggle" aria-label="Toggle color theme"><span id="themeIcon" class="theme-icon">☼</span><span id="themeLabel" class="theme-label">Dark</span></button></div></div></header>
+<nav class="breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span aria-hidden="true">/</span><span aria-current="page">Simulator</span></nav>
   <div class="builder-wrap">
-  <h1>Options Strategy Builder</h1>
-  <p class="subtitle">Fully interactive · equity options ×100 · futures options use contract-specific multipliers · Green = profit · Red = loss</p>
+  <h1>Position Analyzer &amp; Simulator</h1>
+  <p class="subtitle"><a href="/builder/">← Back to Builder</a> · Full position detail and what-if simulation for the setup sent from the Builder</p>
 
-  <div class="card" style="margin-bottom:12px;">
+  <div class="card" id="analyzeEmpty" style="display:none;">
+    <h2>No position loaded</h2>
+    <p>Open this page from the <a href="/builder/">Strategy Builder</a> with the <strong>📊 Analyze →</strong> button, or paste a shared setup link — the position travels in the URL.</p>
+  </div>
+
+  <div id="analyzeMain">
+  <div class="card">
+    <h2>Assumptions <span style="font-size:0.72rem;color:var(--muted);font-weight:500;">edit to re-run scenarios</span></h2>
     <div class="top-bar">
-      <div class="field wide tpl-wrap">
-        <label>Strategy template <span style="font-weight:400;color:var(--muted)">(sample Premium — edit to the chain)</span></label>
-        <button type="button" class="tpl-trigger" id="tplTrigger" aria-haspopup="listbox" aria-expanded="false"><span class="tpl-trigger-label">— Pick a Strategy —</span><span class="tpl-caret">▼</span></button>
-        <select id="strategyTemplate" onchange="applyTemplate()">
-          <option value="">— Pick a Strategy —</option>
-          <optgroup label="Bullish">
-            <option value="long_call">Long Call</option>
-            <option value="covered_call">Covered Call</option>
-            <option value="cash_secured_put">Cash Secured Put</option>
-            <option value="bull_call_spread">Bull Call Spread</option>
-            <option value="long_straddle">Long Straddle</option>
-            <option value="long_strangle">Long Strangle</option>
-            <option value="long_call_butterfly">Long Call Butterfly</option>
-            <option value="call_condor">Call Condor</option>
-          </optgroup>
-          <optgroup label="Bearish">
-            <option value="long_put">Long Put</option>
-            <option value="bear_put_spread">Bear Put Spread</option>
-            <option value="long_straddle_bear">Long Straddle</option>
-            <option value="long_strangle_bear">Long Strangle</option>
-            <option value="long_put_butterfly">Long Put Butterfly</option>
-            <option value="put_condor">Put Condor</option>
-          </optgroup>
-          <optgroup label="Neutral / time value">
-            <option value="short_straddle">Short Straddle</option>
-            <option value="short_strangle">Short Strangle</option>
-            <option value="iron_condor">Iron Condor</option>
-            <option value="iron_butterfly">Iron Butterfly</option>
-            <option value="calendar_call">Calendar Spread (Call)</option>
-            <option value="jade_lizard">Jade Lizard</option>
-          </optgroup>
-          <optgroup label="Synthetic stock &amp; capital-efficient (Bullish / Neutral)">
-            <option value="pmcc">Poor Man's Covered Call</option>
-            <option value="call_ratio_spread">Call Ratio Spread (1×2)</option>
-            <option value="put_ratio_spread">Put Ratio Spread (1×2)</option>
-            <option value="synthetic_long">Synthetic Long</option>
-            <option value="synthetic_short">Synthetic Short</option>
-            <option value="risk_reversal">Risk Reversal (synthetic tilt)</option>
-          </optgroup>
-        </select>
-        <div class="tpl-pop" id="tplPopover">
-          <div class="tpl-groups"></div>
-          <div class="tpl-peek">
-            <div class="tpl-peek-name">Template</div>
-            <div class="tpl-peek-chart"></div>
-            <p class="tpl-peek-note"></p>
-          </div>
-        </div>
-      </div>
-      <div class="field" style="align-self:end;min-width:0;">
-        <label>&nbsp;</label>
-        <button type="button" class="btn-secondary btn-sm" onclick="openStrategyGuide()" title="Open the strategy guide for the selected template">📖 Guide</button>
-      </div>
-            <div class="field ticker-field" style="min-width:200px">
+      <div class="field">
         <label>Symbol / Ticker</label>
-        <input type="text" id="ticker" value="SPY" autocomplete="off" spellcheck="false"
-          placeholder="e.g. SPY, AAPL, /ES"
-          role="combobox" aria-expanded="false" aria-autocomplete="list" aria-controls="tickerSuggest"
-          oninput="onTickerTyping()"
-          onfocus="openTickerSuggest()"
-          onclick="openTickerSuggest()"
-          onchange="onTickerChange()"
-          onkeydown="onTickerKeydown(event)" />
-        <div class="ticker-suggest" id="tickerSuggest" role="listbox"></div>
+        <input id="ticker" type="text" value="SPY" readonly style="opacity:.7" />
       </div>
       <div class="field">
         <label>Underlying price ($)</label>
-        <input id="spot" type="number" value="100" step="0.5" min="1" oninput="liveUpdate()" onchange="resetSimulation()" />
+        <input id="spot" type="number" value="100" step="0.5" min="1" oninput="recalc()" onchange="resetSimulation()" />
       </div>
       <div class="field">
         <label>IV (%)</label>
-        <input id="iv" type="number" value="25" step="1" min="1" max="200" oninput="liveUpdate()" />
+        <input id="iv" type="number" value="25" step="1" min="1" max="200" oninput="recalc()" />
       </div>
       <div class="field">
         <label>Rate (%)</label>
-        <input id="rate" type="number" value="5" step="0.25" min="0" max="20" oninput="liveUpdate()" />
-      </div>
-      
-      <div class="field">
-        <label>Chain filter</label>
-        <select id="chainFilterTop" onchange="renderChainTable()">
-          <option value="atm30">ATM ±30%</option>
-          <option value="atm20" selected>ATM ±20%</option>
-          <option value="atm10">ATM ±10%</option>
-          <option value="atm5">ATM ±5%</option>
-          <option value="all">All strikes</option>
-        </select>
+        <input id="rate" type="number" value="5" step="0.25" min="0" max="20" oninput="recalc()" />
       </div>
       <div class="field">
         <label>Dividend (%)</label>
-        <input id="divYield" type="number" value="0" step="0.1" min="0" max="15" oninput="liveUpdate()" />
+        <input id="divYield" type="number" value="0" step="0.1" min="0" max="15" oninput="recalc()" />
+      </div>
+      <div class="field">
+        <label title="Round-trip commission per option contract">Commission $/contract</label>
+        <input id="commission" type="number" min="0" step="0.05" value="0" oninput="recalc()" />
+      </div>
+      <div class="field">
+        <label title="Show an E marker on the simulation day-horizon">Next earnings</label>
+        <input id="earnDate" type="date" oninput="onEventDateChange()" />
+      </div>
+      <div class="field">
+        <label title="Show a D marker on the simulation day-horizon">Ex-dividend</label>
+        <input id="exDivDate" type="date" oninput="onEventDateChange()" />
+      </div>
+      <div class="field">
+        <label>Days remaining <strong id="daysLeftLabel">90</strong></label>
+        <input type="range" id="daysLeft" min="0" max="90" value="90" oninput="onDaysChange()" />
       </div>
     </div>
-    <p id="quoteStatus" class="quote-status">Loading CBOE delayed chain for the default ticker… Educational — not for trading.</p>
   </div>
 
-  
-  <div class="card" id="chainCard" style="border:1px solid var(--border)">
-      <h2>Live chain — market data (educational) <span style="font-size:0.72rem;color:var(--muted);font-weight:500">loads on open • ~15min delayed • edit any field after</span></h2>
-      <div class="top-bar" style="margin-bottom:8px">
-        <div class="field">
-          <label>Expiration</label>
-          <select id="chainExpiration" onchange="onChainExpChange()"></select>
+      <!-- Position Summary — how P/L has moved across the simulated days -->
+      <div class="card">
+        <h2>Position summary <span style="font-size:0.72rem;color:var(--muted);font-weight:500;">model vs expiry</span></h2>
+        <div class="metrics pos-metrics">
+          <div class="metric">
+            <div class="label">Model P/L</div>
+            <div class="val" id="posCurrentPL">$0</div>
+          </div>
+          <div class="metric">
+            <div class="label">Expiry P/L</div>
+            <div class="val" id="posExpiryPL">$0</div>
+          </div>
+          <div class="metric">
+            <div class="label">Net Debit/Credit</div>
+            <div class="val" id="posNetPremium">$0</div>
+          </div>
+          <div class="metric">
+            <div class="label">Position Delta</div>
+            <div class="val" id="posDelta">—</div>
+          </div>
+          <div class="metric">
+            <div class="label">Theta / day</div>
+            <div class="val" id="posTheta">—</div>
+          </div>
+          <div class="metric">
+            <div class="label">Expected move (1σ)</div>
+            <div class="val" id="posExpMove">—</div>
+          </div>
+          <div class="metric">
+            <div class="label">Prob. of profit (est.)</div>
+            <div class="val" id="posPoP">—</div>
+          </div>
         </div>
-        <div class="field">
-          <label>Spot ref (CBOE)</label>
-          <input id="chainSpotRef" type="text" readonly placeholder="—" style="opacity:.8" />
-        </div>
-        <div class="field wide">
-          <label>Info</label>
-          <div id="chainStatus" class="quote-status" style="padding:6px 8px;background:var(--bg);border-radius:6px">Opening with SPY chain. Change ticker or expiration anytime.</div>
+        <div id="posSummaryChartContainer">
+          <canvas id="posSummaryChart"></canvas>
         </div>
       </div>
-      <div id="chainTableWrap" style="max-height:520px;overflow:auto;border:1px solid var(--border);border-radius:8px"></div>
-      <p style="font-size:0.7rem;color:var(--muted);margin-top:6px">Listed-option data: CBOE delayed. Futures options use separate futures-contract specifications and are not loaded through this CBOE path. On load, spot / ATM IV / strike / DTE / premium come from the chain. You can override any field. +C / +P adds a market-priced leg.</p>
     </div>
 
-  <div class="main-grid">
 
-    <!-- Current Legs, with the strategy's static metrics moved alongside it -->
+    <!-- Option Greeks -->
     <div class="card">
-      <h2>Current legs <span class="slot-tag">A</span></h2>
-      <div class="legs-with-summary">
-        <div>
-          <div class="legs-header">
-            <span>Side</span>
-            <span>Type</span>
-            <span>Symbol</span>
-            <span>Strike</span>
-            <span>DTE</span>
-            <span>Qty</span>
-            <span>Premium / cost</span>
-            <span></span>
-          </div>
-          <div id="legsList"></div>
-          <div class="btn-row">
-            <button class="btn-primary btn-sm" onclick="addEmptyLeg()">+ Add leg</button>
-            <button class="btn-secondary btn-sm" onclick="clearLegs()">Clear all</button>
-            <button class="btn-secondary btn-sm" id="shareSetup">🔗 Share link</button>
-            <button class="btn-secondary btn-sm" onclick="openInAnalyzer()" title="Open this position in the Analyzer &amp; Simulator">📊 Analyze →</button>
-            <label style="font-size:0.75rem;color:var(--muted);display:inline-flex;align-items:center;gap:4px;" title="Round-trip commission per option contract; included in net debit/credit, P/L and max loss. Applies to both A and B.">
-              Commission $/contract
-              <input type="number" id="commission" min="0" step="0.05" value="0" style="width:64px;" oninput="recalc()" />
-            </label>
-            <span id="shareStatus" style="font-size:0.75rem;color:var(--muted);align-self:center;"></span>
-          </div>
-          <p style="font-size:0.7rem;color:var(--muted);margin-top:8px;">
-            Debit = you pay · Credit = you receive · <strong>Listed option:</strong> qty = contracts (×100) · <strong>Futures option:</strong> contract-specific multiplier · <strong>Stock:</strong> qty = share count, cost = entry price (Strike and DTE unused)
-          </p>
+      <h2>Option Greeks <span style="font-size:0.72rem;color:var(--muted);font-weight:500;">(position total · contract multiplier)</span></h2>
+      <div class="greeks-grid">
+        <div class="greek-card">
+          <div class="g-name">Δ Delta</div>
+          <div class="g-val" id="gDelta">—</div>
+          <div class="g-impact" id="gDeltaImpact">Price sensitivity: how much P/L moves if Underlying moves $1.</div>
         </div>
-        <div class="legs-summary-col">
-          <div class="pl-box pl-box-split">
-            <div class="pl-split">
-              <div style="font-size:0.68rem;color:var(--muted);">Model P/L <span style="font-weight:400">(time left · not Bid)</span></div>
-              <div id="plValue" class="pl-value pl-positive">$0</div>
-            </div>
-            <div class="pl-split">
-              <div style="font-size:0.68rem;color:var(--muted);">Expiry P/L <span style="font-weight:400">@ this price</span></div>
-              <div id="plExpiry" class="pl-value pl-negative">$0</div>
-            </div>
-          </div>
-          <div class="metrics">
-            <div class="metric">
-              <div class="label">Net Debit/Credit</div>
-              <div class="val" id="netPremium">$0</div>
-            </div>
-            <div class="metric">
-              <div class="label">Max profit</div>
-              <div class="val" id="maxProfit">—</div>
-            </div>
-            <div class="metric">
-              <div class="label">Max loss</div>
-              <div class="val" id="maxLoss">—</div>
-            </div>
-            <div class="metric">
-              <div class="label">Max return on risk</div>
-              <div class="val" id="maxReturnRisk">—</div>
-            </div>
-            <div class="metric">
-              <div class="label">Capital at risk</div>
-              <div class="val" id="capitalAtRisk">—</div>
-            </div>
-            <div class="metric">
-              <div class="label">Break-Even</div>
-              <div class="val" id="breakevens">—</div>
-            </div>
-          </div>
+        <div class="greek-card">
+          <div class="g-name">Γ Gamma</div>
+          <div class="g-val" id="gGamma">—</div>
+          <div class="g-impact" id="gGammaImpact">Convexity: how fast Delta changes when Underlying moves.</div>
         </div>
+        <div class="greek-card">
+          <div class="g-name">Θ Theta</div>
+          <div class="g-val" id="gTheta">—</div>
+          <div class="g-impact" id="gThetaImpact">Time decay: expected P/L per day if nothing else changes.</div>
+        </div>
+        <div class="greek-card">
+          <div class="g-name">ν Vega</div>
+          <div class="g-val" id="gVega">—</div>
+          <div class="g-impact" id="gVegaImpact">Volatility sensitivity: P/L change if IV rises 1 point.</div>
+        </div>
+        <div class="greek-card">
+          <div class="g-name">ρ Rho</div>
+          <div class="g-val" id="gRho">—</div>
+          <div class="g-impact" id="gRhoImpact">Rate sensitivity: P/L change if rates rise 1 point.</div>
+        </div>
+      </div>
+      <div class="edu-tip" id="eduTip" style="margin-top:10px;">
+        A Long Call is loaded by default. Edit any field — the chart and Greeks update live. For a Covered Call pick the template, or add Stock (qty 100) + a Short Call (qty 1).
       </div>
     </div>
 
-    <div class="card legs-card-b" id="compareLegsCard">
-      <h2>Compare legs <span class="slot-tag b">B</span></h2>
-      <div class="top-bar" style="margin-bottom:10px;">
-        <div class="field wide tpl-wrap">
-          <label>Strategy B template</label>
-          <button type="button" class="tpl-trigger" id="tplTriggerB" aria-haspopup="listbox" aria-expanded="false"><span class="tpl-trigger-label">— Pick a Strategy —</span><span class="tpl-caret">▼</span></button>
-        <select id="strategyTemplateB" onchange="applyTemplateB()">
-            <option value="">— Pick a Strategy —</option>
-          </select>
-        <div class="tpl-pop" id="tplPopoverB">
-          <div class="tpl-groups"></div>
-          <div class="tpl-peek">
-            <div class="tpl-peek-name">Template</div>
-            <div class="tpl-peek-chart"></div>
-            <p class="tpl-peek-note"></p>
+      <div class="card">
+        <h2>📈 Day-by-day price simulator <span style="font-size:0.72rem;color:var(--muted);font-weight:500;">(step the trade forward)</span></h2>
+        <div class="sim-price-big" id="simPriceBig">$100.00</div>
+        <div class="sim-chart-wrap" id="simChartWrap">
+          <svg id="simSvg" viewBox="0 0 600 200" preserveAspectRatio="none"></svg>
+          <div class="sim-tooltip" id="simTooltip"></div>
+        </div>
+        <div style="font-size:0.72rem;color:var(--muted);margin-top:4px;">📅 Day-axis markers: <strong style="color:#f59e0b;">E</strong> = earnings · <strong style="color:#a78bfa;">D</strong> = ex-dividend (set the dates in Assumptions above)</div>
+        <div class="sim-readout" id="simReadout">Day 0 / 90 · P/L now $0</div>
+        <div class="btn-row">
+          <button class="btn-play btn-sm" id="simAdvance1" onclick="advanceSimDays(1)">▶ Advance 1 day</button>
+          <button class="btn-secondary btn-sm" id="simAdvance5" onclick="advanceSimDays(5)">▶▶ Advance 5 days</button>
+          <button class="btn-secondary btn-sm" onclick="resetSimulation()">Reset simulation</button>
+        </div>
+        <div class="controls-compact" style="margin-top:10px;">
+          <div class="slider-group">
+            <label>Simulated volatility <strong id="simVolLabel">25%</strong></label>
+            <input type="range" id="simVol" min="5" max="120" step="1" value="25" oninput="onSimVolChange()" />
+          </div>
+          <div class="slider-group">
+            <label>Simulated drift (annual) <strong id="simDriftLabel">0%</strong></label>
+            <input type="range" id="simDrift" min="-40" max="40" step="1" value="0" oninput="onSimDriftChange()" />
+          </div>
+          <div class="slider-group">
+            <label>IV shock (repricing) <strong id="ivShockLabel">×1</strong></label>
+            <div class="btn-row" id="ivShockBtns" style="margin-top:2px;">
+              <button class="btn-secondary btn-sm" data-mult="0.5" onclick="setIvShock(0.5)">×0.5</button>
+              <button class="btn-secondary btn-sm btn-toggle-on" data-mult="1" onclick="setIvShock(1)">×1</button>
+              <button class="btn-secondary btn-sm" data-mult="1.5" onclick="setIvShock(1.5)">×1.5</button>
+              <button class="btn-secondary btn-sm" data-mult="2" onclick="setIvShock(2)">×2</button>
+            </div>
+            <div style="font-size:0.72rem;color:var(--muted);margin-top:4px;">Reprice P/L as if IV instantly moves — e.g. ×0.5 for post-earnings vol crush.</div>
           </div>
         </div>
-        </div>
-      </div>
-      <div class="legs-with-summary">
-        <div>
-          <div class="legs-header">
-            <span>Side</span>
-            <span>Type</span>
-            <span>Symbol</span>
-            <span>Strike</span>
-            <span>DTE</span>
-            <span>Qty</span>
-            <span>Premium / cost</span>
-            <span></span>
-          </div>
-          <div id="legsListB"></div>
-          <div class="btn-row">
-            <button class="btn-primary btn-sm" onclick="addEmptyLegB()">+ Add leg</button>
-            <button class="btn-secondary btn-sm" onclick="clearLegsB()">Delete B</button>
-          </div>
-        </div>
-        <div class="legs-summary-col">
-          <div class="pl-box">
-            <div style="font-size:0.7rem;color:var(--muted);">B P/L (theoretical)</div>
-            <div id="plValueB" class="pl-value pl-positive">$0</div>
-          </div>
-          <div class="metrics">
-            <div class="metric">
-              <div class="label">Net Debit/Credit</div>
-              <div class="val" id="netPremiumB">$0</div>
-            </div>
-            <div class="metric">
-              <div class="label">Max profit</div>
-              <div class="val" id="maxProfitB">—</div>
-            </div>
-            <div class="metric">
-              <div class="label">Max loss</div>
-              <div class="val" id="maxLossB">—</div>
-            </div>
-            <div class="metric">
-              <div class="label">Max return on risk</div>
-              <div class="val" id="maxReturnRiskB">—</div>
-            </div>
-            <div class="metric">
-              <div class="label">Capital at risk</div>
-              <div class="val" id="capitalAtRiskB">—</div>
-            </div>
-            <div class="metric">
-              <div class="label">Break-Even</div>
-              <div class="val" id="breakevensB">—</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Payoff Graph — full width, the primary chart. The solid "at expiry"
-         line is fixed to the trade's own strikes/entry price, so it holds
-         still as days pass; only the dashed "today" line and the crosshair
-         move as price/time change. -->
-    <div class="card">
-      <h2>Payoff chart
-        <span class="chart-toolbar">
-          <button type="button" class="btn-secondary btn-sm" id="compareToggleBtn" onclick="toggleCompareMode()">Compare two strategies</button>
-          <button type="button" class="btn-secondary btn-sm" onclick="duplicateToB()" title="Copy the current position into slot B as an editable variant">⧉ Duplicate A → B</button>
-          <button type="button" class="btn-secondary btn-sm" onclick="exportPayoffImage()">Download PNG</button>
-          <button type="button" class="btn-secondary btn-sm" onclick="resetChartGestures()">Reset view</button>
-        </span>
-      </h2>
-      <div id="chartContainer">
-        <canvas id="payoffChart"></canvas>
-      </div>
-      <div class="legend-note">
-        <span><span class="dot green"></span> A Expiry (green / red)</span>
-        <span><span class="dot dotted"></span> A with time left</span>
-        <span><span class="dot" style="background:#a78bfa;"></span> B Expiry (compare)</span>
-        <span><span class="dot dotted" style="background:repeating-linear-gradient(90deg,#c4b5fd 0 3px,transparent 3px 6px);"></span> B with time left</span>
-      </div>
-      <p class="gesture-hint">Drag a <span style="color:#60a5fa;">●</span> marker to move its strike · Shift-drag a marker to move all strikes · drag elsewhere to move price · pinch to zoom the Payoff axis · double-tap to reset · two-finger pan.</p>
-      <div class="compare-metrics" id="compareMetrics">
-        <div class="compare-col a" id="compareColA"></div>
-        <div class="compare-col b" id="compareColB"></div>
+        <div class="sim-log" id="simLog"></div>
       </div>
 
-      <!-- Days remaining & underlying price drive the dashed "with time
-           left" payoff line. -->
-      <div class="chart-controls">
-        <div class="slider-group">
-          <label>Days remaining <strong id="daysLeftLabel">90</strong></label>
-          <input type="range" id="daysLeft" min="0" max="90" value="90" oninput="onDaysChange()" />
-        </div>
-        <div class="slider-group">
-          <label>Underlying <strong id="spotLabel">$100.00</strong></label>
-          <input type="range" id="spotSlider" min="40" max="180" step="0.5" value="100" oninput="onSpotSlide()" />
-        </div>
-      </div>
-    </div>
 
   </div>
-
-  <div class="card bmc-card">
-    <h2>Support the site</h2>
-    <p>Lessons and the Builder stay free. If they help, you can buy a coffee.</p>
-    <a class="bmc-link" href="https://www.buymeacoffee.com/memoliro" target="_blank" rel="noopener">☕ Buy me a coffee</a>
   </div>
-
-  <div class="card" id="glossaryCard">
-    <h2>Terms <span style="font-size:0.72rem;color:var(--muted);font-weight:500;">Short explanations of terms kept in English</span></h2>
-    <p style="font-size:0.78rem;color:var(--muted);margin-bottom:10px;">These terms stay in English on purpose; meanings are below.</p>
-    <dl class="glossary-grid">
-      <div class="glossary-item"><dt>Call</dt><dd>An option giving the right to buy the Underlying at a Strike.</dd></div>
-      <div class="glossary-item"><dt>Put</dt><dd>An option giving the right to sell the Underlying at a Strike.</dd></div>
-      <div class="glossary-item"><dt>Strike</dt><dd>The fixed price the option can be exercised at.</dd></div>
-      <div class="glossary-item"><dt>Expiry / expiration</dt><dd>The date the contract ends; DTE is days left until then.</dd></div>
-      <div class="glossary-item"><dt>DTE</dt><dd>Days to expiration: calendar days left until expiration.</dd></div>
-      <div class="glossary-item"><dt>Moneyness</dt><dd>Where Strike sits vs Underlying price: ITM, ATM or OTM.</dd></div>
-      <div class="glossary-item"><dt>ITM / In-the-money</dt><dd>Call: Underlying &gt; Strike; Put: Underlying &lt; Strike. Has intrinsic value.</dd></div>
-      <div class="glossary-item"><dt>ATM / At-the-money</dt><dd>Strike is very close to Underlying price.</dd></div>
-      <div class="glossary-item"><dt>OTM / Out-of-the-money</dt><dd>Call: Underlying &lt; Strike; Put: Underlying &gt; Strike. Intrinsic is zero.</dd></div>
-      <div class="glossary-item"><dt>Premium</dt><dd>Option price per share; seen as Bid / Ask / Last.</dd></div>
-      <div class="glossary-item"><dt>Bid / Ask / Last</dt><dd>Bid, ask, and last trade price.</dd></div>
-      <div class="glossary-item"><dt>Long / Short</dt><dd>Long = buy (rights); Short = sell / write (obligation).</dd></div>
-      <div class="glossary-item"><dt>Debit / Credit</dt><dd>Debit: net premium paid. Credit: net premium received.</dd></div>
-      <div class="glossary-item"><dt>Intrinsic / extrinsic</dt><dd>Intrinsic: the ITM part. Extrinsic: Premium from time and IV.</dd></div>
-      <div class="glossary-item"><dt>Underlying</dt><dd>The stock, index, or asset the option is on.</dd></div>
-      <div class="glossary-item"><dt>Greeks</dt><dd>Risk measures: Delta, Gamma, Theta, Vega.</dd></div>
-      <div class="glossary-item"><dt>Delta</dt><dd>Approx. option-price change when Underlying moves $1.</dd></div>
-      <div class="glossary-item"><dt>Gamma</dt><dd>How much Delta changes when Underlying moves.</dd></div>
-      <div class="glossary-item"><dt>Theta</dt><dd>Expected time decay after one day.</dd></div>
-      <div class="glossary-item"><dt>Vega</dt><dd>Approx. Premium change if IV rises one point.</dd></div>
-      <div class="glossary-item"><dt>IV / implied volatility</dt><dd>Market-priced expected swing; inflates or deflates Premium.</dd></div>
-      <div class="glossary-item"><dt>Payoff</dt><dd>P/L vs price; usually drawn at expiration.</dd></div>
-      <div class="glossary-item"><dt>Break-Even</dt><dd>Underlying price where the trade is flat at expiration.</dd></div>
-      <div class="glossary-item"><dt>Assignment</dt><dd>Exercise of a short option; you may deliver or take stock.</dd></div>
-      <div class="glossary-item"><dt>Spread</dt><dd>A structure with several legs in the same or nearby expirations.</dd></div>
-      <div class="glossary-item"><dt>Vertical</dt><dd>Same expiration, different Strikes.</dd></div>
-      <div class="glossary-item"><dt>Calendar / horizontal</dt><dd>Same Strike, different expirations.</dd></div>
-      <div class="glossary-item"><dt>Butterfly</dt><dd>Three-strike structure: short in the middle, long on the wings (or the reverse).</dd></div>
-      <div class="glossary-item"><dt>Iron Condor</dt><dd>OTM Put Spread + OTM Call Spread; Neutral, defined risk/reward.</dd></div>
-      <div class="glossary-item"><dt>Covered Call</dt><dd>Long stock + Short Call; extra income, capped upside.</dd></div>
-      <div class="glossary-item"><dt>Cash-Secured Put / CSP</dt><dd>Cash-backed Short Put; you may buy stock if it falls.</dd></div>
-      <div class="glossary-item"><dt>Wheel</dt><dd>Cycle: buy stock via CSP, then write a Covered Call.</dd></div>
-      <div class="glossary-item"><dt>LEAPS</dt><dd>Long-dated options (often 1+ year to expiration).</dd></div>
-      <div class="glossary-item"><dt>Bullish / Bearish / Neutral</dt><dd>Up, down, or sideways view.</dd></div>
-      <div class="glossary-item"><dt>Hedge</dt><dd>An offsetting position that reduces current risk.</dd></div>
-      <div class="glossary-item"><dt>Liquidity</dt><dd>Tight Bid–Ask and depth; easier to enter and exit.</dd></div>
-      <div class="glossary-item"><dt>Roll / Roll-out</dt><dd>Close the open leg and reopen it at a later expiration.</dd></div>
-      <div class="glossary-item"><dt>Earnings</dt><dd>Earnings print; IV often rises into the event.</dd></div>
-      <div class="glossary-item"><dt>Builder</dt><dd>This page: build legs and watch Payoff and Greeks live.</dd></div>
-      <div class="glossary-item"><dt>FAQ</dt><dd>Frequently asked questions.</dd></div>
-    </dl>
-    <p>JSM Options Strategy Builder is a free and fully interactive options strategy builder and simulator. Create and analyze multi-leg options strategies including
-<strong>Bullish:</strong>
-Long Call,
-Covered Call,
-Cash Secured Put,
-Bull Call Spread,
-Long Straddle,
-Long Strangle,
-Long Call Butterfly,
-Call Condor
-
-<strong>Bearish:</strong>
-Long Put,
-Bear Put Spread,
-Long Straddle,
-Long Strangle,
-Long Put Butterfly,
-Put Condor
-
-<strong>Neutral:</strong>
-Short Straddle,
-Short Strangle,
-Iron Condor,
-Iron Butterfly,
-Calendar Spread,
-Jade Lizard
-
-<strong>Synthetic stock and capital-efficient:</strong>
-Poor Man's Covered Call,
-Call Ratio Spread (1×2),
-Put Ratio Spread (1×2),
-Synthetic Long,
-Synthetic Short,
-Risk Reversal (synthetic tilt), 
-and custom structures. View payoff charts, Greeks, profit/loss, break-even, probability of profit, and expected move all in one clean interface. 
-      Designed for SPX and equity options traders who want a fast, ad-free, beginner-friendly yet powerful options strategy builder - No sign - up, no account required.</p>
-  </div>
-
-  <footer class="site-footer">
-  <div class="footer-note">Educational only — not financial advice. Options involve risk of loss.</div>
-  <div class="footer-links">
-    <a href="/">Home</a>
-    <a href="/level1/">Basics</a>
-    <a href="/level2/">Fundamentals</a>
-    <a href="/level3/">Spreads</a>
-    <a href="/level4/">Advanced</a>
-    <a href="/strategies/">Strategies</a>
-    <a href="/builder/">Builder</a>
-    <a href="/about/">About</a>
-    <a href="/contact/">Contact</a>
-    <a href="/disclaimer/">Disclaimer</a>
-    <a href="/privacy/">Privacy</a>
-  </div>
-    <div class="footer-tools" style="margin-top:12px;font-size:12px;opacity:.9">
-      More free tools:
-      <a href="https://lyricprep.com/" target="_blank" rel="noopener">LyricPrep</a> ·
-      <a href="https://jsm-image.com/" target="_blank" rel="noopener">JSM Image</a> ·
-      <a href="https://jsm-video.com/" target="_blank" rel="noopener">JSM Video</a> ·
-      <a href="https://jsm-loudness.com/" target="_blank" rel="noopener">JSM Loudness</a>
-    </div>
-</footer>
-
-
-<!-- Strategy guide drawer -->
-  <div class="guide-overlay" id="guideOverlay" onclick="closeStrategyGuide()"></div>
-  <aside class="guide-drawer" id="guideDrawer" aria-label="Strategy guide" role="dialog" aria-modal="true">
-    <div class="guide-head">
-      <div>
-        <h3 id="guideTitle">Strategy guide</h3>
-        <span class="guide-outlook" id="guideOutlook">—</span>
-      </div>
-      <button type="button" class="guide-close" onclick="closeStrategyGuide()" aria-label="Close guide">✕</button>
-    </div>
-    <div class="guide-body" id="guideBody"></div>
-  </aside>
   <script src="/assets/jsm-options-engine.js"></script>
 <script>
 (function(){
