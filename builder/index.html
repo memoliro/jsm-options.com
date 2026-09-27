@@ -591,7 +591,7 @@
     .chain-table .price.has{color:var(--text)}
     .chain-table td.delta{color:var(--muted);font-size:11px;background:rgba(59,130,246,.06)}
     .chain-table tr.atm td.delta{background:rgba(59,130,246,.14)}
-    select#ticker, select#chainFilterTop, select#chainExpiration{background:var(--card);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:8px}
+    #ticker, select#chainFilterTop, select#chainExpiration{background:var(--card);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:8px}
 
     </style>
 
@@ -696,12 +696,17 @@
       </div>
             <div class="field ticker-field" style="min-width:200px">
         <label>Symbol / Ticker</label>
-        <select id="ticker" onchange="onTickerChange()">
-          <option value="SPY" selected>SPY – S&P 500 ETF</option>
+        <input type="text" id="ticker" list="tickerOptions" value="SPY" autocomplete="off" spellcheck="false"
+          placeholder="e.g. SPY, AAPL, /ES"
+          oninput="onTickerTyping()"
+          onchange="onTickerChange()"
+          onkeydown="if(event.key==='Enter'){this.blur();}" />
+        <datalist id="tickerOptions">
+          <option value="SPY">SPY – S&amp;P 500 ETF</option>
           <option value="QQQ">QQQ – Nasdaq 100 ETF</option>
           <option value="IWM">IWM – Russell 2000 ETF</option>
           <option value="DIA">DIA – Dow 30 ETF</option>
-          <option value="SPX">SPX – S&P 500 Index (_SPX)</option>
+          <option value="SPX">SPX – S&amp;P 500 Index (_SPX)</option>
           <option value="NDX">NDX – Nasdaq 100 Index (_NDX)</option>
           <option value="RUT">RUT – Russell 2000 Index (_RUT)</option>
           <option value="VIX">VIX – Volatility Index (_VIX)</option>
@@ -723,34 +728,28 @@
           <option value="USO">USO – Oil ETF</option>
           <option value="XLK">XLK – Tech ETF</option>
           <option value="XLE">XLE – Energy ETF</option>
-          <optgroup label="Futures options (CME / futures contracts)">
-            <option value="/ES">/ES – E-mini S&amp;P 500</option>
-            <option value="/MES">/MES – Micro E-mini S&amp;P 500</option>
-            <option value="/NQ">/NQ – E-mini Nasdaq-100</option>
-            <option value="/MNQ">/MNQ – Micro E-mini Nasdaq-100</option>
-            <option value="/RTY">/RTY – E-mini Russell 2000</option>
-            <option value="/M2K">/M2K – Micro E-mini Russell 2000</option>
-            <option value="/YM">/YM – E-mini Dow</option>
-            <option value="/MYM">/MYM – Micro E-mini Dow</option>
-            <option value="/CL">/CL – Crude Oil</option>
-            <option value="/MCL">/MCL – Micro Crude Oil</option>
-            <option value="/NG">/NG – Natural Gas</option>
-            <option value="/GC">/GC – Gold</option>
-            <option value="/MGC">/MGC – Micro Gold</option>
-            <option value="/SI">/SI – Silver</option>
-            <option value="/SIL">/SIL – Micro Silver</option>
-            <option value="/ZB">/ZB – 30Y Treasury Bond</option>
-            <option value="/ZN">/ZN – 10Y Treasury Note</option>
-            <option value="/ZF">/ZF – 5Y Treasury Note</option>
-            <option value="/ZT">/ZT – 2Y Treasury Note</option>
-            <option value="/6E">/6E – Euro FX</option>
-            <option value="/6J">/6J – Japanese Yen FX</option>
-          </optgroup>
-        </select>
-      </div>
-      <div class="field" style="min-width:auto">
-        <label>&nbsp;</label>
-        <button type="button" class="btn-secondary" id="loadChainBtn" onclick="loadCboeChain()">Load Chain</button>
+          <option value="/ES">/ES – E-mini S&amp;P 500 (futures)</option>
+          <option value="/MES">/MES – Micro E-mini S&amp;P 500 (futures)</option>
+          <option value="/NQ">/NQ – E-mini Nasdaq-100 (futures)</option>
+          <option value="/MNQ">/MNQ – Micro E-mini Nasdaq-100 (futures)</option>
+          <option value="/RTY">/RTY – E-mini Russell 2000 (futures)</option>
+          <option value="/M2K">/M2K – Micro E-mini Russell 2000 (futures)</option>
+          <option value="/YM">/YM – E-mini Dow (futures)</option>
+          <option value="/MYM">/MYM – Micro E-mini Dow (futures)</option>
+          <option value="/CL">/CL – Crude Oil (futures)</option>
+          <option value="/MCL">/MCL – Micro Crude Oil (futures)</option>
+          <option value="/NG">/NG – Natural Gas (futures)</option>
+          <option value="/GC">/GC – Gold (futures)</option>
+          <option value="/MGC">/MGC – Micro Gold (futures)</option>
+          <option value="/SI">/SI – Silver (futures)</option>
+          <option value="/SIL">/SIL – Micro Silver (futures)</option>
+          <option value="/ZB">/ZB – 30Y Treasury Bond (futures)</option>
+          <option value="/ZN">/ZN – 10Y Treasury Note (futures)</option>
+          <option value="/ZF">/ZF – 5Y Treasury Note (futures)</option>
+          <option value="/ZT">/ZT – 2Y Treasury Note (futures)</option>
+          <option value="/6E">/6E – Euro FX (futures)</option>
+          <option value="/6J">/6J – Japanese Yen FX (futures)</option>
+        </datalist>
       </div>
       <div class="field">
         <label>Underlying price ($)</label>
@@ -1296,8 +1295,31 @@ and custom structures. View payoff charts, Greeks, profit/loss, break-even, prob
         list.forEach(function (leg) { if (!leg.tickerManual) leg.ticker = tkr; });
       });
     }
+    // Flat list of the suggested tickers shown in the datalist, used to detect
+    // when a full/known symbol has been typed so the chain/model path can be
+    // triggered immediately — without waiting for the field to lose focus.
+    const TICKER_SUGGESTIONS = [
+      'SPY','QQQ','IWM','DIA','SPX','NDX','RUT','VIX','AAPL','MSFT','NVDA','TSLA',
+      'META','AMZN','GOOGL','NFLX','AMD','BA','JPM','XLF','TLT','GLD','SLV','USO','XLK','XLE',
+      '/ES','/MES','/NQ','/MNQ','/RTY','/M2K','/YM','/MYM','/CL','/MCL','/NG','/GC','/MGC',
+      '/SI','/SIL','/ZB','/ZN','/ZF','/ZT','/6E','/6J'
+    ];
+    let _lastTickerLoaded = 'SPY';
+    function onTickerTyping() {
+      const raw = document.getElementById('ticker').value;
+      const norm = normalizeTicker(raw);
+      if (!norm) return;
+      // Fires as soon as the typed text is a whole, recognized ticker (either
+      // a suggested symbol or a valid /FUTURES root) — covers both picking a
+      // datalist suggestion and manually typing a complete known symbol.
+      if (TICKER_SUGGESTIONS.indexOf(norm) !== -1 || isFuturesTicker(norm)) {
+        onTickerChange();
+      }
+    }
     function onTickerChange() {
       const tkr = normalizeTicker(currentTicker());
+      if (!tkr || tkr === _lastTickerLoaded) return;
+      _lastTickerLoaded = tkr;
       const futures = isFuturesTicker(tkr);
       // A strategy-level ticker change means inherited legs belong to the new
       // underlying. Clear chain pricing/strike anchoring so the old ticker's
@@ -3611,10 +3633,8 @@ and custom structures. View payoff charts, Greeks, profit/loss, break-even, prob
       const spotInput = document.getElementById('spot');
       if (!sym){ statusEl.textContent='Select a ticker'; return; }
       const futures = isFuturesTicker(sym);
-      const loadBtn = document.getElementById('loadChainBtn');
       if (futures) {
         window._cboeData = null;
-        if (loadBtn) loadBtn.textContent = 'Load Futures Chain';
         if (statusEl) {
           const spec = futuresSpec(sym);
           statusEl.textContent = `${sym} is a futures option. CBOE equity/index chain loading is disabled; use a CME futures-option data source for the chain. Contract multiplier: ${spec.multiplier}.`;
@@ -3639,7 +3659,6 @@ and custom structures. View payoff charts, Greeks, profit/loss, break-even, prob
         if (typeof resetSimulation === 'function') resetSimulation(); else if (typeof recalc === 'function') recalc();
         return;
       }
-      if (loadBtn) loadBtn.textContent = 'Load Chain';
       statusEl.textContent = sym + ' chain loading… (CBOE delayed)';
       statusEl.className='quote-status warn';
       try{
