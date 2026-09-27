@@ -81,7 +81,9 @@ function makeCtx(pageFile, search) {
       removeItem: k => { delete localStore[k]; },
     },
     fetch: () => Promise.reject(new Error('offline in test')),
-    Chart: function () {
+    Chart: function (ctx2d, config) {
+      sandbox.__chartConfigs = sandbox.__chartConfigs || [];
+      if (config) sandbox.__chartConfigs.push(config);
       return {
         destroy() {}, update() {},
         data: { labels: [], datasets: [{ data: [] }] },
@@ -290,6 +292,67 @@ const el = (els, id) => els.get(id);
   check('D1 builder: shared setup loads', () => {
     if (vm.runInContext('legs.length', ctx) !== 2) throw new Error('legs!=2');
     if (!/Debit/.test(el(els, 'netPremium').textContent)) throw new Error('net=' + el(els, 'netPremium').textContent);
+  });
+}
+
+// ---------- E: payoff chart shading + stat strip + range slider ----------
+{
+  const { ctx, els } = run('builder', '');
+  check('E1 builder: 6 payoff datasets (2 lines + 4 shade fills)', () => {
+    const n = vm.runInContext('window.__chartConfigs[window.__chartConfigs.length-1].data.datasets.length', ctx);
+    if (n !== 6) throw new Error('datasets=' + n);
+  });
+  check('E2 builder: shade datasets fill to origin, no marks', () => {
+    const r = vm.runInContext(`(function(){
+      var ds = window.__chartConfigs[window.__chartConfigs.length-1].data.datasets;
+      var sh = ds.filter(function(d){ return d._shade; });
+      if (sh.length !== 4) return 'shades=' + sh.length;
+      for (var i = 0; i < sh.length; i++) {
+        if (sh[i].fill !== 'origin') return 'fill=' + sh[i].fill;
+        if (sh[i].pointRadius !== 0 || sh[i].borderWidth !== 0) return 'visible marks';
+        if (sh[i].spanGaps !== false) return 'spanGaps';
+      }
+      return 'ok';
+    })()`, ctx);
+    if (r !== 'ok') throw new Error(r);
+  });
+  check('E3 builder: pos/neg fills split at zero and cover both sides', () => {
+    const r = vm.runInContext(`(function(){
+      var ds = window.__chartConfigs[window.__chartConfigs.length-1].data.datasets;
+      var line = ds[2], pos = ds[0].data, neg = ds[1].data; // expiry line + its fills
+      if (pos.length !== line.data.length) return 'length mismatch';
+      var sawPos = false, sawNeg = false;
+      for (var i = 0; i < line.data.length; i++) {
+        var y = line.data[i];
+        if (y > 0) { if (pos[i] !== y) return 'pos not filled @' + i; sawPos = true; }
+        else if (pos[i] !== null) return 'pos not null @' + i;
+        if (y < 0) { if (neg[i] !== y) return 'neg not filled @' + i; sawNeg = true; }
+        else if (neg[i] !== null) return 'neg not null @' + i;
+      }
+      if (!sawPos || !sawNeg) return 'one side empty';
+      return 'ok';
+    })()`, ctx);
+    if (r !== 'ok') throw new Error(r);
+  });
+  check('E4 builder: chance of profit painted', () => {
+    const t = el(els, 'chanceProfit').textContent;
+    if (!/%|—/.test(t)) throw new Error('chanceProfit=' + JSON.stringify(t));
+  });
+  check('E5 builder: range slider present with default 30', () => {
+    const r = vm.runInContext("document.getElementById('chartRange')", ctx);
+    if (!r) throw new Error('no chartRange');
+    if (el(els, 'chartRange').value !== '30') throw new Error('chartRange.value=' + el(els, 'chartRange').value);
+    const html = fs.readFileSync(path.join(SITE, 'builder', 'index.html'), 'utf8');
+    if (!html.includes('id="rangeLabel">±30%<')) throw new Error('rangeLabel default missing in HTML');
+  });
+  check('E6 builder: stat strip has 9 tiles (A) + 7 (B)', () => {
+    const html = fs.readFileSync(path.join(SITE, 'builder', 'index.html'), 'utf8');
+    const aPart = html.split('Compare legs')[0];
+    const bPart = html.split('Compare legs')[1] || '';
+    const aCount = (aPart.match(/class="stat-tile/g) || []).length;
+    const bCount = (bPart.match(/class="stat-tile/g) || []).length;
+    if (aCount !== 9) throw new Error('A tiles=' + aCount);
+    if (bCount !== 7) throw new Error('B tiles=' + bCount);
   });
 }
 

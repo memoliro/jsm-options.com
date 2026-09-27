@@ -118,6 +118,7 @@
     let legsB = [];
     let nextIdB = 10001;
     let chartZoom = null;
+    let rangeZoomActive = false;
     let chartGesturesBound = false;
     // Strike-drag state: { legId, startStrike, orig: Map(legId -> strike), moved }
     // set on pointerdown when the pointer grabs a leg's strike marker.
@@ -1919,8 +1920,32 @@
       const gS = 'rgba(34,197,94,0.95)', rS = 'rgba(239,68,68,0.95)';
       const gD = 'rgba(34,197,94,0.65)', rD = 'rgba(239,68,68,0.65)';
       const bS = 'rgba(167,139,250,0.95)', bD = 'rgba(167,139,250,0.62)';
-      const sets = [
-        {
+      // Shaded P/L regions between a payoff line and the $0 axis:
+      // green where the line is above zero, red where below.
+      // Each half is its own fill dataset (nulls break the fill at crossings).
+      function shadePair(lineData, posColor, negColor) {
+        const pos = new Array(lineData.length), neg = new Array(lineData.length);
+        for (let i = 0; i < lineData.length; i++) {
+          const y = lineData[i];
+          pos[i] = (y != null && y > 0) ? y : null;
+          neg[i] = (y != null && y < 0) ? y : null;
+        }
+        const common = {
+          pointRadius: 0, hoverRadius: 0, borderWidth: 0, tension: 0,
+          fill: 'origin', spanGaps: false, _shade: true,
+          borderColor: 'rgba(0,0,0,0)'
+        };
+        return [
+          Object.assign({ label: '', data: pos, backgroundColor: posColor }, common),
+          Object.assign({ label: '', data: neg, backgroundColor: negColor }, common)
+        ];
+      }
+      const gFill = 'rgba(46,229,111,0.16)', rFill = 'rgba(255,93,108,0.16)';
+      const gFillSoft = 'rgba(46,229,111,0.08)', rFillSoft = 'rgba(255,93,108,0.08)';
+      const vFill = 'rgba(167,139,250,0.10)';
+      const sets = [].concat(
+        shadePair(data.expiry, gFill, rFill),
+        [{
           label: compareMode ? 'A · Payoff (Expiry)' : 'Payoff (Expiry)',
           data: data.expiry,
           borderColor: gS,
@@ -1929,8 +1954,9 @@
           tension: 0,
           fill: false,
           segment: { borderColor: function(ctx) { return segmentColor(ctx, gS, rS); } }
-        },
-        {
+        }],
+        shadePair(data.theoretical, gFillSoft, rFillSoft),
+        [{
           label: compareMode ? 'A · time left' : 'Theoretical (time left)',
           data: data.theoretical,
           borderColor: gD,
@@ -1940,28 +1966,32 @@
           tension: 0,
           fill: false,
           segment: { borderColor: function(ctx) { return segmentColor(ctx, gD, rD); } }
-        }
-      ];
+        }]
+      );
       if (compareMode && data.expiryB && data.expiryB.length) {
-        sets.push({
-          label: 'B · Payoff (Expiry)',
-          data: data.expiryB,
-          borderColor: bS,
-          borderWidth: 2.5,
-          pointRadius: 0,
-          tension: 0,
-          fill: false
-        });
-        sets.push({
-          label: 'B · time left',
-          data: data.theoreticalB,
-          borderColor: bD,
-          borderWidth: 2,
-          borderDash: [5, 4],
-          pointRadius: 0,
-          tension: 0,
-          fill: false
-        });
+        sets.push.apply(sets, [].concat(
+          shadePair(data.expiryB, vFill, vFill),
+          [{
+            label: 'B · Payoff (Expiry)',
+            data: data.expiryB,
+            borderColor: bS,
+            borderWidth: 2.5,
+            pointRadius: 0,
+            tension: 0,
+            fill: false
+          }],
+          shadePair(data.theoreticalB, vFill, vFill),
+          [{
+            label: 'B · time left',
+            data: data.theoreticalB,
+            borderColor: bD,
+            borderWidth: 2,
+            borderDash: [5, 4],
+            pointRadius: 0,
+            tension: 0,
+            fill: false
+          }]
+        ));
       }
       return sets;
     }
@@ -1972,7 +2002,7 @@
       if (!canvas) return;
       const ctx = canvas.getContext('2d');
       const tc = chartThemeColors();
-      const wantSets = (compareMode && data.expiryB && data.expiryB.length) ? 4 : 2;
+      const wantSets = (compareMode && data.expiryB && data.expiryB.length) ? 12 : 6;
 
       if (chart && chart.data.datasets.length === wantSets) {
         chart.data.labels = data.labels;
@@ -2002,8 +2032,18 @@
           maintainAspectRatio: false,
           interaction: { mode: 'index', intersect: false },
           plugins: {
-            legend: { display: !!compareMode, labels: { color: tc.text, boxWidth: 10, font: { size: 11 } } },
+            legend: {
+              display: !!compareMode,
+              labels: {
+                color: tc.text, boxWidth: 10, font: { size: 11 },
+                filter: function(item, data) {
+                  const ds = data.datasets[item.datasetIndex];
+                  return !(ds && ds._shade);
+                }
+              }
+            },
             tooltip: {
+              filter: function(ti) { return !(ti.dataset && ti.dataset._shade); },
               callbacks: {
                 title: function(items) { return 'Underlying: $' + Number(items[0].label).toFixed(2); },
                 label: function(ctx) { return ctx.dataset.label + ': $' + ctx.parsed.y.toFixed(0); }
@@ -2260,15 +2300,15 @@
       const plEl = document.getElementById('plValueB');
       if (plEl) {
         plEl.textContent = (plB >= 0 ? '+' : '') + formatMoney(plB);
-        plEl.className = 'pl-value ' + (plB >= 0 ? 'pl-positive' : 'pl-negative');
+        plEl.className = 's-val pl-value ' + (plB >= 0 ? 'pl-positive' : 'pl-negative');
       }
       setNetLabel(document.getElementById('netPremiumB'), legsB.length ? initialCost(legsB) : 0);
       const sumB = summarizeExpiry(data.expiryB, data.labels, legsB);
       const mp = document.getElementById('maxProfitB');
       const ml = document.getElementById('maxLossB');
       const be = document.getElementById('breakevensB');
-      if (mp) mp.textContent = sumB.maxProfit;
-      if (ml) ml.textContent = sumB.maxLoss;
+      if (mp) { mp.textContent = sumB.maxProfit; mp.classList.remove('pos', 'neg'); if (sumB.maxProfit !== '—') mp.classList.add('pos'); }
+      if (ml) { ml.textContent = sumB.maxLoss; ml.classList.remove('pos', 'neg'); if (sumB.maxLoss !== '—') ml.classList.add('neg'); }
       if (be) be.textContent = sumB.breakevens;
       const rorB = document.getElementById('maxReturnRiskB');
       const capB = document.getElementById('capitalAtRiskB');
@@ -2312,6 +2352,7 @@
 
     function resetChartGestures() {
       chartZoom = null;
+      rangeZoomActive = false;
       recalc();
     }
 
@@ -2418,6 +2459,7 @@
             let span = (xScale.max - xScale.min) / scale;
             span = Math.max(4, Math.min(span, (parseFloat(document.getElementById('spot').value) || 100) * 3));
             chartZoom = { min: Math.max(0.5, mid - span / 2), max: mid + span / 2 };
+            rangeZoomActive = false;
             const midClient = (pts[0].x + pts[1].x) / 2;
             if (lastPanX != null) {
               const p0 = priceAtClientX(lastPanX);
@@ -2715,6 +2757,24 @@
         setText('maxProfit', maxProfitText);
         setText('maxLoss', maxLossText);
         const rrA = riskReturnStats(maxP, minP, tailSlope);
+        // Stat-tile colors: profit green, loss red.
+        var mpEl = document.getElementById('maxProfit');
+        if (mpEl) { mpEl.classList.remove('pos', 'neg'); if (maxProfitText !== '—') mpEl.classList.add('pos'); }
+        var mlEl = document.getElementById('maxLoss');
+        if (mlEl) { mlEl.classList.remove('pos', 'neg'); if (maxLossText !== '—') mlEl.classList.add('neg'); }
+        var capTileEl = document.getElementById('capitalAtRisk');
+        if (capTileEl) { capTileEl.classList.remove('pos', 'neg', 'warn'); if (rrA.cap !== '—') capTileEl.classList.add('warn'); }
+        // Chance of profit (lognormal estimate at nearest expiry).
+        var cpEl = document.getElementById('chanceProfit');
+        if (cpEl) {
+          var popV = (typeof probOfProfit === 'function') ? probOfProfit() : null;
+          cpEl.classList.remove('pos', 'neg', 'warn');
+          if (popV == null || !isFinite(popV)) { cpEl.textContent = '—'; }
+          else {
+            cpEl.textContent = (popV * 100).toFixed(0) + '%';
+            cpEl.classList.add(popV >= 0.5 ? 'pos' : (popV >= 0.3 ? 'warn' : 'neg'));
+          }
+        }
         const rorEl = document.getElementById('maxReturnRisk');
         const capEl = document.getElementById('capitalAtRisk');
         if (rorEl) rorEl.textContent = rrA.ror;
@@ -2817,7 +2877,24 @@
       const v = parseFloat(document.getElementById('spotSlider').value);
       document.getElementById('spot').value = v.toFixed(1);
       document.getElementById('spotLabel').textContent = '$' + v.toFixed(2);
+      if (rangeZoomActive) applyRangeZoom(v);
       recalc();
+    }
+
+    function applyRangeZoom(S) {
+      const pct = parseFloat(document.getElementById('chartRange').value) || 30;
+      const r = pct / 100;
+      chartZoom = { min: Math.max(0.01, S * (1 - r)), max: S * (1 + r) };
+    }
+
+    function onRangeChange() {
+      const pct = parseFloat(document.getElementById('chartRange').value) || 30;
+      const lbl = document.getElementById('rangeLabel');
+      if (lbl) lbl.textContent = '±' + pct + '%';
+      rangeZoomActive = true;
+      const S = parseFloat(document.getElementById('spot').value) || 100;
+      applyRangeZoom(S);
+      updateChart();
     }
 
     function resetTime() {

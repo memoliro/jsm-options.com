@@ -33,15 +33,19 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
   <style>
     :root {
-      --bg: #0f1419;
-      --card: #1a2332;
-      --border: #2d3a4f;
-      --text: #e7ecf3;
-      --muted: #8b9bb4;
-      --accent: #3b82f6;
-      --green: #22c55e;
-      --red: #ef4444;
-      --yellow: #eab308;
+      --bg: #0a0e17;
+      --card: #111827;
+      --card-2: #151d31;
+      --border: #24304a;
+      --text: #e9eef7;
+      --muted: #8fa0bd;
+      --accent: #4d9fff;
+      --green: #2ee56f;
+      --green-dim: #34d399;
+      --red: #ff5d6c;
+      --red-dim: #f87171;
+      --yellow: #fbbf24;
+      --violet: #a78bfa;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
@@ -60,8 +64,6 @@
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
-    .pl-box-split{display:flex;flex-direction:column;gap:8px;padding:8px 10px}
-    .pl-box-split .pl-value{font-size:1.25rem}
     .pl-split{border-bottom:1px solid var(--border);padding-bottom:6px}
     .pl-split:last-child{border-bottom:0;padding-bottom:0}
 
@@ -334,24 +336,49 @@
     }
     .pl-positive { color: var(--green); }
     .pl-negative { color: var(--red); }
-    .metrics {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 6px;
-      margin-top: 6px;
+    /* Horizontal stat strip: all key numbers visible in one row, no vertical scroll */
+    .stat-strip {
+      display: flex;
+      gap: 8px;
+      margin-top: 10px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+      scrollbar-width: thin;
     }
-    @media (max-width: 500px) {
-      .metrics { grid-template-columns: 1fr 1fr; }
-    }
-    .metric {
-      background: #0f172a;
-      border-radius: 7px;
-      padding: 6px;
-      text-align: center;
+    .stat-tile {
+      flex: 1 1 0;
+      min-width: 118px;
+      background: linear-gradient(180deg, var(--card-2), var(--card));
       border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 8px 10px 9px;
+      text-align: center;
+      box-shadow: 0 1px 0 rgba(255,255,255,0.03) inset, 0 4px 14px rgba(0,0,0,0.25);
     }
-    .metric .label { font-size: 0.65rem; color: var(--muted); }
-    .metric .val { font-size: 0.82rem; font-weight: 600; color: var(--text); }
+    .stat-tile .s-label {
+      font-size: 0.62rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+    .stat-tile .s-val {
+      font-size: 0.98rem;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+      margin-top: 3px;
+      color: var(--text);
+      white-space: nowrap;
+    }
+    .stat-tile .s-val.pos { color: var(--green); }
+    .stat-tile .s-val.neg { color: var(--red); }
+    .stat-tile .s-val.warn { color: var(--yellow); }
+    .stat-tile .s-val.info { color: var(--accent); }
+    .stat-tile.hero { border-color: rgba(77,159,255,0.35); }
+    .stat-tile.hero .s-val { font-size: 1.12rem; }
+    @media (max-width: 640px) {
+      .stat-tile { min-width: 132px; }
+    }
 
     .edu-tip {
       background: #1e3a5f;
@@ -411,18 +438,6 @@
       gap: 6px;
       margin-top: 8px;
     }
-
-    /* Current Legs + moved metrics, side by side on desktop */
-    .legs-with-summary {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 16px;
-    }
-    @media (min-width: 760px) {
-      .legs-with-summary { grid-template-columns: 1fr 300px; }
-    }
-    .legs-summary-col { display: flex; flex-direction: column; gap: 8px; }
-    .legs-summary-col .metrics { grid-template-columns: repeat(2, 1fr); }
 
     /* Stock simulator + payoff graph side by side */
     .charts-row {
@@ -842,76 +857,72 @@
 
   <div class="main-grid">
 
-    <!-- Current Legs, with the strategy's static metrics moved alongside it -->
+    <!-- Current Legs, with the strategy's key numbers in a horizontal strip -->
     <div class="card">
       <h2>Current legs <span class="slot-tag">A</span></h2>
-      <div class="legs-with-summary">
-        <div>
-          <div class="legs-header">
-            <span>Side</span>
-            <span>Type</span>
-            <span>Symbol</span>
-            <span>Strike</span>
-            <span>DTE</span>
-            <span>Qty</span>
-            <span>Premium / cost</span>
-            <span></span>
-          </div>
-          <div id="legsList"></div>
-          <div class="btn-row">
-            <button class="btn-primary btn-sm" onclick="addEmptyLeg()">+ Add leg</button>
-            <button class="btn-secondary btn-sm" onclick="clearLegs()">Clear all</button>
-            <button class="btn-secondary btn-sm" id="shareSetup">🔗 Share link</button>
+      <div class="legs-header">
+        <span>Side</span>
+        <span>Type</span>
+        <span>Symbol</span>
+        <span>Strike</span>
+        <span>DTE</span>
+        <span>Qty</span>
+        <span>Premium / cost</span>
+        <span></span>
+      </div>
+      <div id="legsList"></div>
+      <div class="btn-row">
+        <button class="btn-primary btn-sm" onclick="addEmptyLeg()">+ Add leg</button>
+        <button class="btn-secondary btn-sm" onclick="clearLegs()">Clear all</button>
+        <button class="btn-secondary btn-sm" id="shareSetup">🔗 Share link</button>
             <button class="btn-secondary btn-sm" onclick="openInAnalyzer()" title="Open this position in the Analyzer &amp; Simulator">📊 Analyze →</button>
-            <label style="font-size:0.75rem;color:var(--muted);display:inline-flex;align-items:center;gap:4px;" title="Round-trip commission per option contract; included in net debit/credit, P/L and max loss. Applies to both A and B.">
-              Commission $/contract
-              <input type="number" id="commission" min="0" step="0.05" value="0" style="width:64px;" oninput="recalc()" />
-            </label>
-            <span id="shareStatus" style="font-size:0.75rem;color:var(--muted);align-self:center;"></span>
-          </div>
-          <p style="font-size:0.7rem;color:var(--muted);margin-top:8px;">
-            Debit = you pay · Credit = you receive · <strong>Listed option:</strong> qty = contracts (×100) · <strong>Futures option:</strong> contract-specific multiplier · <strong>Stock:</strong> qty = share count, cost = entry price (Strike and DTE unused)
-          </p>
+        <label style="font-size:0.75rem;color:var(--muted);display:inline-flex;align-items:center;gap:4px;" title="Round-trip commission per option contract; included in net debit/credit, P/L and max loss. Applies to both A and B.">
+          Commission $/contract
+          <input type="number" id="commission" min="0" step="0.05" value="0" style="width:64px;" oninput="recalc()" />
+        </label>
+        <span id="shareStatus" style="font-size:0.75rem;color:var(--muted);align-self:center;"></span>
+      </div>
+      <div class="stat-strip">
+        <div class="stat-tile hero">
+          <div class="s-label">Model P/L · time left</div>
+          <div class="s-val pl-value pl-positive" id="plValue">$0</div>
         </div>
-        <div class="legs-summary-col">
-          <div class="pl-box pl-box-split">
-            <div class="pl-split">
-              <div style="font-size:0.68rem;color:var(--muted);">Model P/L <span style="font-weight:400">(time left · not Bid)</span></div>
-              <div id="plValue" class="pl-value pl-positive">$0</div>
-            </div>
-            <div class="pl-split">
-              <div style="font-size:0.68rem;color:var(--muted);">Expiry P/L <span style="font-weight:400">@ this price</span></div>
-              <div id="plExpiry" class="pl-value pl-negative">$0</div>
-            </div>
-          </div>
-          <div class="metrics">
-            <div class="metric">
-              <div class="label">Net Debit/Credit</div>
-              <div class="val" id="netPremium">$0</div>
-            </div>
-            <div class="metric">
-              <div class="label">Max profit</div>
-              <div class="val" id="maxProfit">—</div>
-            </div>
-            <div class="metric">
-              <div class="label">Max loss</div>
-              <div class="val" id="maxLoss">—</div>
-            </div>
-            <div class="metric">
-              <div class="label">Max return on risk</div>
-              <div class="val" id="maxReturnRisk">—</div>
-            </div>
-            <div class="metric">
-              <div class="label">Capital at risk</div>
-              <div class="val" id="capitalAtRisk">—</div>
-            </div>
-            <div class="metric">
-              <div class="label">Break-Even</div>
-              <div class="val" id="breakevens">—</div>
-            </div>
-          </div>
+        <div class="stat-tile hero">
+          <div class="s-label">Expiry P/L @ price</div>
+          <div class="s-val pl-value pl-negative" id="plExpiry">$0</div>
+        </div>
+        <div class="stat-tile">
+          <div class="s-label">Net Debit/Credit</div>
+          <div class="s-val" id="netPremium">$0</div>
+        </div>
+        <div class="stat-tile">
+          <div class="s-label">Max profit</div>
+          <div class="s-val" id="maxProfit">—</div>
+        </div>
+        <div class="stat-tile">
+          <div class="s-label">Max loss</div>
+          <div class="s-val" id="maxLoss">—</div>
+        </div>
+        <div class="stat-tile">
+          <div class="s-label">Chance of profit</div>
+          <div class="s-val" id="chanceProfit">—</div>
+        </div>
+        <div class="stat-tile">
+          <div class="s-label">Max return on risk</div>
+          <div class="s-val" id="maxReturnRisk">—</div>
+        </div>
+        <div class="stat-tile">
+          <div class="s-label">Capital at risk</div>
+          <div class="s-val" id="capitalAtRisk">—</div>
+        </div>
+        <div class="stat-tile">
+          <div class="s-label">Break-even</div>
+          <div class="s-val" id="breakevens">—</div>
         </div>
       </div>
+      <p style="font-size:0.7rem;color:var(--muted);margin-top:8px;">
+        Debit = you pay · Credit = you receive · <strong>Listed option:</strong> qty = contracts (×100) · <strong>Futures option:</strong> contract-specific multiplier · <strong>Stock:</strong> qty = share count, cost = entry price (Strike and DTE unused)
+      </p>
     </div>
 
     <div class="card legs-card-b" id="compareLegsCard">
@@ -933,55 +944,49 @@
         </div>
         </div>
       </div>
-      <div class="legs-with-summary">
-        <div>
-          <div class="legs-header">
-            <span>Side</span>
-            <span>Type</span>
-            <span>Symbol</span>
-            <span>Strike</span>
-            <span>DTE</span>
-            <span>Qty</span>
-            <span>Premium / cost</span>
-            <span></span>
-          </div>
-          <div id="legsListB"></div>
-          <div class="btn-row">
-            <button class="btn-primary btn-sm" onclick="addEmptyLegB()">+ Add leg</button>
-            <button class="btn-secondary btn-sm" onclick="clearLegsB()">Delete B</button>
-          </div>
+      <div class="legs-header">
+        <span>Side</span>
+        <span>Type</span>
+        <span>Symbol</span>
+        <span>Strike</span>
+        <span>DTE</span>
+        <span>Qty</span>
+        <span>Premium / cost</span>
+        <span></span>
+      </div>
+      <div id="legsListB"></div>
+      <div class="btn-row">
+        <button class="btn-primary btn-sm" onclick="addEmptyLegB()">+ Add leg</button>
+        <button class="btn-secondary btn-sm" onclick="clearLegsB()">Delete B</button>
+      </div>
+      <div class="stat-strip">
+        <div class="stat-tile hero">
+          <div class="s-label">B P/L · theoretical</div>
+          <div class="s-val pl-value pl-positive" id="plValueB">$0</div>
         </div>
-        <div class="legs-summary-col">
-          <div class="pl-box">
-            <div style="font-size:0.7rem;color:var(--muted);">B P/L (theoretical)</div>
-            <div id="plValueB" class="pl-value pl-positive">$0</div>
-          </div>
-          <div class="metrics">
-            <div class="metric">
-              <div class="label">Net Debit/Credit</div>
-              <div class="val" id="netPremiumB">$0</div>
-            </div>
-            <div class="metric">
-              <div class="label">Max profit</div>
-              <div class="val" id="maxProfitB">—</div>
-            </div>
-            <div class="metric">
-              <div class="label">Max loss</div>
-              <div class="val" id="maxLossB">—</div>
-            </div>
-            <div class="metric">
-              <div class="label">Max return on risk</div>
-              <div class="val" id="maxReturnRiskB">—</div>
-            </div>
-            <div class="metric">
-              <div class="label">Capital at risk</div>
-              <div class="val" id="capitalAtRiskB">—</div>
-            </div>
-            <div class="metric">
-              <div class="label">Break-Even</div>
-              <div class="val" id="breakevensB">—</div>
-            </div>
-          </div>
+        <div class="stat-tile">
+          <div class="s-label">Net Debit/Credit</div>
+          <div class="s-val" id="netPremiumB">$0</div>
+        </div>
+        <div class="stat-tile">
+          <div class="s-label">Max profit</div>
+          <div class="s-val" id="maxProfitB">—</div>
+        </div>
+        <div class="stat-tile">
+          <div class="s-label">Max loss</div>
+          <div class="s-val" id="maxLossB">—</div>
+        </div>
+        <div class="stat-tile">
+          <div class="s-label">Max return on risk</div>
+          <div class="s-val" id="maxReturnRiskB">—</div>
+        </div>
+        <div class="stat-tile">
+          <div class="s-label">Capital at risk</div>
+          <div class="s-val" id="capitalAtRiskB">—</div>
+        </div>
+        <div class="stat-tile">
+          <div class="s-label">Break-even</div>
+          <div class="s-val" id="breakevensB">—</div>
         </div>
       </div>
     </div>
@@ -1024,6 +1029,10 @@
         <div class="slider-group">
           <label>Underlying <strong id="spotLabel">$100.00</strong></label>
           <input type="range" id="spotSlider" min="40" max="180" step="0.5" value="100" oninput="onSpotSlide()" />
+        </div>
+        <div class="slider-group" style="margin-top:6px;">
+          <label>Range <strong id="rangeLabel">±30%</strong></label>
+          <input type="range" id="chartRange" min="5" max="100" step="1" value="30" oninput="onRangeChange()" title="Zoom the payoff chart to ± this % around the underlying price" />
         </div>
       </div>
     </div>

@@ -33,15 +33,19 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
   <style>
     :root {
-      --bg: #0f1419;
-      --card: #1a2332;
-      --border: #2d3a4f;
-      --text: #e7ecf3;
-      --muted: #8b9bb4;
-      --accent: #3b82f6;
-      --green: #22c55e;
-      --red: #ef4444;
-      --yellow: #eab308;
+      --bg: #0a0e17;
+      --card: #111827;
+      --card-2: #151d31;
+      --border: #24304a;
+      --text: #e9eef7;
+      --muted: #8fa0bd;
+      --accent: #4d9fff;
+      --green: #2ee56f;
+      --green-dim: #34d399;
+      --red: #ff5d6c;
+      --red-dim: #f87171;
+      --yellow: #fbbf24;
+      --violet: #a78bfa;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
@@ -60,8 +64,6 @@
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
-    .pl-box-split{display:flex;flex-direction:column;gap:8px;padding:8px 10px}
-    .pl-box-split .pl-value{font-size:1.25rem}
     .pl-split{border-bottom:1px solid var(--border);padding-bottom:6px}
     .pl-split:last-child{border-bottom:0;padding-bottom:0}
 
@@ -334,24 +336,49 @@
     }
     .pl-positive { color: var(--green); }
     .pl-negative { color: var(--red); }
-    .metrics {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 6px;
-      margin-top: 6px;
+    /* Horizontal stat strip: all key numbers visible in one row, no vertical scroll */
+    .stat-strip {
+      display: flex;
+      gap: 8px;
+      margin-top: 10px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+      scrollbar-width: thin;
     }
-    @media (max-width: 500px) {
-      .metrics { grid-template-columns: 1fr 1fr; }
-    }
-    .metric {
-      background: #0f172a;
-      border-radius: 7px;
-      padding: 6px;
-      text-align: center;
+    .stat-tile {
+      flex: 1 1 0;
+      min-width: 118px;
+      background: linear-gradient(180deg, var(--card-2), var(--card));
       border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 8px 10px 9px;
+      text-align: center;
+      box-shadow: 0 1px 0 rgba(255,255,255,0.03) inset, 0 4px 14px rgba(0,0,0,0.25);
     }
-    .metric .label { font-size: 0.65rem; color: var(--muted); }
-    .metric .val { font-size: 0.82rem; font-weight: 600; color: var(--text); }
+    .stat-tile .s-label {
+      font-size: 0.62rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+    .stat-tile .s-val {
+      font-size: 0.98rem;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+      margin-top: 3px;
+      color: var(--text);
+      white-space: nowrap;
+    }
+    .stat-tile .s-val.pos { color: var(--green); }
+    .stat-tile .s-val.neg { color: var(--red); }
+    .stat-tile .s-val.warn { color: var(--yellow); }
+    .stat-tile .s-val.info { color: var(--accent); }
+    .stat-tile.hero { border-color: rgba(77,159,255,0.35); }
+    .stat-tile.hero .s-val { font-size: 1.12rem; }
+    @media (max-width: 640px) {
+      .stat-tile { min-width: 132px; }
+    }
 
     .edu-tip {
       background: #1e3a5f;
@@ -411,18 +438,6 @@
       gap: 6px;
       margin-top: 8px;
     }
-
-    /* Current Legs + moved metrics, side by side on desktop */
-    .legs-with-summary {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 16px;
-    }
-    @media (min-width: 760px) {
-      .legs-with-summary { grid-template-columns: 1fr 300px; }
-    }
-    .legs-summary-col { display: flex; flex-direction: column; gap: 8px; }
-    .legs-summary-col .metrics { grid-template-columns: repeat(2, 1fr); }
 
     /* Stock simulator + payoff graph side by side */
     .charts-row {

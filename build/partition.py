@@ -112,6 +112,24 @@ new_recalc = """    function recalc() {
         setText('maxProfit', maxProfitText);
         setText('maxLoss', maxLossText);
         const rrA = riskReturnStats(maxP, minP, tailSlope);
+        // Stat-tile colors: profit green, loss red.
+        var mpEl = document.getElementById('maxProfit');
+        if (mpEl) { mpEl.classList.remove('pos', 'neg'); if (maxProfitText !== '—') mpEl.classList.add('pos'); }
+        var mlEl = document.getElementById('maxLoss');
+        if (mlEl) { mlEl.classList.remove('pos', 'neg'); if (maxLossText !== '—') mlEl.classList.add('neg'); }
+        var capTileEl = document.getElementById('capitalAtRisk');
+        if (capTileEl) { capTileEl.classList.remove('pos', 'neg', 'warn'); if (rrA.cap !== '—') capTileEl.classList.add('warn'); }
+        // Chance of profit (lognormal estimate at nearest expiry).
+        var cpEl = document.getElementById('chanceProfit');
+        if (cpEl) {
+          var popV = (typeof probOfProfit === 'function') ? probOfProfit() : null;
+          cpEl.classList.remove('pos', 'neg', 'warn');
+          if (popV == null || !isFinite(popV)) { cpEl.textContent = '—'; }
+          else {
+            cpEl.textContent = (popV * 100).toFixed(0) + '%';
+            cpEl.classList.add(popV >= 0.5 ? 'pos' : (popV >= 0.3 ? 'warn' : 'neg'));
+          }
+        }
         const rorEl = document.getElementById('maxReturnRisk');
         const capEl = document.getElementById('capitalAtRisk');
         if (rorEl) rorEl.textContent = rrA.ror;
