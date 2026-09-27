@@ -3118,6 +3118,10 @@
     // debit/credit of the roll plus the before/after risk picture. Pure
     // what-if — nothing here places a trade.
     let lastRoll = null;
+    // Two-step inline confirm (no native confirm() dialog: those are invisible
+    // to automated browsers and to anyone who dismisses popups, which made
+    // "Apply roll" look like a no-op in QA). First click arms, second applies.
+    let rollArmed = false;
 
     function rollLegLabel(l) {
       const side = l.side === 'buy' ? 'Buy' : 'Sell';
@@ -3292,6 +3296,8 @@
 
     function modelRoll() {
       syncRollLegs();
+      rollArmed = false; // a fresh model always disarms a pending confirm
+      disarmRollPaint();
       const box = document.getElementById('rollResults');
       if (!box) return;
       const leg = rollSelectedLeg();
@@ -3318,7 +3324,7 @@
       const afterLegs = legs.map(function (l) { return l === leg ? r.newLeg : l; });
       const before = candidateStats(legs);
       const after = candidateStats(afterLegs);
-      lastRoll = { leg: leg, newLeg: r.newLeg };
+      lastRoll = { legId: leg.id, newLeg: r.newLeg };
       const debit = r.netCash < -0.005, credit = r.netCash > 0.005;
       const dirWord = debit ? 'Debit' : credit ? 'Credit' : 'Even';
       const dirCls = debit ? 'var(--red)' : credit ? 'var(--green)' : 'var(--text)';
@@ -3338,26 +3344,86 @@
       h += row('Chance of profit', fmtPop(before.pop), fmtPop(after.pop));
       h += '</tbody></table>';
       if (r.modeled) h += '<p class="disc-note">Modeled prices — no chain quote for one or both sides.</p>';
-      h += '<p style="margin:6px 0 0"><button type="button" class="btn-primary btn-sm" onclick="applyRoll()">Apply roll</button> ' +
-        '<span class="disc-note">Swaps the leg above for the rolled one.</span></p>';
+      h += '<p style="margin:6px 0 0"><button type="button" class="btn-primary btn-sm" id="rollApplyBtn" onclick="applyRoll()">Apply roll</button> ' +
+        '<span class="disc-note" id="rollApplyCap">Swaps the leg above for the rolled one.</span></p>';
       box.innerHTML = h;
     }
 
+    // Repaints the apply button/caption for the disarmed state (no-ops if the
+    // results box was re-rendered and the nodes are gone).
+    function disarmRollPaint() {
+      const btn = document.getElementById('rollApplyBtn');
+      if (btn) btn.textContent = 'Apply roll';
+      const cap = document.getElementById('rollApplyCap');
+      if (cap) cap.textContent = 'Swaps the leg above for the rolled one.';
+    }
+    // Any form change cancels a pending "Confirm roll" so the armed button can
+    // never apply a model the user has already edited away from.
+    function disarmRollQuiet() {
+      if (!rollArmed) return;
+      rollArmed = false;
+      disarmRollPaint();
+    }
+    function disarmRoll() { disarmRollQuiet(); }
     function applyRoll() {
       if (!lastRoll) return;
-      const idx = legs.indexOf(lastRoll.leg);
-      if (idx < 0) return;
-      if (typeof confirm === 'function' &&
-          !confirm('Roll to ' + rollLegLabel(lastRoll.newLeg) + '? This swaps the leg in slot A.')) return;
+      if (!rollArmed) {
+        // First click arms — an inline, visible confirm. (A native confirm()
+        // dialog proved invisible to automated browsers in QA, making Apply
+        // look like a no-op.)
+        rollArmed = true;
+        const btn = document.getElementById('rollApplyBtn');
+        if (btn) btn.textContent = 'Confirm roll';
+        const cap = document.getElementById('rollApplyCap');
+        if (cap) cap.innerHTML = 'Click again to swap the leg. <button type="button" class="btn-sm" style="margin-left:6px" onclick="disarmRoll()">Cancel</button>';
+        return;
+      }
+      rollArmed = false;
+      disarmRollPaint();
+      const box = document.getElementById('rollResults');
+      // Re-resolve the leg by id and recompute from the CURRENT form inputs,
+      // so a leg edited (or removed) after modeling can't silently apply a
+      // stale quote — the applied roll always matches what's on screen now.
+      const idx = legs.findIndex(function (l) { return l.id === lastRoll.legId; });
+      if (idx < 0) {
+        lastRoll = null;
+        if (box) box.innerHTML = '<p class="disc-empty">That leg is gone — model the roll again.</p>';
+        return;
+      }
+      const leg = legs[idx];
+      const strikeEl = document.getElementById('rollStrike');
+      const expEl = document.getElementById('rollExpiry');
+      const newStrike = strikeEl ? parseFloat(strikeEl.value) : NaN;
+      if (!isFinite(newStrike) || newStrike <= 0) {
+        lastRoll = null;
+        if (box) box.innerHTML = '<p class="disc-empty">Enter a new strike to model the roll.</p>';
+        return;
+      }
+      let newExpStr = expEl ? expEl.value : '';
+      let newDte = leg.dte;
+      if (newExpStr) newDte = Math.max(1, expirationDte(newExpStr));
+      else newDte = parseInt((document.getElementById('rollDte') || {}).value, 10) || leg.dte;
+      if (Math.abs(newStrike - leg.strike) < 1e-9 && newDte === leg.dte) {
+        lastRoll = null;
+        if (box) box.innerHTML = '<p class="disc-empty">That is the same strike and expiry — a roll moves at least one of them.</p>';
+        return;
+      }
+      const r = computeRoll(leg, newStrike, newExpStr, newDte);
       markBuildDirty();
-      legs[idx] = lastRoll.newLeg;
+      legs[idx] = r.newLeg;
       lastRoll = null;
       if (typeof syncDTESlider === 'function') syncDTESlider();
       updateSpotSliderRange();
       renderLegs();
       recalc();
       if (typeof resetSimulation === 'function') resetSimulation();
-      modelRoll();
+      syncRollLegs();
+      if (box) {
+        const dir = r.netCash >= 0 ? 'Credit' : 'Debit';
+        box.innerHTML = '<p class="disc-note" style="color:var(--green)">Rolled to ' + escapeHtml(rollLegLabel(r.newLeg)) +
+          ' — ' + dir + ' ' + formatMoney(Math.abs(r.netCash)) + '.</p>' +
+          '<p class="disc-empty">Model another roll above, or tweak the legs.</p>';
+      }
     }
 
     function summarizeExpiry(expiry, labels, legsArr) {

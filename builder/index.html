@@ -1140,16 +1140,16 @@
       <p class="disc-note" style="margin-top:0">Rolling closes one leg and reopens it at a new strike or expiry — usually to buy more time or adjust direction. This models what the roll would cost and how the position changes. Nothing here places a trade.</p>
       <div class="disc-form">
         <label>Leg to roll
-          <select id="rollLeg" onchange="onRollLegChange()"></select>
+          <select id="rollLeg" onchange="onRollLegChange();disarmRollQuiet()"></select>
         </label>
         <label>New expiry
-          <select id="rollExpiry"></select>
+          <select id="rollExpiry" onchange="disarmRollQuiet()"></select>
         </label>
         <label id="rollDteWrap" style="display:none">Model DTE
-          <input id="rollDte" type="number" value="60" min="1" />
+          <input id="rollDte" type="number" value="60" min="1" oninput="disarmRollQuiet()" />
         </label>
         <label>New strike
-          <input id="rollStrike" type="number" step="0.5" min="0.01" />
+          <input id="rollStrike" type="number" step="0.5" min="0.01" oninput="disarmRollQuiet()" />
         </label>
         <button type="button" class="btn-primary btn-sm" onclick="modelRoll()">Model the roll</button>
       </div>
@@ -1358,7 +1358,7 @@ and custom structures. View payoff charts, Greeks, profit/loss, break-even, prob
     </div>
     <div class="guide-body" id="guideBody"></div>
   </aside>
-  <script src="/assets/jsm-options-engine.js?v=c63153ba"></script>
+  <script src="/assets/jsm-options-engine.js?v=11ca4294"></script>
 <script>
 (function(){
   function initNav(){

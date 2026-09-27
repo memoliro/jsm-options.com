@@ -1336,18 +1336,21 @@ async function runAsyncDiscoveryTests() {
   j(`(function(){
     function dstr(days){ var d = new Date(); d.setDate(d.getDate() + days); return d.toISOString().slice(0,10); }
     window.__exp30 = dstr(30); window.__exp60 = dstr(60);
-    window._cboeData = {
-      symbol: 'TEST', spot: 100,
-      expirations: [window.__exp30, window.__exp60],
-      chains: {}
+    window.__seedRollChain = function(){
+      window._cboeData = {
+        symbol: 'TEST', spot: 100,
+        expirations: [window.__exp30, window.__exp60],
+        chains: {}
+      };
+      window._cboeData.chains[window.__exp30] = { strikes: [90, 100, 105, 110],
+        calls: [{strike:100,bid:2.00,ask:2.20,last:2.10,iv:0.25},{strike:105,bid:1.50,ask:1.65,last:1.58,iv:0.25},{strike:110,bid:1.00,ask:1.15,last:1.08,iv:0.25}],
+        puts: [{strike:100,bid:3.00,ask:3.20,last:3.10,iv:0.26},{strike:90,bid:1.50,ask:1.70,last:1.60,iv:0.26}] };
+      window._cboeData.chains[window.__exp60] = { strikes: [90, 100, 110],
+        calls: [{strike:100,bid:3.00,ask:3.25,last:3.12,iv:0.27},{strike:110,bid:1.90,ask:2.10,last:2.00,iv:0.27}],
+        puts: [{strike:90,bid:2.00,ask:2.20,last:2.10,iv:0.28}] };
+      document.getElementById('spot').value = '100';
     };
-    window._cboeData.chains[window.__exp30] = { strikes: [90, 100, 110],
-      calls: [{strike:100,bid:2.00,ask:2.20,last:2.10,iv:0.25},{strike:110,bid:1.00,ask:1.15,last:1.08,iv:0.25}],
-      puts: [{strike:100,bid:3.00,ask:3.20,last:3.10,iv:0.26},{strike:90,bid:1.50,ask:1.70,last:1.60,iv:0.26}] };
-    window._cboeData.chains[window.__exp60] = { strikes: [90, 100, 110],
-      calls: [{strike:100,bid:3.00,ask:3.25,last:3.12,iv:0.27},{strike:110,bid:1.90,ask:2.10,last:2.00,iv:0.27}],
-      puts: [{strike:90,bid:2.00,ask:2.20,last:2.10,iv:0.28}] };
-    document.getElementById('spot').value = '100';
+    window.__seedRollChain();
   })()`);
   const buyCall100 = () => j(`legs = [{ side: 'buy', type: 'call', strike: 100, dte: 30, qty: 1, premium: 2.10, ticker: 'TEST' }]`);
   check('R1 roll long call: close at bid, open at ask, net debit', () => {
@@ -1391,11 +1394,17 @@ async function runAsyncDiscoveryTests() {
     if (html.indexOf('Breakeven') < 0 || html.indexOf('Chance of profit') < 0) throw new Error('missing stat rows');
     if (!j('lastRoll')) throw new Error('lastRoll not set');
   });
-  check('R4 applyRoll swaps the leg in slot A', () => {
+  check('R4 applyRoll is two-step: first click arms, second applies the swap', () => {
     j('applyRoll()');
+    if (!j('rollArmed')) throw new Error('first click should arm');
+    if (j('legs[0].strike') !== 100) throw new Error('armed click must not swap yet');
+    j('applyRoll()');
+    if (j('rollArmed')) throw new Error('should disarm after applying');
     if (j('legs[0].strike') !== 110) throw new Error('strike=' + j('legs[0].strike'));
     if (j('legs[0].dte') !== 60) throw new Error('dte=' + j('legs[0].dte'));
     if (j('legs.length') !== 1) throw new Error('legs length changed');
+    const html = j('document.getElementById("rollResults").innerHTML');
+    if (html.indexOf('Rolled to') < 0) throw new Error('no success message: ' + html.slice(0, 150));
   });
   check('R5 modelRoll with no legs shows the empty message', () => {
     j('legs = []');
@@ -1437,6 +1446,60 @@ async function runAsyncDiscoveryTests() {
     j('modelRoll()');
     const html = j('document.getElementById("rollResults").innerHTML');
     if (html.indexOf('Modeled prices') < 0) throw new Error('no modeled note: ' + html.slice(0, 200));
+  });
+  check('R10 armed click never swaps; a fresh model disarms', () => {
+    buyCall100();
+    j('syncRollLegs()');
+    set('rollLeg', '0');
+    set('rollStrike', '110');
+    j('document.getElementById("rollExpiry").value = window.__exp60');
+    j('modelRoll()');
+    j('applyRoll()');
+    if (!j('rollArmed')) throw new Error('should be armed');
+    if (j('legs[0].strike') !== 100) throw new Error('must not swap while armed');
+    j('modelRoll()'); // re-model disarms
+    if (j('rollArmed')) throw new Error('re-model should disarm');
+  });
+  check('R11 confirm recomputes from the edited leg (no stale quote)', () => {
+    j('window.__seedRollChain()'); // R8/R9 run with the chain nulled; restore it
+    buyCall100();
+    j('syncRollLegs()');
+    set('rollLeg', '0');
+    set('rollStrike', '110');
+    j('document.getElementById("rollExpiry").value = window.__exp60');
+    j('modelRoll()');
+    j('legs[0].strike = 105'); // user edits the leg after modeling
+    j('applyRoll()'); // arm
+    j('applyRoll()'); // confirm: must price the close off the 105 bid (1.50), not the stale 100 bid (2.00)
+    if (j('legs[0].strike') !== 110) throw new Error('new strike not applied');
+    const html = j('document.getElementById("rollResults").innerHTML');
+    // close 1.50 - open 2.10 = -0.60/share -> Debit $60.00 (stale would be $10.00)
+    if (html.indexOf('Debit $60.00') < 0) throw new Error('expected recomputed Debit $60.00, got: ' + html.slice(0, 200));
+  });
+  check('R12 confirm with the leg removed shows a graceful message', () => {
+    buyCall100();
+    j('syncRollLegs()');
+    set('rollLeg', '0');
+    set('rollStrike', '110');
+    j('document.getElementById("rollExpiry").value = window.__exp60');
+    j('modelRoll()');
+    j('legs = []');
+    j('applyRoll()');
+    j('applyRoll()');
+    const html = j('document.getElementById("rollResults").innerHTML');
+    if (html.indexOf('That leg is gone') < 0) throw new Error('got: ' + html.slice(0, 150));
+  });
+  check('R13 form change disarms a pending confirm', () => {
+    buyCall100();
+    j('syncRollLegs()');
+    set('rollLeg', '0');
+    set('rollStrike', '110');
+    j('document.getElementById("rollExpiry").value = window.__exp60');
+    j('modelRoll()');
+    j('applyRoll()');
+    if (!j('rollArmed')) throw new Error('should be armed');
+    j('disarmRollQuiet()'); // what the form oninput/onchange handlers call
+    if (j('rollArmed')) throw new Error('form change should disarm');
   });
 }
 
