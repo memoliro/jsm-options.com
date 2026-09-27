@@ -220,6 +220,23 @@
     .quote-status.err{color:var(--red)}
     .quote-status.warn{color:var(--amber,#eab308)}
     .field.ticker-field input{text-transform:uppercase;letter-spacing:.04em;font-weight:650}
+    .field.ticker-field{position:relative}
+    .ticker-suggest{
+      display:none;position:absolute;left:0;right:0;top:100%;margin-top:4px;z-index:85;
+      background:var(--card);border:1px solid var(--border);border-radius:10px;
+      box-shadow:0 16px 40px rgba(0,0,0,.35);max-height:280px;overflow:auto;padding:6px;
+    }
+    .ticker-suggest.open{display:block}
+    .ticker-suggest .ts-item{
+      display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;
+      text-align:left;border:1px solid transparent;background:transparent;color:var(--text);
+      border-radius:8px;padding:7px 9px;cursor:pointer;font-size:13px;text-transform:none;
+      letter-spacing:normal;font-weight:400;
+    }
+    .ticker-suggest .ts-item:hover,.ticker-suggest .ts-item.active{background:var(--input,#0f172a);border-color:var(--border)}
+    .ticker-suggest .ts-sym{font-weight:700;letter-spacing:.02em;flex-shrink:0}
+    .ticker-suggest .ts-label{color:var(--muted);font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-left:10px}
+    .ticker-suggest .ts-empty{padding:8px 9px;color:var(--muted);font-size:12px;line-height:1.4;text-transform:none}
     .legs-header {
       font-size: 0.65rem;
       color: var(--muted);
@@ -696,60 +713,15 @@
       </div>
             <div class="field ticker-field" style="min-width:200px">
         <label>Symbol / Ticker</label>
-        <input type="text" id="ticker" list="tickerOptions" value="SPY" autocomplete="off" spellcheck="false"
+        <input type="text" id="ticker" value="SPY" autocomplete="off" spellcheck="false"
           placeholder="e.g. SPY, AAPL, /ES"
+          role="combobox" aria-expanded="false" aria-autocomplete="list" aria-controls="tickerSuggest"
           oninput="onTickerTyping()"
+          onfocus="openTickerSuggest()"
+          onclick="openTickerSuggest()"
           onchange="onTickerChange()"
-          onkeydown="if(event.key==='Enter'){this.blur();}" />
-        <datalist id="tickerOptions">
-          <option value="SPY">SPY – S&amp;P 500 ETF</option>
-          <option value="QQQ">QQQ – Nasdaq 100 ETF</option>
-          <option value="IWM">IWM – Russell 2000 ETF</option>
-          <option value="DIA">DIA – Dow 30 ETF</option>
-          <option value="SPX">SPX – S&amp;P 500 Index (_SPX)</option>
-          <option value="NDX">NDX – Nasdaq 100 Index (_NDX)</option>
-          <option value="RUT">RUT – Russell 2000 Index (_RUT)</option>
-          <option value="VIX">VIX – Volatility Index (_VIX)</option>
-          <option value="AAPL">AAPL – Apple</option>
-          <option value="MSFT">MSFT – Microsoft</option>
-          <option value="NVDA">NVDA – Nvidia</option>
-          <option value="TSLA">TSLA – Tesla</option>
-          <option value="META">META – Meta Platforms</option>
-          <option value="AMZN">AMZN – Amazon</option>
-          <option value="GOOGL">GOOGL – Alphabet</option>
-          <option value="NFLX">NFLX – Netflix</option>
-          <option value="AMD">AMD – AMD</option>
-          <option value="BA">BA – Boeing</option>
-          <option value="JPM">JPM – JPMorgan</option>
-          <option value="XLF">XLF – Financials ETF</option>
-          <option value="TLT">TLT – 20Y Treasury ETF</option>
-          <option value="GLD">GLD – Gold ETF</option>
-          <option value="SLV">SLV – Silver ETF</option>
-          <option value="USO">USO – Oil ETF</option>
-          <option value="XLK">XLK – Tech ETF</option>
-          <option value="XLE">XLE – Energy ETF</option>
-          <option value="/ES">/ES – E-mini S&amp;P 500 (futures)</option>
-          <option value="/MES">/MES – Micro E-mini S&amp;P 500 (futures)</option>
-          <option value="/NQ">/NQ – E-mini Nasdaq-100 (futures)</option>
-          <option value="/MNQ">/MNQ – Micro E-mini Nasdaq-100 (futures)</option>
-          <option value="/RTY">/RTY – E-mini Russell 2000 (futures)</option>
-          <option value="/M2K">/M2K – Micro E-mini Russell 2000 (futures)</option>
-          <option value="/YM">/YM – E-mini Dow (futures)</option>
-          <option value="/MYM">/MYM – Micro E-mini Dow (futures)</option>
-          <option value="/CL">/CL – Crude Oil (futures)</option>
-          <option value="/MCL">/MCL – Micro Crude Oil (futures)</option>
-          <option value="/NG">/NG – Natural Gas (futures)</option>
-          <option value="/GC">/GC – Gold (futures)</option>
-          <option value="/MGC">/MGC – Micro Gold (futures)</option>
-          <option value="/SI">/SI – Silver (futures)</option>
-          <option value="/SIL">/SIL – Micro Silver (futures)</option>
-          <option value="/ZB">/ZB – 30Y Treasury Bond (futures)</option>
-          <option value="/ZN">/ZN – 10Y Treasury Note (futures)</option>
-          <option value="/ZF">/ZF – 5Y Treasury Note (futures)</option>
-          <option value="/ZT">/ZT – 2Y Treasury Note (futures)</option>
-          <option value="/6E">/6E – Euro FX (futures)</option>
-          <option value="/6J">/6J – Japanese Yen FX (futures)</option>
-        </datalist>
+          onkeydown="onTickerKeydown(event)" />
+        <div class="ticker-suggest" id="tickerSuggest" role="listbox"></div>
       </div>
       <div class="field">
         <label>Underlying price ($)</label>
@@ -1295,28 +1267,179 @@ and custom structures. View payoff charts, Greeks, profit/loss, break-even, prob
         list.forEach(function (leg) { if (!leg.tickerManual) leg.ticker = tkr; });
       });
     }
-    // Flat list of the suggested tickers shown in the datalist, used to detect
-    // when a full/known symbol has been typed so the chain/model path can be
-    // triggered immediately — without waiting for the field to lose focus.
-    const TICKER_SUGGESTIONS = [
-      'SPY','QQQ','IWM','DIA','SPX','NDX','RUT','VIX','AAPL','MSFT','NVDA','TSLA',
-      'META','AMZN','GOOGL','NFLX','AMD','BA','JPM','XLF','TLT','GLD','SLV','USO','XLK','XLE',
-      '/ES','/MES','/NQ','/MNQ','/RTY','/M2K','/YM','/MYM','/CL','/MCL','/NG','/GC','/MGC',
-      '/SI','/SIL','/ZB','/ZN','/ZF','/ZT','/6E','/6J'
+    // Symbols shown in the custom ticker dropdown. A native <datalist> is
+    // unreliable across browsers (many won't show the full list until text is
+    // typed, and it's unsupported on iOS Safari at all), so this builds a
+    // small self-contained combobox instead: it opens on focus/click, always
+    // shows the whole list when the field is empty, filters as you type, and
+    // is fully clickable/keyboard-navigable.
+    const TICKER_LIST = [
+      { sym: 'SPY', label: 'S&P 500 ETF' },
+      { sym: 'QQQ', label: 'Nasdaq 100 ETF' },
+      { sym: 'IWM', label: 'Russell 2000 ETF' },
+      { sym: 'DIA', label: 'Dow 30 ETF' },
+      { sym: 'SPX', label: 'S&P 500 Index (_SPX)' },
+      { sym: 'NDX', label: 'Nasdaq 100 Index (_NDX)' },
+      { sym: 'RUT', label: 'Russell 2000 Index (_RUT)' },
+      { sym: 'VIX', label: 'Volatility Index (_VIX)' },
+      { sym: 'AAPL', label: 'Apple' },
+      { sym: 'MSFT', label: 'Microsoft' },
+      { sym: 'NVDA', label: 'Nvidia' },
+      { sym: 'TSLA', label: 'Tesla' },
+      { sym: 'META', label: 'Meta Platforms' },
+      { sym: 'AMZN', label: 'Amazon' },
+      { sym: 'GOOGL', label: 'Alphabet' },
+      { sym: 'NFLX', label: 'Netflix' },
+      { sym: 'AMD', label: 'AMD' },
+      { sym: 'BA', label: 'Boeing' },
+      { sym: 'JPM', label: 'JPMorgan' },
+      { sym: 'XLF', label: 'Financials ETF' },
+      { sym: 'TLT', label: '20Y Treasury ETF' },
+      { sym: 'GLD', label: 'Gold ETF' },
+      { sym: 'SLV', label: 'Silver ETF' },
+      { sym: 'USO', label: 'Oil ETF' },
+      { sym: 'XLK', label: 'Tech ETF' },
+      { sym: 'XLE', label: 'Energy ETF' },
+      { sym: '/ES', label: 'E-mini S&P 500 (futures)' },
+      { sym: '/MES', label: 'Micro E-mini S&P 500 (futures)' },
+      { sym: '/NQ', label: 'E-mini Nasdaq-100 (futures)' },
+      { sym: '/MNQ', label: 'Micro E-mini Nasdaq-100 (futures)' },
+      { sym: '/RTY', label: 'E-mini Russell 2000 (futures)' },
+      { sym: '/M2K', label: 'Micro E-mini Russell 2000 (futures)' },
+      { sym: '/YM', label: 'E-mini Dow (futures)' },
+      { sym: '/MYM', label: 'Micro E-mini Dow (futures)' },
+      { sym: '/CL', label: 'Crude Oil (futures)' },
+      { sym: '/MCL', label: 'Micro Crude Oil (futures)' },
+      { sym: '/NG', label: 'Natural Gas (futures)' },
+      { sym: '/GC', label: 'Gold (futures)' },
+      { sym: '/MGC', label: 'Micro Gold (futures)' },
+      { sym: '/SI', label: 'Silver (futures)' },
+      { sym: '/SIL', label: 'Micro Silver (futures)' },
+      { sym: '/ZB', label: '30Y Treasury Bond (futures)' },
+      { sym: '/ZN', label: '10Y Treasury Note (futures)' },
+      { sym: '/ZF', label: '5Y Treasury Note (futures)' },
+      { sym: '/ZT', label: '2Y Treasury Note (futures)' },
+      { sym: '/6E', label: 'Euro FX (futures)' },
+      { sym: '/6J', label: 'Japanese Yen FX (futures)' }
     ];
+    const TICKER_SUGGESTIONS = TICKER_LIST.map(function (t) { return t.sym; });
+    let tickerSuggestVisible = [];
+    let tickerSuggestActiveIdx = -1;
+
+    function tickerSuggestMatches(query) {
+      const q = (query || '').trim().toUpperCase();
+      if (!q) return TICKER_LIST;
+      return TICKER_LIST.filter(function (t) {
+        return t.sym.toUpperCase().indexOf(q) !== -1 || t.label.toUpperCase().indexOf(q) !== -1;
+      });
+    }
+    function renderTickerSuggest() {
+      const box = document.getElementById('tickerSuggest');
+      const input = document.getElementById('ticker');
+      if (!box || !input) return;
+      tickerSuggestVisible = tickerSuggestMatches(input.value);
+      tickerSuggestActiveIdx = -1;
+      if (!tickerSuggestVisible.length) {
+        box.innerHTML = '<div class="ts-empty">No preset match for "' + (input.value || '').toUpperCase() +
+          '" — press Enter to try it if it has market data, or clear the field to browse the list.</div>';
+        return;
+      }
+      box.innerHTML = tickerSuggestVisible.map(function (t, i) {
+        return '<button type="button" class="ts-item" data-idx="' + i + '" role="option">' +
+          '<span class="ts-sym">' + t.sym + '</span><span class="ts-label">' + t.label + '</span></button>';
+      }).join('');
+    }
+    function openTickerSuggest() {
+      renderTickerSuggest();
+      const box = document.getElementById('tickerSuggest');
+      const input = document.getElementById('ticker');
+      if (box) box.classList.add('open');
+      if (input) input.setAttribute('aria-expanded', 'true');
+    }
+    function closeTickerSuggest() {
+      const box = document.getElementById('tickerSuggest');
+      const input = document.getElementById('ticker');
+      if (box) box.classList.remove('open');
+      if (input) input.setAttribute('aria-expanded', 'false');
+      tickerSuggestActiveIdx = -1;
+    }
+    function highlightTickerSuggest(idx) {
+      const box = document.getElementById('tickerSuggest');
+      if (!box) return;
+      const items = box.querySelectorAll('.ts-item');
+      items.forEach(function (el, i) { el.classList.toggle('active', i === idx); });
+      if (items[idx] && items[idx].scrollIntoView) items[idx].scrollIntoView({ block: 'nearest' });
+    }
+    function pickTickerSuggestion(idx) {
+      const t = tickerSuggestVisible[idx];
+      if (!t) return;
+      const input = document.getElementById('ticker');
+      if (input) input.value = t.sym;
+      closeTickerSuggest();
+      onTickerChange();
+    }
+    function onTickerKeydown(e) {
+      const box = document.getElementById('tickerSuggest');
+      const isOpen = box && box.classList.contains('open');
+      if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        if (!isOpen) { openTickerSuggest(); return; }
+        if (!tickerSuggestVisible.length) return;
+        tickerSuggestActiveIdx = (tickerSuggestActiveIdx + 1) % tickerSuggestVisible.length;
+        highlightTickerSuggest(tickerSuggestActiveIdx);
+      } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        if (!isOpen || !tickerSuggestVisible.length) return;
+        tickerSuggestActiveIdx = (tickerSuggestActiveIdx - 1 + tickerSuggestVisible.length) % tickerSuggestVisible.length;
+        highlightTickerSuggest(tickerSuggestActiveIdx);
+      } else if (e.key === 'Enter') {
+        if (isOpen && tickerSuggestActiveIdx >= 0) {
+          e.preventDefault();
+          pickTickerSuggestion(tickerSuggestActiveIdx);
+        } else {
+          closeTickerSuggest();
+          e.target.blur();
+        }
+      } else if (e.key === 'Escape') {
+        closeTickerSuggest();
+      }
+    }
+    // Selecting a suggestion uses mousedown (fires before the input's blur)
+    // so the click reliably registers even though the input loses focus.
+    document.addEventListener('mousedown', function (e) {
+      const box = document.getElementById('tickerSuggest');
+      if (!box) return;
+      const btn = e.target.closest('.ts-item');
+      if (btn && box.contains(btn)) {
+        e.preventDefault();
+        pickTickerSuggestion(parseInt(btn.getAttribute('data-idx'), 10));
+      }
+    });
+    document.addEventListener('click', function (e) {
+      const box = document.getElementById('tickerSuggest');
+      const input = document.getElementById('ticker');
+      if (!box || !box.classList.contains('open')) return;
+      if (box.contains(e.target) || (input && input.contains(e.target))) return;
+      closeTickerSuggest();
+    });
+
     let _lastTickerLoaded = 'SPY';
     function onTickerTyping() {
+      renderTickerSuggest();
+      const box = document.getElementById('tickerSuggest');
+      if (box) box.classList.add('open');
       const raw = document.getElementById('ticker').value;
       const norm = normalizeTicker(raw);
       if (!norm) return;
       // Fires as soon as the typed text is a whole, recognized ticker (either
       // a suggested symbol or a valid /FUTURES root) — covers both picking a
-      // datalist suggestion and manually typing a complete known symbol.
+      // suggestion and manually typing a complete known symbol.
       if (TICKER_SUGGESTIONS.indexOf(norm) !== -1 || isFuturesTicker(norm)) {
         onTickerChange();
       }
     }
     function onTickerChange() {
+      closeTickerSuggest();
       const tkr = normalizeTicker(currentTicker());
       if (!tkr || tkr === _lastTickerLoaded) return;
       _lastTickerLoaded = tkr;
@@ -1502,8 +1625,17 @@ and custom structures. View payoff charts, Greeks, profit/loss, break-even, prob
       return Math.round(v * 100) / 100;
     }
 
+    // A leg with no strike (e.g. its ticker has no market data and the user
+    // hasn't typed one yet) is "incomplete": it should price as $0 rather than
+    // silently borrow the spot price as a fake strike, so the payoff chart and
+    // Greeks honestly reflect that the leg needs manual input.
+    function legIsIncomplete(leg) {
+      return !!(leg && leg.type !== 'stock' && (leg.strike == null || !isFinite(leg.strike)));
+    }
+
     function modeledPremiumForLeg(leg, S) {
       if (!leg || leg.type === 'stock') return roundPrem(S);
+      if (legIsIncomplete(leg)) return 0;
       const p = getParams();
       const days = Math.max(0, Number(leg.dte) || 0);
       const T = days / 365;
@@ -1572,6 +1704,8 @@ and custom structures. View payoff charts, Greeks, profit/loss, break-even, prob
           let vps;
           if (leg.type === 'stock') {
             vps = Ss;
+          } else if (legIsIncomplete(leg)) {
+            vps = 0;
           } else {
             const residualDays = Math.max(0, leg.dte - elapsed);
             vps = legIsFuturesOption(leg)
@@ -1951,7 +2085,8 @@ and custom structures. View payoff charts, Greeks, profit/loss, break-even, prob
       // option row: strike, dte, qty, premium — stock row: qty, premium
       const premInput = inputs[inputs.length - 1];
       if (premInput && document.activeElement !== premInput) {
-        premInput.value = legs[idx].premium;
+        const prem = legs[idx].premium;
+        premInput.value = (prem == null ? '' : prem);
       }
       updateLegCashLabel(id);
     }
@@ -2015,7 +2150,7 @@ and custom structures. View payoff charts, Greeks, profit/loss, break-even, prob
         const strikeStep = futuresLeg ? futuresStrikeStep(l.ticker || currentTicker()) : 0.5;
         const strikeInput = isStock
           ? '<input type="text" value="—" disabled title="Not used for stock" style="opacity:0.45;cursor:not-allowed;" />'
-          : '<input type="number" value="' + (l.strike == null ? '' : l.strike) + '" step="' + strikeStep + '" min="0.000001" ' +
+          : '<input type="number" value="' + (l.strike == null ? '' : l.strike) + '" step="' + strikeStep + '" min="0.000001" placeholder="Enter strike" ' +
               'onchange="updateLegField(' + l.id + ',\'strike\',this.value,false)" ' +
               'oninput="updateLegField(' + l.id + ',\'strike\',this.value,true)" />';
         const dteInput = isStock
@@ -2024,8 +2159,9 @@ and custom structures. View payoff charts, Greeks, profit/loss, break-even, prob
               'onchange="updateLegField(' + l.id + ',\'dte\',this.value,false)" ' +
               'oninput="updateLegField(' + l.id + ',\'dte\',this.value,true)" />';
         const premiumTitle = isStock ? 'Cost per share (entry)' : 'Option Premium per share';
+        const premiumVal = (l.premium == null ? '' : l.premium);
         const premiumInput =
-          '<input type="number" value="' + l.premium + '" step="0.05" min="0" title="' + premiumTitle + '" ' +
+          '<input type="number" value="' + premiumVal + '" step="0.05" min="0" title="' + premiumTitle + '" placeholder="Enter price" ' +
             'onchange="updateLegField(' + l.id + ',\'premium\',this.value,false)" ' +
             'oninput="updateLegField(' + l.id + ',\'premium\',this.value,true)" />';
         const qtyInput =
@@ -2066,7 +2202,7 @@ and custom structures. View payoff charts, Greeks, profit/loss, break-even, prob
 
     function updateSpotSliderRange() {
       if (!legs.length) return;
-      const strikes = legs.filter(l => l.type !== 'stock').map(l => l.strike);
+      const strikes = legs.filter(l => l.type !== 'stock' && l.strike != null && isFinite(l.strike)).map(l => l.strike);
       const S = parseFloat(document.getElementById('spot').value) || 100;
       const all = strikes.length ? strikes : [S];
       const lo = Math.min(S, ...all) * 0.55;
@@ -2102,6 +2238,8 @@ and custom structures. View payoff charts, Greeks, profit/loss, break-even, prob
         let valPerShare;
         if (leg.type === 'stock') {
           valPerShare = S;
+        } else if (legIsIncomplete(leg)) {
+          valPerShare = 0;
         } else {
           let residualDays;
           if (useExpiryOnly) {
@@ -2141,7 +2279,7 @@ and custom structures. View payoff charts, Greeks, profit/loss, break-even, prob
     }
 
     function collectStrikes(list) {
-      return (list || []).filter(function(l) { return l.type !== 'stock'; }).map(function(l) { return l.strike; });
+      return (list || []).filter(function(l) { return l.type !== 'stock' && l.strike != null && isFinite(l.strike); }).map(function(l) { return l.strike; });
     }
 
     function buildChartData() {
@@ -3625,38 +3763,59 @@ and custom structures. View payoff charts, Greeks, profit/loss, break-even, prob
         leg.strike = Math.round(spot);
       }
     }
+    // Called whenever the current ticker has no usable market data (invalid
+    // symbol, failed fetch, or a futures root — which this app never fetches
+    // a live chain for). Rather than silently keep the previous ticker's
+    // stale Spot/Strike/Premium around, this blanks the fields that would
+    // normally come from the chain so the user notices they need to type
+    // their own numbers, and immediately re-renders the legs, payoff chart
+    // and Greeks so nothing misleading stays on screen.
+    function enterManualDataMode(sym, message) {
+      window._cboeData = null;
+      const spotInput = document.getElementById('spot');
+      const ivInput = document.getElementById('iv');
+      const spotRefEl = document.getElementById('chainSpotRef');
+      if (spotInput) spotInput.value = '';
+      if (ivInput) ivInput.value = '';
+      if (spotRefEl) spotRefEl.value = '';
+      [legs, legsB].forEach(function (list) {
+        if (!list) return;
+        list.forEach(function (leg) {
+          if (leg.tickerManual) return; // leg pinned to its own symbol keeps its own data
+          if (leg.type === 'stock') {
+            leg.premium = null;
+            leg.premiumManual = false;
+          } else {
+            leg.strike = null;
+            leg.premium = null;
+            leg.premiumManual = false;
+            leg.premiumFromChain = false;
+          }
+        });
+      });
+      const chainStatus = document.getElementById('chainStatus');
+      if (chainStatus) { chainStatus.textContent = message; chainStatus.className = 'quote-status err'; }
+      const qStatus = document.getElementById('quoteStatus');
+      if (qStatus) { qStatus.textContent = message; qStatus.className = 'quote-status err'; }
+      const wrap = document.getElementById('chainTableWrap');
+      if (wrap) wrap.innerHTML = '<div style="padding:14px;color:var(--muted)">No market data for this ticker — enter Spot, Strike and Premium manually below.</div>';
+      syncDTESlider();
+      updateSpotSliderRange();
+      renderLegs();
+      if (typeof renderLegsB === 'function' && typeof compareMode !== 'undefined' && compareMode) renderLegsB();
+      recalc();
+    }
     async function loadCboeChain(){
       const tickerEl = document.getElementById('ticker');
       const sym = normalizeTicker(tickerEl && tickerEl.value || 'SPY');
       const statusEl = document.getElementById('chainStatus');
       const spotRefEl = document.getElementById('chainSpotRef');
       const spotInput = document.getElementById('spot');
-      if (!sym){ statusEl.textContent='Select a ticker'; return; }
+      if (!sym){ enterManualDataMode('', 'No ticker entered — enter Spot, Strike and Premium manually below.'); return; }
       const futures = isFuturesTicker(sym);
       if (futures) {
-        window._cboeData = null;
-        if (statusEl) {
-          const spec = futuresSpec(sym);
-          statusEl.textContent = `${sym} is a futures option. CBOE equity/index chain loading is disabled; use a CME futures-option data source for the chain. Contract multiplier: ${spec.multiplier}.`;
-          statusEl.className = 'quote-status warn';
-        }
-        const spotInput = document.getElementById('spot');
-        const S = parseFloat(spotInput && spotInput.value) || 100;
-        [legs, legsB].forEach(function(list){
-          if (!list) return;
-          list.forEach(function(leg){
-            if (leg.tickerManual) return;
-            leg.ticker = sym;
-            if (leg.type !== 'stock' && (!leg.strike || leg.strike <= 0)) leg.strike = roundToStep(S, futuresStrikeStep(sym));
-            if (leg.type === 'stock') { leg.premium = S; leg.premiumManual = false; }
-            else if (!leg.premiumManual) leg.premium = modeledPremiumForLeg(leg, S);
-          });
-        });
-        renderLegs();
-        if (typeof renderLegsB === 'function' && compareMode) renderLegsB();
-        syncDTESlider();
-        updateSpotSliderRange();
-        if (typeof resetSimulation === 'function') resetSimulation(); else if (typeof recalc === 'function') recalc();
+        const spec = futuresSpec(sym);
+        enterManualDataMode(sym, `${sym} is a futures option — no live chain here (use a CME futures-option data source). Contract multiplier: ${spec ? spec.multiplier : '—'}. Enter Spot, Strike and Premium manually.`);
         return;
       }
       statusEl.textContent = sym + ' chain loading… (CBOE delayed)';
@@ -3767,8 +3926,7 @@ and custom structures. View payoff charts, Greeks, profit/loss, break-even, prob
         statusEl.className='quote-status ok';
       }catch(err){
         console.error(err);
-        statusEl.textContent = 'Chain failed: ' + err.message + ' — Try a listed equity/index ticker such as SPY, QQQ, AAPL, or SPX';
-        statusEl.className='quote-status err';
+        enterManualDataMode(sym, `No market data found for ${sym} (${err && err.message ? err.message : err}). Enter Spot, Strike and Premium manually below — try a listed equity/index ticker such as SPY, QQQ, AAPL, or SPX for a live chain.`);
       }
     }
     function renderChainTable(){
@@ -3776,7 +3934,7 @@ and custom structures. View payoff charts, Greeks, profit/loss, break-even, prob
       const sel = document.getElementById('chainExpiration');
       const filterTop = document.getElementById('chainFilterTop');
       const data = window._cboeData;
-      if (!data || !sel || !sel.value){ wrap.innerHTML='<div style="padding:14px;color:var(--muted)">Select ticker and Load Chain (CBOE)</div>'; return; }
+      if (!data || !sel || !sel.value){ wrap.innerHTML='<div style="padding:14px;color:var(--muted)">No chain loaded — pick or type a ticker above.</div>'; return; }
       const exp = sel.value;
       const chain = data.chains ? data.chains[exp] : null;
       if (!chain){ wrap.innerHTML='<div style="padding:14px">Empty chain for '+exp+'</div>'; return; }
