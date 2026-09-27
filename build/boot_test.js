@@ -1114,5 +1114,84 @@ const el = (els, id) => els.get(id);
   });
 }
 
+// ---------- T: Batch C fix — discovery follows ticker changes ----------
+{
+  const { ctx, els } = run('builder', '');
+  const j = (expr) => vm.runInContext(expr, ctx);
+  const set = (id, v) => j('document.getElementById("' + id + '").value = "' + v + '"');
+  const fakeChain = (sym, spot, exp, strikes) => j(`(function(){
+    window._cboeData = {
+      symbol: '${sym}', spot: ${spot},
+      expirations: ['${exp}'],
+      chains: { '${exp}': {
+        strikes: ${JSON.stringify(strikes)},
+        calls: ${JSON.stringify(strikes.map(k => ({ strike: k, bid: 1, ask: 1.2, last: 1.1, iv: 0.25 })))},
+        puts: ${JSON.stringify(strikes.map(k => ({ strike: k, bid: 1, ask: 1.2, last: 1.1, iv: 0.26 })))}
+      }}
+    };
+    document.getElementById('spot').value = '${spot}';
+  })()`);
+  const AAPL = [320, 330, 340, 350, 360];
+  check('T1 ticker change: absolute target prices reset (old underlying scale)', () => {
+    j('loadCboeChain = function(){}'); // stub network for this ctx
+    j(`_lastTickerLoaded = 'SPY'`);
+    set('ticker', 'QQQ');
+    set('optTarget', '801.35'); set('findTarget', '831.35');
+    j('onTickerChange()');
+    if (j('document.getElementById("optTarget").value') !== '') throw new Error('optTarget not reset');
+    if (j('document.getElementById("findTarget").value') !== '') throw new Error('findTarget not reset');
+  });
+  check('T2 ticker change: prior optimizer scan marked stale with loading note', () => {
+    set('spot', '100');
+    set('optFamily', 'bullcall'); set('optGoal', 'profit');
+    j('runOptimizerScan()');
+    if (!j('optResults.length')) throw new Error('setup: no scan rows');
+    set('ticker', 'AAPL');
+    j('onTickerChange()');
+    if (!j('discOptStale')) throw new Error('discOptStale not set');
+    if (j('discFindStale')) throw new Error('discFindStale spuriously set');
+    const html = j('document.getElementById("optResults").innerHTML');
+    if (html.indexOf('loading new chain') < 0) throw new Error('no loading note: ' + html.slice(0, 80));
+  });
+  check('T3 chain arrival: stale optimizer scan re-runs on the new chain', () => {
+    fakeChain('AAPL', 340, '2026-11-20', AAPL);
+    j('resolveDiscoveryStale()');
+    if (j('discOptStale')) throw new Error('flag not consumed');
+    if (!j('optUsedChain')) throw new Error('re-run did not use the chain');
+    const ks = JSON.parse(j('JSON.stringify(optResults.map(c => c.k1))'));
+    if (!ks.length) throw new Error('no rows after re-run');
+    for (const k of ks) { if (AAPL.indexOf(k) < 0) throw new Error('old-ticker strike survived: ' + k); }
+  });
+  check('T4 scan during chain load (synthetic) is upgraded on chain arrival', () => {
+    j('window._cboeData = null'); // chain "in flight"
+    set('spot', '100');
+    set('findTarget', '110'); set('findDir', 'long'); set('findCap', '');
+    j('runFinder()');
+    if (!j('findResults.length')) throw new Error('setup: no finder rows');
+    if (j('findUsedChain')) throw new Error('should be synthetic while loading');
+    fakeChain('AAPL', 340, '2026-11-20', AAPL);
+    j('resolveDiscoveryStale()');
+    if (!j('findUsedChain')) throw new Error('not upgraded to chain quotes');
+    const ks = JSON.parse(j('JSON.stringify(findResults.map(c => c.legs[0].strike))'));
+    for (const k of ks) { if (AAPL.indexOf(k) < 0) throw new Error('synthetic strike survived: ' + k); }
+  });
+  check('T5 manual-data mode: stale results cleared, selects fall back', () => {
+    if (!j('findResults.length')) throw new Error('setup: no finder rows');
+    j('enterManualDataMode("ZZZ", "No market data found for ZZZ.")');
+    if (j('findResults.length')) throw new Error('findResults not cleared');
+    if (j('optResults.length')) throw new Error('optResults not cleared');
+    if (j('discOptStale') || j('discFindStale')) throw new Error('stale flags not cleared');
+    const html = j('document.getElementById("findResults").innerHTML');
+    if (html.indexOf('No chain for this ticker') < 0) throw new Error('no cleared message');
+    const disp = j('document.getElementById("findDteWrap").style.display');
+    if (disp !== '') throw new Error('findDteWrap not shown, display=' + JSON.stringify(disp));
+  });
+  check('T6 chain arrival with no prior scans: no-op, no phantom results', () => {
+    fakeChain('MSFT', 200, '2026-11-20', [190, 200, 210]);
+    j('resolveDiscoveryStale()');
+    if (j('optResults.length') || j('findResults.length')) throw new Error('phantom scan ran');
+  });
+}
+
 console.log(failures ? `\n${failures} FAILURES` : '\nALL PASS');
 process.exit(failures ? 1 : 0);

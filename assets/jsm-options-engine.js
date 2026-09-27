@@ -359,6 +359,25 @@
         });
       });
       window._cboeData = null;
+      // Batch C fix: a ticker change invalidates discovery scans. Absolute
+      // target prices belonged to the old underlying's scale, so reset them
+      // (empty falls back to the new spot at scan time). Mark any rendered
+      // results stale with a loading note; the chain-load completion re-runs
+      // them, and manual-data mode clears them.
+      var _ot = document.getElementById('optTarget');
+      if (_ot) _ot.value = '';
+      var _ft = document.getElementById('findTarget');
+      if (_ft) _ft.value = '';
+      discOptStale = optResults.length > 0;
+      discFindStale = findResults.length > 0;
+      if (discOptStale) {
+        var _ob = document.getElementById('optResults');
+        if (_ob) _ob.innerHTML = '<p class="disc-empty">Ticker changed — loading new chain…</p>';
+      }
+      if (discFindStale) {
+        var _fb = document.getElementById('findResults');
+        if (_fb) _fb.innerHTML = '<p class="disc-empty">Ticker changed — loading new chain…</p>';
+      }
       const chainStatus = document.getElementById('chainStatus');
       if (chainStatus) {
         chainStatus.textContent = futures
@@ -2705,6 +2724,16 @@
     // global IV input on a synthetic grid. All stats are estimates.
     let optResults = [];   // last optimizer scan: [{fam,k1,k2,legs,label,st}]
     let findResults = [];  // last finder scan:    [{legs,label,st,score}]
+    // Batch C fix: a ticker/chain change invalidates rendered discovery
+    // results. These flags mark scans that must be re-run (new chain) or
+    // cleared (manual-data mode) once the new market state settles.
+    let discOptStale = false;
+    let discFindStale = false;
+    // Batch C fix: whether the last scan priced off a loaded chain. A scan
+    // run while a chain was still loading falls back to the synthetic grid;
+    // when the chain arrives it is re-run against real quotes.
+    let optUsedChain = false;
+    let findUsedChain = false;
 
     // Strike universe + per-strike IV for a discovery scan.
     // Chain path: strikes within ±20% of spot on the chosen expiry, IV from
@@ -2718,11 +2747,13 @@
         dte: Math.max(1, Math.round(dteFallback || 30)),
         expStr: expStr || '',
         strikes: [],
+        usedChain: false,
         ivOf: function () { return p.iv; }
       };
       const data = window._cboeData;
       const chain = data && data.chains ? data.chains[expStr || ''] : null;
       if (chain && chain.strikes && chain.strikes.length) {
+        uni.usedChain = true;
         uni.dte = Math.max(1, expirationDte(expStr));
         uni.strikes = chain.strikes.filter(function (k) { return k >= S * 0.8 && k <= S * 1.2; });
         uni.ivOf = function (type, strike) {
@@ -2844,6 +2875,7 @@
       const uni = discoveryUniverse(expStr, dteInput ? parseFloat(dteInput.value) : 30);
       const box = document.getElementById('optResults');
       optResults = [];
+      optUsedChain = !!uni.usedChain;
       if (uni.strikes.length < 2) {
         box.innerHTML = '<p class="disc-empty">Not enough strikes to scan — load an options chain first.</p>';
         return;
@@ -2915,6 +2947,7 @@
       const uni = discoveryUniverse(expStr, dteInput ? parseFloat(dteInput.value) : 30);
       const box = document.getElementById('findResults');
       findResults = [];
+      findUsedChain = !!uni.usedChain;
       if (uni.strikes.length < 2) {
         box.innerHTML = '<p class="disc-empty">Not enough strikes to scan — load an options chain first.</p>';
         return;
@@ -3033,6 +3066,24 @@
     try {
       if (typeof document !== 'undefined' && document.getElementById('optExpiry')) syncDiscoveryExpiries();
     } catch (e) {}
+
+    // Batch C fix: settle discovery panels after a ticker/chain change. The
+    // expiry selects always refresh; scans the user already ran are re-run
+    // against the new chain so the tables follow the new ticker instead of
+    // showing the old one's strikes. A scan that ran on the synthetic grid
+    // while the chain was still loading is also upgraded to real quotes.
+    // No-op when nothing was invalidated.
+    function resolveDiscoveryStale() {
+      if (typeof syncDiscoveryExpiries === 'function') syncDiscoveryExpiries();
+      if (discOptStale || (optResults.length && !optUsedChain)) {
+        discOptStale = false;
+        try { runOptimizerScan(); } catch (e) {}
+      }
+      if (discFindStale || (findResults.length && !findUsedChain)) {
+        discFindStale = false;
+        try { runFinder(); } catch (e) {}
+      }
+    }
 
     function summarizeExpiry(expiry, labels, legsArr) {
       if (!expiry || !expiry.length) return { maxProfit: '—', maxLoss: '—', breakevens: '—', beNums: [], ror: '—', cap: '—' };
@@ -4869,6 +4920,19 @@
       renderLegs();
       if (typeof renderLegsB === 'function' && typeof compareMode !== 'undefined' && compareMode) renderLegsB();
       recalc();
+      // Batch C fix: no chain for this ticker — discovery expiry selects fall
+      // back to modeled-DTE mode and any ticker-invalidated results are
+      // cleared (spot is empty here, so a synthetic re-run would model the
+      // wrong scale; the user re-scans after entering a spot).
+      discOptStale = false;
+      discFindStale = false;
+      optResults = [];
+      findResults = [];
+      if (typeof syncDiscoveryExpiries === 'function') syncDiscoveryExpiries();
+      var _obm = document.getElementById('optResults');
+      if (_obm) _obm.innerHTML = '<p class="disc-empty">No chain for this ticker — enter a spot price, then scan to model candidates.</p>';
+      var _fbm = document.getElementById('findResults');
+      if (_fbm) _fbm.innerHTML = '<p class="disc-empty">No chain for this ticker — enter a spot price, then scan to model candidates.</p>';
     }
     async function loadCboeChain(){
       const tickerEl = document.getElementById('ticker');
@@ -4981,7 +5045,10 @@
         if (typeof resetSimulation === 'function') resetSimulation();
         else if (typeof liveUpdate === 'function') liveUpdate();
         onRangeChange(); // fresh market price asserted: re-lock the Range window around it
-        if (typeof syncDiscoveryExpiries === 'function') syncDiscoveryExpiries(); // Batch C: optimizer/finder expiry selects
+        // Batch C fix: new chain arrived — refresh discovery expiry selects
+        // and re-run any scans invalidated by the ticker change.
+        if (typeof resolveDiscoveryStale === 'function') resolveDiscoveryStale();
+        else if (typeof syncDiscoveryExpiries === 'function') syncDiscoveryExpiries();
         const dteNow = expirationDte(sel.value);
         const qStatus = document.getElementById('quoteStatus');
         if (qStatus){
