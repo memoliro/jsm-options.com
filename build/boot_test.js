@@ -677,6 +677,38 @@ const el = (els, id) => els.get(id);
       if (Math.abs(o.mid - o.S) > o.S * 0.001) throw new Error('pct=' + pct + ': middle row ' + o.mid + ' != S ' + o.S);
     });
   });
+  check('F16 chart: range slider keeps the x-window symmetric around spot', () => {
+    const { ctx: c2 } = run('builder', '');
+    [5, 20, 40, 100].forEach(function (pct) {
+      const ok = vm.runInContext(`(function(){
+        document.getElementById('chartRange').value = '${pct}';
+        onRangeChange();
+        var S = getParams().S;
+        if (!chartZoom) return 'no zoom';
+        var dev = Math.abs((chartZoom.min + chartZoom.max) / 2 - S) / S;
+        return dev < 1e-9 ? 'ok' : ('center-dev=' + dev);
+      })()`, c2);
+      if (ok !== 'ok') throw new Error('pct=' + pct + ': ' + ok);
+    });
+  });
+  check('F17 chart: recreated chart inherits the zoom (spot stays centered)', () => {
+    const { ctx: c2 } = run('builder', '');
+    const res = vm.runInContext(`(function(){
+      document.getElementById('chartRange').value = '40';
+      onRangeChange();
+      chart = null; // force the new-Chart creation branch (template/compare path)
+      updateChart();
+      var cfg = window.__chartConfigs[window.__chartConfigs.length - 1];
+      var S = getParams().S;
+      return JSON.stringify({
+        xmin: cfg.options.scales.x.min, xmax: cfg.options.scales.x.max,
+        zmin: chartZoom.min, zmax: chartZoom.max, S: S
+      });
+    })()`, c2);
+    const o = JSON.parse(res);
+    if (!(o.xmin === o.zmin && o.xmax === o.zmax)) throw new Error('creation did not apply zoom: ' + res);
+    if (Math.abs((o.xmin + o.xmax) / 2 - o.S) / o.S > 1e-9) throw new Error('created chart off-center: ' + res);
+  });
 }
 
 // ---------- G: Round 2 item 2 — clickable bid/ask on the chain ----------

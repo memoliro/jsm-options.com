@@ -2007,7 +2007,7 @@
       const base = strikes.length ? strikes : [anchor];
       let lo = Math.min(anchor * 0.65, Math.min.apply(null, base) * 0.65);
       let hi = Math.max(anchor * 1.45, Math.max.apply(null, base) * 1.45);
-      if (chartZoom && chartZoom.min > 0 && chartZoom.max > chartZoom.min) {
+      if (chartZoom && chartZoom.min >= 0 && chartZoom.max > chartZoom.min) {
         lo = chartZoom.min;
         hi = chartZoom.max;
       }
@@ -2415,6 +2415,11 @@
           scales: {
             x: {
               type: 'linear',
+              // Keep the spot horizontally centered even on a freshly created
+              // chart (template/compare recreation): Chart.js auto-scaling
+              // would otherwise pick "nice" bounds around the data.
+              min: (chartZoom ? chartZoom.min : undefined),
+              max: (chartZoom ? chartZoom.max : undefined),
               title: { display: true, text: 'Underlying ($)', color: tc.text },
               ticks: { color: tc.text, callback: function(v) { return '$' + v.toFixed(0); } },
               grid: { color: tc.grid }
@@ -4207,7 +4212,7 @@
       const base = strikes.length ? strikes : [anchor];
       let lo = Math.min(anchor * 0.65, Math.min.apply(null, base) * 0.65);
       let hi = Math.max(anchor * 1.45, Math.max.apply(null, base) * 1.45);
-      if (typeof chartZoom !== 'undefined' && chartZoom && chartZoom.min > 0 && chartZoom.max > chartZoom.min) {
+      if (typeof chartZoom !== 'undefined' && chartZoom && chartZoom.min >= 0 && chartZoom.max > chartZoom.min) {
         lo = chartZoom.min; hi = chartZoom.max;
       }
       if (!(hi > lo)) { lo = anchor * 0.7; hi = anchor * 1.3; }
@@ -4512,7 +4517,10 @@
     function applyRangeZoom(S) {
       const pct = parseFloat(document.getElementById('chartRange').value) || 20;
       const r = pct / 100;
-      chartZoom = { min: Math.max(0.01, S * (1 - r)), max: S * (1 + r) };
+      // Exact symmetry around S: the spot sits at the horizontal center of the
+      // payoff chart (and the middle row of the P&L table) at every slider
+      // value, including ±100% (floor at 0, not 0.01, so the center is exact).
+      chartZoom = { min: Math.max(0, S * (1 - r)), max: S * (1 + r) };
     }
 
     function onRangeChange() {
