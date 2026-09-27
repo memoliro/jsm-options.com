@@ -864,6 +864,7 @@
           beyEl.title = 'Estimated chance the underlying expires ' + dir + ' $' + s.price + ' (lognormal, current IV).';
         }
       });
+      renderSliceBell();
     }
 
     function updateSliceAddBtn() {
@@ -891,6 +892,71 @@
     function sliceMarkerPrices() {
       return priceSlices.map(function(s) { return s.price; })
         .filter(function(p) { return isFinite(p) && p > 0; });
+    }
+
+    // Price-slice distribution visual: a small bell curve (the classic σ-band
+    // diagram) in the site's blue palette, with each slice target marked as
+    // a dashed teal line at its σ-distance from the reference price.
+    // Marker z uses the same 1σ convention as expectedMove():
+    // z = (K − S_ref) / (S_ref · σ√T), so the auto ±1σ slices sit at ±1.
+    function renderSliceBell() {
+      const svg = document.getElementById('sliceBell');
+      if (!svg) return;
+      const h = (typeof sliceHorizon === 'function') ? sliceHorizon() : null;
+      const marks = (typeof sliceMarkerPrices === 'function') ? sliceMarkerPrices() : [];
+      if (!legs.length || !h || !(h.iv > 0) || !(h.T > 0)) { svg.style.display = 'none'; svg.innerHTML = ''; return; }
+      svg.style.display = '';
+      const S = h.S, sd = S * h.iv * Math.sqrt(h.T);
+      const W = 420, base = 88, peak = 62, ZMAX = 3.6;
+      const X = function(z) { return W / 2 + z * ((W / 2 - 14) / ZMAX); };
+      const Y = function(z) { return base - peak * Math.exp(-z * z / 2); };
+      const f1 = function(n) { return (Math.round(n * 10) / 10).toFixed(1); };
+      function bandPath(a, b) {
+        const n = 24;
+        let d = '';
+        for (let i = 0; i <= n; i++) {
+          const z = a + (b - a) * i / n;
+          d += (i ? 'L' : 'M') + f1(X(z)) + ' ' + f1(Y(z)) + ' ';
+        }
+        d += 'L' + f1(X(b)) + ' ' + base + ' L' + f1(X(a)) + ' ' + base + ' Z';
+        return d;
+      }
+      // σ bands, darkest at the center — same palette as the reference diagram.
+      const bands = [
+        { a: 0, b: 1, c: '#1e40af', pct: '34.1%', dark: true },
+        { a: 1, b: 2, c: '#3b82f6', pct: '13.6%', dark: true },
+        { a: 2, b: 3, c: '#93c5fd', pct: '2.1%', dark: false },
+        { a: 3, b: 3.6, c: '#dbeafe', pct: '0.1%', dark: false }
+      ];
+      let s = '';
+      bands.forEach(function(bd) {
+        s += '<path d="' + bandPath(-bd.b, -bd.a) + '" fill="' + bd.c + '"/>';
+        s += '<path d="' + bandPath(bd.a, bd.b) + '" fill="' + bd.c + '"/>';
+      });
+      bands.forEach(function(bd) {
+        const zc = (bd.a + bd.b) / 2;
+        const y = f1((Y(zc) + base) / 2 + 3);
+        const fill = bd.dark ? '#ffffff' : '#1e3a8a';
+        s += '<text x="' + f1(X(-zc)) + '" y="' + y + '" text-anchor="middle" font-size="8.5" fill="' + fill + '">' + bd.pct + '</text>';
+        s += '<text x="' + f1(X(zc)) + '" y="' + y + '" text-anchor="middle" font-size="8.5" fill="' + fill + '">' + bd.pct + '</text>';
+      });
+      s += '<line x1="' + f1(X(-ZMAX)) + '" y1="' + base + '" x2="' + f1(X(ZMAX)) + '" y2="' + base + '" stroke="var(--border)" stroke-width="1"/>';
+      const refLbl = '$' + (S >= 100 ? S.toFixed(0) : S.toFixed(2));
+      const ticks = [[-3, '−3σ'], [-2, '−2σ'], [-1, '−1σ'], [0, 'μ ' + refLbl], [1, '1σ'], [2, '2σ'], [3, '3σ']];
+      ticks.forEach(function(t) {
+        s += '<text x="' + f1(X(t[0])) + '" y="' + (base + 13) + '" text-anchor="middle" font-size="8.5" fill="var(--muted)">' + t[1] + '</text>';
+      });
+      marks.forEach(function(mk, mi) {
+        if (!isFinite(mk) || mk <= 0) return;
+        const z = Math.max(-3.55, Math.min(3.55, (mk - S) / sd));
+        const x = X(z);
+        const pt = (typeof probTouch === 'function') ? probTouch(mk) : null;
+        s += '<line class="mk-line" x1="' + f1(x) + '" y1="38" x2="' + f1(x) + '" y2="' + base + '" stroke-width="1.25" stroke-dasharray="4 3"/>';
+        const lbl = '$' + (mk >= 100 ? mk.toFixed(0) : mk.toFixed(2)) + (pt != null ? ' · ' + (pt * 100).toFixed(0) + '%' : '');
+        const anchorEnd = x > W - 86;
+        s += '<text class="mk-label" x="' + f1(anchorEnd ? x - 4 : x + 4) + '" y="' + (12 + (mi % 3) * 10) + '" text-anchor="' + (anchorEnd ? 'end' : 'start') + '" font-size="8.5">' + lbl + '</text>';
+      });
+      svg.innerHTML = s;
     }
 
     function defaultLongCall() {
@@ -1774,6 +1840,11 @@
       if (!slider) return;
       slider.min = Math.max(1, Math.floor(lo));
       slider.max = Math.ceil(hi);
+      // Keep the thumb on the current spot. Raising min above a stale value
+      // makes the browser clamp the value up to min, so without this the
+      // first drag after a chain load / spot edit starts from the lower end
+      // of the range instead of the current price.
+      slider.value = Math.min(slider.max, Math.max(slider.min, S));
     }
 
     function getParams() {
@@ -2112,21 +2183,22 @@
             ctx.fillText(lbl, Math.min(x + 4, area.right - 52), Math.max(ly, area.top + 12));
           });
         });
-        // Round 2, Item 5: price-slice markers — vertical dashed amber lines
+        // Round 2, Item 5: price-slice markers — vertical dashed teal lines
         // with tiny labels at each slice's target price.
         if (typeof sliceMarkerPrices === 'function') {
           const marks = sliceMarkerPrices();
+          const lightMk = (typeof isLightTheme === 'function') ? isLightTheme() : (document.documentElement.getAttribute('data-theme') === 'light');
           ctx.font = '9px Segoe UI, system-ui, sans-serif';
           marks.forEach(function (mk, mi) {
             if (!isFinite(mk)) return;
             const x = cx.getPixelForValue(mk);
             if (x < area.left || x > area.right) return;
-            ctx.strokeStyle = 'rgba(245,158,11,0.55)';
+            ctx.strokeStyle = lightMk ? 'rgba(13,148,136,0.65)' : 'rgba(45,212,191,0.65)';
             ctx.lineWidth = 1;
             ctx.setLineDash([4, 3]);
             ctx.beginPath(); ctx.moveTo(x, area.top); ctx.lineTo(x, area.bottom); ctx.stroke();
             ctx.setLineDash([]);
-            ctx.fillStyle = 'rgba(251,191,36,0.9)';
+            ctx.fillStyle = lightMk ? '#0d9488' : '#2dd4bf';
             ctx.fillText('$' + Number(mk).toFixed(0), Math.min(x + 4, area.right - 34), area.top + 24 + (mi * 11));
           });
         }
@@ -2722,8 +2794,9 @@
     }
 
     function resetChartGestures() {
-      chartZoom = null;
-      rangeZoomActive = false;
+      // Double-tap clears pinch/pan zoom and returns to the Range slider's
+      // locked window (±20% default) around the current spot.
+      onRangeChange();
       recalc();
     }
 
@@ -3473,13 +3546,13 @@
     }
 
     function applyRangeZoom(S) {
-      const pct = parseFloat(document.getElementById('chartRange').value) || 30;
+      const pct = parseFloat(document.getElementById('chartRange').value) || 20;
       const r = pct / 100;
       chartZoom = { min: Math.max(0.01, S * (1 - r)), max: S * (1 + r) };
     }
 
     function onRangeChange() {
-      const pct = parseFloat(document.getElementById('chartRange').value) || 30;
+      const pct = parseFloat(document.getElementById('chartRange').value) || 20;
       const lbl = document.getElementById('rangeLabel');
       if (lbl) lbl.textContent = '±' + pct + '%';
       rangeZoomActive = true;
@@ -4166,6 +4239,7 @@
       if (legsFromQuery(r.token)){
         markBuildDirty();
         syncDTESlider(); updateSpotSliderRange(); renderLegs(); recalc(); resetSimulation();
+        onRangeChange(); // re-lock the Range window around the loaded build's spot
         const tip = document.getElementById('templateTip');
         if (tip) tip.innerHTML = 'Loaded from recent builds. Edit freely.';
       } else {
@@ -4563,6 +4637,7 @@
         renderChainTable();
         if (typeof resetSimulation === 'function') resetSimulation();
         else if (typeof liveUpdate === 'function') liveUpdate();
+        onRangeChange(); // fresh market price asserted: re-lock the Range window around it
         const dteNow = expirationDte(sel.value);
         const qStatus = document.getElementById('quoteStatus');
         if (qStatus){
@@ -4746,6 +4821,9 @@
         if (HAS_LEGS && typeof renderLegs === 'function') renderLegs();
         recalc();
         resetSimulation();
+        // The payoff chart loads with the Range slider's window (±20%
+        // default) locked around the asserted spot. Builder page only.
+        if (HAS_PAYOFF && typeof onRangeChange === 'function') onRangeChange();
       }
 
       if (setupToken && legsFromQuery(setupToken)) {
@@ -4770,6 +4848,7 @@
         }
         if (found && typeof applyTemplate === 'function') {
           applyTemplate();
+          if (HAS_PAYOFF && typeof onRangeChange === 'function') onRangeChange();
           if (typeof loadCboeChain === 'function') loadCboeChain();
           return;
         }
@@ -4787,5 +4866,7 @@
       renderLegs();
       recalc();
       resetSimulation();
+      // The payoff chart loads with the Range slider's window (±20% default) locked.
+      if (HAS_PAYOFF && typeof onRangeChange === 'function') onRangeChange();
       if (typeof loadCboeChain === 'function') loadCboeChain();
     })();

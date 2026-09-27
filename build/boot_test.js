@@ -341,12 +341,12 @@ const el = (els, id) => els.get(id);
     const t = el(els, 'chanceProfit').textContent;
     if (!/%|—/.test(t)) throw new Error('chanceProfit=' + JSON.stringify(t));
   });
-  check('E5 builder: range slider present with default 30', () => {
+  check('E5 builder: range slider present with default 20', () => {
     const r = vm.runInContext("document.getElementById('chartRange')", ctx);
     if (!r) throw new Error('no chartRange');
-    if (el(els, 'chartRange').value !== '30') throw new Error('chartRange.value=' + el(els, 'chartRange').value);
+    if (el(els, 'chartRange').value !== '20') throw new Error('chartRange.value=' + el(els, 'chartRange').value);
     const html = fs.readFileSync(path.join(SITE, 'builder', 'index.html'), 'utf8');
-    if (!html.includes('id="rangeLabel">±30%<')) throw new Error('rangeLabel default missing in HTML');
+    if (!html.includes('id="rangeLabel">±20%<')) throw new Error('rangeLabel default missing in HTML');
   });
   check('E6 builder: stat strip has 10 tiles (A) + 7 (B)', () => {
     const html = fs.readFileSync(path.join(SITE, 'builder', 'index.html'), 'utf8');
@@ -910,6 +910,76 @@ const el = (els, id) => els.get(id);
     setLegs(`[{id:1,side:'sell',type:'put',strike:100,dte:30,qty:1,premium:3}]`, 100);
     const t = els.get('estMargin').textContent;
     if (!/2300/.test(t) || !/est\./.test(t)) throw new Error('tile=' + JSON.stringify(t));
+  });
+}
+
+// ---------- M: range default 20%, slider thumb sync, slices bell visual ----------
+// TOKEN ctx: S=105, IV=25%, DTE=30 (same token as K).
+{
+  const { ctx, els } = run('builder', '?setup=' + TOKEN);
+  const j = (expr) => vm.runInContext(expr, ctx);
+  check('M1 slider: updateSpotSliderRange keeps the thumb on the current spot', () => {
+    const v = j(`(function(){
+      document.getElementById('spot').value = '771.35';
+      var sl = document.getElementById('spotSlider');
+      sl.min = '40'; sl.max = '180'; sl.value = '100'; // stale pre-chain state
+      updateSpotSliderRange();
+      return sl.value + '|' + sl.min + '|' + sl.max;
+    })()`);
+    const val = parseFloat(String(v).split('|')[0]);
+    if (val !== 771.35) throw new Error('thumb did not follow spot: ' + v);
+  });
+  check('M2 range: chart loads with the Range window locked (±20% of spot)', () => {
+    const o = JSON.parse(j('JSON.stringify({min: chartZoom.min, max: chartZoom.max, active: rangeZoomActive})'));
+    if (o.active !== true) throw new Error('range not locked at boot');
+    if (Math.abs(o.min - 84) > 1e-9 || Math.abs(o.max - 126) > 1e-9) throw new Error('window=' + JSON.stringify(o));
+  });
+  check('M3 gestures: resetChartGestures restores the ±20% range window', () => {
+    const o = JSON.parse(j(`(function(){
+      document.getElementById('spot').value = '105'; // M1 left 771.35 behind
+      chartZoom = { min: 1, max: 2 }; rangeZoomActive = false; // simulate pinch zoom
+      resetChartGestures();
+      return JSON.stringify({min: chartZoom.min, max: chartZoom.max, active: rangeZoomActive});
+    })()`));
+    if (o.active !== true) throw new Error('range not re-locked');
+    if (Math.abs(o.min - 84) > 1e-9 || Math.abs(o.max - 126) > 1e-9) throw new Error('window=' + JSON.stringify(o));
+  });
+  check('M4 slices: section lives below the sliders in the builder HTML', () => {
+    const html = fs.readFileSync(path.join(SITE, 'builder', 'index.html'), 'utf8');
+    const iSlices = html.indexOf('id="priceSlicesWrap"');
+    const iRange = html.indexOf('id="chartRange"');
+    if (iSlices < 0 || iRange < 0) throw new Error('section or slider missing');
+    if (!(iSlices > iRange)) throw new Error('slices not below sliders');
+  });
+  check('M5 slices: chips are teal, no amber/yellow left', () => {
+    const html = fs.readFileSync(path.join(SITE, 'builder', 'index.html'), 'utf8');
+    const m = html.match(/\.slice-chip\s*\{[^}]*\}/);
+    if (!m) throw new Error('no .slice-chip rule');
+    if (!/45,212,191/.test(m[0])) throw new Error('chip not teal: ' + m[0].slice(0, 80));
+    if (/245,158,11/.test(html)) throw new Error('amber still present in builder HTML');
+  });
+  check('M6 slices: bell SVG present in the builder HTML', () => {
+    const html = fs.readFileSync(path.join(SITE, 'builder', 'index.html'), 'utf8');
+    if (!html.includes('id="sliceBell"')) throw new Error('sliceBell missing');
+  });
+  check('M7 bell: auto ±1σ prefill draws 2 teal markers + σ-band labels', () => {
+    const v = j(`(function(){
+      renderSliceBell();
+      return document.getElementById('sliceBell').innerHTML;
+    })()`);
+    const n = (v.match(/mk-line/g) || []).length;
+    if (n !== 2) throw new Error('markers=' + n);
+    if (!/34\.1%/.test(v) || !/13\.6%/.test(v)) throw new Error('band labels missing');
+    if (!/μ \$105/.test(v)) throw new Error('ref tick missing');
+  });
+}
+{
+  const { ctx } = run('builder', '');
+  const j = (expr) => vm.runInContext(expr, ctx);
+  check('M8 range: default boot path locks ±20% around spot 100', () => {
+    const o = JSON.parse(j('JSON.stringify({min: chartZoom.min, max: chartZoom.max, active: rangeZoomActive})'));
+    if (o.active !== true) throw new Error('range not locked at boot');
+    if (Math.abs(o.min - 80) > 1e-9 || Math.abs(o.max - 120) > 1e-9) throw new Error('window=' + JSON.stringify(o));
   });
 }
 

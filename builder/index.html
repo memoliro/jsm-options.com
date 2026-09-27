@@ -330,8 +330,16 @@
     .slices-actions { margin-left: auto; display: flex; gap: 6px; }
     .slice-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; padding: 3px 0; }
     .slice-price { width: 96px; background: var(--input-bg, #0f172a); color: var(--text); border: 1px solid var(--border); border-radius: 6px; padding: 4px 8px; font-size: 0.82rem; }
-    .slice-chip { font-size: 0.74rem; padding: 2px 9px; border-radius: 999px; background: rgba(245,158,11,0.12); color: #fbbf24; border: 1px solid rgba(245,158,11,0.35); font-variant-numeric: tabular-nums; white-space: nowrap; cursor: help; }
+    .slice-chip { font-size: 0.74rem; padding: 2px 9px; border-radius: 999px; background: rgba(45,212,191,0.10); color: #2dd4bf; border: 1px solid rgba(45,212,191,0.35); font-variant-numeric: tabular-nums; white-space: nowrap; cursor: help; }
     .slice-chip.dim { opacity: 0.5; }
+    [data-theme="light"] .slice-chip { color: #0f766e; background: rgba(13,148,136,0.10); border-color: rgba(13,148,136,0.35); }
+    /* Round 2 follow-up: price-slice distribution visual (bell curve with σ bands) */
+    .slice-bell { width: 100%; height: auto; display: block; margin: 4px 0 6px; }
+    .slice-bell text { font-family: 'Segoe UI', system-ui, sans-serif; }
+    .slice-bell .mk-line { stroke: #2dd4bf; }
+    .slice-bell .mk-label { fill: #2dd4bf; }
+    [data-theme="light"] .slice-bell .mk-line { stroke: #0d9488; }
+    [data-theme="light"] .slice-bell .mk-label { fill: #0d9488; }
     .slice-x { background: none; border: none; color: var(--muted); cursor: pointer; font-size: 0.9rem; padding: 2px 6px; border-radius: 6px; }
     .slice-x:hover { color: var(--red); background: rgba(239,68,68,0.1); }
 
@@ -1077,18 +1085,6 @@
         <span><span class="dot dotted" style="background:repeating-linear-gradient(90deg,#c4b5fd 0 3px,transparent 3px 6px);"></span> B with time left</span>
       </div>
       <p class="gesture-hint">Drag a <span style="color:#60a5fa;">●</span> marker to move its strike · Shift-drag a marker to move all strikes · drag elsewhere to move price · pinch to zoom the Payoff axis · double-tap to reset · two-finger pan.</p>
-      <!-- Round 2, Item 5: price slices — touch odds + expiry odds at target prices -->
-      <div class="slices-wrap" id="priceSlicesWrap" style="display:none">
-        <div class="slices-head">
-          <span class="slices-title">Price slices <span class="slices-est">est.</span></span>
-          <span class="slices-sub">touch odds before expiry · from the reference price</span>
-          <span class="slices-actions">
-            <button type="button" class="btn-secondary btn-sm" onclick="resetSlices()" title="Reset slices to ±1σ around the reference price">↺ ±1σ</button>
-            <button type="button" class="btn-secondary btn-sm" id="sliceAddBtn" onclick="addSlice()">+ Add</button>
-          </span>
-        </div>
-        <div id="priceSlices"></div>
-      </div>
       <div class="compare-metrics" id="compareMetrics">
         <div class="compare-col a" id="compareColA"></div>
         <div class="compare-col b" id="compareColB"></div>
@@ -1106,9 +1102,24 @@
           <input type="range" id="spotSlider" min="40" max="180" step="0.5" value="100" oninput="onSpotSlide()" />
         </div>
         <div class="slider-group" style="margin-top:6px;">
-          <label>Range <strong id="rangeLabel">±30%</strong></label>
-          <input type="range" id="chartRange" min="5" max="100" step="1" value="30" oninput="onRangeChange()" title="Zoom the payoff chart to ± this % around the underlying price" />
+          <label>Range <strong id="rangeLabel">±20%</strong></label>
+          <input type="range" id="chartRange" min="5" max="100" step="1" value="20" oninput="onRangeChange()" title="Zoom the payoff chart to ± this % around the underlying price" />
         </div>
+      </div>
+      <!-- Round 2, Item 5: price slices — touch odds + expiry odds at target prices.
+           Lives below the sliders: a small σ-band distribution visual plus the
+           editable target rows. -->
+      <div class="slices-wrap" id="priceSlicesWrap" style="display:none">
+        <div class="slices-head">
+          <span class="slices-title">Price slices <span class="slices-est">est.</span></span>
+          <span class="slices-sub">touch odds before expiry · from the reference price</span>
+          <span class="slices-actions">
+            <button type="button" class="btn-secondary btn-sm" onclick="resetSlices()" title="Reset slices to ±1σ around the reference price">↺ ±1σ</button>
+            <button type="button" class="btn-secondary btn-sm" id="sliceAddBtn" onclick="addSlice()">+ Add</button>
+          </span>
+        </div>
+        <svg id="sliceBell" class="slice-bell" viewBox="0 0 420 118" role="img" aria-label="Expected distribution of the underlying at expiry with slice targets marked"></svg>
+        <div id="priceSlices"></div>
       </div>
     </div>
 
@@ -1240,7 +1251,7 @@ and custom structures. View payoff charts, Greeks, profit/loss, break-even, prob
     </div>
     <div class="guide-body" id="guideBody"></div>
   </aside>
-  <script src="/assets/jsm-options-engine.js?v=fc757790"></script>
+  <script src="/assets/jsm-options-engine.js?v=e15b809f"></script>
 <script>
 (function(){
   function initNav(){

@@ -221,12 +221,16 @@ assert block.count(old_dl) == 1
 block = block.replace(old_dl, "        setText('daysLeftLabel', maxDTE);")
 engine = engine[:fi] + block + engine[fj:]
 
-# M6: updateSpotSliderRange guard
+# M6: updateSpotSliderRange guard + thumb sync (now in the monolith; verify it
+# survives into the built engine)
 rep("""      const slider = document.getElementById('spotSlider');
-      slider.min = Math.max(1, Math.floor(lo));""",
+      if (!slider) return;
+      slider.min = Math.max(1, Math.floor(lo));
+      slider.max = Math.ceil(hi);""",
     """      const slider = document.getElementById('spotSlider');
       if (!slider) return;
-      slider.min = Math.max(1, Math.floor(lo));""", name='M6 spot slider guard')
+      slider.min = Math.max(1, Math.floor(lo));
+      slider.max = Math.ceil(hi);""", name='M6 spot slider guard')
 
 # M7: syncDTESlider guards
 rep("""      const slider = document.getElementById('daysLeft');
@@ -434,6 +438,9 @@ new_tail = """    // ---- Cross-page navigation ----
         if (HAS_LEGS && typeof renderLegs === 'function') renderLegs();
         recalc();
         resetSimulation();
+        // The payoff chart loads with the Range slider's window (±20%
+        // default) locked around the asserted spot. Builder page only.
+        if (HAS_PAYOFF && typeof onRangeChange === 'function') onRangeChange();
       }
 
       if (setupToken && legsFromQuery(setupToken)) {
@@ -458,6 +465,7 @@ new_tail = """    // ---- Cross-page navigation ----
         }
         if (found && typeof applyTemplate === 'function') {
           applyTemplate();
+          if (HAS_PAYOFF && typeof onRangeChange === 'function') onRangeChange();
           if (typeof loadCboeChain === 'function') loadCboeChain();
           return;
         }
@@ -475,6 +483,8 @@ new_tail = """    // ---- Cross-page navigation ----
       renderLegs();
       recalc();
       resetSimulation();
+      // The payoff chart loads with the Range slider's window (±20% default) locked.
+      if (HAS_PAYOFF && typeof onRangeChange === 'function') onRangeChange();
       if (typeof loadCboeChain === 'function') loadCboeChain();
     })();
 """
