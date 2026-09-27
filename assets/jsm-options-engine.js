@@ -112,6 +112,11 @@
     let animating = false;
     let crosshairS = 100;
     let crosshairPL = 0;
+    // Item 4: effective per-position Y-axis denominators for the payoff chart
+    // under % modes, refreshed by payoffDatasets() on every updateChart().
+    // null-safe: 1 + 'usd' means the position fell back to dollars.
+    let chartDenomA = 1, chartDenomB = 1;
+    let chartModeA = 'usd', chartModeB = 'usd'; // 'usd' | 'pct'
     let maxDTE = 90;
     let nextId = 1;
     let compareMode = false;
@@ -894,6 +899,7 @@
       const t = makeTemplateLegs(key);
       if (!t) return;
       legs = t.map(leg => ({ ...leg, id: nextId++, premiumManual: false }));
+      markBuildDirty();
       if (chart) { try { chart.destroy(); } catch (e) {} chart = null; }
       syncDTESlider();
       updateSpotSliderRange();
@@ -1305,6 +1311,7 @@
       };
       draft.premium = modeledPremiumForLeg(draft, S);
       legs.push(draft);
+      markBuildDirty();
       syncDTESlider();
       renderLegs();
       recalc();
@@ -1313,6 +1320,7 @@
     function removeLeg(id) {
       legs = legs.filter(l => l.id !== id);
       if (legs.length === 0) legs = defaultLongCall();
+      markBuildDirty();
       syncDTESlider();
       renderLegs();
       recalc();
@@ -1320,6 +1328,7 @@
 
     function clearLegs() {
       legs = defaultLongCall();
+      markBuildDirty();
       syncDTESlider();
       renderLegs();
       recalc();
@@ -1331,6 +1340,7 @@
     function updateLegField(id, field, value, liveTyping) {
       const leg = legs.find(l => l.id === id);
       if (!leg) return;
+      markBuildDirty();
       if (field === 'ticker') {
         leg.ticker = normalizeTicker(value);
         leg.tickerManual = !!leg.ticker;
@@ -1755,7 +1765,12 @@
         if (!cx || !cy) return;
         const ctx = chart.ctx;
         const x = cx.getPixelForValue(crosshairS);
-        const y = cy.getPixelForValue(crosshairPL);
+        // Item 4: the crosshair tracks position A, so it follows A's effective
+        // Y mode (percent when A is in a % mode, dollars when A fell back).
+        const chPct = (typeof chartModeA !== 'undefined' && chartModeA === 'pct');
+        const chDenom = (typeof chartDenomA === 'number' && chartDenomA > 0) ? chartDenomA : 1;
+        const chY = chPct ? crosshairPL / chDenom : crosshairPL;
+        const y = cy.getPixelForValue(chY);
         const top = chart.chartArea.top;
         const bottom = chart.chartArea.bottom;
         const left = chart.chartArea.left;
@@ -1788,7 +1803,9 @@
         const priceLbl = '$' + crosshairS.toFixed(1);
         ctx.fillText(priceLbl, Math.min(x + 4, right - 48), top + 12);
         ctx.fillStyle = plColor;
-        const plLbl = (crosshairPL >= 0 ? '+' : '') + '$' + crosshairPL.toFixed(0);
+        const plLbl = chPct
+          ? ((chY >= 0 ? '+' : '') + chY.toFixed(1) + '%')
+          : ((crosshairPL >= 0 ? '+' : '') + '$' + crosshairPL.toFixed(0));
         ctx.fillText(plLbl, left + 4, Math.max(y - 4, top + 12));
         ctx.restore();
       }
@@ -1916,10 +1933,37 @@
       }
     };
 
+    // Item 4: Y-axis presentation follows the shared $ / % risk / % cost mode.
+    function yAxisTitle() {
+      if (plMetric === 'risk') return 'P/L (% of max risk)';
+      if (plMetric === 'cost') return 'P/L (% of entry cost)';
+      return 'P/L ($)';
+    }
+    function yTickFormat(v) {
+      if (plMetric === '$') return '$' + v.toFixed(0);
+      return v.toFixed(0) + '%';
+    }
+
     function payoffDatasets(data) {
       const gS = 'rgba(34,197,94,0.95)', rS = 'rgba(239,68,68,0.95)';
       const gD = 'rgba(34,197,94,0.65)', rD = 'rgba(239,68,68,0.65)';
       const bS = 'rgba(167,139,250,0.95)', bD = 'rgba(167,139,250,0.62)';
+      // Item 4: % modes rescale each position's datasets by its own
+      // denominator. A position whose denominator is undefined (unbounded
+      // loss / zero cost) falls back to dollars; its label gets a ($)
+      // suffix so the tooltip notes the fallback.
+      const pctMode = plMetric !== '$';
+      const dA = plDenomFor(legs, data.expiry);
+      const hasB = compareMode && data.expiryB && data.expiryB.length;
+      const dB = hasB ? plDenomFor(legsB, data.expiryB) : 1;
+      function scaleY(arr, d) { return d ? arr.map(function(y) { return y / d; }) : arr.slice(); }
+      const exA = scaleY(data.expiry, dA), thA = scaleY(data.theoretical, dA);
+      const exB = scaleY(data.expiryB, dB), thB = scaleY(data.theoreticalB, dB);
+      chartDenomA = dA || 1; chartDenomB = dB || 1;
+      chartModeA = (pctMode && dA) ? 'pct' : 'usd';
+      chartModeB = (pctMode && dB) ? 'pct' : 'usd';
+      const fbA = (pctMode && !dA) ? ' ($)' : '';
+      const fbB = (pctMode && !dB) ? ' ($)' : '';
       // Shaded P/L regions between a payoff line and the $0 axis:
       // green where the line is above zero, red where below.
       // Each half is its own fill dataset (nulls break the fill at crossings).
@@ -1944,10 +1988,11 @@
       const gFillSoft = 'rgba(46,229,111,0.08)', rFillSoft = 'rgba(255,93,108,0.08)';
       const vFill = 'rgba(167,139,250,0.10)';
       const sets = [].concat(
-        shadePair(data.expiry, gFill, rFill),
+        shadePair(exA, gFill, rFill),
         [{
-          label: compareMode ? 'A · Payoff (Expiry)' : 'Payoff (Expiry)',
-          data: data.expiry,
+          label: (compareMode ? 'A · Payoff (Expiry)' : 'Payoff (Expiry)') + fbA,
+          data: exA,
+          _ymode: chartModeA,
           borderColor: gS,
           borderWidth: 2.5,
           pointRadius: 0,
@@ -1955,10 +2000,11 @@
           fill: false,
           segment: { borderColor: function(ctx) { return segmentColor(ctx, gS, rS); } }
         }],
-        shadePair(data.theoretical, gFillSoft, rFillSoft),
+        shadePair(thA, gFillSoft, rFillSoft),
         [{
-          label: compareMode ? 'A · time left' : 'Theoretical (time left)',
-          data: data.theoretical,
+          label: (compareMode ? 'A · time left' : 'Theoretical (time left)') + fbA,
+          data: thA,
+          _ymode: chartModeA,
           borderColor: gD,
           borderWidth: 2,
           borderDash: [6, 4],
@@ -1968,22 +2014,24 @@
           segment: { borderColor: function(ctx) { return segmentColor(ctx, gD, rD); } }
         }]
       );
-      if (compareMode && data.expiryB && data.expiryB.length) {
+      if (hasB) {
         sets.push.apply(sets, [].concat(
-          shadePair(data.expiryB, vFill, vFill),
+          shadePair(exB, vFill, vFill),
           [{
-            label: 'B · Payoff (Expiry)',
-            data: data.expiryB,
+            label: 'B · Payoff (Expiry)' + fbB,
+            data: exB,
+            _ymode: chartModeB,
             borderColor: bS,
             borderWidth: 2.5,
             pointRadius: 0,
             tension: 0,
             fill: false
           }],
-          shadePair(data.theoreticalB, vFill, vFill),
+          shadePair(thB, vFill, vFill),
           [{
-            label: 'B · time left',
-            data: data.theoreticalB,
+            label: 'B · time left' + fbB,
+            data: thB,
+            _ymode: chartModeB,
             borderColor: bD,
             borderWidth: 2,
             borderDash: [5, 4],
@@ -2007,6 +2055,10 @@
       if (chart && chart.data.datasets.length === wantSets) {
         chart.data.labels = data.labels;
         chart.data.datasets = payoffDatasets(data);
+        // Item 4: keep the Y-axis title in sync with the $ / % mode.
+        // (Guarded: Chart.js always resolves scales.y.title, but the
+        // boot-test Chart stub does not.)
+        if (chart.options.scales.y.title) chart.options.scales.y.title.text = yAxisTitle();
         if (chartZoom) {
           chart.options.scales.x.min = chartZoom.min;
           chart.options.scales.x.max = chartZoom.max;
@@ -2046,7 +2098,12 @@
               filter: function(ti) { return !(ti.dataset && ti.dataset._shade); },
               callbacks: {
                 title: function(items) { return 'Underlying: $' + Number(items[0].label).toFixed(2); },
-                label: function(ctx) { return ctx.dataset.label + ': $' + ctx.parsed.y.toFixed(0); }
+                label: function(c) {
+                  if (c.dataset && c.dataset._ymode === 'pct') {
+                    return c.dataset.label + ': ' + (c.parsed.y >= 0 ? '+' : '') + c.parsed.y.toFixed(1) + '%';
+                  }
+                  return c.dataset.label + ': $' + c.parsed.y.toFixed(0);
+                }
               }
             }
           },
@@ -2058,8 +2115,8 @@
               grid: { color: tc.grid }
             },
             y: {
-              title: { display: true, text: 'P/L ($)', color: tc.text },
-              ticks: { color: tc.text, callback: function(v) { return '$' + v.toFixed(0); } },
+              title: { display: true, text: yAxisTitle(), color: tc.text },
+              ticks: { color: tc.text, callback: function(v) { return yTickFormat(v); } },
               grid: { color: tc.grid }
             }
           }
@@ -2730,6 +2787,174 @@
       recalc();
     }
 
+    // ===== Round 2 item 1: Price×date P&L data table =====
+    // View toggle (chart/table) + value mode ($ / % of max risk / % of entry cost).
+    // The table reuses plAt()/initialCost() so it always agrees with the chart.
+    // NOTE: recalc() is rewritten wholesale by partition.py (M3), so the table
+    // refreshes via the post-recalc wrapper after updateGreeksUI() below —
+    // never by editing recalc() itself.
+    let chartView = 'chart'; // 'chart' | 'table'
+    let plMetric = '$';      // '$' | 'risk' | 'cost'
+
+    function setChartView(v) {
+      chartView = v;
+      const cb = document.getElementById('viewChartBtn');
+      const tb = document.getElementById('viewTableBtn');
+      if (cb) cb.classList.toggle('active', v === 'chart');
+      if (tb) tb.classList.toggle('active', v === 'table');
+      const cc = document.getElementById('chartContainer');
+      const tw = document.getElementById('plTableWrap');
+      const note = document.getElementById('plTableNote');
+      const gh = document.querySelector('.gesture-hint');
+      if (cc) cc.style.display = v === 'chart' ? '' : 'none';
+      if (tw) tw.style.display = v === 'table' ? '' : 'none';
+      if (note) note.style.display = v === 'table' ? '' : 'none';
+      if (gh) gh.style.display = v === 'chart' ? '' : 'none';
+      if (v === 'table') renderPlTable();
+    }
+
+    function setPlMetric(m) {
+      plMetric = m;
+      const btns = document.querySelectorAll('[data-plmetric]');
+      for (let i = 0; i < btns.length; i++) {
+        btns[i].classList.toggle('active', btns[i].getAttribute('data-plmetric') === m);
+      }
+      // Item 4: the $ / % risk / % cost mode drives the payoff chart Y-axis
+      // as well as the P&L table.
+      if (typeof updateChart === 'function') updateChart();
+      if (chartView === 'table') renderPlTable();
+    }
+
+    // Denominator for % modes, per position. null => the mode is undefined
+    // for this position (chart falls back to dollars for it; table shows '—').
+    // % of max risk needs a bounded loss: tail < 0 means the right tail
+    // loses without bound (e.g. naked short call) -> null. tail >= 0 covers
+    // defined-risk spreads AND long-only positions (long call/put, long
+    // stock) whose max loss is the debit paid. Computed lazily from the
+    // same buildChartData() recalc() uses, so the table/chart can never
+    // disagree with the stat strip.
+    function riskDenomFor(legsArr, expiryArr) {
+      if (rightTailSlope(legsArr) < 0) return null;
+      if (!expiryArr || !expiryArr.length) return null;
+      const minP = Math.min.apply(null, expiryArr);
+      return minP < 0 ? -minP : null;
+    }
+    function costDenomFor(legsArr) {
+      const c = Math.abs(initialCost(legsArr));
+      return c > 0 ? c : null;
+    }
+    // Effective denominator for one position under the current plMetric.
+    // '$' => 1 (dollars). null => this position falls back to dollars.
+    function plDenomFor(legsArr, expiryArr) {
+      if (plMetric === 'risk') return riskDenomFor(legsArr, expiryArr);
+      if (plMetric === 'cost') return costDenomFor(legsArr);
+      return 1;
+    }
+    // Table denominator (position A). Kept as the single entry point so the
+    // P&L table and the chart always share the same definition.
+    function plMetricDenom() {
+      if (plMetric === '$') return 1;
+      const data = buildChartData();
+      return plDenomFor(legs, data.expiry);
+    }
+
+    function formatPlMetric(v) {
+      if (!isFinite(v)) return '—';
+      if (plMetric === '$') {
+        const a = Math.abs(v);
+        return (v < 0 ? '-' : (v > 0 ? '+' : '')) + '$' + (a >= 100 ? a.toFixed(0) : a.toFixed(2));
+      }
+      const d = plMetricDenom();
+      if (!(d > 0)) return '—';
+      const pct = v / d * 100;
+      if (!isFinite(pct)) return '—';
+      return (pct > 0 ? '+' : '') + pct.toFixed(0) + '%';
+    }
+
+    // Same X window the payoff chart uses, so rows line up with the chart.
+    function chartXWindowA() {
+      const params = getParams();
+      const S = params.S;
+      const anchor = (typeof chartRefSpot === 'number' && chartRefSpot > 0) ? chartRefSpot : S;
+      const strikes = collectStrikes(legs);
+      const base = strikes.length ? strikes : [anchor];
+      let lo = Math.min(anchor * 0.65, Math.min.apply(null, base) * 0.65);
+      let hi = Math.max(anchor * 1.45, Math.max.apply(null, base) * 1.45);
+      if (typeof chartZoom !== 'undefined' && chartZoom && chartZoom.min > 0 && chartZoom.max > chartZoom.min) {
+        lo = chartZoom.min; hi = chartZoom.max;
+      }
+      if (!(hi > lo)) { lo = anchor * 0.7; hi = anchor * 1.3; }
+      return { lo: lo, hi: hi };
+    }
+
+    function renderPlTable() {
+      const tbl = document.getElementById('plTable');
+      if (!tbl) return;
+      if (!legs.length) {
+        tbl.innerHTML = '<tbody><tr><td style="padding:16px;color:var(--muted)">Add a leg to see the P&L table.</td></tr></tbody>';
+        return;
+      }
+      const params = getParams();
+      const S = params.S;
+      const win = chartXWindowA();
+      const ROWS = 11, COLS = 6;
+      let minDte = 0;
+      for (let i = 0; i < legs.length; i++) {
+        const d = legs[i].dte;
+        if (legs[i].type !== 'stock' && isFinite(d) && d > 0) minDte = minDte ? Math.min(minDte, d) : d;
+      }
+      minDte = Math.max(0, Math.round(minDte));
+      const today = new Date(); today.setHours(0, 0, 0, 0);
+      const colDefs = [];
+      for (let j = 0; j < COLS; j++) {
+        const f = j / (COLS - 1); // 0 = today … 1 = expiry
+        const dl = Math.round(minDte * (1 - f));
+        const elapsed = minDte - dl;
+        const dt = new Date(today.getTime() + elapsed * 86400000).toISOString().slice(0, 10);
+        colDefs.push({
+          daysLeft: dl,
+          head: j === 0 ? 'Today' : (j === COLS - 1 ? 'Expiry' : 'D-' + dl),
+          sub: dt
+        });
+      }
+      let html = '<thead><tr><th>Price</th>';
+      for (let j = 0; j < colDefs.length; j++) {
+        html += '<th>' + colDefs[j].head + '<br><span style="font-weight:400;text-transform:none;letter-spacing:0">' + colDefs[j].sub + '</span></th>';
+      }
+      html += '</tr></thead><tbody>';
+      const prices = [];
+      let spotRow = 0, best = Infinity;
+      for (let i = 0; i < ROWS; i++) {
+        const p = win.hi - (win.hi - win.lo) * (i / (ROWS - 1)); // high → low
+        prices.push(p);
+        const dd = Math.abs(p - S);
+        if (dd < best) { best = dd; spotRow = i; }
+      }
+      for (let i = 0; i < ROWS; i++) {
+        const p = prices[i];
+        const pctMove = S > 0 ? (p - S) / S * 100 : 0;
+        const vals = colDefs.map(function(c) { return plAt(p, c.daysLeft, legs); });
+        let mx = 0;
+        for (let j = 0; j < vals.length; j++) if (isFinite(vals[j])) mx = Math.max(mx, Math.abs(vals[j]));
+        html += '<tr' + (i === spotRow ? ' class="spot-row"' : '') + '><th>$' + p.toFixed(1) +
+          ' <span style="color:var(--muted);font-weight:400">(' + (pctMove >= 0 ? '+' : '') + pctMove.toFixed(0) + '%)</span></th>';
+        for (let j = 0; j < vals.length; j++) {
+          const v = vals[j];
+          const cls = !isFinite(v) ? '' : (v > 0.005 ? 'pv-pos' : (v < -0.005 ? 'pv-neg' : ''));
+          const be = isFinite(v) && Math.abs(v) < 1 ? ' be' : '';
+          const alpha = mx > 0 && isFinite(v) ? Math.min(0.8, Math.abs(v) / mx * 0.8) : 0;
+          const bg = v > 0 ? 'background:rgba(34,197,94,' + alpha.toFixed(2) + ');'
+                   : (v < 0 ? 'background:rgba(239,68,68,' + alpha.toFixed(2) + ');' : '');
+          html += '<td class="' + (cls + be).trim() + '" style="' + bg + '">' + formatPlMetric(v) + '</td>';
+        }
+        html += '</tr>';
+      }
+      html += '</tbody>';
+      tbl.innerHTML = html;
+      const note = document.getElementById('plTableModeNote');
+      if (note) note.textContent = 'mode: ' + (plMetric === '$' ? 'dollars' : (plMetric === 'risk' ? '% of max risk' : '% of entry cost'));
+    }
+
     function recalc() {
       try { if (typeof updateShareUrlQuiet === "function") { /* share updated on button only */ } } catch (e) {}
 
@@ -2867,6 +3092,23 @@
         : rh < -5 ? 'Rates hurt: +1% rates costs about $' + Math.abs(rh).toFixed(0) + '.'
         : 'Low Rho: rate moves matter little right now.';
     }
+
+    // ===== Round 2: post-recalc hooks live here, NOT inside recalc() =====
+    // partition.py (build step M3) replaces recalc() wholesale with a
+    // section-guarded copy, so anything added inside the monolith's recalc()
+    // would be silently dropped from the built site. Wrap it instead.
+    const _recalcOrigR2 = recalc;
+    recalc = function() {
+      _recalcOrigR2.apply(null, arguments);
+      try {
+        // Item 1: keep the P&L data table in sync when legs/params change.
+        if (typeof chartView !== 'undefined' && chartView === 'table') renderPlTable();
+      } catch (e) { /* table refresh must never break recalc */ }
+      try {
+        // Item 3: snapshot recent builds (builder page only; debounced 1.5s).
+        if (document.getElementById('legsList')) scheduleRecentSave();
+      } catch (e) {}
+    };
 
     function onDaysChange() {
       document.getElementById('daysLeftLabel').textContent = document.getElementById('daysLeft').value;
@@ -3406,6 +3648,7 @@
         if (obj.exdiv && document.getElementById('exDivDate')) {
           document.getElementById('exDivDate').value = obj.exdiv;
         }
+        markBuildDirty(); // a loaded setup is worth remembering
         return true;
       } catch (e) { return false; }
     }
@@ -3421,6 +3664,185 @@
         window.history.replaceState(null, '', url.pathname + '?' + url.searchParams.toString());
       } catch (e) {}
     }
+
+    // ===== Round 2 item 3: recent-builds history (localStorage only) =====
+    // Snapshots of the builder setup are saved (debounced) after edits settle.
+    // Nothing leaves the browser; the panel offers one-click reload.
+    const RECENT_KEY = 'jsm.recent.v1';
+    const RECENT_MAX = 12;
+    let recentSaveTimer = null;
+    let buildDirty = false;
+    function markBuildDirty(){ buildDirty = true; }
+    function escapeHtml(s){
+      return String(s == null ? '' : s).replace(/[&<>"']/g, function(c){
+        return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+      });
+    }
+    function relTime(ts){
+      const d = Date.now() - ts;
+      if (!(d >= 0)) return 'just now';
+      const m = Math.floor(d / 60000);
+      if (m < 1) return 'just now';
+      if (m < 60) return m + 'm ago';
+      const h = Math.floor(m / 60);
+      if (h < 24) return h + 'h ago';
+      const days = Math.floor(h / 24);
+      if (days < 7) return days + 'd ago';
+      return new Date(ts).toISOString().slice(0, 10);
+    }
+    // Short human label for a leg list, e.g. "Bull Call Spread".
+    function describeLegs(list){
+      const ls = (list || []).filter(function(l){ return l && l.type && l.type !== 'stock'; });
+      const st = (list || []).filter(function(l){ return l && l.type === 'stock'; });
+      if (!ls.length){
+        if (st.length) return (st[0].side === 'sell' ? 'Short Stock' : 'Long Stock');
+        return 'Empty';
+      }
+      if (st.length === 1 && ls.length === 1 && ls[0].type === 'call' && ls[0].side === 'sell') return 'Covered Call';
+      if (st.length === 1 && ls.length === 1 && ls[0].type === 'put' && ls[0].side === 'sell') return 'Cash-Secured Put';
+      if (ls.length === 1){
+        const l = ls[0];
+        return (l.side === 'sell' ? 'Short ' : 'Long ') + (l.type === 'put' ? 'Put ' : 'Call ') + l.strike;
+      }
+      if (ls.length === 2){
+        let p1 = ls[0], p2 = ls[1];
+        // a = lower strike; on equal strikes, put the put leg first
+        if (p2.strike < p1.strike || (p2.strike === p1.strike && p2.type === 'put' && p1.type !== 'put')){
+          const t = p1; p1 = p2; p2 = t;
+        }
+        const a = p1, b = p2;
+        const sameQty = Math.abs(a.qty) === Math.abs(b.qty);
+        if (a.dte === b.dte && sameQty){
+          if (a.type === 'call' && b.type === 'call'){
+            if (a.side === 'buy' && b.side === 'sell') return 'Bull Call Spread';
+            if (a.side === 'sell' && b.side === 'buy') return 'Bear Call Spread';
+          }
+          if (a.type === 'put' && b.type === 'put'){
+            if (a.side === 'buy' && b.side === 'sell') return 'Bull Put Spread';
+            if (a.side === 'sell' && b.side === 'buy') return 'Bear Put Spread';
+          }
+          if (a.type === 'put' && b.type === 'call' && a.side === 'buy' && b.side === 'buy')
+            return a.strike === b.strike ? 'Long Straddle' : 'Long Strangle';
+          if (a.type === 'put' && b.type === 'call' && a.side === 'sell' && b.side === 'sell')
+            return a.strike === b.strike ? 'Short Straddle' : 'Short Strangle';
+        } else if (a.dte !== b.dte && a.type === b.type && a.strike === b.strike){
+          return 'Calendar Spread';
+        }
+        return 'Custom (2 legs)';
+      }
+      if ((ls.length === 3 || ls.length === 4) && ls.every(function(l){ return l.dte === ls[0].dte; })){
+        const types = {};
+        ls.forEach(function(l){ types[l.type] = 1; });
+        const nTypes = Object.keys(types).length;
+        const shorts = ls.filter(function(l){ return l.side === 'sell'; }).length;
+        if (ls.length === 4 && nTypes === 2 && shorts === 2) return 'Iron Condor';
+        if (nTypes === 1) return ls.length === 3 ? 'Butterfly' : 'Condor';
+      }
+      return 'Custom (' + list.length + ' legs)';
+    }
+    function loadRecent(){
+      try {
+        const raw = localStorage.getItem(RECENT_KEY);
+        if (!raw) return [];
+        const arr = JSON.parse(raw);
+        return Array.isArray(arr) ? arr.filter(function(r){ return r && r.token; }) : [];
+      } catch (e){ return []; }
+    }
+    function persistRecent(arr){
+      try { localStorage.setItem(RECENT_KEY, JSON.stringify(arr.slice(0, RECENT_MAX))); } catch (e){}
+    }
+    function scheduleRecentSave(){
+      if (recentSaveTimer) clearTimeout(recentSaveTimer);
+      recentSaveTimer = setTimeout(saveRecentBuild, 1500);
+    }
+    function saveRecentBuild(){
+      try {
+        if (!buildDirty || !legs.length) return;
+        if (!document.getElementById('legsList')) return; // builder page only
+        const token = legsToQuery();
+        if (!token) return;
+        let arr = loadRecent();
+        if (arr.length && arr[0].token === token) return; // unchanged since last save
+        arr = arr.filter(function(r){ return r.token !== token; });
+        const tkrEl = document.getElementById('ticker');
+        arr.unshift({
+          ts: Date.now(),
+          ticker: tkrEl ? (tkrEl.value || '').toUpperCase() : '',
+          label: describeLegs(legs),
+          token: token
+        });
+        persistRecent(arr);
+        const p = document.getElementById('recentPanel');
+        if (p && p.style.display !== 'none') renderRecentList();
+      } catch (e){}
+    }
+    function renderRecentList(){
+      const p = document.getElementById('recentPanel');
+      if (!p) return;
+      const arr = loadRecent();
+      if (!arr.length){
+        p.innerHTML = '<div style="padding:12px;color:var(--muted);font-size:.8rem">No recent builds yet.<br>Setups you build will appear here.</div>';
+        return;
+      }
+      let html = '';
+      arr.forEach(function(r, i){
+        html += '<div class="recent-item" role="button" tabindex="0" onclick="loadRecentBuild(' + i + ')">' +
+          '<span class="rt">' + escapeHtml(r.ticker || '—') + '</span>' +
+          '<span class="rl">' + escapeHtml(r.label || '') + '</span>' +
+          '<span class="rw">' + escapeHtml(relTime(r.ts)) + '</span>' +
+          '<button type="button" class="recent-del" title="Remove" onclick="event.stopPropagation();deleteRecentBuild(' + i + ')">✕</button></div>';
+      });
+      html += '<div style="display:flex;justify-content:space-between;align-items:center;margin-top:6px;padding:2px 4px">' +
+        '<span style="font-size:.68rem;color:var(--muted)">Stored only in this browser</span>' +
+        '<button type="button" class="btn-secondary btn-sm" onclick="clearRecentBuilds()">Clear all</button></div>';
+      p.innerHTML = html;
+    }
+    function toggleRecentPanel(){
+      const p = document.getElementById('recentPanel');
+      const btn = document.getElementById('recentBtn');
+      if (!p || !btn) return;
+      if (p.style.display !== 'none'){ p.style.display = 'none'; return; }
+      renderRecentList();
+      const r = btn.getBoundingClientRect();
+      p.style.position = 'fixed';
+      p.style.top = Math.min(r.bottom + 6, window.innerHeight - 120) + 'px';
+      p.style.left = Math.max(8, Math.min(r.left, window.innerWidth - 360)) + 'px';
+      p.style.display = '';
+    }
+    function loadRecentBuild(i){
+      const arr = loadRecent();
+      const r = arr[i];
+      const p = document.getElementById('recentPanel');
+      if (p) p.style.display = 'none';
+      if (!r) return;
+      if (legsFromQuery(r.token)){
+        markBuildDirty();
+        syncDTESlider(); updateSpotSliderRange(); renderLegs(); recalc(); resetSimulation();
+        const tip = document.getElementById('templateTip');
+        if (tip) tip.innerHTML = 'Loaded from recent builds. Edit freely.';
+      } else {
+        arr.splice(i, 1); persistRecent(arr); // token no longer decodes; drop it
+      }
+    }
+    function deleteRecentBuild(i){
+      const arr = loadRecent();
+      arr.splice(i, 1); persistRecent(arr);
+      renderRecentList();
+    }
+    function clearRecentBuilds(){
+      persistRecent([]);
+      renderRecentList();
+    }
+    // Close the panel on outside clicks (no-op under test DOM).
+    document.addEventListener('click', function(ev){
+      const p = document.getElementById('recentPanel');
+      if (!p || p.style.display === 'none') return;
+      const t = ev.target;
+      if (p.contains(t)) return;
+      const btn = document.getElementById('recentBtn');
+      if (btn && (btn === t || btn.contains(t))) return;
+      p.style.display = 'none';
+    });
 
     var shareBtn = document.getElementById('shareSetup');
     if (shareBtn) {
@@ -3806,6 +4228,22 @@
         enterManualDataMode(sym, `No market data found for ${sym} (${err && err.message ? err.message : err}). Enter Spot, Strike and Premium manually below — try a listed equity/index ticker such as SPY, QQQ, AAPL, or SPX for a live chain.`);
       }
     }
+    // Round 2 item 2: clickable bid/ask on the chain. Clicking the bid
+    // stages a SELL leg at the bid; clicking the ask stages a BUY leg at the
+    // ask (thinkorswim-style). Falls back to the mid-price display when
+    // bid/ask are missing or zero.
+    function baCell(q, type, strike, expStr){
+      if (!q) return `<td class="price">—</td>`;
+      const b = Number(q.bid), a = Number(q.ask);
+      if (b > 0 && a > 0){
+        return `<td class="price has ba-cell">` +
+          `<button type="button" class="ba ba-bid" title="Sell at the bid $${b.toFixed(2)}" onclick="addLegFromChain('${type}', ${strike}, ${b}, '${expStr}', 'sell')">${b.toFixed(2)}</button>` +
+          `<span class="ba-sep">×</span>` +
+          `<button type="button" class="ba ba-ask" title="Buy at the ask $${a.toFixed(2)}" onclick="addLegFromChain('${type}', ${strike}, ${a}, '${expStr}', 'buy')">${a.toFixed(2)}</button></td>`;
+      }
+      const m = midPrice(q);
+      return `<td class="price ${m?'has':''}">${m? '$'+m.toFixed(2):'—'}</td>`;
+    }
     function renderChainTable(){
       const wrap = document.getElementById('chainTableWrap');
       const sel = document.getElementById('chainExpiration');
@@ -3858,11 +4296,11 @@
         const dat = (isATM?' data-atm="1"':'') + (isExactATM?' data-atm-exact="1"':'');
         html += `<tr class="${cls.trim()}"${dat}>`;
         html += `<td class="delta">${deltaFor(c, 'call', strike)}</td>`;
-        html += `<td class="price ${cPrice?'has':''}">${cPrice? '$'+cPrice.toFixed(2):'—'}</td>`;
+        html += baCell(c, 'call', strike, exp);
         html += `<td><button class="btn-add" onclick="addLegFromChain('call', ${strike}, ${cPrice||0}, '${exp}')">Add Call</button></td>`;
         html += `<td class="strike">${strike}${isExactATM?'<span class="atm-tag">ATM</span>':''}</td>`;
         html += `<td><button class="btn-add" onclick="addLegFromChain('put', ${strike}, ${pPrice||0}, '${exp}')">Add Put</button></td>`;
-        html += `<td class="price ${pPrice?'has':''}">${pPrice? '$'+pPrice.toFixed(2):'—'}</td>`;
+        html += baCell(p2, 'put', strike, exp);
         html += `<td class="delta">${deltaFor(p2, 'put', strike)}</td>`;
         html += `</tr>`;
       });
@@ -3897,13 +4335,15 @@
       const target = wrap.scrollTop + (rowRect.top - wrapRect.top - headH) - visibleH / 2 + rowRect.height / 2;
       wrap.scrollTop = Math.max(0, target);
     }
-    function addLegFromChain(type, strike, premium, expStr){
+    function addLegFromChain(type, strike, premium, expStr, side){
+      markBuildDirty();
       const today = new Date(); today.setHours(0,0,0,0);
       const expDate = new Date(expStr);
       const dte = Math.max(0, Math.round((expDate - today)/86400000));
+      const legSide = side === 'sell' ? 'sell' : 'buy'; // Round 2 item 2: bid click => sell, ask click => buy
       const leg = {
         id: nextId++,
-        side: 'buy',
+        side: legSide,
         type: type,
         strike: Number(strike),
         dte: dte,
@@ -3917,7 +4357,7 @@
       recalc();
       if (typeof resetSimulation==='function') resetSimulation();
       const qs = document.getElementById('quoteStatus');
-      if(qs){ qs.textContent = `Added ${type.toUpperCase()} ${strike} exp ${expStr} (DTE ${dte}) @ $${leg.premium} — editable`; qs.className='quote-status ok'; }
+      if(qs){ qs.textContent = `Added ${legSide.toUpperCase()} ${type.toUpperCase()} ${strike} exp ${expStr} (DTE ${dte}) @ $${leg.premium} — editable`; qs.className='quote-status ok'; }
       if (typeof syncDTESlider === 'function') syncDTESlider();
     }
     // ---- Cross-page navigation ----

@@ -219,12 +219,15 @@ const el = (els, id) => els.get(id);
     if (!ro || /NaN/.test(ro)) throw new Error('readout bad: ' + ro.slice(0, 80));
   });
   check('B7 sim: IV shock reprices', () => {
-    const before = el(els, 'posCurrentPL').textContent;
-    if (/NaN/.test(before)) throw new Error('P/L NaN before shock: ' + before);
+    const rawBefore = vm.runInContext('simPLLog[simPLLog.length-1].pl', ctx);
+    if (!isFinite(rawBefore)) throw new Error('P/L not finite before shock: ' + rawBefore);
     vm.runInContext('setIvShock(2)', ctx);
+    const rawAfter = vm.runInContext('simPLLog[simPLLog.length-1].pl', ctx);
     const after = el(els, 'posCurrentPL').textContent;
     if (/NaN/.test(after)) throw new Error('P/L NaN after shock');
-    if (before === after) throw new Error('P/L unchanged by shock: ' + before);
+    // Compare raw (unrounded) P/L: near spot≈104 this spread's net vega is ~0,
+    // so a 2x shock can move true P/L by <$1 and whole-dollar rounding hides it.
+    if (!(Math.abs(rawAfter - rawBefore) > 1e-9)) throw new Error('P/L unchanged by shock: ' + rawBefore + ' -> ' + rawAfter);
   });
   check('B8 sim: empty state hidden when loaded', () => {
     const n = els.get('analyzeEmpty');
@@ -379,6 +382,353 @@ const el = (els, id) => els.get(id);
       return 'ok';
     })()`, ctx);
     if (r !== 'ok') throw new Error(r);
+  });
+}
+
+// ---------- F: Round 2 item 1 — Price×date P&L data table ----------
+{
+  const { ctx, els } = run('builder', '');
+  check('F0 table: ids present in builder HTML', () => {
+    const html = fs.readFileSync(path.join(SITE, 'builder', 'index.html'), 'utf8');
+    for (const id of ['viewChartBtn', 'viewTableBtn', 'plTableWrap', 'plTable', 'plTableNote', 'plTableModeNote']) {
+      if (!html.includes('id="' + id + '"')) throw new Error('missing ' + id);
+    }
+    if (!html.includes('data-plmetric="risk"') || !html.includes('data-plmetric="cost"')) throw new Error('metric buttons missing');
+  });
+  check('F1 table: view toggle renders 11 rows x 6 cols, no NaN', () => {
+    vm.runInContext("setChartView('table')", ctx);
+    if (el(els, 'plTableWrap').style.display === 'none') throw new Error('wrap hidden');
+    if (el(els, 'chartContainer').style.display !== 'none') throw new Error('chart not hidden');
+    const html = el(els, 'plTable').innerHTML;
+    if (/NaN/.test(html)) throw new Error('NaN in table');
+    const body = html.split('<tbody>')[1].split('</tbody>')[0];
+    const rows = body.split('</tr>').filter(s => s.indexOf('<td') >= 0);
+    if (rows.length !== 11) throw new Error('rows=' + rows.length);
+    const tds = (body.match(/<td/g) || []).length;
+    if (tds !== 66) throw new Error('tds=' + tds);
+    const ths = (html.split('<thead>')[1].split('</thead>')[0].match(/<th/g) || []).length;
+    if (ths !== 7) throw new Error('header cols=' + ths); // Price + 6 dates
+  });
+  check('F2 table: spot row highlighted', () => {
+    const html = el(els, 'plTable').innerHTML;
+    if ((html.match(/class="spot-row"/g) || []).length !== 1) throw new Error('spot-row count wrong');
+  });
+  check('F3 table: expiry column flips sign at the breakeven (long call)', () => {
+    const info = vm.runInContext(`(function(){
+      var K = legs[0].strike, p = legs[0].premium;
+      var be = K + p; // long-call breakeven, per share
+      var html = document.getElementById('plTable').innerHTML;
+      var body = html.split('<tbody>')[1].split('</tbody>')[0];
+      var rows = body.split('</tr>').filter(function(s){ return s.indexOf('<td') >= 0; });
+      var data = rows.map(function(rh){
+        var pm = rh.match(/<th>\\$([0-9.]+)/);
+        var cells = rh.split('</td>');
+        var tm = cells[cells.length - 2].match(/>([^<>]*)$/);
+        return { price: parseFloat(pm[1]), txt: tm[1].trim() };
+      });
+      for (var i = 0; i < data.length - 1; i++) {
+        if (data[i].price >= be && data[i + 1].price <= be) {
+          return JSON.stringify({ be: be, above: data[i].txt, below: data[i + 1].txt });
+        }
+      }
+      return 'no-straddle be=' + be;
+    })()`, ctx);
+    if (info.indexOf('no-straddle') === 0) throw new Error(info);
+    const o = JSON.parse(info);
+    const num = t => parseFloat(String(t).replace(/[^0-9.\-]/g, ''));
+    if (!(num(o.above) > 0)) throw new Error('above BE not positive: ' + o.above + ' (BE ' + o.be + ')');
+    if (!(num(o.below) < 0)) throw new Error('below BE not negative: ' + o.below + ' (BE ' + o.be + ')');
+  });
+  check('F4 table: % risk mode shows +pct matching $/maxLoss', () => {
+    vm.runInContext("setPlMetric('risk')", ctx);
+    const cell = vm.runInContext(`(function(){
+      var html = document.getElementById('plTable').innerHTML;
+      var body = html.split('<tbody>')[1].split('</tbody>')[0];
+      var first = body.split('</tr>').filter(function(s){ return s.indexOf('<td') >= 0; })[0];
+      var tm = first.split('</td>')[0].match(/>([^<>]*)$/);
+      return tm[1].trim();
+    })()`, ctx);
+    if (!/\+[0-9]+%/.test(cell)) throw new Error('cell=' + cell);
+    const cross = vm.runInContext(`(function(){
+      var html = document.getElementById('plTable').innerHTML;
+      var body = html.split('<tbody>')[1].split('</tbody>')[0];
+      var first = body.split('</tr>').filter(function(s){ return s.indexOf('<td') >= 0; })[0];
+      var price = parseFloat(first.match(/<th>\\$([0-9.]+)/)[1]);
+      var minDte = 0;
+      for (var i = 0; i < legs.length; i++) {
+        var d = legs[i].dte;
+        if (legs[i].type !== 'stock' && isFinite(d) && d > 0) minDte = minDte ? Math.min(minDte, d) : d;
+      }
+      var dollar = plAt(price, Math.round(minDte), legs); // col 0 = Today
+      // lazy denom, same inputs recalc() uses
+      var tail = rightTailSlope(legs);
+      var data = buildChartData();
+      var minP = Math.min.apply(null, data.expiry);
+      return JSON.stringify({ dollar: dollar, minP: minP, tail: tail, denom: plMetricDenom() });
+    })()`, ctx);
+    const co = JSON.parse(cross);
+    if (!(co.tail >= 0 && co.minP < 0)) throw new Error('unexpected risk shape: ' + cross);
+    if (Math.abs(co.denom - (-co.minP)) > 1e-9) throw new Error('denom != -minP: ' + cross);
+    const expected = co.dollar / (-co.minP) * 100;
+    const got = parseFloat(cell.replace(/[^0-9.\-]/g, ''));
+    if (Math.abs(got - expected) > 2) throw new Error('pct mismatch: got ' + got + ' expected ' + expected.toFixed(1));
+  });
+  check('F5 table: % cost mode has no NaN and shows % cells', () => {
+    vm.runInContext("setPlMetric('cost')", ctx);
+    const html = el(els, 'plTable').innerHTML;
+    if (/NaN/.test(html)) throw new Error('NaN in % cost mode');
+    if (html.indexOf('%') < 0) throw new Error('no % cells');
+    vm.runInContext("setPlMetric('$')", ctx);
+  });
+  check('F6 table: back to chart view restores canvas', () => {
+    vm.runInContext("setChartView('chart')", ctx);
+    if (el(els, 'chartContainer').style.display === 'none') throw new Error('chart hidden');
+    if (el(els, 'plTableWrap').style.display !== 'none') throw new Error('table shown');
+  });
+  check('F7 table: recalc() refreshes the table via the post-recalc wrapper', () => {
+    vm.runInContext("setChartView('table'); setPlMetric('$')", ctx);
+    const before = el(els, 'plTable').innerHTML;
+    vm.runInContext('legs[0].premium = legs[0].premium + 1; recalc();', ctx);
+    const after = el(els, 'plTable').innerHTML;
+    if (before === after) throw new Error('table not refreshed by recalc');
+    if (/NaN/.test(after)) throw new Error('NaN after refresh');
+    vm.runInContext("setChartView('chart')", ctx); // leave clean
+  });
+}
+
+// ---------- G: Round 2 item 2 — clickable bid/ask on the chain ----------
+{
+  const { ctx, els } = run('builder', '');
+  const setupChain = () => {
+    vm.runInContext(`(function(){
+      window._cboeData = {
+        symbol: 'SPY', spot: 100,
+        chains: { '2026-11-20': {
+          strikes: [95, 100, 105],
+          calls: [
+            {strike:95,bid:6.10,ask:6.40,last:6.25,iv:0.25},
+            {strike:100,bid:3.10,ask:3.40,last:3.25,iv:0.25},
+            {strike:105,bid:0,ask:0,last:1.20,iv:0.25}
+          ],
+          puts: [
+            {strike:95,bid:1.00,ask:1.30,last:1.15,iv:0.26},
+            {strike:100,bid:3.00,ask:3.30,last:3.15,iv:0.26},
+            {strike:105,bid:6.00,ask:6.30,last:6.15,iv:0.26}
+          ]
+        }}
+      };
+      document.getElementById('chainExpiration').value = '2026-11-20';
+      document.getElementById('spot').value = '100';
+      document.getElementById('ticker').value = 'SPY';
+      renderChainTable();
+    })()`, ctx);
+  };
+  check('G0 chain: bid/ask buttons render with titles', () => {
+    setupChain();
+    const html = els.get('chainTableWrap').innerHTML;
+    if (!html.includes('class="ba ba-bid"')) throw new Error('no bid buttons');
+    if (!html.includes('class="ba ba-ask"')) throw new Error('no ask buttons');
+    if (!html.includes('title="Sell at the bid $3.10"')) throw new Error('no bid title');
+    if (!html.includes('title="Buy at the ask $3.40"')) throw new Error('no ask title');
+    if (!html.includes('6.10') || !html.includes('6.40')) throw new Error('bid/ask values missing');
+  });
+  check('G1 chain: missing bid/ask falls back to mid, not clickable', () => {
+    const html = els.get('chainTableWrap').innerHTML;
+    if (!html.includes('$1.20')) throw new Error('mid fallback missing');
+    const nBid = (html.match(/ba-bid/g) || []).length;
+    const nAsk = (html.match(/ba-ask/g) || []).length;
+    if (nBid !== 5 || nAsk !== 5) throw new Error('bid/ask buttons=' + nBid + '/' + nAsk);
+  });
+  check('G2 chain: bid click stages SELL at bid (credit applied)', () => {
+    const net0 = vm.runInContext('initialCost()', ctx);
+    const n0 = vm.runInContext('legs.length', ctx);
+    vm.runInContext("addLegFromChain('call', 100, 3.10, '2026-11-20', 'sell')", ctx);
+    if (vm.runInContext('legs.length', ctx) !== n0 + 1) throw new Error('leg not added');
+    const leg = vm.runInContext('legs[legs.length-1]', ctx);
+    if (leg.side !== 'sell') throw new Error('side=' + leg.side);
+    if (leg.premium !== 3.1) throw new Error('premium=' + leg.premium);
+    if (leg.type !== 'call' || leg.strike !== 100) throw new Error('leg identity wrong');
+    const net1 = vm.runInContext('initialCost()', ctx);
+    if (Math.abs((net0 - net1) - 310) > 1) throw new Error('credit not applied: ' + net0 + ' -> ' + net1);
+  });
+  check('G3 chain: ask click stages BUY at ask', () => {
+    vm.runInContext("addLegFromChain('put', 100, 3.30, '2026-11-20', 'buy')", ctx);
+    const leg = vm.runInContext('legs[legs.length-1]', ctx);
+    if (leg.side !== 'buy') throw new Error('side=' + leg.side);
+    if (leg.premium !== 3.3) throw new Error('premium=' + leg.premium);
+    if (leg.type !== 'put' || leg.strike !== 100) throw new Error('leg identity wrong');
+  });
+  check('G4 chain: Add buttons still default to buy at mid', () => {
+    vm.runInContext("addLegFromChain('call', 95, 6.25, '2026-11-20')", ctx);
+    const leg = vm.runInContext('legs[legs.length-1]', ctx);
+    if (leg.side !== 'buy') throw new Error('side=' + leg.side);
+    if (leg.premium !== 6.25) throw new Error('premium=' + leg.premium);
+  });
+}
+
+// ---------- H: Round 2 item 3 — recent-builds history ----------
+{
+  const { ctx, els } = run('builder', '');
+  const stored = () => JSON.parse(vm.runInContext("localStorage.getItem('jsm.recent.v1')", ctx) || '[]');
+  check('H0 recent: button + panel ids present', () => {
+    const html = fs.readFileSync(path.join(SITE, 'builder', 'index.html'), 'utf8');
+    if (!html.includes('id="recentBtn"')) throw new Error('no recentBtn');
+    if (!html.includes('id="recentPanel"')) throw new Error('no recentPanel');
+  });
+  check('H1 recent: save round-trips ticker, label and token', () => {
+    vm.runInContext("(function(){ buildDirty = true; document.getElementById('ticker').value = 'SPY'; saveRecentBuild(); })()", ctx);
+    const arr = stored();
+    if (arr.length !== 1) throw new Error('not saved: ' + JSON.stringify(arr).slice(0, 80));
+    if (arr[0].ticker !== 'SPY') throw new Error('ticker=' + arr[0].ticker);
+    if (arr[0].label !== 'Long Call 100') throw new Error('label=' + arr[0].label);
+    if (!arr[0].token) throw new Error('no token');
+    if (vm.runInContext('legsFromQuery(' + JSON.stringify(arr[0].token) + ')', ctx) !== true) throw new Error('token does not reload');
+  });
+  check('H2 recent: cap at 12, newest first', () => {
+    vm.runInContext("(function(){ buildDirty = true; for (var i = 0; i < 14; i++){ legs[0].premium = 5 + i; saveRecentBuild(); } })()", ctx);
+    const arr = stored();
+    if (arr.length !== 12) throw new Error('len=' + arr.length);
+    const t0 = JSON.parse(Buffer.from(arr[0].token.replace(/-/g, '+').replace(/_/g, '/'), 'base64').toString('utf8'));
+    if (t0.legs[0].premium !== 18) throw new Error('newest not first: ' + t0.legs[0].premium);
+  });
+  check('H3 recent: unchanged build does not add a duplicate', () => {
+    const before = stored().length;
+    vm.runInContext('saveRecentBuild()', ctx);
+    if (stored().length !== before) throw new Error('duplicate added');
+  });
+  check('H4 recent: panel renders entries + privacy note', () => {
+    vm.runInContext('renderRecentList()', ctx);
+    const html = els.get('recentPanel').innerHTML;
+    if (!html.includes('SPY')) throw new Error('ticker not in panel');
+    if (!html.includes('Stored only in this browser')) throw new Error('privacy note missing');
+    if (!html.includes('loadRecentBuild(')) throw new Error('no load handler');
+  });
+  check('H5 recent: loadRecentBuild applies the saved setup', () => {
+    vm.runInContext('legs[0].strike = 999; loadRecentBuild(0)', ctx);
+    const s = vm.runInContext('legs[0].strike', ctx);
+    if (s === 999) throw new Error('setup not applied');
+  });
+  check('H6 recent: delete one + clear all', () => {
+    const n0 = stored().length;
+    vm.runInContext('deleteRecentBuild(0)', ctx);
+    if (stored().length !== n0 - 1) throw new Error('delete failed');
+    vm.runInContext('clearRecentBuilds()', ctx);
+    if (stored().length !== 0) throw new Error('clear failed');
+  });
+  check('H7 recent: corrupt JSON is safe', () => {
+    vm.runInContext("localStorage.setItem('jsm.recent.v1', 'not-json{{{')", ctx);
+    const arr = vm.runInContext('loadRecent()', ctx);
+    if (!Array.isArray(arr) || arr.length !== 0) throw new Error('not safe');
+    vm.runInContext('renderRecentList()', ctx); // must not throw
+  });
+  check('H8 recent: describeLegs names common structures', () => {
+    const t = vm.runInContext("(function(){" +
+      "const mk = (side, type, strike) => ({side, type, strike, dte: 30, qty: 1});" +
+      "return [" +
+      " describeLegs([mk('buy','call',100), mk('sell','call',110)])," +
+      " describeLegs([mk('buy','put',100), mk('sell','put',90)])," +
+      " describeLegs([mk('sell','call',100)])," +
+      " describeLegs([mk('buy','call',100), mk('buy','put',100)])," +
+      " describeLegs([mk('buy','call',95), mk('sell','call',100), mk('sell','call',100), mk('buy','call',105)])" +
+      "].join('|'); })()", ctx);
+    if (t !== 'Bull Call Spread|Bear Put Spread|Short Call 100|Long Straddle|Condor') throw new Error(t);
+  });
+}
+
+// ---------- I: Round 2 item 4 — chart $ / % risk / % cost modes ----------
+{
+  const { ctx, els } = run('builder', '?setup=' + TOKEN);
+  const lastDS = (c) => vm.runInContext(
+    'window.__chartConfigs[window.__chartConfigs.length-1].data.datasets', c || ctx);
+  check('I0 chart: $ mode is default, axis title P/L ($)', () => {
+    if (vm.runInContext('yAxisTitle()', ctx) !== 'P/L ($)') throw new Error('title');
+    if (vm.runInContext('yTickFormat(50)', ctx) !== '$50') throw new Error('tick');
+    const o = JSON.parse(vm.runInContext(
+      `(function(){ var l = window.__chartConfigs[window.__chartConfigs.length-1].data.datasets[2];
+        return JSON.stringify({label: l.label, ymode: l._ymode}); })()`, ctx));
+    if (o.label !== 'Payoff (Expiry)') throw new Error('label=' + o.label);
+    if (o.ymode !== 'usd') throw new Error('ymode=' + o.ymode);
+  });
+  check('I1 chart: % risk rescales datasets by exactly 1/maxLoss', () => {
+    const usd = JSON.parse(vm.runInContext(
+      'JSON.stringify(window.__chartConfigs[window.__chartConfigs.length-1].data.datasets[2].data)', ctx));
+    vm.runInContext("setPlMetric('risk')", ctx);
+    const o = JSON.parse(vm.runInContext(`(function(){
+      var cfgs = window.__chartConfigs[window.__chartConfigs.length-1];
+      var line = cfgs.data.datasets[2];
+      var data = buildChartData();
+      var denom = plDenomFor(legs, data.expiry);
+      var minP = Math.min.apply(null, data.expiry);
+      var pos = cfgs.data.datasets[0].data;
+      return JSON.stringify({ data: line.data, label: line.label, ymode: line._ymode,
+        denom: denom, minP: minP, title: yAxisTitle(), tick: yTickFormat(50),
+        modeA: chartModeA, denomA: chartDenomA, pos: pos });
+    })()`, ctx));
+    if (o.title !== 'P/L (% of max risk)') throw new Error('title=' + o.title);
+    if (o.tick !== '50%') throw new Error('tick=' + o.tick);
+    if (o.ymode !== 'pct' || o.modeA !== 'pct') throw new Error('ymode=' + o.ymode + '/' + o.modeA);
+    if (o.label !== 'Payoff (Expiry)') throw new Error('label=' + o.label);
+    if (!(o.denom > 0)) throw new Error('denom=' + o.denom);
+    if (Math.abs(o.denom - (-o.minP)) > 1e-9) throw new Error('denom != -minP');
+    if (Math.abs(o.denomA - o.denom) > 1e-12) throw new Error('module denomA');
+    if (usd.length !== o.data.length) throw new Error('length');
+    for (let i = 0; i < usd.length; i++) {
+      if (!isFinite(o.data[i])) throw new Error('NaN @' + i);
+      if (Math.abs(o.data[i] - usd[i] / o.denom) > 1e-9) throw new Error('rescale mismatch @' + i);
+      const wantPos = o.data[i] > 0 ? o.data[i] : null;
+      if (o.pos[i] !== wantPos) throw new Error('shade not following @' + i);
+    }
+  });
+  check('I2 chart: % cost rescales by 1/|initialCost|, axis title updates', () => {
+    vm.runInContext("setPlMetric('cost')", ctx);
+    const o = JSON.parse(vm.runInContext(`(function(){
+      var line = window.__chartConfigs[window.__chartConfigs.length-1].data.datasets[2];
+      return JSON.stringify({ ymode: line._ymode, denom: plDenomFor(legs, buildChartData().expiry),
+        cost: Math.abs(initialCost(legs)), title: yAxisTitle(), tick: yTickFormat(-25) });
+    })()`, ctx));
+    if (o.title !== 'P/L (% of entry cost)') throw new Error('title=' + o.title);
+    if (o.tick !== '-25%') throw new Error('tick=' + o.tick);
+    if (o.ymode !== 'pct') throw new Error('ymode=' + o.ymode);
+    if (Math.abs(o.denom - o.cost) > 1e-9) throw new Error('denom != |cost|');
+    vm.runInContext("setPlMetric('$')", ctx); // leave clean
+  });
+  check('I3 chart: tooltip formats % and $ per dataset mode', () => {
+    const o = JSON.parse(vm.runInContext(`(function(){
+      var cb = window.__chartConfigs[window.__chartConfigs.length-1].options.plugins.tooltip.callbacks.label;
+      return JSON.stringify({
+        pct: cb({ dataset: { label: 'Payoff (Expiry)', _ymode: 'pct' }, parsed: { y: 45.678 } }),
+        usd: cb({ dataset: { label: 'Payoff (Expiry) ($)', _ymode: 'usd' }, parsed: { y: 123.4 } }),
+        neg: cb({ dataset: { label: 'Payoff (Expiry)', _ymode: 'pct' }, parsed: { y: -12.34 } })
+      });
+    })()`, ctx));
+    if (o.pct !== 'Payoff (Expiry): +45.7%') throw new Error('pct=' + o.pct);
+    if (o.usd !== 'Payoff (Expiry) ($): $123') throw new Error('usd=' + o.usd);
+    if (o.neg !== 'Payoff (Expiry): -12.3%') throw new Error('neg=' + o.neg);
+  });
+}
+
+// ---------- I4: Round 2 item 4 — undefined denominator falls back to $ ----------
+{
+  const { ctx, els } = run('builder', '?setup=' + TOKEN);
+  check('I4 chart: unbounded-loss position falls back to $, tooltip notes it', () => {
+    const o = JSON.parse(vm.runInContext(`(function(){
+      legs = [{ side: 'sell', type: 'call', strike: 100, dte: 30, qty: 1, premium: 3.2 }];
+      recalc();
+      setPlMetric('risk');
+      var cfgs = window.__chartConfigs[window.__chartConfigs.length-1];
+      var line = cfgs.data.datasets[2];
+      var raw = buildChartData().expiry;
+      var same = line.data.length === raw.length;
+      for (var i = 0; same && i < raw.length; i++) same = (line.data[i] === raw[i]);
+      return JSON.stringify({ label: line.label, ymode: line._ymode, modeA: chartModeA,
+        denomA: chartDenomA, title: yAxisTitle(), same: same,
+        denomNull: plDenomFor(legs, raw) === null });
+    })()`, ctx));
+    if (!o.denomNull) throw new Error('denom should be null for naked short call');
+    if (o.modeA !== 'usd' || o.ymode !== 'usd') throw new Error('mode=' + o.modeA + '/' + o.ymode);
+    if (o.label.indexOf('($)') < 0) throw new Error('no ($) fallback note: ' + o.label);
+    if (!o.same) throw new Error('fallback datasets are not raw dollars');
+    if (o.title !== 'P/L (% of max risk)') throw new Error('title=' + o.title);
   });
 }
 
