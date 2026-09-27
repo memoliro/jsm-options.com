@@ -4232,9 +4232,41 @@
       return { lo: lo, hi: hi };
     }
 
+    // Axis hover crosshair for the P&L table: hovering a cell tints the
+    // row's price header (vertical axis) and the column's date header
+    // (horizontal axis). Delegated on the table element so the binding
+    // survives renderPlTable() re-renders (innerHTML replacement).
+    function clearPlAxHover(tbl) {
+      const marked = tbl.querySelectorAll('th.ax-hover');
+      for (let i = 0; i < marked.length; i++) marked[i].classList.remove('ax-hover');
+    }
+    function bindPlAxHover(tbl) {
+      if (!tbl || tbl._axHoverBound) return;
+      tbl._axHoverBound = true;
+      tbl.addEventListener('mousemove', function (ev) {
+        const t = ev.target;
+        const td = (t && t.closest) ? t.closest('td') : null;
+        if (td === tbl._axHoverTd) return; // same cell: nothing to do
+        tbl._axHoverTd = td;
+        clearPlAxHover(tbl);
+        if (!td || !tbl.contains(td)) return;
+        const tr = td.parentElement;
+        const rowTh = tr ? tr.querySelector('th') : null;
+        if (rowTh) rowTh.classList.add('ax-hover');
+        const headRow = tbl.querySelector('thead tr');
+        const colTh = headRow && headRow.children ? headRow.children[td.cellIndex] : null;
+        if (colTh && colTh.tagName === 'TH') colTh.classList.add('ax-hover');
+      });
+      tbl.addEventListener('mouseleave', function () {
+        tbl._axHoverTd = null;
+        clearPlAxHover(tbl);
+      });
+    }
+
     function renderPlTable() {
       const tbl = document.getElementById('plTable');
       if (!tbl) return;
+      bindPlAxHover(tbl);
       if (!legs.length) {
         tbl.innerHTML = '<tbody><tr><td style="padding:16px;color:var(--muted)">Add a leg to see the P&L table.</td></tr></tbody>';
         return;

@@ -752,6 +752,40 @@ const el = (els, id) => els.get(id);
     })()`, ctx);
     if (res !== 'ok') throw new Error(res);
   });
+
+  // F19: axis hover crosshair — hovering a P&L cell tints the row's price
+  // header and the column's date header. The harness's fake DOM can't fire
+  // real mouse events, so this checks the wiring statically: the CSS rule
+  // exists, the engine binds delegated mousemove/mouseleave handlers that
+  // toggle ax-hover on exactly the two axis headers, and renderPlTable
+  // installs the binding.
+  check('F19 table hover crosshair: ax-hover wiring present', () => {
+    const html = fs.readFileSync(path.join(SITE, 'builder', 'index.html'), 'utf8');
+    if (!/\.pl-table th\.ax-hover\s*\{/.test(html)) throw new Error('ax-hover CSS rule missing');
+    const iRender = engineSrc.indexOf('function renderPlTable');
+    if (iRender < 0) throw new Error('renderPlTable missing from engine');
+    const iBind = engineSrc.indexOf('function bindPlAxHover');
+    if (iBind < 0) throw new Error('bindPlAxHover missing from engine');
+    // the binding is installed from renderPlTable
+    const renderBody = engineSrc.slice(iRender, iRender + 800);
+    if (renderBody.indexOf('bindPlAxHover(tbl)') < 0) throw new Error('renderPlTable does not bind hover');
+    // delegated listeners: mousemove toggles, mouseleave clears
+    const bindBody = engineSrc.slice(iBind, iBind + 1400);
+    if (bindBody.indexOf("'mousemove'") < 0) throw new Error('no mousemove listener');
+    if (bindBody.indexOf("'mouseleave'") < 0) throw new Error('no mouseleave listener');
+    if (bindBody.indexOf("closest('td')") < 0) throw new Error('hover does not resolve the cell');
+    if (bindBody.indexOf("tr.querySelector('th')") < 0) throw new Error('hover does not find row header');
+    if (bindBody.indexOf('td.cellIndex') < 0) throw new Error('hover does not find column header');
+    const nAdd = (bindBody.match(/classList\.add\('ax-hover'\)/g) || []).length;
+    if (nAdd !== 2) throw new Error('expected 2 ax-hover adds (row+column), got ' + nAdd);
+    // clearing: clearPlAxHover removes the class, and the binding calls it
+    // on every cell change and on mouseleave
+    const iClear = engineSrc.indexOf('function clearPlAxHover');
+    if (iClear < 0) throw new Error('clearPlAxHover missing from engine');
+    const clearBody = engineSrc.slice(iClear, iClear + 400);
+    if (clearBody.indexOf("classList.remove('ax-hover')") < 0) throw new Error('hover is never cleared');
+    if ((bindBody.match(/clearPlAxHover\(tbl\)/g) || []).length < 2) throw new Error('binding does not clear hover');
+  });
 }
 
 // ---------- G: Round 2 item 2 — clickable bid/ask on the chain ----------

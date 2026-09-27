@@ -313,6 +313,9 @@
     .pl-table td.pv-neg { color: var(--red); font-weight: 600; }
     .pl-table tr.spot-row th, .pl-table tr.spot-row td { box-shadow: inset 0 0 0 999px rgba(59,130,246,0.12); }
     .pl-table td.be { outline: 1px dashed var(--muted); outline-offset: -2px; }
+    /* Axis hover crosshair: hovering a P&L cell tints the row's price
+       header and the column's date header (JS toggles .ax-hover). */
+    .pl-table th.ax-hover { background: rgba(122,162,255,0.22); color: var(--text); }
 
     /* Round 2 Batch C: strategy discovery (optimizer lite + option finder). */
     .discovery-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
@@ -1391,7 +1394,7 @@ and custom structures. View payoff charts, Greeks, profit/loss, break-even, prob
     </div>
     <div class="guide-body" id="guideBody"></div>
   </aside>
-  <script src="/assets/jsm-options-engine.js?v=d01ec77f"></script>
+  <script src="/assets/jsm-options-engine.js?v=2ed4c7e8"></script>
 <script>
 (function(){
   function initNav(){
