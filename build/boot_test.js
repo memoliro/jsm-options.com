@@ -604,16 +604,16 @@ const el = (els, id) => els.get(id);
     if (Math.abs(o2.nearVal - o2.intrinsic100) > 1e-6) throw new Error('near leg not settled to intrinsic: ' + JSON.stringify(o2));
   });
   // F12-F14: Range slider for the P&L table.
-  check('F12 table: range slider wrap shows only in table view', () => {
+  check('F12 range slider is visible in both chart and table view', () => {
     const { ctx: c2 } = run('builder', '');
-    const disp = () => vm.runInContext(`document.getElementById('tableRangeWrap').style.display`, c2);
-    // fake DOM doesn't parse inline styles: undefined == the inline display:none
-    if (disp() !== undefined) throw new Error('slider visible in chart view: ' + disp());
+    const disp = () => vm.runInContext(`document.getElementById('rangeSliderWrap').style.display`, c2);
+    vm.runInContext(`if (!document.getElementById('rangeSliderWrap')) throw new Error('no wrap')`, c2);
+    vm.runInContext(`if (!document.getElementById('chartRange')) throw new Error('no chartRange')`, c2);
+    if (disp() === 'none') throw new Error('slider hidden in chart view');
     vm.runInContext("setChartView('table')", c2);
-    if (disp() === 'none' || disp() === undefined) throw new Error('slider hidden in table view');
-    vm.runInContext("if (!document.getElementById('chartRange')) throw new Error('no chartRange')", c2);
+    if (disp() === 'none') throw new Error('slider hidden in table view');
     vm.runInContext("setChartView('chart')", c2);
-    if (disp() !== 'none') throw new Error('slider not re-hidden: ' + disp());
+    if (disp() === 'none') throw new Error('slider hidden after returning to chart view');
   });
   check('F13 table: moving the range slider re-renders the price rows', () => {
     const { ctx: c2, els: e2 } = run('builder', '');
@@ -656,6 +656,26 @@ const el = (els, id) => els.get(id);
     const o = JSON.parse(edge);
     if (Math.abs(o.hi - S * 1.05) > S * 0.02) throw new Error('hi=' + o.hi + ' S=' + S);
     if (Math.abs(o.lo - S * 0.95) > S * 0.02) throw new Error('lo=' + o.lo + ' S=' + S);
+  });
+  check('F15 table: spot price stays vertically centered when the slider moves', () => {
+    const { ctx: c2 } = run('builder', '');
+    vm.runInContext("setChartView('table')", c2);
+    [5, 20, 40, 100].forEach(function (pct) {
+      const info = vm.runInContext(`(function(){
+        document.getElementById('chartRange').value = '${pct}';
+        onRangeChange();
+        var html = document.getElementById('plTable').innerHTML;
+        var body = html.split('<tbody>')[1].split('</tbody>')[0];
+        var rows = body.split('</tr>').filter(function(s){ return s.indexOf('<td') >= 0; });
+        var px = rows.map(function(r){ return parseFloat(r.match(/<th>\\$([0-9.]+)/)[1]); });
+        var spotIdx = -1;
+        rows.forEach(function(r, i){ if (r.indexOf('spot-row') >= 0) spotIdx = i; });
+        return JSON.stringify({ spotIdx: spotIdx, mid: px[5], S: getParams().S });
+      })()`, c2);
+      const o = JSON.parse(info);
+      if (o.spotIdx !== 5) throw new Error('pct=' + pct + ': spot row at index ' + o.spotIdx + ', not middle');
+      if (Math.abs(o.mid - o.S) > o.S * 0.001) throw new Error('pct=' + pct + ': middle row ' + o.mid + ' != S ' + o.S);
+    });
   });
 }
 

@@ -4137,8 +4137,6 @@
       if (tw) tw.style.display = v === 'table' ? '' : 'none';
       if (note) note.style.display = v === 'table' ? '' : 'none';
       if (gh) gh.style.display = v === 'chart' ? '' : 'none';
-      const trw = document.getElementById('tableRangeWrap');
-      if (trw) trw.style.display = v === 'table' ? '' : 'none';
       if (v === 'table') renderPlTable();
     }
 
