@@ -134,6 +134,19 @@ function check(name, fn) {
     console.log('FAIL', name, '—', e.message.split('\n')[0]);
   }
 }
+// Chain loads are async: microtasks never drain inside a sync check(), so
+// async discovery tests use acheck() and flush() to yield to the VM's
+// promise continuations before asserting.
+async function acheck(name, fn) {
+  try {
+    await fn();
+    console.log('PASS', name);
+  } catch (e) {
+    failures++;
+    console.log('FAIL', name, '—', e.message.split('\n')[0]);
+  }
+}
+const flush = () => new Promise(r => setTimeout(r, 20));
 function run(page, search) {
   const { ctx, els } = makeCtx(path.join(SITE, page, 'index.html'), search);
   vm.runInContext(engineSrc, ctx, { filename: 'engine.js' });
@@ -1187,11 +1200,135 @@ const el = (els, id) => els.get(id);
     if (disp !== '') throw new Error('findDteWrap not shown, display=' + JSON.stringify(disp));
   });
   check('T6 chain arrival with no prior scans: no-op, no phantom results', () => {
-    fakeChain('MSFT', 200, '2026-11-20', [190, 200, 210]);
-    j('resolveDiscoveryStale()');
-    if (j('optResults.length') || j('findResults.length')) throw new Error('phantom scan ran');
+    const r6 = run('builder', '');
+    const j6 = (expr) => vm.runInContext(expr, r6.ctx);
+    j6(`(function(){
+      window._cboeData = {
+        symbol: 'MSFT', spot: 200, expirations: ['2026-11-20'],
+        chains: { '2026-11-20': { strikes: [190, 200, 210],
+          calls: [190, 200, 210].map(function (k) { return { strike: k, bid: 1, ask: 1.2, last: 1.1, iv: 0.25 }; }),
+          puts: [190, 200, 210].map(function (k) { return { strike: k, bid: 1, ask: 1.2, last: 1.1, iv: 0.26 }; }) } }
+      };
+      document.getElementById('spot').value = '200';
+    })()`);
+    j6('resolveDiscoveryStale()');
+    if (j6('optResults.length') || j6('findResults.length')) throw new Error('phantom scan ran');
+    if (j6('discOptStale') || j6('discFindStale') || j6('discOptHadScan') || j6('discFindHadScan')) {
+      throw new Error('stale flags set with no prior scans');
+    }
   });
 }
 
-console.log(failures ? `\n${failures} FAILURES` : '\nALL PASS');
-process.exit(failures ? 1 : 0);
+// ---------- T7/T8 run async: chain loads are async (see acheck/flush) ----------
+async function runAsyncDiscoveryTests() {
+  // T7: a stale chain response (superseded by a newer request) is dropped;
+  // the current request's response still applies.
+  {
+    const { ctx } = run('builder', '');
+    const j = (expr) => vm.runInContext(expr, ctx);
+    const set = (id, v) => j('document.getElementById("' + id + '").value = "' + v + '"');
+    // Fake-DOM fix: the apply path reads the selected filter option's text;
+    // give the fake select one option like a real browser would have.
+    j(`(function(){
+      var sel = document.getElementById('chainFilterTop');
+      if (sel) { sel.options = [{ text: 'ATM \\u00b120%' }]; sel.selectedIndex = 0; }
+    })()`);
+    const fetchData = (sym, spot, strikes) => `(function(){
+      return { ok: true, json: function(){ return Promise.resolve({
+        symbol: '${sym}', spot: ${spot}, source: 'test',
+        expirations: ['2026-11-20'],
+        chains: { '2026-11-20': { strikes: ${JSON.stringify(strikes)},
+          calls: ${JSON.stringify(strikes.map(k => ({ strike: k, bid: 1, ask: 1.2, last: 1.1, iv: 0.25 })))},
+          puts: ${JSON.stringify(strikes.map(k => ({ strike: k, bid: 1, ask: 1.2, last: 1.1, iv: 0.26 }))) } } }
+      }); } };
+    })()`;
+    await acheck('T7 stale chain response dropped; current response applied', async () => {
+      j('var __resolveFetch, __fetchCalls = 0; fetch = function(){ __fetchCalls++; return new Promise(function(res){ __resolveFetch = res; }); }');
+      set('ticker', 'SPY');
+      const idBefore = j('_chainReqId');
+      const p1 = j('loadCboeChain()');
+      if (j('_chainReqId') !== idBefore + 1) throw new Error('request token not taken');
+      j('_chainReqId++'); // a newer request supersedes it (ticker changed mid-flight)
+      j('__resolveFetch(' + fetchData('SPY', 100, [90, 100, 110]) + ')');
+      await p1; // stale response dropped by the guard -> resolves without applying
+      if (j('window._cboeData && window._cboeData.symbol') === 'SPY') throw new Error('stale SPY chain applied');
+      const p2 = j('loadCboeChain()');
+      j('__resolveFetch(' + fetchData('SPY', 100, [90, 100, 110]) + ')');
+      await p2; // current response applies (a throw here fails the test with the real error)
+      if (j('window._cboeData && window._cboeData.symbol') !== 'SPY') throw new Error('current chain not applied');
+    });
+  }
+
+  // T8: a no-chain ticker clears results but remembers the scan; the next
+  // chain load re-runs it on the new ticker's strikes. Full async path:
+  // onTickerChange -> loadCboeChain -> sandbox fetch rejects -> manual mode.
+  {
+    const { ctx } = run('builder', '');
+    const j = (expr) => vm.runInContext(expr, ctx);
+    const set = (id, v) => j('document.getElementById("' + id + '").value = "' + v + '"');
+    const QQQ = [180, 190, 200, 210, 220];
+    const qqqData = {
+      symbol: 'QQQ', spot: 200, expirations: ['2026-11-20'],
+      chains: {
+        '2026-11-20': {
+          strikes: QQQ,
+          calls: QQQ.map(k => ({ strike: k, bid: 1, ask: 1.2, last: 1.1, iv: 0.25 })),
+          puts: QQQ.map(k => ({ strike: k, bid: 1, ask: 1.2, last: 1.1, iv: 0.26 })),
+        },
+      },
+    };
+    await acheck('T8 no-chain clears, next chain re-runs prior scan', async () => {
+      set('spot', '100');
+      set('optFamily', 'bullcall'); set('optGoal', 'profit');
+      j('runOptimizerScan()');
+      if (!j('optResults.length')) throw new Error('setup: no scan rows');
+      j(`_lastTickerLoaded = 'SPY'`);
+      set('ticker', 'ZZZ');
+      j('onTickerChange()');
+      await flush();
+      if (j('optResults.length')) throw new Error('results not cleared');
+      if (!j('discOptHadScan')) throw new Error('hadScan not set');
+      const html = j('document.getElementById("optResults").innerHTML');
+      if (html.indexOf('No chain for this ticker') < 0) throw new Error('no cleared note');
+      j('window._cboeData = ' + JSON.stringify(qqqData) + '; document.getElementById("spot").value = "200";');
+      j('resolveDiscoveryStale()');
+      if (j('discOptHadScan')) throw new Error('hadScan not consumed');
+      if (!j('optUsedChain')) throw new Error('re-run did not use the chain');
+      const ks = JSON.parse(j('JSON.stringify(optResults.map(function (c) { return c.k1; }))'));
+      if (!ks.length) throw new Error('no rows after re-run');
+      for (const k of ks) { if (QQQ.indexOf(k) < 0) throw new Error('wrong strike: ' + k); }
+    });
+  }
+}
+
+// ---------- T9: stale "No chain" note clears when a chain arrives (never scanned) ----------
+{
+  const { ctx } = run('builder', '');
+  const j = (expr) => vm.runInContext(expr, ctx);
+  check('T9 no-chain note clears to default prompt on chain arrival', () => {
+    j('enterManualDataMode("ZZZ", "No market data found for ZZZ.")');
+    const html0 = j('document.getElementById("findResults").innerHTML');
+    if (html0.indexOf('No chain for this ticker') < 0) throw new Error('setup: note missing');
+    j(`(function(){
+      window._cboeData = {
+        symbol: 'QQQ', spot: 200, expirations: ['2026-11-20'],
+        chains: { '2026-11-20': { strikes: [180, 190, 200, 210, 220],
+          calls: [180, 190, 200, 210, 220].map(function (k) { return { strike: k, bid: 1, ask: 1.2, last: 1.1, iv: 0.25 }; }),
+          puts: [180, 190, 200, 210, 220].map(function (k) { return { strike: k, bid: 1, ask: 1.2, last: 1.1, iv: 0.26 }; }) } }
+      };
+    })()`);
+    j('resolveDiscoveryStale()');
+    const htmlF = j('document.getElementById("findResults").innerHTML');
+    if (htmlF.indexOf('No chain for this ticker') >= 0) throw new Error('finder stale note survived');
+    if (htmlF.indexOf('Enter where you think the price goes') < 0) throw new Error('finder default prompt not restored');
+    const htmlO = j('document.getElementById("optResults").innerHTML');
+    if (htmlO.indexOf('No chain for this ticker') >= 0) throw new Error('optimizer stale note survived');
+    if (htmlO.indexOf('Pick a family and scan') < 0) throw new Error('optimizer default prompt not restored');
+    if (j('findResults.length') || j('optResults.length')) throw new Error('phantom scan ran');
+  });
+}
+
+runAsyncDiscoveryTests().then(() => {
+  console.log(failures ? `\n${failures} FAILURES` : '\nALL PASS');
+  process.exit(failures ? 1 : 0);
+}).catch(e => { console.error('async tests crashed:', e); process.exit(1); });

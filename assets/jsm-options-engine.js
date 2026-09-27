@@ -318,6 +318,10 @@
     });
 
     let _lastTickerLoaded = 'SPY';
+    // Batch C fix: every loadCboeChain() call takes a request token; if the
+    // ticker changes (or another load starts) while a request is in flight,
+    // the stale response is dropped instead of overwriting the new ticker.
+    let _chainReqId = 0;
     function onTickerTyping() {
       renderTickerSuggest();
       const box = document.getElementById('tickerSuggest');
@@ -2729,6 +2733,11 @@
     // cleared (manual-data mode) once the new market state settles.
     let discOptStale = false;
     let discFindStale = false;
+    // Batch C fix: manual-data mode clears results but remembers a scan
+    // existed, so the next chain load re-runs it instead of leaving a
+    // stale "No chain" note under a loaded chain.
+    let discOptHadScan = false;
+    let discFindHadScan = false;
     // Batch C fix: whether the last scan priced off a loaded chain. A scan
     // run while a chain was still loading falls back to the synthetic grid;
     // when the chain arrives it is re-run against real quotes.
@@ -3071,17 +3080,32 @@
     // expiry selects always refresh; scans the user already ran are re-run
     // against the new chain so the tables follow the new ticker instead of
     // showing the old one's strikes. A scan that ran on the synthetic grid
-    // while the chain was still loading is also upgraded to real quotes.
-    // No-op when nothing was invalidated.
+    // while the chain was still loading is also upgraded to real quotes, and
+    // a scan cleared by an intermediate no-chain ticker is re-run too.
+    // Panels that never had a scan get a stale "No chain" note cleared back
+    // to the default prompt. No-op otherwise.
     function resolveDiscoveryStale() {
       if (typeof syncDiscoveryExpiries === 'function') syncDiscoveryExpiries();
-      if (discOptStale || (optResults.length && !optUsedChain)) {
-        discOptStale = false;
+      if (discOptStale || discOptHadScan || (optResults.length && !optUsedChain)) {
+        discOptStale = false; discOptHadScan = false;
         try { runOptimizerScan(); } catch (e) {}
+      } else {
+        clearNoChainNote('optResults', 'Pick a family and scan — the top 5 by your goal appear here.');
       }
-      if (discFindStale || (findResults.length && !findUsedChain)) {
-        discFindStale = false;
+      if (discFindStale || discFindHadScan || (findResults.length && !findUsedChain)) {
+        discFindStale = false; discFindHadScan = false;
         try { runFinder(); } catch (e) {}
+      } else {
+        clearNoChainNote('findResults', 'Enter where you think the price goes — the top 5 by profit at target appear here.');
+      }
+    }
+
+    // Batch C fix: a "No chain for this ticker" note written by manual-data
+    // mode is stale once a chain loads — restore the default empty prompt.
+    function clearNoChainNote(boxId, defaultText) {
+      var box = document.getElementById(boxId);
+      if (box && box.innerHTML.indexOf('No chain for this ticker') >= 0) {
+        box.innerHTML = '<p class="disc-empty">' + defaultText + '</p>';
       }
     }
 
@@ -4921,9 +4945,12 @@
       if (typeof renderLegsB === 'function' && typeof compareMode !== 'undefined' && compareMode) renderLegsB();
       recalc();
       // Batch C fix: no chain for this ticker — discovery expiry selects fall
-      // back to modeled-DTE mode and any ticker-invalidated results are
-      // cleared (spot is empty here, so a synthetic re-run would model the
-      // wrong scale; the user re-scans after entering a spot).
+      // back to modeled-DTE mode. Results are cleared (spot is empty here, so
+      // a synthetic re-run would model the wrong scale), but remember a scan
+      // existed so the next chain load re-runs it instead of leaving a stale
+      // "No chain" note under a loaded chain.
+      discOptHadScan = optResults.length > 0 || discOptStale;
+      discFindHadScan = findResults.length > 0 || discFindStale;
       discOptStale = false;
       discFindStale = false;
       optResults = [];
@@ -4935,6 +4962,7 @@
       if (_fbm) _fbm.innerHTML = '<p class="disc-empty">No chain for this ticker — enter a spot price, then scan to model candidates.</p>';
     }
     async function loadCboeChain(){
+      const reqId = ++_chainReqId; // Batch C fix: stale-response guard token
       const tickerEl = document.getElementById('ticker');
       const sym = normalizeTicker(tickerEl && tickerEl.value || 'SPY');
       const statusEl = document.getElementById('chainStatus');
@@ -4997,6 +5025,10 @@
           }
           data={symbol:sym, spot, expirations, chains, source:'CBOE via allorigins'};
         }
+        // Batch C fix: the ticker changed (or another load started) while
+        // this request was in flight — drop the stale response so it can't
+        // overwrite the new ticker's chain or re-run discovery on old data.
+        if (reqId !== _chainReqId) return;
         if (!data || !data.expirations || !data.expirations.length) throw new Error('No expirations (try SPY, QQQ, AAPL)');
         const sel = document.getElementById('chainExpiration');
         const keepExp = sel && sel.value;
@@ -5060,6 +5092,9 @@
         statusEl.textContent = `${data.symbol} spot $${data.spot ? Number(data.spot).toFixed(2) : '?'} • default exp ${sel.value} (${dteNow}d) • Filter ${filterLabel}`;
         statusEl.className='quote-status ok';
       }catch(err){
+        // Batch C fix: a superseded request must not clear the new ticker's
+        // UI into manual-data mode when its own (stale) fetch fails.
+        if (reqId !== _chainReqId) return;
         console.error(err);
         enterManualDataMode(sym, `No market data found for ${sym} (${err && err.message ? err.message : err}). Enter Spot, Strike and Premium manually below — try a listed equity/index ticker such as SPY, QQQ, AAPL, or SPX for a live chain.`);
       }
