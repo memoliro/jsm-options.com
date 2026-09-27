@@ -3358,11 +3358,13 @@
       if (cap) cap.textContent = 'Swaps the leg above for the rolled one.';
     }
     // Any form change cancels a pending "Confirm roll" so the armed button can
-    // never apply a model the user has already edited away from.
+    // never apply a model the user has already edited away from. The model is
+    // re-rendered from the new inputs so the display always matches what a
+    // fresh "Apply roll" would do — no stale table beside an armed button.
     function disarmRollQuiet() {
       if (!rollArmed) return;
       rollArmed = false;
-      disarmRollPaint();
+      modelRoll();
     }
     function disarmRoll() { disarmRollQuiet(); }
     function applyRoll() {

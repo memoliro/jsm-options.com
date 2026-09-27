@@ -1501,6 +1501,21 @@ async function runAsyncDiscoveryTests() {
     j('disarmRollQuiet()'); // what the form oninput/onchange handlers call
     if (j('rollArmed')) throw new Error('form change should disarm');
   });
+  check('R14 disarm re-renders the model from the new inputs', () => {
+    j('window.__seedRollChain()');
+    buyCall100();
+    j('syncRollLegs()');
+    set('rollLeg', '0');
+    set('rollStrike', '110');
+    j('document.getElementById("rollExpiry").value = window.__exp60');
+    j('modelRoll()');
+    j('applyRoll()'); // arm
+    set('rollStrike', '105'); // user edits the strike while armed
+    j('disarmRollQuiet()');
+    if (j('rollArmed')) throw new Error('should be disarmed');
+    const html = j('document.getElementById("rollResults").innerHTML');
+    if (html.indexOf('Buy call 105') < 0) throw new Error('model should refresh to the 105 inputs, got: ' + html.slice(0, 200));
+  });
 }
 
 runAsyncDiscoveryTests().then(() => {
