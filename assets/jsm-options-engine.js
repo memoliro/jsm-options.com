@@ -1857,6 +1857,8 @@
           legGreeksLine(l)
         );
       }).join('');
+      // Item 9: keep the roll analyzer's leg list fresh as legs are edited.
+      try { if (typeof syncRollLegs === 'function') syncRollLegs(); } catch (e) {}
     }
 
     function updateSpotSliderRange() {
@@ -3074,6 +3076,7 @@
     // Init the expiry selects at engine boot (chain hook refreshes them later).
     try {
       if (typeof document !== 'undefined' && document.getElementById('optExpiry')) syncDiscoveryExpiries();
+      if (typeof document !== 'undefined' && typeof syncRollLegs === 'function') { syncRollLegs(); }
     } catch (e) {}
 
     // Batch C fix: settle discovery panels after a ticker/chain change. The
@@ -3086,6 +3089,7 @@
     // to the default prompt. No-op otherwise.
     function resolveDiscoveryStale() {
       if (typeof syncDiscoveryExpiries === 'function') syncDiscoveryExpiries();
+      if (typeof syncRollExpiries === 'function') { try { syncRollExpiries(); } catch (e) {} }
       if (discOptStale || discOptHadScan || (optResults.length && !optUsedChain)) {
         discOptStale = false; discOptHadScan = false;
         try { runOptimizerScan(); } catch (e) {}
@@ -3107,6 +3111,253 @@
       if (box && box.innerHTML.indexOf('No chain for this ticker') >= 0) {
         box.innerHTML = '<p class="disc-empty">' + defaultText + '</p>';
       }
+    }
+
+    // ---- Item 9: roll analyzer (slim, educational) -------------------------
+    // Models closing one leg and reopening it at a new strike/expiry: the net
+    // debit/credit of the roll plus the before/after risk picture. Pure
+    // what-if — nothing here places a trade.
+    let lastRoll = null;
+
+    function rollLegLabel(l) {
+      const side = l.side === 'buy' ? 'Buy' : 'Sell';
+      const type = l.type === 'call' ? 'call' : 'put';
+      return side + ' ' + type + ' ' + l.strike + ' (' + l.dte + 'd)';
+    }
+
+    function rollSelectedLeg() {
+      const sel = document.getElementById('rollLeg');
+      if (!sel || sel.value === '' || sel.value == null) return null;
+      const l = legs[parseInt(sel.value, 10)];
+      return (l && l.type !== 'stock') ? l : null;
+    }
+
+    function syncRollLegs() {
+      const sel = document.getElementById('rollLeg');
+      if (!sel) return;
+      const keep = sel.value;
+      sel.innerHTML = '';
+      const idxs = [];
+      legs.forEach(function (l, i) {
+        if (l.type === 'stock') return;
+        idxs.push(i);
+        const opt = document.createElement('option');
+        opt.value = String(i);
+        opt.textContent = rollLegLabel(l);
+        sel.appendChild(opt);
+      });
+      if (idxs.indexOf(parseInt(keep, 10)) >= 0) sel.value = keep;
+      else if (idxs.length) sel.value = String(idxs[0]);
+      else sel.value = '';
+      onRollLegChange(true);
+    }
+
+    // Nearest chain expiration to a leg's DTE — legs store DTE, not an expiry
+    // date, so the close side is quoted off the closest listed expiry.
+    function nearestExpiryForDte(dte) {
+      const data = window._cboeData;
+      const exps = (data && data.expirations) || [];
+      let best = '', bestDiff = Infinity;
+      exps.forEach(function (exp) {
+        const diff = Math.abs(expirationDte(exp) - dte);
+        if (diff < bestDiff) { bestDiff = diff; best = exp; }
+      });
+      return best;
+    }
+
+    function syncRollExpiries() {
+      const sel = document.getElementById('rollExpiry');
+      if (!sel) return;
+      const wrap = document.getElementById('rollDteWrap');
+      const data = window._cboeData;
+      const exps = (data && data.expirations) || [];
+      const leg = rollSelectedLeg();
+      const keep = sel.value;
+      sel.innerHTML = '';
+      if (!exps.length) {
+        const opt = document.createElement('option');
+        opt.value = '';
+        opt.textContent = 'No chain — modeled';
+        sel.appendChild(opt);
+        if (wrap) wrap.style.display = '';
+        return;
+      }
+      if (wrap) wrap.style.display = 'none';
+      exps.forEach(function (exp) {
+        const opt = document.createElement('option');
+        opt.value = exp;
+        const d = expirationDte(exp);
+        opt.textContent = exp + (d ? ' (' + d + 'd)' : '');
+        sel.appendChild(opt);
+      });
+      let prefer = (keep && exps.indexOf(keep) >= 0) ? keep : '';
+      if (!prefer && leg) {
+        // Nearest later expiry first — buying time is the usual motive.
+        let best = '', bestD = Infinity;
+        exps.forEach(function (exp) {
+          const d = expirationDte(exp);
+          if (d > leg.dte && d - leg.dte < bestD) { bestD = d - leg.dte; best = exp; }
+        });
+        prefer = best || pickDefaultExpiration(exps, 30, true);
+      }
+      if (!prefer) prefer = pickDefaultExpiration(exps, 30, true);
+      if (prefer) sel.value = prefer;
+    }
+
+    // Default the new-strike input to the selected leg's strike; the expiry
+    // select follows unless the user already picked one (keepExpiry).
+    function onRollLegChange(keepExpiry) {
+      const leg = rollSelectedLeg();
+      const strikeEl = document.getElementById('rollStrike');
+      if (leg && strikeEl && !keepExpiry) strikeEl.value = leg.strike;
+      const sel = document.getElementById('rollExpiry');
+      const hadPick = keepExpiry && sel && sel.value;
+      if (!hadPick) syncRollExpiries();
+    }
+
+    // Per-share close/open quote for a roll. Closing a long sells at the bid,
+    // closing a short buys at the ask; opening mirrors it. Falls back to the
+    // mid, then to a Black-Scholes model quote (per-strike chain IV, else the
+    // global IV input).
+    function rollQuote(type, strike, expStr, legDte, action, side) {
+      const q = findChainContract(type, strike, expStr);
+      let px = NaN, src = '';
+      if (q) {
+        const b = Number(q.bid), a = Number(q.ask);
+        const wantBid = (action === 'close') === (side === 'buy');
+        if (wantBid && b > 0) { px = b; src = 'bid'; }
+        else if (!wantBid && a > 0) { px = a; src = 'ask'; }
+        else {
+          const m = midPrice(q);
+          if (m > 0) { px = m; src = 'mid'; }
+        }
+      }
+      if (!(px > 0)) {
+        const uni = discoveryUniverse(expStr, legDte);
+        px = discoveryPremium(type, strike, uni);
+        src = uni.usedChain ? 'modeled @ chain IV' : 'modeled';
+      }
+      return { px: px, src: src };
+    }
+
+    // Pure computation behind modelRoll — kept DOM-free for testing.
+    function computeRoll(oldLeg, newStrike, newExpStr, newDte) {
+      const mult = legShareMult(oldLeg) * oldLeg.qty;
+      const closeExp = nearestExpiryForDte(oldLeg.dte);
+      const closeQ = rollQuote(oldLeg.type, oldLeg.strike, closeExp, oldLeg.dte, 'close', oldLeg.side);
+      const openQ = rollQuote(oldLeg.type, newStrike, newExpStr, newDte, 'open', oldLeg.side);
+      // Cash flow per share: long → +close − open; short → −close + open.
+      // Negative = net debit (you pay to roll), positive = net credit.
+      const perShare = oldLeg.side === 'buy' ? closeQ.px - openQ.px : openQ.px - closeQ.px;
+      const netCash = perShare * mult;
+      const newLeg = {
+        id: nextId++,
+        side: oldLeg.side,
+        type: oldLeg.type,
+        strike: Math.round(newStrike * 100) / 100,
+        dte: Math.max(1, Math.round(newDte)),
+        qty: oldLeg.qty,
+        premium: Math.max(0.01, Math.round(openQ.px * 100) / 100),
+        premiumManual: true,
+        ticker: oldLeg.ticker || currentTicker()
+      };
+      return {
+        closeQ: closeQ, openQ: openQ, perShare: perShare, netCash: netCash,
+        newLeg: newLeg,
+        modeled: closeQ.src.indexOf('model') === 0 || openQ.src.indexOf('model') === 0
+      };
+    }
+
+    // Expiry-payoff breakevens by sign-change scan (mirrors summarizeExpiry).
+    function breakevensOf(legsArr) {
+      const strikes = legsArr.filter(function (l) { return l.type !== 'stock'; })
+        .map(function (l) { return l.strike; });
+      const hi = Math.max.apply(null, [10].concat(strikes)) * 3;
+      const bes = [];
+      let prevX = 0.01, prevY = expiryPayoff(0.01, legsArr);
+      for (let i = 1; i <= 400; i++) {
+        const x = hi * i / 400;
+        const y = expiryPayoff(x, legsArr);
+        if (prevY === 0) bes.push(prevX);
+        else if (y === 0) bes.push(x);
+        else if ((prevY < 0) !== (y < 0)) bes.push(prevX - prevY * (x - prevX) / (y - prevY));
+        prevX = x; prevY = y;
+      }
+      return bes;
+    }
+
+    function fmtBesList(bes) {
+      return bes.length ? bes.map(function (b) { return '$' + b.toFixed(1); }).join(' / ') : '—';
+    }
+
+    function modelRoll() {
+      syncRollLegs();
+      const box = document.getElementById('rollResults');
+      if (!box) return;
+      const leg = rollSelectedLeg();
+      const strikeEl = document.getElementById('rollStrike');
+      const newStrike = strikeEl ? parseFloat(strikeEl.value) : NaN;
+      const expSel = document.getElementById('rollExpiry');
+      const newExp = expSel ? expSel.value : '';
+      const dteEl = document.getElementById('rollDte');
+      if (!leg) {
+        box.innerHTML = '<p class="disc-empty">Add an option leg above first — there is nothing to roll.</p>';
+        lastRoll = null; return;
+      }
+      if (!(newStrike > 0)) {
+        box.innerHTML = '<p class="disc-empty">Enter a new strike to model the roll.</p>';
+        lastRoll = null; return;
+      }
+      const newDte = newExp ? expirationDte(newExp)
+        : Math.max(1, Math.round(parseFloat(dteEl && dteEl.value) || leg.dte));
+      if (Math.abs(newStrike - leg.strike) < 1e-9 && Math.abs(newDte - leg.dte) < 1) {
+        box.innerHTML = '<p class="disc-empty">That is the same strike and expiry — a roll moves at least one of them.</p>';
+        lastRoll = null; return;
+      }
+      const r = computeRoll(leg, newStrike, newExp, newDte);
+      const afterLegs = legs.map(function (l) { return l === leg ? r.newLeg : l; });
+      const before = candidateStats(legs);
+      const after = candidateStats(afterLegs);
+      lastRoll = { leg: leg, newLeg: r.newLeg };
+      const debit = r.netCash < -0.005, credit = r.netCash > 0.005;
+      const dirWord = debit ? 'Debit' : credit ? 'Credit' : 'Even';
+      const dirCls = debit ? 'var(--red)' : credit ? 'var(--green)' : 'var(--text)';
+      function row(lbl, b, a) {
+        return '<tr><td style="text-align:left">' + lbl + '</td><td>' + b + '</td><td>' + a + '</td></tr>';
+      }
+      let h = '<p style="font-size:0.82rem;margin:0 0 6px">Roll <b>' + rollLegLabel(leg) + '</b> → <b>' + rollLegLabel(r.newLeg) + '</b></p>';
+      h += '<p style="font-size:0.82rem;margin:0 0 6px">Close at ' + formatMoney(r.closeQ.px) +
+        ' <span style="color:var(--muted)">(' + r.closeQ.src + ')</span> · open at ' + formatMoney(r.openQ.px) +
+        ' <span style="color:var(--muted)">(' + r.openQ.src + ')</span> → ' +
+        '<b style="color:' + dirCls + '">' + dirWord + ' ' + formatMoney(Math.abs(r.netCash)) + '</b></p>';
+      h += '<table class="pl-table"><thead><tr><th style="text-align:left"></th><th>Before</th><th>After roll</th></tr></thead><tbody>';
+      h += row('Net cost', fmtNet(before.net), fmtNet(after.net));
+      h += row('Max profit', fmtStatMoney(before.maxProfit), fmtStatMoney(after.maxProfit));
+      h += row('Max loss', fmtStatMoney(before.maxLoss), fmtStatMoney(after.maxLoss));
+      h += row('Breakeven', fmtBesList(breakevensOf(legs)), fmtBesList(breakevensOf(afterLegs)));
+      h += row('Chance of profit', fmtPop(before.pop), fmtPop(after.pop));
+      h += '</tbody></table>';
+      if (r.modeled) h += '<p class="disc-note">Modeled prices — no chain quote for one or both sides.</p>';
+      h += '<p style="margin:6px 0 0"><button type="button" class="btn-primary btn-sm" onclick="applyRoll()">Apply roll</button> ' +
+        '<span class="disc-note">Swaps the leg above for the rolled one.</span></p>';
+      box.innerHTML = h;
+    }
+
+    function applyRoll() {
+      if (!lastRoll) return;
+      const idx = legs.indexOf(lastRoll.leg);
+      if (idx < 0) return;
+      if (typeof confirm === 'function' &&
+          !confirm('Roll to ' + rollLegLabel(lastRoll.newLeg) + '? This swaps the leg in slot A.')) return;
+      markBuildDirty();
+      legs[idx] = lastRoll.newLeg;
+      lastRoll = null;
+      if (typeof syncDTESlider === 'function') syncDTESlider();
+      updateSpotSliderRange();
+      renderLegs();
+      recalc();
+      if (typeof resetSimulation === 'function') resetSimulation();
+      modelRoll();
     }
 
     function summarizeExpiry(expiry, labels, legsArr) {

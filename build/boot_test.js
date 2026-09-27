@@ -1328,6 +1328,118 @@ async function runAsyncDiscoveryTests() {
   });
 }
 
+// ---------- R: Round 2 item 9 — roll analyzer ----------
+{
+  const { ctx, els } = run('builder', '');
+  const j = (expr) => vm.runInContext(expr, ctx);
+  const set = (id, v) => j('document.getElementById("' + id + '").value = "' + v + '"');
+  j(`(function(){
+    function dstr(days){ var d = new Date(); d.setDate(d.getDate() + days); return d.toISOString().slice(0,10); }
+    window.__exp30 = dstr(30); window.__exp60 = dstr(60);
+    window._cboeData = {
+      symbol: 'TEST', spot: 100,
+      expirations: [window.__exp30, window.__exp60],
+      chains: {}
+    };
+    window._cboeData.chains[window.__exp30] = { strikes: [90, 100, 110],
+      calls: [{strike:100,bid:2.00,ask:2.20,last:2.10,iv:0.25},{strike:110,bid:1.00,ask:1.15,last:1.08,iv:0.25}],
+      puts: [{strike:100,bid:3.00,ask:3.20,last:3.10,iv:0.26},{strike:90,bid:1.50,ask:1.70,last:1.60,iv:0.26}] };
+    window._cboeData.chains[window.__exp60] = { strikes: [90, 100, 110],
+      calls: [{strike:100,bid:3.00,ask:3.25,last:3.12,iv:0.27},{strike:110,bid:1.90,ask:2.10,last:2.00,iv:0.27}],
+      puts: [{strike:90,bid:2.00,ask:2.20,last:2.10,iv:0.28}] };
+    document.getElementById('spot').value = '100';
+  })()`);
+  const buyCall100 = () => j(`legs = [{ side: 'buy', type: 'call', strike: 100, dte: 30, qty: 1, premium: 2.10, ticker: 'TEST' }]`);
+  check('R1 roll long call: close at bid, open at ask, net debit', () => {
+    buyCall100();
+    const r = JSON.parse(j(`JSON.stringify((function(){
+      var res = computeRoll(legs[0], 110, window.__exp60, 60);
+      return { closePx: res.closeQ.px, closeSrc: res.closeQ.src, openPx: res.openQ.px, openSrc: res.openQ.src,
+               perShare: res.perShare, netCash: res.netCash, modeled: res.modeled,
+               ns: res.newLeg.strike, ndte: res.newLeg.dte, nside: res.newLeg.side, ntype: res.newLeg.type };
+    })())`));
+    if (r.closePx !== 2.00 || r.closeSrc !== 'bid') throw new Error('close should be bid 2.00, got ' + r.closePx + '/' + r.closeSrc);
+    if (r.openPx !== 2.10 || r.openSrc !== 'ask') throw new Error('open should be ask 2.10, got ' + r.openPx + '/' + r.openSrc);
+    if (Math.abs(r.perShare - (-0.10)) > 1e-9) throw new Error('perShare=' + r.perShare + ' (want close-open = -0.10)');
+    if (Math.abs(r.netCash - (-10)) > 1e-9) throw new Error('netCash=' + r.netCash + ' (want -10)');
+    if (r.ns !== 110 || r.ndte !== 60 || r.nside !== 'buy' || r.ntype !== 'call') throw new Error('newLeg wrong: ' + JSON.stringify(r));
+    if (r.modeled) throw new Error('should not be modeled with chain quotes');
+  });
+  check('R2 roll short put: close at ask, open at bid, net debit', () => {
+    j(`legs = [{ side: 'sell', type: 'put', strike: 100, dte: 30, qty: 1, premium: 3.10, ticker: 'TEST' }]`);
+    const r = JSON.parse(j(`JSON.stringify((function(){
+      var res = computeRoll(legs[0], 90, window.__exp60, 60);
+      return { closePx: res.closeQ.px, closeSrc: res.closeQ.src, openPx: res.openQ.px, openSrc: res.openQ.src,
+               perShare: res.perShare, netCash: res.netCash };
+    })())`));
+    if (r.closePx !== 3.20 || r.closeSrc !== 'ask') throw new Error('close should be ask 3.20, got ' + r.closePx + '/' + r.closeSrc);
+    if (r.openPx !== 2.00 || r.openSrc !== 'bid') throw new Error('open should be bid 2.00, got ' + r.openPx + '/' + r.openSrc);
+    if (Math.abs(r.perShare - (-1.20)) > 1e-9) throw new Error('perShare=' + r.perShare + ' (want open-close = -1.20)');
+    if (Math.abs(r.netCash - (-120)) > 1e-9) throw new Error('netCash=' + r.netCash + ' (want -120)');
+  });
+  check('R3 modelRoll renders cost + before/after table + Apply', () => {
+    buyCall100();
+    j('syncRollLegs()');
+    set('rollLeg', '0');
+    set('rollStrike', '110');
+    j('document.getElementById("rollExpiry").value = window.__exp60');
+    j('modelRoll()');
+    const html = j('document.getElementById("rollResults").innerHTML');
+    if (html.indexOf('Debit') < 0) throw new Error('expected Debit, got: ' + html.slice(0, 200));
+    if (html.indexOf('Apply roll') < 0) throw new Error('no Apply button');
+    if (html.indexOf('Before') < 0 || html.indexOf('After roll') < 0) throw new Error('no before/after table');
+    if (html.indexOf('Breakeven') < 0 || html.indexOf('Chance of profit') < 0) throw new Error('missing stat rows');
+    if (!j('lastRoll')) throw new Error('lastRoll not set');
+  });
+  check('R4 applyRoll swaps the leg in slot A', () => {
+    j('applyRoll()');
+    if (j('legs[0].strike') !== 110) throw new Error('strike=' + j('legs[0].strike'));
+    if (j('legs[0].dte') !== 60) throw new Error('dte=' + j('legs[0].dte'));
+    if (j('legs.length') !== 1) throw new Error('legs length changed');
+  });
+  check('R5 modelRoll with no legs shows the empty message', () => {
+    j('legs = []');
+    j('modelRoll()');
+    const html = j('document.getElementById("rollResults").innerHTML');
+    if (html.indexOf('nothing to roll') < 0) throw new Error('got: ' + html.slice(0, 150));
+  });
+  check('R6 modelRoll rejects same strike and expiry', () => {
+    buyCall100();
+    j('syncRollLegs()');
+    set('rollLeg', '0');
+    set('rollStrike', '100');
+    j('document.getElementById("rollExpiry").value = window.__exp30');
+    j('modelRoll()');
+    const html = j('document.getElementById("rollResults").innerHTML');
+    if (html.indexOf('same strike and expiry') < 0) throw new Error('got: ' + html.slice(0, 150));
+    if (j('lastRoll')) throw new Error('lastRoll should be null');
+  });
+  check('R7 breakevensOf finds the long-call breakeven near strike+premium', () => {
+    const bes = JSON.parse(j('JSON.stringify(breakevensOf([{side:"buy",type:"call",strike:100,dte:30,qty:1,premium:3}]))'));
+    if (bes.length !== 1 || Math.abs(bes[0] - 103) > 0.5) throw new Error('bes=' + JSON.stringify(bes));
+  });
+  check('R8 computeRoll without a chain falls back to modeled prices', () => {
+    j('window._cboeData = null');
+    buyCall100();
+    const r = JSON.parse(j(`JSON.stringify((function(){
+      var res = computeRoll(legs[0], 110, '', 60);
+      return { modeled: res.modeled, closePx: res.closeQ.px, openPx: res.openQ.px };
+    })())`));
+    if (!r.modeled) throw new Error('expected modeled=true');
+    if (!(r.closePx > 0) || !(r.openPx > 0) || !isFinite(r.closePx) || !isFinite(r.openPx)) throw new Error('bad modeled prices');
+  });
+  check('R9 modelRoll without chain shows the modeled note', () => {
+    buyCall100();
+    j('syncRollLegs()');
+    set('rollLeg', '0');
+    set('rollStrike', '105');
+    j('document.getElementById("rollExpiry").value = ""');
+    j('modelRoll()');
+    const html = j('document.getElementById("rollResults").innerHTML');
+    if (html.indexOf('Modeled prices') < 0) throw new Error('no modeled note: ' + html.slice(0, 200));
+  });
+}
+
 runAsyncDiscoveryTests().then(() => {
   console.log(failures ? `\n${failures} FAILURES` : '\nALL PASS');
   process.exit(failures ? 1 : 0);

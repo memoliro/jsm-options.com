@@ -1131,6 +1131,31 @@
       <p class="disc-note">Candidates are priced with Black-Scholes at per-strike chain IV when a chain is loaded, otherwise the IV input. Stats are estimates — your broker's fills will differ.</p>
     </div>
 
+    <!-- Round 2 item 9: roll analyzer — slim educational what-if for rolling
+         a leg to a new strike/expiry. Models the net cost and the new risk
+         picture; Apply swaps the leg. Placed with the discovery card so it
+         stays on the builder page through the partition.py simulator cut. -->
+    <div class="card" id="rollCard">
+      <h2>Roll analyzer <span style="font-size:0.72rem;color:var(--muted);font-weight:500;">what-if model · no orders placed</span></h2>
+      <p class="disc-note" style="margin-top:0">Rolling closes one leg and reopens it at a new strike or expiry — usually to buy more time or adjust direction. This models what the roll would cost and how the position changes. Nothing here places a trade.</p>
+      <div class="disc-form">
+        <label>Leg to roll
+          <select id="rollLeg" onchange="onRollLegChange()"></select>
+        </label>
+        <label>New expiry
+          <select id="rollExpiry"></select>
+        </label>
+        <label id="rollDteWrap" style="display:none">Model DTE
+          <input id="rollDte" type="number" value="60" min="1" />
+        </label>
+        <label>New strike
+          <input id="rollStrike" type="number" step="0.5" min="0.01" />
+        </label>
+        <button type="button" class="btn-primary btn-sm" onclick="modelRoll()">Model the roll</button>
+      </div>
+      <div id="rollResults" class="disc-results"><p class="disc-empty">Pick a leg, a new expiry and strike — the modeled cost and the new stats appear here.</p></div>
+    </div>
+
     <!-- Payoff Graph — full width, the primary chart. The solid "at expiry"
          line is fixed to the trade's own strikes/entry price, so it holds
          still as days pass; only the dashed "today" line and the crosshair
@@ -1333,7 +1358,7 @@ and custom structures. View payoff charts, Greeks, profit/loss, break-even, prob
     </div>
     <div class="guide-body" id="guideBody"></div>
   </aside>
-  <script src="/assets/jsm-options-engine.js?v=86ad7e29"></script>
+  <script src="/assets/jsm-options-engine.js?v=c63153ba"></script>
 <script>
 (function(){
   function initNav(){
