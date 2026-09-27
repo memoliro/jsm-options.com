@@ -2877,7 +2877,9 @@
       const v = parseFloat(document.getElementById('spotSlider').value);
       document.getElementById('spot').value = v.toFixed(1);
       document.getElementById('spotLabel').textContent = '$' + v.toFixed(2);
-      if (rangeZoomActive) applyRangeZoom(v);
+      // Range slider locks the X window: keep it fixed while the price marker
+      // travels inside it; recenter only if the price would leave the window.
+      if (rangeZoomActive && chartZoom && (v < chartZoom.min || v > chartZoom.max)) applyRangeZoom(v);
       recalc();
     }
 

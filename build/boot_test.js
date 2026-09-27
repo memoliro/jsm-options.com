@@ -354,6 +354,32 @@ const el = (els, id) => els.get(id);
     if (aCount !== 9) throw new Error('A tiles=' + aCount);
     if (bCount !== 7) throw new Error('B tiles=' + bCount);
   });
+  check('E7 builder: stat tiles use flat background (no gradient)', () => {
+    const html = fs.readFileSync(path.join(SITE, 'builder', 'index.html'), 'utf8');
+    const m = html.match(/\.stat-tile\s*\{[^}]*\}/);
+    if (!m) throw new Error('no .stat-tile rule found');
+    if (/gradient/i.test(m[0])) throw new Error('gradient still in .stat-tile: ' + m[0].slice(0, 90));
+  });
+  check('E8 builder: range slider locks X window; spot moves marker, not window', () => {
+    const r = vm.runInContext(`(function(){
+      var rng = document.getElementById('chartRange');
+      rng.value = '20';
+      onRangeChange();
+      var lo1 = chartZoom.min, hi1 = chartZoom.max;
+      if (!(hi1 > lo1)) return 'bad lock ' + lo1 + ',' + hi1;
+      var spot = document.getElementById('spotSlider');
+      spot.value = String((lo1 + hi1) / 2); // inside the locked window
+      onSpotSlide();
+      if (chartZoom.min !== lo1 || chartZoom.max !== hi1) return 'window moved with spot';
+      spot.value = String(hi1 * 3); // far outside the window
+      onSpotSlide();
+      if (chartZoom.min === lo1 && chartZoom.max === hi1) return 'window did not follow escaped spot';
+      var v = hi1 * 3;
+      if (!(chartZoom.min < v && chartZoom.max > v)) return 'escaped spot still outside window';
+      return 'ok';
+    })()`, ctx);
+    if (r !== 'ok') throw new Error(r);
+  });
 }
 
 console.log(failures ? `\n${failures} FAILURES` : '\nALL PASS');
