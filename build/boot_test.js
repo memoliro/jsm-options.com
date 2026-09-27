@@ -408,7 +408,7 @@ const el = (els, id) => els.get(id);
     }
     if (!html.includes('data-plmetric="risk"') || !html.includes('data-plmetric="cost"')) throw new Error('metric buttons missing');
   });
-  check('F1 table: view toggle renders 11 rows x 6 cols, no NaN', () => {
+  check('F1 table: view toggle renders 11 rows; cols = Today + each leg DTE (no chain)', () => {
     vm.runInContext("setChartView('table')", ctx);
     if (el(els, 'plTableWrap').style.display === 'none') throw new Error('wrap hidden');
     if (el(els, 'chartContainer').style.display !== 'none') throw new Error('chart not hidden');
@@ -417,10 +417,13 @@ const el = (els, id) => els.get(id);
     const body = html.split('<tbody>')[1].split('</tbody>')[0];
     const rows = body.split('</tr>').filter(s => s.indexOf('<td') >= 0);
     if (rows.length !== 11) throw new Error('rows=' + rows.length);
+    // no chain in this env -> fallback = unique leg DTEs (default leg: 90) ->
+    // Today + D-90 = 2 date columns
     const tds = (body.match(/<td/g) || []).length;
-    if (tds !== 66) throw new Error('tds=' + tds);
+    if (tds !== 22) throw new Error('tds=' + tds);
     const ths = (html.split('<thead>')[1].split('</thead>')[0].match(/<th/g) || []).length;
-    if (ths !== 7) throw new Error('header cols=' + ths); // Price + 6 dates
+    if (ths !== 3) throw new Error('header cols=' + ths); // Price + Today + D-90
+    if (html.indexOf('>Today<') < 0) throw new Error('no Today header');
   });
   check('F2 table: spot row highlighted', () => {
     const html = el(els, 'plTable').innerHTML;
@@ -506,6 +509,99 @@ const el = (els, id) => els.get(id);
     if (before === after) throw new Error('table not refreshed by recalc');
     if (/NaN/.test(after)) throw new Error('NaN after refresh');
     vm.runInContext("setChartView('chart')", ctx); // leave clean
+  });
+  // F8-F11: all-expirations columns (Round 2 follow-up).
+  const expCtxSetup = () => {
+    const { ctx: c2, els: e2 } = run('builder', '');
+    vm.runInContext(`(function(){
+      function dstr(days){ var d = new Date(); d.setHours(0,0,0,0); d.setDate(d.getDate() + days); return d.toISOString().slice(0,10); }
+      window._cboeData = {
+        symbol: 'TST', spot: 100,
+        expirations: [dstr(7), dstr(30), dstr(60), dstr(200)],
+        chains: {}
+      };
+      legs = [{ side: 'buy', type: 'call', strike: 100, dte: 60, qty: 1, premium: 3.2, ticker: 'TST' }];
+      document.getElementById('spot').value = '100';
+    })()`, c2);
+    return { ctx: c2, els: e2 };
+  };
+  check('F8 table: one column per listed expiry up to the furthest leg', () => {
+    const { ctx: c2, els: e2 } = expCtxSetup();
+    vm.runInContext("setChartView('table')", c2);
+    const html = e2.get('plTable').innerHTML;
+    if (/NaN/.test(html)) throw new Error('NaN in table');
+    const thead = html.split('<thead>')[1].split('</thead>')[0];
+    const ths = (thead.match(/<th/g) || []).length;
+    // Price + Today + 7d + 30d + 60d = 5 (200d expiry is past the 60d leg)
+    if (ths !== 5) throw new Error('header cols=' + ths + ' (want 5)');
+    if (thead.indexOf('200') >= 0) throw new Error('far expiry leaked into headers');
+    const body = html.split('<tbody>')[1].split('</tbody>')[0];
+    const tds = (body.match(/<td/g) || []).length;
+    if (tds !== 44) throw new Error('tds=' + tds + ' (want 44)');
+  });
+  check('F9 table: expiry headers carry month-day labels in ascending order', () => {
+    const { ctx: c2, els: e2 } = expCtxSetup();
+    vm.runInContext("setChartView('table')", c2);
+    const thead = e2.get('plTable').innerHTML.split('<thead>')[1].split('</thead>')[0];
+    const subs = [];
+    const re = /<span[^>]*>([^<]*)<\/span>/g;
+    let m;
+    while ((m = re.exec(thead))) subs.push(m[1]);
+    // Today sub is a full date; expiry subs are "Nd"
+    const ds = subs.slice(1).map(s => parseInt(s, 10));
+    if (ds.join(',') !== '7,30,60') throw new Error('subs=' + JSON.stringify(subs));
+  });
+  check('F10 table: every column matches plAt(price, minDte - d)', () => {
+    const { ctx: c2, els: e2 } = expCtxSetup();
+    vm.runInContext("setPlMetric('$'); setChartView('table')", c2);
+    const res = vm.runInContext(`(function(){
+      var html = document.getElementById('plTable').innerHTML;
+      var thead = html.split('<thead>')[1].split('</thead>')[0];
+      var subs = [], re = /<span[^>]*>([^<]*)<\\/span>/g, m;
+      while ((m = re.exec(thead))) subs.push(m[1]);
+      var minDte = 60, S = getParams().S;
+      var colDays = subs.map(function(s, i){ return i === 0 ? minDte : minDte - parseInt(s, 10); });
+      var body = html.split('<tbody>')[1].split('</tbody>')[0];
+      var rows = body.split('</tr>').filter(function(s){ return s.indexOf('<td') >= 0; });
+      var bad = [];
+      rows.forEach(function(rh, ri){
+        var pm = rh.match(/<th>\\$([0-9.]+)/);
+        var price = parseFloat(pm[1]);
+        var cells = rh.split('</td>').slice(0, -1).map(function(c){ var tm = c.match(/>([^<>]*)$/); return tm[1].trim(); });
+        cells.forEach(function(txt, j){
+          var want = formatPlMetric(plAt(price, colDays[j], legs));
+          if (txt !== want) bad.push('r' + ri + 'c' + j + ': got ' + txt + ' want ' + want);
+        });
+      });
+      return JSON.stringify({ bad: bad.slice(0, 5), nbad: bad.length, S: S });
+    })()`, c2);
+    const o = JSON.parse(res);
+    if (o.nbad) throw new Error(o.nbad + ' mismatches, e.g. ' + o.bad.join(' | '));
+  });
+  check('F11 table: two expiries -> both listed; near leg settles past its expiry', () => {
+    const { ctx: c2, els: e2 } = expCtxSetup();
+    vm.runInContext(`(function(){
+      legs = [
+        { side: 'buy', type: 'call', strike: 100, dte: 30, qty: 1, premium: 2.1, ticker: 'TST' },
+        { side: 'buy', type: 'call', strike: 100, dte: 60, qty: 1, premium: 3.2, ticker: 'TST' }
+      ];
+    })()`, c2);
+    vm.runInContext("setChartView('table')", c2);
+    const html = e2.get('plTable').innerHTML;
+    const thead = html.split('<thead>')[1].split('</thead>')[0];
+    const ths = (thead.match(/<th/g) || []).length;
+    if (ths !== 5) throw new Error('header cols=' + ths + ' (want Price+Today+7d+30d+60d)');
+    // Column for the 60d expiry: daysLeft = minDte(30) - 60 = -30, so the
+    // 30d leg is fully settled there and must price at intrinsic value.
+    const chk2 = vm.runInContext(`(function(){
+      var p = 120;
+      var vAll = plAt(p, -30, legs);
+      var pos = positionValueAt(p, -30, false, legs);
+      var nearVal = positionValueAt(p, -30, false, [legs[0]]);
+      return JSON.stringify({ vAll: vAll, pos: pos, nearVal: nearVal, intrinsic100: Math.max(p-100,0)*100 });
+    })()`, c2);
+    const o2 = JSON.parse(chk2);
+    if (Math.abs(o2.nearVal - o2.intrinsic100) > 1e-6) throw new Error('near leg not settled to intrinsic: ' + JSON.stringify(o2));
   });
 }
 

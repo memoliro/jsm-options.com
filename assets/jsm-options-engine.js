@@ -4224,25 +4224,62 @@
       const params = getParams();
       const S = params.S;
       const win = chartXWindowA();
-      const ROWS = 11, COLS = 6;
-      let minDte = 0;
+      const ROWS = 11;
+      // One column per listed expiration (plus Today). positionValueAt()
+      // treats daysLeft as "days left until the nearest expiry", so a column
+      // for an expiration d days out uses daysLeft = minDte - d — negative
+      // for expirations past the nearest leg, which correctly settles the
+      // nearer legs to intrinsic. Expirations past the furthest leg are
+      // omitted: every column there would show the same settled value.
+      let minDte = 0, maxDte = 0;
       for (let i = 0; i < legs.length; i++) {
         const d = legs[i].dte;
-        if (legs[i].type !== 'stock' && isFinite(d) && d > 0) minDte = minDte ? Math.min(minDte, d) : d;
+        if (legs[i].type !== 'stock' && isFinite(d) && d > 0) {
+          minDte = minDte ? Math.min(minDte, d) : d;
+          maxDte = Math.max(maxDte, d);
+        }
       }
       minDte = Math.max(0, Math.round(minDte));
+      maxDte = Math.max(minDte, Math.round(maxDte));
       const today = new Date(); today.setHours(0, 0, 0, 0);
-      const colDefs = [];
-      for (let j = 0; j < COLS; j++) {
-        const f = j / (COLS - 1); // 0 = today … 1 = expiry
-        const dl = Math.round(minDte * (1 - f));
-        const elapsed = minDte - dl;
-        const dt = new Date(today.getTime() + elapsed * 86400000).toISOString().slice(0, 10);
-        colDefs.push({
-          daysLeft: dl,
-          head: j === 0 ? 'Today' : (j === COLS - 1 ? 'Expiry' : 'D-' + dl),
-          sub: dt
+      const expDtes = [];
+      const chainExps = (window._cboeData && Array.isArray(window._cboeData.expirations))
+        ? window._cboeData.expirations : [];
+      chainExps.forEach(function (es) {
+        const t = Date.parse(es + 'T00:00:00Z');
+        if (!isFinite(t)) return;
+        const d = Math.round((t - today.getTime()) / 86400000);
+        if (d > 0 && d <= maxDte) expDtes.push({ d: d, label: es });
+      });
+      if (!expDtes.length) {
+        // No chain (manual mode): fall back to the legs' own DTEs.
+        const seen = {};
+        legs.forEach(function (l) {
+          if (l.type === 'stock') return;
+          const d = Math.max(0, Math.round(l.dte));
+          if (d > 0 && !seen[d] && d <= maxDte) { seen[d] = 1; expDtes.push({ d: d, label: null }); }
         });
+      }
+      expDtes.sort(function (a, b) { return a.d - b.d; });
+      const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+      const colDefs = [{ daysLeft: minDte, head: 'Today', sub: today.toISOString().slice(0, 10) }];
+      expDtes.forEach(function (e) {
+        let head, sub;
+        if (e.label) {
+          const dt = new Date(Date.parse(e.label + 'T00:00:00Z'));
+          head = MONTHS[dt.getUTCMonth()] + ' ' + dt.getUTCDate();
+          sub = e.d + 'd';
+        } else {
+          head = 'D-' + e.d;
+          sub = e.d + 'd out';
+        }
+        colDefs.push({ daysLeft: minDte - e.d, head: head, sub: sub });
+      });
+      if (!colDefs.some(function (c) { return c.daysLeft === 0; })) {
+        // Nearest expiry isn't a listed date (e.g. hand-edited DTE): keep an
+        // explicit expiry anchor like the old table had.
+        const expDt = new Date(today.getTime() + minDte * 86400000).toISOString().slice(0, 10);
+        colDefs.push({ daysLeft: 0, head: 'Expiry', sub: expDt });
       }
       let html = '<thead><tr><th>Price</th>';
       for (let j = 0; j < colDefs.length; j++) {
