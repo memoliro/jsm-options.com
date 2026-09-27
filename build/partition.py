@@ -618,7 +618,7 @@ assumptions = """  <div class="card">
       </div>
       <div class="field">
         <label>Underlying price ($)</label>
-        <input id="spot" type="number" value="100" step="0.5" min="1" oninput="recalc()" onchange="resetSimulation()" />
+        <input id="spot" type="number" value="100" step="0.5" min="1" oninput="onSpotInput()" onchange="resetSimulation()" />
       </div>
       <div class="field">
         <label>IV (%)</label>

@@ -76,6 +76,23 @@
     // legs, or a manually-typed new stock price, not on every sim day.
     let chartRefSpot = null;
 
+    // Reference price the ±1σ expected-move band is anchored to. The
+    // Underlying slider is a what-if scenario tool: dragging it must NOT move
+    // the band, because the band is the market-implied expected move FROM the
+    // actual current price — a fixed reference frame the slider explores
+    // against. The anchor updates only when the asserted current price
+    // changes (chain data load, manual spot entry, loaded setup token), and
+    // is captured once at boot otherwise.
+    let emAnchorSpot = null;
+    function emRefSpot() {
+      if (!(emAnchorSpot > 0)) {
+        const spotEl = document.getElementById('spot');
+        const s = spotEl ? parseFloat(spotEl.value) || 0 : 0;
+        if (s > 0) emAnchorSpot = s;
+      }
+      return emAnchorSpot > 0 ? emAnchorSpot : 0;
+    }
+
     function isLightTheme() {
       return document.documentElement.getAttribute('data-theme') === 'light';
     }
@@ -639,9 +656,14 @@
       for (let i = 0; i < legs.length; i++) {
         if (legs[i].type !== 'stock' && !legIsIncomplete(legs[i])) optionDtes.push(legs[i].dte);
       }
-      if (!optionDtes.length || !(p.iv > 0) || !(p.S > 0)) return null;
+      // Centered on the reference price (emRefSpot), NOT the Underlying
+      // scenario slider: the expected move is a forecast from the actual
+      // current price, so the band stays a fixed reference while the slider
+      // explores what-if prices.
+      const S = emRefSpot();
+      if (!optionDtes.length || !(p.iv > 0) || !(S > 0)) return null;
       const minDte = Math.min.apply(null, optionDtes);
-      return p.S * p.iv * Math.sqrt(Math.max(minDte, 1) / 365);
+      return S * p.iv * Math.sqrt(Math.max(minDte, 1) / 365);
     }
 
     // Probability the position is profitable at the nearest expiry, estimated
@@ -1882,11 +1904,12 @@
         const ctx = chart.ctx;
         const hasLegs = (typeof legs !== 'undefined' && legs && legs.length > 0);
         ctx.save();
-        // ±1σ expected-move band around spot
+        // ±1σ expected-move band around the reference price (fixed while the
+        // Underlying slider explores what-if prices)
         if (hasLegs && typeof expectedMove === 'function') {
           let em = null;
           try { em = expectedMove(); } catch (e) { em = null; }
-          const S = parseFloat(document.getElementById('spot').value) || 0;
+          const S = (typeof emRefSpot === 'function') ? emRefSpot() : 0;
           if (em && isFinite(em) && em > 0 && S > 0) {
             const x0 = Math.max(area.left, cx.getPixelForValue(S - em));
             const x1 = Math.min(area.right, cx.getPixelForValue(S + em));
@@ -2787,6 +2810,19 @@
       recalc();
     }
 
+    // Manual spot entry asserts a new current price, so it re-anchors the ±1σ
+    // expected-move band. The Underlying slider writes to the same field via
+    // onSpotSlide(), which deliberately does NOT re-anchor — the slider is a
+    // what-if scenario tool, not a price assertion.
+    function onSpotInput() {
+      const v = parseFloat(document.getElementById('spot').value);
+      if (v > 0) emAnchorSpot = v;
+      // Builder has the Underlying slider + chain UI: full live update.
+      // Simulator has neither, so a plain recalc suffices there.
+      if (document.getElementById('spotSlider')) liveUpdate();
+      else recalc();
+    }
+
     // ===== Round 2 item 1: Price×date P&L data table =====
     // View toggle (chart/table) + value mode ($ / % of max risk / % of entry cost).
     // The table reuses plAt()/initialCost() so it always agrees with the chart.
@@ -3635,6 +3671,7 @@
           document.getElementById('spot').value = obj.S;
           var sl = document.getElementById('spotSlider');
           if (sl) sl.value = obj.S;
+          if (parseFloat(obj.S) > 0) emAnchorSpot = parseFloat(obj.S); // loaded setup asserts a price
         }
         if (obj.ticker && document.getElementById('ticker')) {
           document.getElementById('ticker').value = obj.ticker;
@@ -4071,6 +4108,7 @@
     // and Greeks so nothing misleading stays on screen.
     function enterManualDataMode(sym, message) {
       window._cboeData = null;
+      emAnchorSpot = null; // no market price: band stays hidden until the user types one
       const spotInput = document.getElementById('spot');
       const ivInput = document.getElementById('iv');
       const spotRefEl = document.getElementById('chainSpotRef');
@@ -4186,6 +4224,7 @@
         if (spotRefEl) spotRefEl.value = data.spot ? '$' + Number(data.spot).toFixed(2) : '—';
         if (spotInput && data.spot){
           spotInput.value = Number(data.spot).toFixed(2);
+          emAnchorSpot = Number(data.spot); // fresh market price re-anchors the ±1σ band
         }
         seedIvFromAtm(data, sel.value);
         // The selected ticker owns inherited legs. Re-anchor every inherited

@@ -732,5 +732,65 @@ const el = (els, id) => els.get(id);
   });
 }
 
+// ---------- J: ±1σ band anchored to reference price, not the scenario slider ----------
+{
+  const { ctx, els } = run('builder', '?setup=' + TOKEN);
+  const j = (expr) => vm.runInContext(expr, ctx);
+  const jj = (expr) => JSON.parse(j(expr));
+  check('J1 band: anchor captured from loaded setup price', () => {
+    const a = j('emRefSpot()');
+    if (Math.abs(a - 105) > 1e-9) throw new Error('anchor=' + a);
+  });
+  check('J2 band: slider drag does not move band center or width', () => {
+    const before = jj(`JSON.stringify({em: expectedMove(), c: emRefSpot()})`);
+    if (!(before.em > 0)) throw new Error('no EM before: ' + before.em);
+    j(`(function(){ var sl = document.getElementById('spotSlider'); sl.value = 150; onSpotSlide(); })()`);
+    const after = jj(`JSON.stringify({em: expectedMove(), c: emRefSpot(), spot: parseFloat(document.getElementById('spot').value)})`);
+    if (Math.abs(after.spot - 150) > 1e-9) throw new Error('slider did not move spot: ' + after.spot);
+    if (Math.abs(after.c - before.c) > 1e-9) throw new Error('band center moved: ' + before.c + ' -> ' + after.c);
+    if (Math.abs(after.em - before.em) > 1e-9) throw new Error('band width moved: ' + before.em + ' -> ' + after.em);
+  });
+  check('J3 band: IV change resizes band, center stays fixed', () => {
+    const before = jj(`JSON.stringify({em: expectedMove(), c: emRefSpot()})`);
+    j(`(function(){ document.getElementById('iv').value = '50'; liveUpdate(); })()`);
+    const after = jj(`JSON.stringify({em: expectedMove(), c: emRefSpot()})`);
+    if (Math.abs(after.c - before.c) > 1e-9) throw new Error('center moved on IV change');
+    if (!(after.em > before.em * 1.5)) throw new Error('width did not scale with IV: ' + before.em + ' -> ' + after.em);
+  });
+  check('J4 band: manual spot edit re-anchors (EM = S*IV*sqrt(T))', () => {
+    j(`(function(){ document.getElementById('spot').value = '200'; onSpotInput(); })()`);
+    const a = j('emRefSpot()');
+    if (Math.abs(a - 200) > 1e-9) throw new Error('anchor=' + a);
+    const em = j('expectedMove()');
+    const want = 200 * 0.50 * Math.sqrt(30 / 365); // IV was set to 50 in J3
+    if (Math.abs(em - want) / want > 1e-9) throw new Error('em=' + em + ' want=' + want);
+  });
+  check('J5 band: stat tile follows the anchor, not the slider', () => {
+    j(`(function(){ var sl = document.getElementById('spotSlider'); sl.value = 120; onSpotSlide(); })()`);
+    // The Expected-move tile lives on the simulator page; the builder shows
+    // the band on the chart instead. The overlay reads the same emRefSpot(),
+    // already covered by J1-J4, so assert the anchor is untouched here.
+    const a = j('emRefSpot()');
+    if (Math.abs(a - 200) > 1e-9) throw new Error('anchor moved by slider: ' + a);
+  });
+}
+
+// ---------- J6: simulator Expected-move tile follows the anchor ----------
+{
+  const { ctx, els } = run('simulator', '?setup=' + TOKEN);
+  const j = (expr) => vm.runInContext(expr, ctx);
+  check('J6 sim: EM tile anchored to setup price, manual edit re-anchors', () => {
+    const t1 = el(els, 'posExpMove').textContent;
+    if (/NaN/.test(t1)) throw new Error('tile NaN: ' + t1);
+    // TOKEN: S=105, IV=25, DTE=30 -> EM = 105*0.25*sqrt(30/365) = 7.53
+    if (!/±\$7\.53/.test(t1)) throw new Error('tile=' + JSON.stringify(t1));
+    j(`(function(){ document.getElementById('spot').value = '200'; onSpotInput(); })()`);
+    const t2 = el(els, 'posExpMove').textContent;
+    if (/NaN/.test(t2)) throw new Error('tile NaN after edit');
+    // EM = 200*0.25*sqrt(30/365) = 14.33
+    if (!/±\$14\.33/.test(t2)) throw new Error('tile after edit=' + JSON.stringify(t2));
+  });
+}
+
 console.log(failures ? `\n${failures} FAILURES` : '\nALL PASS');
 process.exit(failures ? 1 : 0);
