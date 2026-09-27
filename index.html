@@ -614,6 +614,10 @@
     .chain-table .price.has{color:var(--text)}
     .chain-table td.delta{color:var(--muted);font-size:11px;background:rgba(59,130,246,.06)}
     .chain-table tr.atm td.delta{background:rgba(59,130,246,.14)}
+    .chain-table tr.atm-exact td{border-top:2px solid var(--accent);border-bottom:2px solid var(--accent);background:rgba(59,130,246,.10)}
+    .chain-table tr.atm-exact td.strike{background:rgba(59,130,246,.30)}
+    .chain-table tr.atm-exact td.delta{background:rgba(59,130,246,.20)}
+    .atm-tag{display:inline-block;margin-left:6px;font-size:9px;font-weight:800;letter-spacing:.08em;color:#fff;background:var(--accent);border-radius:4px;padding:1px 5px;vertical-align:1px;white-space:nowrap}
     #ticker, select#chainFilterTop, select#chainExpiration{background:var(--card);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:8px}
 
     </style>
@@ -4174,17 +4178,23 @@ and custom structures. View payoff charts, Greeks, profit/loss, break-even, prob
         return d.toFixed(2);
       }
       let html = '<table class="chain-table"><thead><tr><th>Δ</th><th>Call</th><th></th><th>Strike</th><th></th><th>Put</th><th>Δ</th></tr></thead><tbody>';
+      // Single strike nearest spot — gets the strong ATM marker (line + pill).
+      let atmStrike = null, atmD = Infinity;
+      visible.forEach(s => { const d = Math.abs(s - spotManual); if (d < atmD) { atmD = d; atmStrike = s; } });
       visible.slice().reverse().forEach(strike=>{
         const c = callMap.get(strike);
         const p2 = putMap.get(strike);
         const cPrice = c ? midPrice(c) : 0;
         const pPrice = p2 ? midPrice(p2) : 0;
         const isATM = Math.abs(strike-spotManual) < spotManual*0.02;
-        html += `<tr class="${isATM?'atm':''}"${isATM?' data-atm="1"':''}>`;
+        const isExactATM = atmStrike !== null && strike === atmStrike;
+        const cls = (isATM?'atm':'') + (isExactATM?' atm-exact':'');
+        const dat = (isATM?' data-atm="1"':'') + (isExactATM?' data-atm-exact="1"':'');
+        html += `<tr class="${cls.trim()}"${dat}>`;
         html += `<td class="delta">${deltaFor(c, 'call', strike)}</td>`;
         html += `<td class="price ${cPrice?'has':''}">${cPrice? '$'+cPrice.toFixed(2):'—'}</td>`;
         html += `<td><button class="btn-add" onclick="addLegFromChain('call', ${strike}, ${cPrice||0}, '${exp}')">Add Call</button></td>`;
-        html += `<td class="strike">${strike}</td>`;
+        html += `<td class="strike">${strike}${isExactATM?'<span class="atm-tag">ATM</span>':''}</td>`;
         html += `<td><button class="btn-add" onclick="addLegFromChain('put', ${strike}, ${pPrice||0}, '${exp}')">Add Put</button></td>`;
         html += `<td class="price ${pPrice?'has':''}">${pPrice? '$'+pPrice.toFixed(2):'—'}</td>`;
         html += `<td class="delta">${deltaFor(p2, 'put', strike)}</td>`;
@@ -4200,7 +4210,7 @@ and custom structures. View payoff charts, Greeks, profit/loss, break-even, prob
     function centerChainOnAtm(){
       const wrap = document.getElementById('chainTableWrap');
       if (!wrap) return;
-      const rows = wrap.querySelectorAll('tr[data-atm="1"]');
+      const rows = wrap.querySelectorAll('tr[data-atm-exact="1"],tr[data-atm="1"]');
       if (!rows.length) return;
       const spotEl = document.getElementById('spot');
       const spot = (spotEl && parseFloat(spotEl.value)) || 0;
