@@ -733,6 +733,166 @@
       return Math.max(0, Math.min(1, pop));
     }
 
+    // ===== Round 2, Item 5: probability of touch + price slices =====
+    // One-touch estimate (labeled "est." in the UI):
+    //   PoT(K) ≈ 2 · N(−| ln(S/K) − μT | / (σ√T)),  μ = r − q − σ²/2.
+    // S is the anchored reference price (emRefSpot), NOT the Underlying
+    // scenario slider — the same anchor the ±1σ band uses. These are
+    // market-distribution statements, not P/L scenarios.
+    // Edge cases: σ = 0 or T = 0 → the price is frozen, so the touch
+    // probability is 100% if the level is already touched (K === S: the
+    // path starts at S) else 0%.
+    // Hand-verified fixture: S=100, K=110, T=1, σ=0.20, r=0.05, q=0
+    // → μ=0.03, z=−0.626551, PoT = 0.531 (node one-off, 2026-09-27).
+    function probTouchRaw(S, K, T, sig, r, q) {
+      if (!(S > 0) || !(K > 0) || !(T >= 0)) return null;
+      if (K === S) return 1;                 // the path starts at S: touched at t=0
+      if (!(sig > 0) || !(T > 0)) return 0;  // frozen price never reaches K
+      const mu = r - q - sig * sig / 2;
+      const z = -Math.abs(Math.log(S / K) - mu * T) / (sig * Math.sqrt(T));
+      return Math.max(0, Math.min(1, 2 * normCDF(z)));
+    }
+
+    // P(expire beyond K): P(S_T > K) when K >= S, P(S_T < K) when K < S,
+    // under the same lognormal model. Zero-vol edge: deterministic forward.
+    function probExpireBeyondRaw(S, K, T, sig, r, q) {
+      if (!(S > 0) || !(K > 0) || !(T >= 0)) return null;
+      if (!(sig > 0) || !(T > 0)) {
+        const F = S * Math.exp((r - q) * T);
+        return K >= S ? (F > K ? 1 : 0) : (F < K ? 1 : 0);
+      }
+      const mu = r - q - sig * sig / 2;
+      const pAbove = normCDF((Math.log(S / K) + mu * T) / (sig * Math.sqrt(T)));
+      return K >= S ? pAbove : 1 - pAbove;
+    }
+
+    function sliceHorizon() {
+      // Same horizon convention as the ±1σ band / PoP: nearest option expiry.
+      if (!legs.length) return null;
+      const p = getParams();
+      const S = (typeof emRefSpot === 'function') ? emRefSpot() : 0;
+      if (!(S > 0) || !(p.iv > 0)) return null;
+      const dtes = [];
+      for (let i = 0; i < legs.length; i++) {
+        if (legs[i].type !== 'stock' && !legIsIncomplete(legs[i])) dtes.push(legs[i].dte);
+      }
+      if (!dtes.length) return null;
+      return { S: S, iv: p.iv, T: Math.max(Math.min.apply(null, dtes), 1) / 365, r: p.r, q: p.q };
+    }
+    function probTouch(K) {
+      const h = sliceHorizon();
+      return h ? probTouchRaw(h.S, K, h.T, h.iv, h.r, h.q) : null;
+    }
+    function probExpireBeyond(K) {
+      const h = sliceHorizon();
+      return h ? probExpireBeyondRaw(h.S, K, h.T, h.iv, h.r, h.q) : null;
+    }
+
+    // Price slices (builder): up to 4 target prices. Auto mode prefills
+    // ±1σ around the reference price and refreshes on recalc; any manual
+    // edit/add/remove switches to manual mode (↺ ±1σ restores auto).
+    const MAX_SLICES = 4;
+    let priceSlices = [];   // [{ price: number }]
+    let slicesAuto = true;
+
+    function roundSlice(x) { return Math.round(x * 100) / 100; }
+
+    function refreshSlices() {
+      const wrap = document.getElementById('priceSlicesWrap');
+      if (!wrap) return;
+      if (!legs.length) { priceSlices = []; renderSlices(); return; }
+      if (slicesAuto) {
+        const em = (typeof expectedMove === 'function') ? expectedMove() : null;
+        const S = (typeof emRefSpot === 'function') ? emRefSpot() : 0;
+        const want = (em && S > 0)
+          ? [roundSlice(Math.max(0.01, S - em)), roundSlice(S + em)]
+          : [];
+        const cur = priceSlices.map(function(s) { return s.price; });
+        const same = cur.length === want.length &&
+          cur.every(function(v, i) { return Math.abs(v - want[i]) < 1e-9; });
+        if (!same) { priceSlices = want.map(function(p) { return { price: p }; }); renderSlices(); }
+        else updateSliceChips();
+        return;
+      }
+      // Manual mode: chips only, so typing in a slice input never loses focus.
+      updateSliceChips();
+    }
+
+    function renderSlices() {
+      const host = document.getElementById('priceSlices');
+      const wrap = document.getElementById('priceSlicesWrap');
+      if (!host || !wrap) return;
+      wrap.style.display = legs.length ? '' : 'none';
+      host.innerHTML = '';
+      priceSlices.forEach(function(s, i) {
+        const row = document.createElement('div');
+        row.className = 'slice-row';
+        const inp = document.createElement('input');
+        inp.type = 'number'; inp.className = 'slice-price'; inp.step = 'any';
+        inp.value = s.price; inp.setAttribute('aria-label', 'Slice target price ' + (i + 1));
+        inp.oninput = function() { onSliceInput(i, inp); };
+        const pot = document.createElement('span');
+        pot.className = 'slice-chip'; pot.id = 'slicePot' + i;
+        pot.title = 'Estimated chance the underlying touches this price at least once before expiry. 2·N(−|ln(S/K)−μT|/(σ√T)), μ=r−q−σ²/2.';
+        const bey = document.createElement('span');
+        bey.className = 'slice-chip'; bey.id = 'sliceBey' + i;
+        const x = document.createElement('button');
+        x.type = 'button'; x.className = 'slice-x'; x.textContent = '✕';
+        x.title = 'Remove slice'; x.setAttribute('aria-label', 'Remove slice ' + (i + 1));
+        x.onclick = function() { removeSlice(i); };
+        row.appendChild(inp); row.appendChild(pot); row.appendChild(bey); row.appendChild(x);
+        host.appendChild(row);
+      });
+      updateSliceAddBtn();
+      updateSliceChips();
+    }
+
+    function updateSliceChips() {
+      const S = (typeof emRefSpot === 'function') ? emRefSpot() : 0;
+      priceSlices.forEach(function(s, i) {
+        const potEl = document.getElementById('slicePot' + i);
+        const beyEl = document.getElementById('sliceBey' + i);
+        if (!potEl || !beyEl) return;
+        const pt = probTouch(s.price), be = probExpireBeyond(s.price);
+        if (pt == null) { potEl.textContent = 'PoT —'; potEl.classList.add('dim'); }
+        else { potEl.textContent = 'PoT ' + (pt * 100).toFixed(0) + '%'; potEl.classList.remove('dim'); }
+        const dir = s.price >= S ? 'above' : 'below';
+        if (be == null) { beyEl.textContent = 'P(' + dir + ') —'; beyEl.classList.add('dim'); }
+        else {
+          beyEl.textContent = 'P(' + dir + ') ' + (be * 100).toFixed(0) + '%';
+          beyEl.classList.remove('dim');
+          beyEl.title = 'Estimated chance the underlying expires ' + dir + ' $' + s.price + ' (lognormal, current IV).';
+        }
+      });
+    }
+
+    function updateSliceAddBtn() {
+      const b = document.getElementById('sliceAddBtn');
+      if (b) b.disabled = priceSlices.length >= MAX_SLICES;
+    }
+    function addSlice() {
+      if (priceSlices.length >= MAX_SLICES) return;
+      const S = (typeof emRefSpot === 'function') ? emRefSpot() : 0;
+      priceSlices.push({ price: roundSlice(S > 0 ? S : 100) });
+      slicesAuto = false;
+      renderSlices();
+    }
+    function removeSlice(i) {
+      priceSlices.splice(i, 1);
+      slicesAuto = false;
+      renderSlices();
+    }
+    function onSliceInput(i, el) {
+      const v = parseFloat(el.value);
+      if (isFinite(v) && v > 0) { priceSlices[i].price = v; slicesAuto = false; }
+      updateSliceChips();
+    }
+    function resetSlices() { slicesAuto = true; refreshSlices(); }
+    function sliceMarkerPrices() {
+      return priceSlices.map(function(s) { return s.price; })
+        .filter(function(p) { return isFinite(p) && p > 0; });
+    }
+
     function defaultLongCall() {
       const S = parseFloat(document.getElementById('spot').value) || 100;
       // Anchor the default leg to the currently selected chain expiration so
@@ -1952,6 +2112,24 @@
             ctx.fillText(lbl, Math.min(x + 4, area.right - 52), Math.max(ly, area.top + 12));
           });
         });
+        // Round 2, Item 5: price-slice markers — vertical dashed amber lines
+        // with tiny labels at each slice's target price.
+        if (typeof sliceMarkerPrices === 'function') {
+          const marks = sliceMarkerPrices();
+          ctx.font = '9px Segoe UI, system-ui, sans-serif';
+          marks.forEach(function (mk, mi) {
+            if (!isFinite(mk)) return;
+            const x = cx.getPixelForValue(mk);
+            if (x < area.left || x > area.right) return;
+            ctx.strokeStyle = 'rgba(245,158,11,0.55)';
+            ctx.lineWidth = 1;
+            ctx.setLineDash([4, 3]);
+            ctx.beginPath(); ctx.moveTo(x, area.top); ctx.lineTo(x, area.bottom); ctx.stroke();
+            ctx.setLineDash([]);
+            ctx.fillStyle = 'rgba(251,191,36,0.9)';
+            ctx.fillText('$' + Number(mk).toFixed(0), Math.min(x + 4, area.right - 34), area.top + 24 + (mi * 11));
+          });
+        }
         ctx.restore();
       }
     };
@@ -2326,6 +2504,119 @@
         }
       }
       return { ror: rorText, cap: capText };
+    }
+
+    // ===== Round 2, Item 6: margin requirement estimates =====
+    // Reg-T-style estimates, always labeled "est." — broker rules vary.
+    // Rules:
+    //  - all-long position  → margin = debit (cash)
+    //  - every short covered (finite max loss) → margin = max loss
+    //  - naked short call/put → (premium + 20%·S − OTM amount) per share,
+    //    floored at (premium + 10%·S); × multiplier × contracts
+    //  - short stock → 50% of notional
+    //  - mixed → worst (max) of the applicable rules
+    // Coverage is share-for-share: short calls ← long stock, then long calls
+    // with strike ≤ short strike; short puts ← long puts with strike ≤ short
+    // strike; short stock ← remaining long calls.
+    function definedRiskMaxLoss(legsArr) {
+      // Exact max loss for a defined-risk set of legs: the expiry payoff is
+      // piecewise linear with kinks only at strikes, and (every short being
+      // covered) neither tail runs to -∞, so the minimum is attained at a
+      // strike or near zero.
+      const list = legsArr || legs;
+      const pts = [0.01];
+      list.forEach(function(leg) {
+        if (leg.type !== 'stock' && isFinite(leg.strike) && leg.strike > 0) pts.push(leg.strike);
+      });
+      let min = Infinity;
+      pts.forEach(function(x) {
+        const v = expiryPayoff(x, list);
+        if (isFinite(v) && v < min) min = v;
+      });
+      if (min === Infinity) return 0;
+      return Math.max(0, -min);
+    }
+
+    function estimateMargin() {
+      if (!legs.length) return null;
+      const S = getParams().S;
+      if (!(S > 0)) return null;
+
+      let longStock = 0, shortStockShares = 0;
+      const longCalls = [], longPuts = [], shortCalls = [], shortPuts = [];
+      legs.forEach(function(leg) {
+        if (legIsIncomplete(leg)) return;
+        const sq = signedQty(leg);
+        if (sq === 0) return;
+        const shares = Math.abs(sq) * legShareMult(leg);
+        if (leg.type === 'stock') {
+          if (sq > 0) longStock += shares; else shortStockShares += shares;
+        } else if (sq > 0) {
+          (leg.type === 'call' ? longCalls : longPuts).push({ strike: leg.strike, shares: shares });
+        } else {
+          (leg.type === 'call' ? shortCalls : shortPuts).push({ leg: leg, shares: shares });
+        }
+      });
+
+      const hasShort = shortCalls.length > 0 || shortPuts.length > 0 || shortStockShares > 0;
+      if (!hasShort) {
+        return { amount: Math.max(0, initialCost(legs)), basis: 'cash — full debit' };
+      }
+
+      longCalls.sort(function(a, b) { return a.strike - b.strike; });
+      longPuts.sort(function(a, b) { return a.strike - b.strike; });
+      const nakedLegIds = {};
+      const nakedContracts = []; // { leg, contracts } — uncovered remainder
+      shortCalls.forEach(function(sc) {
+        let need = sc.shares;
+        const fromStock = Math.min(need, longStock);
+        need -= fromStock; longStock -= fromStock;
+        for (let i = 0; i < longCalls.length && need > 0; i++) {
+          const lc = longCalls[i];
+          if (lc.strike > sc.leg.strike || lc.shares <= 0) continue;
+          const use = Math.min(need, lc.shares);
+          need -= use; lc.shares -= use;
+        }
+        if (need > 0) {
+          nakedLegIds[sc.leg.id] = true;
+          nakedContracts.push({ leg: sc.leg, contracts: need / legShareMult(sc.leg) });
+        }
+      });
+      shortPuts.forEach(function(sp) {
+        let need = sp.shares;
+        for (let i = 0; i < longPuts.length && need > 0; i++) {
+          const lp = longPuts[i];
+          if (lp.strike > sp.leg.strike || lp.shares <= 0) continue;
+          const use = Math.min(need, lp.shares);
+          need -= use; lp.shares -= use;
+        }
+        if (need > 0) {
+          nakedLegIds[sp.leg.id] = true;
+          nakedContracts.push({ leg: sp.leg, contracts: need / legShareMult(sp.leg) });
+        }
+      });
+      let nakedStockShares = shortStockShares;
+      for (let i = 0; i < longCalls.length && nakedStockShares > 0; i++) {
+        const use = Math.min(nakedStockShares, longCalls[i].shares);
+        nakedStockShares -= use; longCalls[i].shares -= use;
+      }
+
+      if (nakedContracts.length === 0 && nakedStockShares === 0) {
+        return { amount: definedRiskMaxLoss(legs), basis: 'max loss (defined risk)' };
+      }
+      let m = 0;
+      nakedContracts.forEach(function(nc) {
+        const leg = nc.leg, K = leg.strike, prem = leg.premium || 0;
+        const otm = leg.type === 'call' ? Math.max(K - S, 0) : Math.max(S - K, 0);
+        const req = Math.max(prem + 0.20 * S - otm, prem + 0.10 * S);
+        m += Math.max(0, req) * legShareMult(leg) * nc.contracts;
+      });
+      m += 0.5 * S * nakedStockShares;
+      // Worst of the applicable rules: the covered legs can still lose up to
+      // their own max loss, so take the max with that.
+      const coveredLegs = legs.filter(function(l) { return !nakedLegIds[l.id]; });
+      if (coveredLegs.length) m = Math.max(m, definedRiskMaxLoss(coveredLegs));
+      return { amount: m, basis: 'Reg-T naked-short estimate' };
     }
 
     function summarizeExpiry(expiry, labels, legsArr) {
@@ -3143,6 +3434,26 @@
       try {
         // Item 3: snapshot recent builds (builder page only; debounced 1.5s).
         if (document.getElementById('legsList')) scheduleRecentSave();
+      } catch (e) {}
+      try {
+        // Item 5: keep price slices in sync — auto-prefill ±1σ until the
+        // user customizes; chips refresh every recalc without stealing
+        // input focus (builder page only).
+        if (document.getElementById('priceSlicesWrap')) refreshSlices();
+      } catch (e) {}
+      try {
+        // Item 6: estimated margin tile (builder page only).
+        const mEl = document.getElementById('estMargin');
+        if (mEl) {
+          const m = estimateMargin();
+          if (m && isFinite(m.amount)) {
+            mEl.textContent = formatMoney(m.amount) + ' est.';
+            mEl.title = m.basis + ' — Reg-T-style estimate; your broker\u2019s rules vary.';
+          } else {
+            mEl.textContent = '—';
+            mEl.title = '';
+          }
+        }
       } catch (e) {}
     };
 

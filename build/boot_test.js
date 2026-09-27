@@ -348,13 +348,13 @@ const el = (els, id) => els.get(id);
     const html = fs.readFileSync(path.join(SITE, 'builder', 'index.html'), 'utf8');
     if (!html.includes('id="rangeLabel">±30%<')) throw new Error('rangeLabel default missing in HTML');
   });
-  check('E6 builder: stat strip has 9 tiles (A) + 7 (B)', () => {
+  check('E6 builder: stat strip has 10 tiles (A) + 7 (B)', () => {
     const html = fs.readFileSync(path.join(SITE, 'builder', 'index.html'), 'utf8');
     const aPart = html.split('Compare legs')[0];
     const bPart = html.split('Compare legs')[1] || '';
     const aCount = (aPart.match(/class="stat-tile/g) || []).length;
     const bCount = (bPart.match(/class="stat-tile/g) || []).length;
-    if (aCount !== 9) throw new Error('A tiles=' + aCount);
+    if (aCount !== 10) throw new Error('A tiles=' + aCount); // Item 6 added Est. margin
     if (bCount !== 7) throw new Error('B tiles=' + bCount);
   });
   check('E7 builder: stat tiles use flat background (no gradient)', () => {
@@ -789,6 +789,127 @@ const el = (els, id) => els.get(id);
     if (/NaN/.test(t2)) throw new Error('tile NaN after edit');
     // EM = 200*0.25*sqrt(30/365) = 14.33
     if (!/±\$14\.33/.test(t2)) throw new Error('tile after edit=' + JSON.stringify(t2));
+  });
+}
+
+// ---------- K: Item 5 — probability of touch + price slices ----------
+// TOKEN: S=105, IV=25%, DTE=30, r=5%, q=0 (fresh ctx; J's ctx is separate).
+{
+  const { ctx, els } = run('builder', '?setup=' + TOKEN);
+  const j = (expr) => vm.runInContext(expr, ctx);
+  const jj = (expr) => JSON.parse(j(expr));
+  check('K1 touch: PoT(K) >= P(expire beyond K) for OTM strikes', () => {
+    const v = jj(`JSON.stringify({
+      up: [probTouch(120), probExpireBeyond(120)],
+      dn: [probTouch(90), probExpireBeyond(90)]
+    })`);
+    if (!(v.up[0] >= v.up[1])) throw new Error('up: ' + v.up);
+    if (!(v.dn[0] >= v.dn[1])) throw new Error('dn: ' + v.dn);
+    if (!(v.up[0] > 0 && v.up[0] < 1)) throw new Error('up PoT out of range: ' + v.up[0]);
+  });
+  check('K2 touch: PoT(S) = 1 (path starts at S)', () => {
+    const p = j('probTouch(105)');
+    if (p !== 1) throw new Error('PoT(105)=' + p);
+  });
+  check('K3 touch: far OTM strike -> PoT < 5%', () => {
+    const p = j('probTouch(200)');
+    if (!(p < 0.05)) throw new Error('PoT(200)=' + p);
+  });
+  check('K4 touch: frozen (sigma=0 / T=0) edges', () => {
+    const v = jj(`JSON.stringify([
+      probTouchRaw(100, 110, 1, 0, 0.05, 0),
+      probTouchRaw(100, 100, 1, 0, 0.05, 0),
+      probTouchRaw(100, 110, 0, 0.20, 0.05, 0),
+      probTouchRaw(100, 90, 1, 0, 0.05, 0)
+    ])`);
+    if (v[0] !== 0 || v[1] !== 1 || v[2] !== 0 || v[3] !== 0) throw new Error('frozen=' + v);
+  });
+  check('K5 touch: hand-verified fixture S=100,K=110,T=1,sig=.20,r=.05 -> 0.531', () => {
+    const p = j('probTouchRaw(100, 110, 1, 0.20, 0.05, 0)');
+    if (Math.abs(p - 0.531) > 0.0005) throw new Error('fixture=' + p);
+  });
+  check('K6 slices: auto-prefill is anchor ±1sigma (2 rows)', () => {
+    const v = jj(`JSON.stringify({ n: priceSlices.length, p: sliceMarkerPrices(), em: expectedMove(), s: emRefSpot() })`);
+    if (v.n !== 2) throw new Error('rows=' + v.n);
+    if (Math.abs(v.s - 105) > 1e-9) throw new Error('anchor=' + v.s);
+    const want = [105 - v.em, 105 + v.em];
+    v.p.forEach((x, i) => {
+      if (Math.abs(x - want[i]) > 0.011) throw new Error('slice ' + i + '=' + x + ' want~' + want[i].toFixed(2));
+    });
+  });
+  check('K7 slices: add caps at 4, remove works, markers follow', () => {
+    j('addSlice(); addSlice(); addSlice();'); // 2 -> 4, third add is a no-op
+    let n = j('priceSlices.length');
+    if (n !== 4) throw new Error('after adds=' + n);
+    j('removeSlice(0)');
+    n = j('priceSlices.length');
+    if (n !== 3) throw new Error('after remove=' + n);
+    const m = j('sliceMarkerPrices().length');
+    if (m !== 3) throw new Error('markers=' + m);
+    const auto = j('slicesAuto');
+    if (auto !== false) throw new Error('manual edit should clear auto mode');
+  });
+  check('K8 slices: reset restores ±1sigma auto prefill', () => {
+    j('resetSlices()');
+    const v = jj(`JSON.stringify({ n: priceSlices.length, auto: slicesAuto, p: sliceMarkerPrices(), em: expectedMove() })`);
+    if (v.n !== 2 || v.auto !== true) throw new Error('reset=' + JSON.stringify(v));
+    const want = [105 - v.em, 105 + v.em];
+    v.p.forEach((x, i) => {
+      if (Math.abs(x - want[i]) > 0.011) throw new Error('slice ' + i + '=' + x);
+    });
+  });
+}
+
+// ---------- L: Item 6 — margin requirement estimates ----------
+// Legs are set directly; spot is set via the spot input (estimateMargin
+// reads the live price from getParams).
+{
+  const { ctx, els } = run('builder', '');
+  const j = (expr) => vm.runInContext(expr, ctx);
+  const setLegs = (legsJson, spot) => {
+    j(`(function(){
+      document.getElementById('spot').value = '${spot}';
+      legs = ${legsJson};
+      recalc();
+    })()`);
+  };
+  check('L1 margin: naked short put S=100,K=100,prem=3 -> $2,300 (Reg-T)', () => {
+    setLegs(`[{id:1,side:'sell',type:'put',strike:100,dte:30,qty:1,premium:3}]`, 100);
+    const m = j('estimateMargin()');
+    if (m.amount !== 2300) throw new Error('amount=' + m.amount);
+  });
+  check('L2 margin: bull put spread -> max loss of spread', () => {
+    setLegs(`[{id:1,side:'sell',type:'put',strike:110,dte:30,qty:1,premium:2.5},
+             {id:2,side:'buy',type:'put',strike:100,dte:30,qty:1,premium:1.0}]`, 105);
+    const m = j('estimateMargin()');
+    if (m.amount !== 850) throw new Error('amount=' + m.amount + ' basis=' + m.basis);
+  });
+  check('L3 margin: all-long -> debit (cash)', () => {
+    setLegs(`[{id:1,side:'buy',type:'call',strike:105,dte:30,qty:1,premium:8.5}]`, 105);
+    const m = j('estimateMargin()');
+    if (m.amount !== 850) throw new Error('amount=' + m.amount);
+  });
+  check('L4 margin: covered call -> max loss (stock cost - premium)', () => {
+    setLegs(`[{id:1,side:'buy',type:'stock',strike:0,dte:0,qty:100,premium:100},
+             {id:2,side:'sell',type:'call',strike:110,dte:30,qty:1,premium:2}]`, 100);
+    const m = j('estimateMargin()');
+    if (Math.abs(m.amount - 9799) > 1) throw new Error('amount=' + m.amount);
+  });
+  check('L5 margin: short stock -> 50% of notional', () => {
+    setLegs(`[{id:1,side:'sell',type:'stock',strike:0,dte:0,qty:10,premium:100}]`, 100);
+    const m = j('estimateMargin()');
+    if (m.amount !== 500) throw new Error('amount=' + m.amount);
+  });
+  check('L6 margin: naked OTM short call uses OTM haircut + floor', () => {
+    setLegs(`[{id:1,side:'sell',type:'call',strike:110,dte:30,qty:1,premium:2}]`, 100);
+    const m = j('estimateMargin()');
+    // (2 + 20 - 10) = 12/share, floor (2 + 10) = 12 -> $1,200
+    if (m.amount !== 1200) throw new Error('amount=' + m.amount);
+  });
+  check('L7 margin: tile shows "$2300 est." for the naked-put fixture', () => {
+    setLegs(`[{id:1,side:'sell',type:'put',strike:100,dte:30,qty:1,premium:3}]`, 100);
+    const t = els.get('estMargin').textContent;
+    if (!/2300/.test(t) || !/est\./.test(t)) throw new Error('tile=' + JSON.stringify(t));
   });
 }
 

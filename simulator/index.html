@@ -321,6 +321,20 @@
       height: 3px;
     }
 
+    /* Round 2, Item 5: price slices */
+    .slices-wrap { margin-top: 10px; border-top: 1px solid var(--border); padding-top: 8px; }
+    .slices-head { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 4px; }
+    .slices-title { font-weight: 600; font-size: 0.85rem; }
+    .slices-est { font-size: 0.68rem; color: var(--muted); font-weight: 500; }
+    .slices-sub { font-size: 0.72rem; color: var(--muted); }
+    .slices-actions { margin-left: auto; display: flex; gap: 6px; }
+    .slice-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; padding: 3px 0; }
+    .slice-price { width: 96px; background: var(--input-bg, #0f172a); color: var(--text); border: 1px solid var(--border); border-radius: 6px; padding: 4px 8px; font-size: 0.82rem; }
+    .slice-chip { font-size: 0.74rem; padding: 2px 9px; border-radius: 999px; background: rgba(245,158,11,0.12); color: #fbbf24; border: 1px solid rgba(245,158,11,0.35); font-variant-numeric: tabular-nums; white-space: nowrap; cursor: help; }
+    .slice-chip.dim { opacity: 0.5; }
+    .slice-x { background: none; border: none; color: var(--muted); cursor: pointer; font-size: 0.9rem; padding: 2px 6px; border-radius: 6px; }
+    .slice-x:hover { color: var(--red); background: rgba(239,68,68,0.1); }
+
     .controls-compact {
       display: grid;
       grid-template-columns: 1fr;
@@ -920,7 +934,7 @@
 
   </div>
   </div>
-  <script src="/assets/jsm-options-engine.js?v=3dea01de"></script>
+  <script src="/assets/jsm-options-engine.js?v=fc757790"></script>
 <script>
 (function(){
   function initNav(){
