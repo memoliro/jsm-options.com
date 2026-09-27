@@ -603,6 +603,60 @@ const el = (els, id) => els.get(id);
     const o2 = JSON.parse(chk2);
     if (Math.abs(o2.nearVal - o2.intrinsic100) > 1e-6) throw new Error('near leg not settled to intrinsic: ' + JSON.stringify(o2));
   });
+  // F12-F14: Range slider for the P&L table.
+  check('F12 table: range slider wrap shows only in table view', () => {
+    const { ctx: c2 } = run('builder', '');
+    const disp = () => vm.runInContext(`document.getElementById('tableRangeWrap').style.display`, c2);
+    // fake DOM doesn't parse inline styles: undefined == the inline display:none
+    if (disp() !== undefined) throw new Error('slider visible in chart view: ' + disp());
+    vm.runInContext("setChartView('table')", c2);
+    if (disp() === 'none' || disp() === undefined) throw new Error('slider hidden in table view');
+    vm.runInContext("if (!document.getElementById('chartRange')) throw new Error('no chartRange')", c2);
+    vm.runInContext("setChartView('chart')", c2);
+    if (disp() !== 'none') throw new Error('slider not re-hidden: ' + disp());
+  });
+  check('F13 table: moving the range slider re-renders the price rows', () => {
+    const { ctx: c2, els: e2 } = run('builder', '');
+    vm.runInContext("setChartView('table')", c2);
+    const firstRowPrice = () => vm.runInContext(`(function(){
+      var html = document.getElementById('plTable').innerHTML;
+      var body = html.split('<tbody>')[1].split('</tbody>')[0];
+      var first = body.split('</tr>').filter(function(s){ return s.indexOf('<td') >= 0; })[0];
+      return parseFloat(first.match(/<th>\\$([0-9.]+)/)[1]);
+    })()`, c2);
+    const before = firstRowPrice();
+    vm.runInContext(`(function(){
+      document.getElementById('chartRange').value = '40';
+      onRangeChange();
+    })()`, c2);
+    const lbl = e2.get('rangeLabel').textContent;
+    if (lbl !== '±40%') throw new Error('label=' + lbl);
+    const S = vm.runInContext('getParams().S', c2);
+    const after = firstRowPrice();
+    if (Math.abs(after - S * 1.4) > S * 0.02) throw new Error('rows not at ±40%: S=' + S + ' first=' + after);
+    if (Math.abs(after - before) < 1e-9) throw new Error('rows did not change');
+    const html = e2.get('plTable').innerHTML;
+    if (/NaN/.test(html)) throw new Error('NaN after range change');
+  });
+  check('F14 table: range slider narrows rows symmetrically', () => {
+    const { ctx: c2 } = run('builder', '');
+    vm.runInContext("setChartView('table')", c2);
+    vm.runInContext(`(function(){
+      document.getElementById('chartRange').value = '5';
+      onRangeChange();
+    })()`, c2);
+    const S = vm.runInContext('getParams().S', c2);
+    const edge = vm.runInContext(`(function(){
+      var html = document.getElementById('plTable').innerHTML;
+      var body = html.split('<tbody>')[1].split('</tbody>')[0];
+      var rows = body.split('</tr>').filter(function(s){ return s.indexOf('<td') >= 0; });
+      var px = rows.map(function(r){ return parseFloat(r.match(/<th>\\$([0-9.]+)/)[1]); });
+      return JSON.stringify({ hi: px[0], lo: px[px.length - 1] });
+    })()`, c2);
+    const o = JSON.parse(edge);
+    if (Math.abs(o.hi - S * 1.05) > S * 0.02) throw new Error('hi=' + o.hi + ' S=' + S);
+    if (Math.abs(o.lo - S * 0.95) > S * 0.02) throw new Error('lo=' + o.lo + ' S=' + S);
+  });
 }
 
 // ---------- G: Round 2 item 2 — clickable bid/ask on the chain ----------

@@ -4137,6 +4137,8 @@
       if (tw) tw.style.display = v === 'table' ? '' : 'none';
       if (note) note.style.display = v === 'table' ? '' : 'none';
       if (gh) gh.style.display = v === 'chart' ? '' : 'none';
+      const trw = document.getElementById('tableRangeWrap');
+      if (trw) trw.style.display = v === 'table' ? '' : 'none';
       if (v === 'table') renderPlTable();
     }
 
@@ -4523,6 +4525,9 @@
       const S = parseFloat(document.getElementById('spot').value) || 100;
       applyRangeZoom(S);
       updateChart();
+      // The P&L table shares the chart's price window: re-render it live
+      // when the slider moves in table view.
+      if (typeof chartView !== 'undefined' && chartView === 'table') renderPlTable();
     }
 
     function resetTime() {

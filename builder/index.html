@@ -1231,9 +1231,14 @@
           <label>Underlying <strong id="spotLabel">$100.00</strong></label>
           <input type="range" id="spotSlider" min="40" max="180" step="0.5" value="100" oninput="onSpotSlide()" />
         </div>
-        <div class="slider-group" style="margin-top:6px;">
+      </div>
+      <!-- Range slider for the P&L table: same price window the payoff chart
+           uses (chartZoom). Shown only in table view; in chart view the
+           window is driven by pinch/double-tap gestures. -->
+      <div id="tableRangeWrap" style="display:none;margin:10px 0 2px;max-width:440px">
+        <div class="slider-group">
           <label>Range <strong id="rangeLabel">±20%</strong></label>
-          <input type="range" id="chartRange" min="5" max="100" step="1" value="20" oninput="onRangeChange()" title="Zoom the payoff chart to ± this % around the underlying price" />
+          <input type="range" id="chartRange" min="5" max="100" step="1" value="20" oninput="onRangeChange()" title="Price range for the P&L table and payoff chart (± this % around the underlying price)" />
         </div>
       </div>
       <!-- Round 2, Item 5: price slices — touch odds + expiry odds at target prices.
@@ -1381,7 +1386,7 @@ and custom structures. View payoff charts, Greeks, profit/loss, break-even, prob
     </div>
     <div class="guide-body" id="guideBody"></div>
   </aside>
-  <script src="/assets/jsm-options-engine.js?v=d47eed3d"></script>
+  <script src="/assets/jsm-options-engine.js?v=bbb5cb3d"></script>
 <script>
 (function(){
   function initNav(){
