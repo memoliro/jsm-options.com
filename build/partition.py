@@ -482,6 +482,10 @@ engine = engine[:bi] + new_tail
 
 open(os.path.join(OUT, 'assets', 'jsm-options-engine.js'), 'w', encoding='utf-8').write(engine)
 print('engine written:', len(engine), 'chars')
+# Content-hash cache buster so browsers never run a stale engine against new HTML.
+import hashlib as _hl
+engine_src = '/assets/jsm-options-engine.js?v=' + _hl.md5(engine.encode('utf-8')).hexdigest()[:8]
+print('engine src:', engine_src)
 
 # ------------------------------------------------------------ shared head ---
 head_end = html.find('</head>') + len('</head>')
@@ -592,7 +596,7 @@ builder_head = head.replace(
 
 builder_html = (builder_head + '\n' + builder_body
                 + '\n' + guide_drawer
-                + '\n  <script src="/assets/jsm-options-engine.js"></script>\n'
+                + '\n  <script src="' + engine_src + '"></script>\n'
                 + nav_js + '\n' + off_js + '\n</body>\n</html>\n')
 open(os.path.join(OUT, 'builder', 'index.html'), 'w', encoding='utf-8').write(builder_html)
 print('builder written:', len(builder_html), 'chars')
@@ -667,10 +671,11 @@ sim_body = """<body>
 """ + assumptions + '\n' + summary_card + '\n' + greeks_card + '\n' + sim_card + """
   </div>
   </div>
-  <script src="/assets/jsm-options-engine.js"></script>
+  <script src="__ENGINE_SRC__"></script>
 """ + nav_js + '\n' + off_js + '\n</body>\n</html>\n'
 
 sim_html = sim_head + '\n' + sim_body
+sim_html = sim_html.replace('__ENGINE_SRC__', engine_src)
 open(os.path.join(OUT, 'simulator', 'index.html'), 'w', encoding='utf-8').write(sim_html)
 print('simulator written:', len(sim_html), 'chars')
 
