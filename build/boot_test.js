@@ -983,5 +983,136 @@ const el = (els, id) => els.get(id);
   });
 }
 
+// ---------- O: Batch C item 7 — optimizer lite (synthetic grid, no chain) ----------
+{
+  const { ctx, els } = run('builder', '');
+  const j = (expr) => vm.runInContext(expr, ctx);
+  // NOTE: the fake-DOM els map only fills when the engine calls
+  // getElementById, so drive everything through j() here.
+  const set = (id, v) => j('document.getElementById("' + id + '").value = "' + v + '"');
+  const exists = (id) => j('document.getElementById("' + id + '") !== null');
+  check('O1 discovery: card + controls exist on builder, synthetic universe sane', () => {
+    for (const id of ['discoveryCard', 'optFamily', 'optTarget', 'optExpiry', 'optGoal', 'optResults']) {
+      if (!exists(id)) throw new Error('missing ' + id);
+    }
+    const u = JSON.parse(j(`(function(){ const u = discoveryUniverse('', 30); return JSON.stringify({n: u.strikes.length, lo: u.strikes[0], hi: u.strikes[u.strikes.length-1], dte: u.dte, iv: u.ivOf('call', 100)}); })()`));
+    if (u.n !== 61 || u.lo !== 70 || u.hi !== 130) throw new Error('grid=' + JSON.stringify(u));
+    if (u.dte !== 30) throw new Error('dte=' + u.dte);
+    if (Math.abs(u.iv - 0.25) > 1e-12) throw new Error('iv=' + u.iv);
+  });
+  check('O2 optimizer: bull-call scan ranks top 5 by max profit, winner > 0', () => {
+    set('optFamily', 'bullcall'); set('optTarget', '110'); set('optGoal', 'profit');
+    j('runOptimizerScan()');
+    const n = j('optResults.length');
+    if (!(n > 0 && n <= 5)) throw new Error('rows=' + n);
+    const rows = JSON.parse(j('JSON.stringify(optResults.map(c => ({mp: c.st.maxProfit, net: c.st.net, label: c.label})))'));
+    for (const r of rows) { if (!isFinite(r.net)) throw new Error('non-finite net ' + r.label); }
+    for (let i = 1; i < rows.length; i++) {
+      if (rows[i].mp > rows[i - 1].mp + 1e-9) throw new Error('not sorted: ' + JSON.stringify(rows.map(r => r.mp)));
+    }
+    if (!(rows[0].mp > 0)) throw new Error('top maxProfit=' + rows[0].mp);
+  });
+  check('O3 optimizer: debit spread structural invariant maxProfit = width − debit', () => {
+    set('optFamily', 'bullcall'); set('optTarget', '110'); set('optGoal', 'profit');
+    j('runOptimizerScan()');
+    const rows = JSON.parse(j('JSON.stringify(optResults.map(c => ({k1: c.k1, k2: c.k2, mp: c.st.maxProfit, net: c.st.net})))'));
+    for (const r of rows) {
+      if (r.net <= 0) continue; // debit spreads only for this invariant
+      const expect = (r.k2 - r.k1) * 100 - r.net;
+      if (Math.abs(r.mp - expect) > 0.02) throw new Error(r.k1 + '/' + r.k2 + ' mp=' + r.mp + ' expect=' + expect);
+    }
+  });
+  check('O4 optimizer: modeled ATM call premium matches independent Black-Scholes', () => {
+    // Independent reference (Simpson-integrated normal CDF): S=100 K=100
+    // T=30/365 σ=0.25 r=0.05 q=0 → 3.062600 per share.
+    const v = j(`(function(){ const u = discoveryUniverse('', 30); return discoveryPremium('call', 100, u); })()`);
+    if (Math.abs(v - 3.062600) > 0.001) throw new Error('premium=' + v);
+  });
+  check('O5 optimizer: ROC goal sorts by ROC desc, all defined', () => {
+    set('optFamily', 'bullcall'); set('optTarget', '110'); set('optGoal', 'roc');
+    j('runOptimizerScan()');
+    const rocs = JSON.parse(j('JSON.stringify(optResults.map(c => c.st.roc))'));
+    if (!rocs.length) throw new Error('no rows');
+    for (const r of rocs) { if (r == null || !(r > 0)) throw new Error('roc=' + r); }
+    for (let i = 1; i < rocs.length; i++) {
+      if (rocs[i] > rocs[i - 1] + 1e-9) throw new Error('not sorted: ' + JSON.stringify(rocs));
+    }
+  });
+  check('O6 optimizer: POP goal sorts by POP desc', () => {
+    set('optFamily', 'bullput'); set('optTarget', '105'); set('optGoal', 'pop');
+    j('runOptimizerScan()');
+    const pops = JSON.parse(j('JSON.stringify(optResults.map(c => c.st.pop))'));
+    if (!pops.length) throw new Error('no rows');
+    for (let i = 1; i < pops.length; i++) {
+      if (pops[i] > pops[i - 1] + 1e-9) throw new Error('not sorted');
+    }
+  });
+  check('O7 optimizer: Apply loads 2 legs into A', () => {
+    set('optFamily', 'bullcall'); set('optTarget', '110'); set('optGoal', 'profit');
+    j('runOptimizerScan()');
+    j('legs = []; applyDiscoveryLegs("opt", 0)');
+    const n = j('legs.length');
+    if (n !== 2) throw new Error('legs=' + n);
+    const types = j('JSON.stringify(legs.map(l => l.side + " " + l.type))');
+    if (!/buy call/.test(types) || !/sell call/.test(types)) throw new Error(types);
+  });
+  check('O8 optimizer: probOfProfit delegates to popOf without behavior change', () => {
+    const a = j('probOfProfit()'), b = j('popOf(legs)');
+    if (Math.abs(a - b) > 1e-12) throw new Error(a + ' vs ' + b);
+  });
+  check('O9 discovery: expiry selects initialized at boot (no-chain fallback)', () => {
+    const disp = j('document.getElementById("optDteWrap").style.display');
+    if (disp !== '') throw new Error('optDteWrap display=' + JSON.stringify(disp));
+  });
+}
+
+// ---------- P: Batch C item 8 — option finder ----------
+{
+  const { ctx, els } = run('builder', '');
+  const j = (expr) => vm.runInContext(expr, ctx);
+  const set = (id, v) => j('document.getElementById("' + id + '").value = "' + v + '"');
+  const exists = (id) => j('document.getElementById("' + id + '") !== null');
+  check('P1 finder: controls exist; target >> spot + Long → calls/bull-calls on top', () => {
+    for (const id of ['findTarget', 'findExpiry', 'findDir', 'findCap', 'findResults']) {
+      if (!exists(id)) throw new Error('missing ' + id);
+    }
+    set('findTarget', '130'); set('findDir', 'long'); set('findCap', '');
+    j('runFinder()');
+    const n = j('findResults.length');
+    if (!(n > 0 && n <= 5)) throw new Error('rows=' + n);
+    const labels = JSON.parse(j('JSON.stringify(findResults.map(c => c.label))'));
+    for (const l of labels) {
+      if (!/^(Long call|Bull call)/.test(l)) throw new Error('unexpected top row: ' + l);
+    }
+  });
+  check('P2 finder: profit@target equals recomputed expiryPayoff', () => {
+    const rows = JSON.parse(j('JSON.stringify(findResults.map(c => ({pat: c.profitAtTarget, legs: c.legs})))'));
+    for (const r of rows) {
+      const re = j(`expiryPayoff(130, JSON.parse('${JSON.stringify(r.legs).replace(/'/g, "\\'")}'))`);
+      if (Math.abs(r.pat - re) > 0.01) throw new Error('pat=' + r.pat + ' recomputed=' + re);
+    }
+  });
+  check('P3 finder: results ranked by profit@target desc', () => {
+    const pats = JSON.parse(j('JSON.stringify(findResults.map(c => c.profitAtTarget))'));
+    for (let i = 1; i < pats.length; i++) {
+      if (pats[i] > pats[i - 1] + 1e-9) throw new Error('not sorted: ' + JSON.stringify(pats));
+    }
+  });
+  check('P4 finder: max-loss cap filters rows', () => {
+    set('findTarget', '130'); set('findDir', 'auto'); set('findCap', '50');
+    j('runFinder()');
+    const mls = JSON.parse(j('JSON.stringify(findResults.map(c => c.st.maxLoss))'));
+    if (!mls.length) throw new Error('no rows under cap');
+    for (const m of mls) { if (!(m <= 50)) throw new Error('maxLoss=' + m + ' over cap'); }
+  });
+  check('P5 finder: Apply loads the pick into legs A', () => {
+    set('findTarget', '130'); set('findDir', 'long'); set('findCap', '');
+    j('runFinder()');
+    j('legs = []; applyDiscoveryLegs("find", 0)');
+    const n = j('legs.length');
+    if (!(n >= 1 && n <= 2)) throw new Error('legs=' + n);
+  });
+}
+
 console.log(failures ? `\n${failures} FAILURES` : '\nALL PASS');
 process.exit(failures ? 1 : 0);

@@ -304,6 +304,18 @@
     .pl-table td.pv-neg { color: var(--red); font-weight: 600; }
     .pl-table tr.spot-row th, .pl-table tr.spot-row td { box-shadow: inset 0 0 0 999px rgba(59,130,246,0.12); }
     .pl-table td.be { outline: 1px dashed var(--muted); outline-offset: -2px; }
+
+    /* Round 2 Batch C: strategy discovery (optimizer lite + option finder). */
+    .discovery-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    @media (max-width: 760px) { .discovery-grid { grid-template-columns: 1fr; } }
+    .disc-panel { border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; background: var(--bg); }
+    .disc-panel h3 { margin: 0 0 8px; font-size: 0.95rem; }
+    .disc-form { display: flex; flex-wrap: wrap; gap: 8px; align-items: flex-end; margin-bottom: 8px; }
+    .disc-form label { font-size: 0.75rem; color: var(--muted); display: flex; flex-direction: column; gap: 3px; }
+    .disc-form input, .disc-form select { font-size: 0.82rem; padding: 5px 7px; border: 1px solid var(--border); border-radius: 6px; background: var(--card); color: var(--text); max-width: 132px; }
+    .disc-results { overflow-x: auto; }
+    .disc-empty { font-size: 0.8rem; color: var(--muted); }
+    .disc-note { font-size: 0.72rem; color: var(--muted); margin-top: 6px; }
     .legend-note {
       font-size: 0.74rem;
       color: var(--muted);
@@ -1049,6 +1061,76 @@
       </div>
     </div>
 
+    <!-- Round 2 Batch C: strategy discovery — optimizer lite + option finder.
+         Placed between the legs editor and the payoff chart (and before the
+         simulator-row cut in partition.py, so it stays on the builder page).
+         Both panels write into legs A via Apply, with a confirm when legs
+         already exist. -->
+    <div class="card" id="discoveryCard">
+      <h2>Strategy discovery <span style="font-size:0.72rem;color:var(--muted);font-weight:500;">modeled prices · est. stats — Apply loads the pick into legs A</span></h2>
+      <div class="discovery-grid">
+        <div class="disc-panel">
+          <h3>Optimizer lite</h3>
+          <div class="disc-form">
+            <label>Family
+              <select id="optFamily">
+                <option value="bullcall">Bull call</option>
+                <option value="bearput">Bear put</option>
+                <option value="bullput">Bull put</option>
+                <option value="bearcall">Bear call</option>
+                <option value="strangle">Long strangle</option>
+              </select>
+            </label>
+            <label>Target price
+              <input id="optTarget" type="number" step="0.5" min="0.01" placeholder="spot" />
+            </label>
+            <label>Target expiry
+              <select id="optExpiry"></select>
+            </label>
+            <label id="optDteWrap" style="display:none">Model DTE
+              <input id="optDte" type="number" value="30" min="1" />
+            </label>
+            <label>Goal
+              <select id="optGoal">
+                <option value="roc">Max ROC</option>
+                <option value="pop">Max POP</option>
+                <option value="profit">Max profit</option>
+              </select>
+            </label>
+            <button type="button" class="btn-primary btn-sm" onclick="runOptimizerScan()">Scan strategies</button>
+          </div>
+          <div id="optResults" class="disc-results"><p class="disc-empty">Pick a family and scan — the top 5 by your goal appear here.</p></div>
+        </div>
+        <div class="disc-panel">
+          <h3>Option finder</h3>
+          <div class="disc-form">
+            <label>Expected price
+              <input id="findTarget" type="number" step="0.5" min="0.01" placeholder="spot" />
+            </label>
+            <label>Expected date
+              <select id="findExpiry"></select>
+            </label>
+            <label id="findDteWrap" style="display:none">Model DTE
+              <input id="findDte" type="number" value="30" min="1" />
+            </label>
+            <label>Direction
+              <select id="findDir">
+                <option value="auto">Auto</option>
+                <option value="long">Long</option>
+                <option value="short">Short</option>
+              </select>
+            </label>
+            <label>Max-loss cap $
+              <input id="findCap" type="number" step="10" min="0" placeholder="none" />
+            </label>
+            <button type="button" class="btn-primary btn-sm" onclick="runFinder()">Find options</button>
+          </div>
+          <div id="findResults" class="disc-results"><p class="disc-empty">Enter where you think the price goes — the top 5 by profit at target appear here.</p></div>
+        </div>
+      </div>
+      <p class="disc-note">Candidates are priced with Black-Scholes at per-strike chain IV when a chain is loaded, otherwise the IV input. Stats are estimates — your broker's fills will differ.</p>
+    </div>
+
     <!-- Payoff Graph — full width, the primary chart. The solid "at expiry"
          line is fixed to the trade's own strikes/entry price, so it holds
          still as days pass; only the dashed "today" line and the crosshair
@@ -1251,7 +1333,7 @@ and custom structures. View payoff charts, Greeks, profit/loss, break-even, prob
     </div>
     <div class="guide-body" id="guideBody"></div>
   </aside>
-  <script src="/assets/jsm-options-engine.js?v=e15b809f"></script>
+  <script src="/assets/jsm-options-engine.js?v=50908644"></script>
 <script>
 (function(){
   function initNav(){

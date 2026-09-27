@@ -669,21 +669,23 @@
     // Probability the position is profitable at the nearest expiry, estimated
     // from a lognormal distribution of the underlying (drift r−q, vol = IV).
     // Finds the expiry-payoff breakevens, then integrates the profit regions.
-    function probOfProfit() {
-      if (!legs.length) return null;
+    // Legs-agnostic core (used by probOfProfit and the Batch C discovery
+    // tools); probOfProfit() keeps the original signature for the stats tiles.
+    function popOf(legsArr) {
+      if (!legsArr || !legsArr.length) return null;
       const p = getParams();
       const S = p.S, iv = p.iv, r = p.r, q = p.q;
       const optionDtes = [];
-      for (let i = 0; i < legs.length; i++) {
-        if (legs[i].type !== 'stock' && !legIsIncomplete(legs[i])) optionDtes.push(legs[i].dte);
+      for (let i = 0; i < legsArr.length; i++) {
+        if (legsArr[i].type !== 'stock' && !legIsIncomplete(legsArr[i])) optionDtes.push(legsArr[i].dte);
       }
       if (!optionDtes.length || !(iv > 0) || !(S > 0)) return null;
       const minDte = Math.min.apply(null, optionDtes);
       const T = Math.max(minDte, 1) / 365;
       const sigma = Math.max(iv, 0.005);
-      const cost = initialCost(legs);
+      const cost = initialCost(legsArr);
       function payoffExp(x) {
-        return positionValueAt(x, 0, true, legs) - cost;
+        return positionValueAt(x, 0, true, legsArr) - cost;
       }
       // Scan for sign changes, then bisect each crossing for accuracy.
       const lo = Math.max(0.01, S * 0.05);
@@ -731,6 +733,11 @@
       }
       if (!isFinite(pop)) return null;
       return Math.max(0, Math.min(1, pop));
+    }
+
+    function probOfProfit() {
+      if (!legs.length) return null;
+      return popOf(legs);
     }
 
     // ===== Round 2, Item 5: probability of touch + price slices =====
@@ -2691,6 +2698,342 @@
       return { amount: m, basis: 'Reg-T naked-short estimate' };
     }
 
+    // ===== Round 2, Batch C: strategy discovery (optimizer lite + finder) ===
+    // Both panels scan modeled candidates and Apply loads the pick into
+    // legs A (with a confirm when legs already exist). Pricing is
+    // Black-Scholes at per-strike chain IV when a chain is loaded, else the
+    // global IV input on a synthetic grid. All stats are estimates.
+    let optResults = [];   // last optimizer scan: [{fam,k1,k2,legs,label,st}]
+    let findResults = [];  // last finder scan:    [{legs,label,st,score}]
+
+    // Strike universe + per-strike IV for a discovery scan.
+    // Chain path: strikes within ±20% of spot on the chosen expiry, IV from
+    // that strike's own chain quote (falls back to the global IV input).
+    // No chain: synthetic grid, spot ±30% at ~1% steps, global IV.
+    function discoveryUniverse(expStr, dteFallback) {
+      const p = getParams();
+      const S = p.S;
+      const uni = {
+        S: S,
+        dte: Math.max(1, Math.round(dteFallback || 30)),
+        expStr: expStr || '',
+        strikes: [],
+        ivOf: function () { return p.iv; }
+      };
+      const data = window._cboeData;
+      const chain = data && data.chains ? data.chains[expStr || ''] : null;
+      if (chain && chain.strikes && chain.strikes.length) {
+        uni.dte = Math.max(1, expirationDte(expStr));
+        uni.strikes = chain.strikes.filter(function (k) { return k >= S * 0.8 && k <= S * 1.2; });
+        uni.ivOf = function (type, strike) {
+          const q = findChainContract(type, strike, expStr);
+          const pct = quoteIvPct(q);
+          return pct ? pct / 100 : p.iv;
+        };
+      } else {
+        const step = Math.max(0.5, Math.round(S * 0.01 * 2) / 2);
+        for (let k = Math.ceil(S * 0.7 / step) * step; k <= S * 1.3 + 1e-9; k += step) {
+          uni.strikes.push(Math.round(k * 100) / 100);
+        }
+      }
+      return uni;
+    }
+
+    function nearestGridStrike(strikes, x) {
+      let best = strikes[0], bd = Infinity;
+      for (let i = 0; i < strikes.length; i++) {
+        const d = Math.abs(strikes[i] - x);
+        if (d < bd) { bd = d; best = strikes[i]; }
+      }
+      return best;
+    }
+
+    // Modeled premium for a candidate leg (per-share, like leg.premium).
+    function discoveryPremium(type, strike, uni) {
+      const p = getParams();
+      const iv = Math.max(0.01, uni.ivOf(type, strike) || p.iv);
+      return blackScholes(uni.S, strike, Math.max(1, uni.dte) / 365, p.r, p.q, iv, type);
+    }
+
+    function discoveryLeg(side, type, strike, uni) {
+      return {
+        id: nextId++,
+        side: side,
+        type: type,
+        strike: Math.round(strike * 100) / 100,
+        dte: Math.max(1, Math.round(uni.dte)),
+        qty: 1,
+        premium: Math.max(0.01, Math.round(discoveryPremium(type, strike, uni) * 100) / 100),
+        premiumManual: true,
+        ticker: currentTicker()
+      };
+    }
+
+    // Family recipes. k1 < k2 are the two grid strikes.
+    function buildFamilyLegs(family, k1, k2, uni) {
+      const out = [];
+      function mk(side, type, k) { out.push(discoveryLeg(side, type, k, uni)); }
+      if (family === 'bullcall') { mk('buy', 'call', k1); mk('sell', 'call', k2); }
+      else if (family === 'bearput') { mk('buy', 'put', k2); mk('sell', 'put', k1); }
+      else if (family === 'bullput') { mk('sell', 'put', k2); mk('buy', 'put', k1); }
+      else if (family === 'bearcall') { mk('sell', 'call', k1); mk('buy', 'call', k2); }
+      else if (family === 'strangle') { mk('buy', 'put', k1); mk('buy', 'call', k2); }
+      return out;
+    }
+
+    // Exact expiry-P/L extrema for a candidate: the payoff is piecewise
+    // linear with kinks only at strikes, so min/max are attained at a strike
+    // or near zero, or on an unbounded tail.
+    function candidateStats(legsArr) {
+      const pts = [0.01];
+      legsArr.forEach(function (l) { if (isFinite(l.strike) && l.strike > 0) pts.push(l.strike); });
+      let min = Infinity, max = -Infinity;
+      pts.forEach(function (x) {
+        const v = expiryPayoff(x, legsArr);
+        if (!isFinite(v)) return;
+        if (v < min) min = v;
+        if (v > max) max = v;
+      });
+      const rs = rightTailSlope(legsArr);
+      let ls = 0; // left-tail slope: calls flatten; puts move -signedQty*mult per $1
+      legsArr.forEach(function (l) { if (l.type === 'put') ls -= signedQty(l) * legShareMult(l); });
+      if (rs > 0) max = Infinity; else if (rs < 0) min = -Infinity;
+      if (ls > 0) max = Infinity; else if (ls < 0) min = -Infinity;
+      if (min === Infinity) min = 0;
+      if (max === -Infinity) max = 0;
+      const maxLoss = min < 0 ? -min : 0;
+      const maxProfit = max > 0 ? max : 0;
+      const net = initialCost(legsArr);
+      let roc = null;
+      if (maxLoss > 0) roc = (maxProfit === Infinity) ? Infinity : maxProfit / maxLoss;
+      return { net: net, maxProfit: maxProfit, maxLoss: maxLoss, roc: roc, pop: popOf(legsArr) };
+    }
+
+    function familyLabel(fam) {
+      return fam === 'bullcall' ? 'Bull call' : fam === 'bearput' ? 'Bear put'
+        : fam === 'bullput' ? 'Bull put' : fam === 'bearcall' ? 'Bear call' : 'Long strangle';
+    }
+
+    function fmtStatMoney(v) {
+      if (v === Infinity) return 'Unlimited';
+      return formatMoney(v);
+    }
+    function fmtRoc(roc) {
+      if (roc == null || !isFinite(roc)) return roc === Infinity ? '∞' : '—';
+      return (roc * 100).toFixed(0) + '%';
+    }
+    function fmtPop(pop) {
+      return (pop == null || !isFinite(pop)) ? '—' : (pop * 100).toFixed(0) + '%';
+    }
+    function fmtNet(net) {
+      if (net > 0.005) return 'Debit ' + formatMoney(net);
+      if (net < -0.005) return 'Credit ' + formatMoney(-net);
+      return '$0';
+    }
+
+    // ---- Item 7: optimizer lite -------------------------------------------
+    function runOptimizerScan() {
+      syncDiscoveryExpiries();
+      const fam = document.getElementById('optFamily').value;
+      const goal = document.getElementById('optGoal').value;
+      const S = getParams().S;
+      let target = parseFloat(document.getElementById('optTarget').value);
+      if (!(target > 0)) target = S;
+      const expStr = document.getElementById('optExpiry').value;
+      const dteInput = document.getElementById('optDte');
+      const uni = discoveryUniverse(expStr, dteInput ? parseFloat(dteInput.value) : 30);
+      const box = document.getElementById('optResults');
+      optResults = [];
+      if (uni.strikes.length < 2) {
+        box.innerHTML = '<p class="disc-empty">Not enough strikes to scan — load an options chain first.</p>';
+        return;
+      }
+      const widths = [0.01, 0.02, 0.03].map(function (w) { return Math.max(0.5, Math.round(S * w * 2) / 2); });
+      const seen = {};
+      const cands = [];
+      for (let i = 0; i < uni.strikes.length; i++) {
+        const k1 = uni.strikes[i];
+        for (let w = 0; w < widths.length; w++) {
+          const k2 = nearestGridStrike(uni.strikes, k1 + widths[w]);
+          if (!(k2 > k1)) continue;
+          const key = k1 + '|' + k2;
+          if (seen[key]) continue;
+          seen[key] = true;
+          // Mild directional filter so the scan doesn't surface structures
+          // that are dead at the target price.
+          if (fam === 'bullcall' && target <= k1) continue;
+          if (fam === 'bearput' && target >= k2) continue;
+          if (fam === 'bullput' && target <= k1) continue;
+          if (fam === 'bearcall' && target >= k2) continue;
+          if (fam === 'strangle' && target > k1 && target < k2) continue;
+          const legsArr = buildFamilyLegs(fam, k1, k2, uni);
+          const st = candidateStats(legsArr);
+          if (!isFinite(st.net)) continue;
+          cands.push({ fam: fam, k1: k1, k2: k2, legs: legsArr, label: familyLabel(fam) + ' ' + k1 + '/' + k2, st: st });
+        }
+      }
+      function score(c) {
+        if (goal === 'roc') return c.st.roc == null ? -Infinity : c.st.roc;
+        if (goal === 'pop') return c.st.pop == null ? -Infinity : c.st.pop;
+        return c.st.maxProfit; // Infinity sorts first for the strangle
+      }
+      cands.sort(function (a, b) { return score(b) - score(a); });
+      optResults = cands.slice(0, 5);
+      renderOptimizerResults();
+    }
+
+    function renderOptimizerResults() {
+      const box = document.getElementById('optResults');
+      if (!optResults.length) {
+        box.innerHTML = '<p class="disc-empty">No candidates for these inputs — try a different family or target.</p>';
+        return;
+      }
+      let h = '<table class="pl-table"><thead><tr><th style="text-align:left">Structure</th><th>Net</th><th>Max profit</th><th>Max loss</th><th>ROC</th><th>POP</th><th></th></tr></thead><tbody>';
+      optResults.forEach(function (c, i) {
+        h += '<tr><td style="text-align:left">' + c.label + '</td>' +
+          '<td>' + fmtNet(c.st.net) + '</td>' +
+          '<td>' + fmtStatMoney(c.st.maxProfit) + '</td>' +
+          '<td>' + fmtStatMoney(c.st.maxLoss) + '</td>' +
+          '<td>' + fmtRoc(c.st.roc) + '</td>' +
+          '<td>' + fmtPop(c.st.pop) + '</td>' +
+          '<td><button type="button" class="btn-primary btn-sm" onclick="applyDiscoveryLegs(\'opt\',' + i + ')">Apply</button></td></tr>';
+      });
+      box.innerHTML = h + '</tbody></table><p class="disc-note">est. stats · Apply replaces legs A</p>';
+    }
+
+    // ---- Item 8: option finder --------------------------------------------
+    function runFinder() {
+      syncDiscoveryExpiries();
+      const dir = document.getElementById('findDir').value; // auto | long | short
+      const S = getParams().S;
+      let target = parseFloat(document.getElementById('findTarget').value);
+      if (!(target > 0)) target = S;
+      const capRaw = parseFloat(document.getElementById('findCap').value);
+      const cap = capRaw > 0 ? capRaw : Infinity;
+      const expStr = document.getElementById('findExpiry').value;
+      const dteInput = document.getElementById('findDte');
+      const uni = discoveryUniverse(expStr, dteInput ? parseFloat(dteInput.value) : 30);
+      const box = document.getElementById('findResults');
+      findResults = [];
+      if (uni.strikes.length < 2) {
+        box.innerHTML = '<p class="disc-empty">Not enough strikes to scan — load an options chain first.</p>';
+        return;
+      }
+      const cands = [];
+      const seen = {};
+      function consider(legsArr, label) {
+        const st = candidateStats(legsArr);
+        if (!isFinite(st.net)) return;
+        if (st.maxLoss > cap) return;
+        if (dir === 'long' && !(st.net > 0.005)) return;
+        if (dir === 'short' && !(st.net < -0.005)) return;
+        const key = label;
+        if (seen[key]) return;
+        seen[key] = true;
+        cands.push({ legs: legsArr, label: label, st: st, score: expiryPayoff(target, legsArr) });
+      }
+      // Singles near the expected price (±10% of target, at least 3 strikes).
+      const nearT = uni.strikes.filter(function (k) { return Math.abs(k - target) <= target * 0.10; });
+      const singleStrikes = nearT.length >= 3 ? nearT : uni.strikes.slice(0, 12);
+      singleStrikes.forEach(function (k) {
+        consider([discoveryLeg('buy', 'call', k, uni)], 'Long call ' + k);
+        consider([discoveryLeg('buy', 'put', k, uni)], 'Long put ' + k);
+        consider([discoveryLeg('sell', 'call', k, uni)], 'Short call ' + k);
+        consider([discoveryLeg('sell', 'put', k, uni)], 'Short put ' + k);
+      });
+      // Vertical spreads, widths 1–3% of spot.
+      const widths = [0.01, 0.02, 0.03].map(function (w) { return Math.max(0.5, Math.round(S * w * 2) / 2); });
+      for (let i = 0; i < uni.strikes.length; i++) {
+        const k1 = uni.strikes[i];
+        for (let w = 0; w < widths.length; w++) {
+          const k2 = nearestGridStrike(uni.strikes, k1 + widths[w]);
+          if (!(k2 > k1)) continue;
+          consider(buildFamilyLegs('bullcall', k1, k2, uni), 'Bull call ' + k1 + '/' + k2);
+          consider(buildFamilyLegs('bearput', k1, k2, uni), 'Bear put ' + k1 + '/' + k2);
+          consider(buildFamilyLegs('bullput', k1, k2, uni), 'Bull put ' + k1 + '/' + k2);
+          consider(buildFamilyLegs('bearcall', k1, k2, uni), 'Bear call ' + k1 + '/' + k2);
+        }
+      }
+      // Rank by profit at the expected price, tiebreak by POP.
+      cands.sort(function (a, b) {
+        if (b.score !== a.score) return b.score - a.score;
+        const pa = a.st.pop == null ? -1 : a.st.pop, pb = b.st.pop == null ? -1 : b.st.pop;
+        return pb - pa;
+      });
+      findResults = cands.slice(0, 5);
+      findResults.forEach(function (c) { c.profitAtTarget = c.score; });
+      renderFinderResults(target);
+    }
+
+    function renderFinderResults(target) {
+      const box = document.getElementById('findResults');
+      if (!findResults.length) {
+        box.innerHTML = '<p class="disc-empty">No candidates under these filters — loosen the max-loss cap or direction.</p>';
+        return;
+      }
+      let h = '<table class="pl-table"><thead><tr><th style="text-align:left">Structure</th><th>Cost</th><th>P/L @ ' + formatMoney(target) + '</th><th>POP</th><th>Max loss</th><th></th></tr></thead><tbody>';
+      findResults.forEach(function (c, i) {
+        h += '<tr><td style="text-align:left">' + c.label + '</td>' +
+          '<td>' + fmtNet(c.st.net) + '</td>' +
+          '<td class="' + (c.profitAtTarget >= 0 ? 'pv-pos' : 'pv-neg') + '">' + formatMoney(c.profitAtTarget) + '</td>' +
+          '<td>' + fmtPop(c.st.pop) + '</td>' +
+          '<td>' + fmtStatMoney(c.st.maxLoss) + '</td>' +
+          '<td><button type="button" class="btn-primary btn-sm" onclick="applyDiscoveryLegs(\'find\',' + i + ')">Apply</button></td></tr>';
+      });
+      box.innerHTML = h + '</tbody></table><p class="disc-note">est. stats · Apply replaces legs A</p>';
+    }
+
+    // Apply a discovery candidate into legs A.
+    function applyDiscoveryLegs(which, i) {
+      const arr = which === 'opt' ? optResults : findResults;
+      const c = arr[i];
+      if (!c) return;
+      if (legs.length && typeof confirm === 'function' && !confirm('Replace the current legs in slot A with "' + c.label + '"?')) return;
+      markBuildDirty();
+      legs = c.legs;
+      syncDTESlider();
+      updateSpotSliderRange();
+      renderLegs();
+      recalc();
+      if (typeof resetSimulation === 'function') resetSimulation();
+    }
+
+    // Populate the target-expiry selects from the loaded chain; without a
+    // chain they offer a modeled-DTE fallback input instead.
+    function syncDiscoveryExpiries() {      const data = window._cboeData;
+      const exps = (data && data.expirations) || [];
+      [['optExpiry', 'optDteWrap'], ['findExpiry', 'findDteWrap']].forEach(function (cfg) {
+        const sel = document.getElementById(cfg[0]);
+        const wrap = document.getElementById(cfg[1]);
+        if (!sel) return;
+        const keep = sel.value;
+        sel.innerHTML = '';
+        if (exps.length) {
+          exps.forEach(function (exp) {
+            const opt = document.createElement('option');
+            opt.value = exp;
+            const d = expirationDte(exp);
+            opt.textContent = exp + (d ? ' (' + d + 'd)' : '');
+            sel.appendChild(opt);
+          });
+          const prefer = (keep && exps.indexOf(keep) >= 0) ? keep : pickDefaultExpiration(exps, 30, true);
+          if (prefer) sel.value = prefer;
+          if (wrap) wrap.style.display = 'none';
+        } else {
+          const opt = document.createElement('option');
+          opt.value = '';
+          opt.textContent = 'No chain — model DTE';
+          sel.appendChild(opt);
+          if (wrap) wrap.style.display = '';
+        }
+      });
+    }
+
+    // Init the expiry selects at engine boot (chain hook refreshes them later).
+    try {
+      if (typeof document !== 'undefined' && document.getElementById('optExpiry')) syncDiscoveryExpiries();
+    } catch (e) {}
+
     function summarizeExpiry(expiry, labels, legsArr) {
       if (!expiry || !expiry.length) return { maxProfit: '—', maxLoss: '—', breakevens: '—', beNums: [], ror: '—', cap: '—' };
       const maxP = Math.max.apply(null, expiry);
@@ -4638,6 +4981,7 @@
         if (typeof resetSimulation === 'function') resetSimulation();
         else if (typeof liveUpdate === 'function') liveUpdate();
         onRangeChange(); // fresh market price asserted: re-lock the Range window around it
+        if (typeof syncDiscoveryExpiries === 'function') syncDiscoveryExpiries(); // Batch C: optimizer/finder expiry selects
         const dteNow = expirationDte(sel.value);
         const qStatus = document.getElementById('quoteStatus');
         if (qStatus){
