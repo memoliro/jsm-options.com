@@ -264,6 +264,12 @@
     }
     .cash-debit { color: var(--red); }
     .cash-credit { color: var(--green); }
+    .leg-greeks {
+      font-size: 0.68rem;
+      color: var(--muted);
+      margin: -5px 0 7px 4px;
+      font-variant-numeric: tabular-nums;
+    }
 
     @media (max-width: 640px) {
       .legs-header { display: none; }
@@ -798,7 +804,7 @@
             <button class="btn-secondary btn-sm" onclick="clearLegs()">Clear all</button>
           </div>
           <p style="font-size:0.7rem;color:var(--muted);margin-top:8px;">
-            Debit = you pay · Credit = you receive · <strong>Listed option:</strong> qty = contracts (×100) · <strong>Futures option:</strong> contract-specific multiplier · <strong>Hisse:</strong> qty = share count, cost = entry price (Strike and DTE unused)
+            Debit = you pay · Credit = you receive · <strong>Listed option:</strong> qty = contracts (×100) · <strong>Futures option:</strong> contract-specific multiplier · <strong>Stock:</strong> qty = share count, cost = entry price (Strike and DTE unused)
           </p>
         </div>
         <div class="legs-summary-col">
@@ -868,12 +874,12 @@
           <div id="legsListB"></div>
           <div class="btn-row">
             <button class="btn-primary btn-sm" onclick="addEmptyLegB()">+ Add leg</button>
-            <button class="btn-secondary btn-sm" onclick="clearLegsB()">B'yi sil</button>
+            <button class="btn-secondary btn-sm" onclick="clearLegsB()">Delete B</button>
           </div>
         </div>
         <div class="legs-summary-col">
           <div class="pl-box">
-            <div style="font-size:0.7rem;color:var(--muted);">B K/Z (teorik)</div>
+            <div style="font-size:0.7rem;color:var(--muted);">B P/L (theoretical)</div>
             <div id="plValueB" class="pl-value pl-positive">$0</div>
           </div>
           <div class="metrics">
@@ -906,7 +912,7 @@
       <h2>Payoff chart
         <span class="chart-toolbar">
           <button type="button" class="btn-secondary btn-sm" id="compareToggleBtn" onclick="toggleCompareMode()">Compare two strategies</button>
-          <button type="button" class="btn-secondary btn-sm" onclick="exportPayoffImage()">PNG indir</button>
+          <button type="button" class="btn-secondary btn-sm" onclick="exportPayoffImage()">Download PNG</button>
           <button type="button" class="btn-secondary btn-sm" onclick="resetChartGestures()">Reset view</button>
         </span>
       </h2>
@@ -991,6 +997,14 @@
           <div class="metric">
             <div class="label">Theta / day</div>
             <div class="val" id="posTheta">—</div>
+          </div>
+          <div class="metric">
+            <div class="label">Expected move (1σ)</div>
+            <div class="val" id="posExpMove">—</div>
+          </div>
+          <div class="metric">
+            <div class="label">Prob. of profit (est.)</div>
+            <div class="val" id="posPoP">—</div>
           </div>
         </div>
         <div id="posSummaryChartContainer">
@@ -1081,8 +1095,8 @@
       <div class="glossary-item"><dt>Builder</dt><dd>This page: build legs and watch Payoff and Greeks live.</dd></div>
       <div class="glossary-item"><dt>FAQ</dt><dd>Frequently asked questions.</dd></div>
     </dl>
-    <p>JSM Options Strategy Builder is a free and fully interactive options strategy builder and simulator. Create and analyze multi-leg options strategies including Bulish:
-<strong>Bulish:</strong>
+    <p>JSM Options Strategy Builder is a free and fully interactive options strategy builder and simulator. Create and analyze multi-leg options strategies including
+<strong>Bullish:</strong>
 Long Call,
 Covered Call,
 Cash Secured Put,
@@ -1108,11 +1122,11 @@ Iron Butterfly,
 Calendar Spread,
 Jade Lizard
 
-<strong>Synthetic stock and Capital efficient:</strong>
+<strong>Synthetic stock and capital-efficient:</strong>
 Poor Man's Covered Call,
 Call Ratio Spread (1×2),
 Put Ratio Spread (1×2),
-Synthetic Long
+Synthetic Long,
 Synthetic Short,
 Risk Reversal (synthetic tilt), 
 and custom structures. View payoff charts, Greeks, profit/loss, break-even, probability of profit, and expected move all in one clean interface. 
@@ -1680,7 +1694,9 @@ and custom structures. View payoff charts, Greeks, profit/loss, break-even, prob
     }
 
     // Finite-difference Greeks (position-level, already × MULTIPLIER via signedQty)
-    function positionGreeks() {
+    // `list` lets us reuse the same math for per-leg Greeks; defaults to legs.
+    function positionGreeksFor(list) {
+      const arr = list || legs;
       const p = getParams();
       const S = p.S;
       const daysLeft = p.daysLeft;
@@ -1694,13 +1710,13 @@ and custom structures. View payoff charts, Greeks, profit/loss, break-even, prob
       function val(Ss, days, vol) {
         let total = 0;
         const optionDtes = [];
-        for (let i = 0; i < legs.length; i++) {
-          if (legs[i].type !== 'stock') optionDtes.push(legs[i].dte);
+        for (let i = 0; i < arr.length; i++) {
+          if (arr[i].type !== 'stock') optionDtes.push(arr[i].dte);
         }
         const minDte = optionDtes.length ? Math.min.apply(null, optionDtes) : 0;
         const elapsed = Math.max(0, minDte - days);
-        for (let i = 0; i < legs.length; i++) {
-          const leg = legs[i];
+        for (let i = 0; i < arr.length; i++) {
+          const leg = arr[i];
           let vps;
           if (leg.type === 'stock') {
             vps = Ss;
@@ -1717,11 +1733,24 @@ and custom structures. View payoff charts, Greeks, profit/loss, break-even, prob
         return total;
       }
 
+      // Time decay is measured against the nearest expiry. The "days remaining"
+      // slider can sit above the shortest leg DTE (e.g. right after loading a
+      // preset or clearing legs), in which case perturbing daysLeft by one day
+      // changes nothing and theta wrongly reads $0. Clamp to the effective
+      // horizon first. (Delta/gamma/vega need no clamp: with elapsed already 0
+      // above the horizon, their valuations are identical either way.)
+      const optionDtes = [];
+      for (let i = 0; i < arr.length; i++) {
+        if (arr[i].type !== 'stock') optionDtes.push(arr[i].dte);
+      }
+      const minDte = optionDtes.length ? Math.min.apply(null, optionDtes) : 0;
+      const effDays = Math.min(daysLeft, minDte);
+
       const v0 = val(S, daysLeft, iv);
       const vUp = val(S + dS, daysLeft, iv);
       const vDn = val(S - dS, daysLeft, iv);
       const vVol = val(S, daysLeft, iv + dVol);
-      const vTime = daysLeft > 0 ? val(S, Math.max(0, daysLeft - 1), iv) : v0;
+      const vTime = effDays > 0 ? val(S, effDays - 1, iv) : v0;
 
       const delta = (vUp - vDn) / (2 * dS);
       const gamma = (vUp - 2 * v0 + vDn) / (dS * dS);
@@ -1731,19 +1760,117 @@ and custom structures. View payoff charts, Greeks, profit/loss, break-even, prob
       return { delta: delta, gamma: gamma, theta: theta, vega: vega };
     }
 
+    function positionGreeks() {
+      return positionGreeksFor(legs);
+    }
+
+    // Expected 1-standard-deviation move over the nearest expiry:
+    // S × IV × sqrt(T). Standard options-desk estimate.
+    function expectedMove() {
+      if (!legs.length) return null;
+      const p = getParams();
+      const optionDtes = [];
+      for (let i = 0; i < legs.length; i++) {
+        if (legs[i].type !== 'stock' && !legIsIncomplete(legs[i])) optionDtes.push(legs[i].dte);
+      }
+      if (!optionDtes.length || !(p.iv > 0) || !(p.S > 0)) return null;
+      const minDte = Math.min.apply(null, optionDtes);
+      return p.S * p.iv * Math.sqrt(Math.max(minDte, 1) / 365);
+    }
+
+    // Probability the position is profitable at the nearest expiry, estimated
+    // from a lognormal distribution of the underlying (drift r−q, vol = IV).
+    // Finds the expiry-payoff breakevens, then integrates the profit regions.
+    function probOfProfit() {
+      if (!legs.length) return null;
+      const p = getParams();
+      const S = p.S, iv = p.iv, r = p.r, q = p.q;
+      const optionDtes = [];
+      for (let i = 0; i < legs.length; i++) {
+        if (legs[i].type !== 'stock' && !legIsIncomplete(legs[i])) optionDtes.push(legs[i].dte);
+      }
+      if (!optionDtes.length || !(iv > 0) || !(S > 0)) return null;
+      const minDte = Math.min.apply(null, optionDtes);
+      const T = Math.max(minDte, 1) / 365;
+      const sigma = Math.max(iv, 0.005);
+      const cost = initialCost(legs);
+      function payoffExp(x) {
+        return positionValueAt(x, 0, true, legs) - cost;
+      }
+      // Scan for sign changes, then bisect each crossing for accuracy.
+      const lo = Math.max(0.01, S * 0.05);
+      const hi = Math.max(S * 4, S + 1);
+      const N = 300;
+      const bes = [];
+      let px = lo, py = payoffExp(lo);
+      for (let i = 1; i <= N; i++) {
+        const x = lo + (hi - lo) * i / N;
+        const y = payoffExp(x);
+        if (py === 0) { bes.push(px); }
+        else if (y === 0) { bes.push(x); }
+        else if (py * y < 0) {
+          let a = px, b = x, fa = py;
+          for (let j = 0; j < 50; j++) {
+            const m = (a + b) / 2, fm = payoffExp(m);
+            if (fa * fm <= 0) { b = m; } else { a = m; fa = fm; }
+          }
+          bes.push((a + b) / 2);
+        }
+        px = x; py = y;
+      }
+      bes.sort(function(a, b) { return a - b; });
+      const uniq = [];
+      for (let i = 0; i < bes.length; i++) {
+        if (!uniq.length || bes[i] - uniq[uniq.length - 1] > Math.max(0.05, S * 0.002)) uniq.push(bes[i]);
+      }
+      const mu = Math.log(S) + (r - q - 0.5 * sigma * sigma) * T;
+      const sd = sigma * Math.sqrt(T);
+      function cdf(x) {
+        if (x <= 0) return 0;
+        if (!isFinite(x)) return 1;
+        return normCDF((Math.log(x) - mu) / sd);
+      }
+      let pop = 0;
+      const bounds = [0].concat(uniq).concat([Infinity]);
+      for (let i = 0; i < bounds.length - 1; i++) {
+        const a = bounds[i], b = bounds[i + 1];
+        let mid;
+        if (a === 0) mid = Math.min(b, S) / 2;
+        else if (b === Infinity) mid = Math.max(a * 1.5, S * 2);
+        else mid = (a + b) / 2;
+        if (!(mid > 0)) mid = 0.01;
+        if (payoffExp(mid) > 0) pop += cdf(b) - cdf(a);
+      }
+      if (!isFinite(pop)) return null;
+      return Math.max(0, Math.min(1, pop));
+    }
+
     function defaultLongCall() {
       const S = parseFloat(document.getElementById('spot').value) || 100;
+      // Anchor the default leg to the currently selected chain expiration so
+      // "Clear all" never leaves a phantom 90-DTE leg while the chain shows
+      // a different expiry. Falls back to 90 when no chain is loaded yet.
+      let dte = 90;
+      try {
+        const chainDte = expirationDte(selectedExpiration());
+        if (chainDte > 0) dte = chainDte;
+      } catch (e) { /* chain not ready */ }
       const leg = {
         id: nextId++,
         side: 'buy',
         type: 'call',
         strike: Math.round(S),
-        dte: 90,
+        dte: dte,
         qty: 1,
         premium: 5.00,
         premiumManual: false
       };
       leg.premium = modeledPremiumForLeg(leg, S);
+      try {
+        if (typeof tryFillLegFromChain === 'function') {
+          tryFillLegFromChain(leg, { setDte: true, snapStrikes: true });
+        }
+      } catch (e) { /* chain not ready — keep modeled values */ }
       return [leg];
     }
 
@@ -1951,7 +2078,8 @@ and custom structures. View payoff charts, Greeks, profit/loss, break-even, prob
       if (!tip) return;
       const meta = TEMPLATE_LESSONS[key];
       if (meta) {
-        tip.innerHTML = 'You are viewing a <strong>' + meta.title + '</strong> — <a href="' + meta.href + '">' + meta.label + '</a> lesson, or edit the legs below.';
+        const article = /^[aeiou]/i.test(meta.title) ? 'an' : 'a';
+        tip.innerHTML = 'You are viewing ' + article + ' <strong>' + meta.title + '</strong> — <a href="' + meta.href + '">' + meta.label + '</a> lesson, or edit the legs below.';
       } else {
         tip.innerHTML = 'Template loaded. Edit any field — chart and Greeks update live.';
       }
@@ -2102,9 +2230,9 @@ and custom structures. View payoff charts, Greeks, profit/loss, break-even, prob
       const isStock = leg.type === 'stock';
       const cash = legCash(leg);
       const cashCls = cash >= 0 ? 'cash-debit' : 'cash-credit';
-      const cashTxt = (cash >= 0 ? '+' : '') + cash.toFixed(0);
+      const cashTxt = '$' + Math.abs(cash).toFixed(0);
       const cashLabel = isStock
-        ? (leg.side === 'buy' ? 'Stock cost ' : 'Stock Credit ') + cashTxt + ' (' + leg.qty + ' pay)'
+        ? (leg.side === 'buy' ? 'Stock cost ' : 'Stock credit ') + cashTxt + ' (' + leg.qty + ' shares)'
         : (cash >= 0 ? 'Debit' : 'Credit') + ' ' + cashTxt + ' (×' + legShareMult(leg) + ')';
       cashLines[idx].className = 'cash-line ' + cashCls;
       cashLines[idx].textContent = cashLabel;
@@ -2120,6 +2248,52 @@ and custom structures. View payoff charts, Greeks, profit/loss, break-even, prob
       document.getElementById('daysLeftLabel').textContent = slider.value;
     }
 
+    // DTE cell: when a CBOE chain is loaded for this leg's ticker, offer the
+    // listed expirations as a dropdown (real expiry dates instead of a bare
+    // day count); otherwise fall back to the numeric input. Futures legs and
+    // legs on a different ticker keep the numeric input.
+    function dteInputFor(l, isStock, futuresLeg) {
+      if (isStock) {
+        return '<input type="text" value="—" disabled title="Not used for stock" style="opacity:0.45;cursor:not-allowed;" />';
+      }
+      const data = window._cboeData;
+      const exps = (data && data.expirations) || [];
+      const chainSym = data && data.symbol ? String(data.symbol).toUpperCase() : '';
+      const legSym = ((l.ticker || '').toString().toUpperCase()) ||
+        (typeof currentTicker === 'function' ? String(currentTicker()).toUpperCase() : '');
+      if (!futuresLeg && exps.length && chainSym && legSym === chainSym) {
+        const cur = Math.max(1, parseInt(l.dte, 10) || 0);
+        let opts = '';
+        let matched = false;
+        for (let i = 0; i < exps.length; i++) {
+          const d = expirationDte(exps[i]);
+          if (d < 1) continue;
+          const sel = (d === cur) ? ' selected' : '';
+          if (d === cur) matched = true;
+          opts += '<option value="' + d + '"' + sel + '>' + exps[i] + ' (' + d + 'd)</option>';
+        }
+        if (!matched) {
+          opts = '<option value="' + cur + '" selected>Custom (' + cur + 'd)</option>' + opts;
+        }
+        return '<select title="Expiration date (from chain)" onchange="updateLegField(' + l.id + ',\'dte\',this.value,false)">' + opts + '</select>';
+      }
+      return '<input type="number" value="' + l.dte + '" min="1" max="730" ' +
+        'onchange="updateLegField(' + l.id + ',\'dte\',this.value,false)" ' +
+        'oninput="updateLegField(' + l.id + ',\'dte\',this.value,true)" />';
+    }
+
+    // One-line per-leg Greeks under each leg row (delta + theta/day).
+    function legGreeksLine(l) {
+      if (!l || l.type === 'stock' || legIsIncomplete(l)) return '';
+      try {
+        const g = positionGreeksFor([l]);
+        if (!isFinite(g.delta) || !isFinite(g.theta)) return '';
+        const d = (g.delta >= 0 ? '+' : '') + g.delta.toFixed(1);
+        const t = (g.theta >= 0 ? '+' : '') + formatMoney(g.theta) + '/day';
+        return '<div class="leg-greeks">Δ ' + d + ' · Θ ' + t + '</div>';
+      } catch (e) { return ''; }
+    }
+
     function renderLegs() {
       const container = document.getElementById('legsList');
       if (!legs.length) {
@@ -2130,7 +2304,7 @@ and custom structures. View payoff charts, Greeks, profit/loss, break-even, prob
         const isStock = l.type === 'stock';
         const cash = legCash(l);
         const cashCls = cash >= 0 ? 'cash-debit' : 'cash-credit';
-        const cashTxt = (cash >= 0 ? '+' : '') + cash.toFixed(0);
+        const cashTxt = '$' + Math.abs(cash).toFixed(0);
         const rowCls = l.side === 'buy' ? 'long' : 'short';
         const sideBuy = l.side === 'buy' ? ' selected' : '';
         const sideSell = l.side === 'sell' ? ' selected' : '';
@@ -2141,8 +2315,8 @@ and custom structures. View payoff charts, Greeks, profit/loss, break-even, prob
         const stockOption = futuresLeg ? '' : '<option value=\"stock\"' + typeStock + '>Stock</option>';
         const debitCredit = cash >= 0 ? 'Debit' : 'Credit';
         const cashLabel = isStock
-          ? (l.side === 'buy' ? 'Stock cost ' : 'Stock Credit ') + cashTxt + ' (' + l.qty + ' pay)'
-          : debitCredit + ' ' + cashTxt + ' (×100)';
+          ? (l.side === 'buy' ? 'Stock cost ' : 'Stock credit ') + cashTxt + ' (' + l.qty + ' shares)'
+          : debitCredit + ' ' + cashTxt + ' (×' + legShareMult(l) + ')';
 
         // Strike & DTE disabled for stock; premium becomes Cost/Share
         // oninput → liveTyping=true (update graph, keep focus)
@@ -2153,11 +2327,7 @@ and custom structures. View payoff charts, Greeks, profit/loss, break-even, prob
           : '<input type="number" value="' + (l.strike == null ? '' : l.strike) + '" step="' + strikeStep + '" min="0.000001" placeholder="Enter strike" ' +
               'onchange="updateLegField(' + l.id + ',\'strike\',this.value,false)" ' +
               'oninput="updateLegField(' + l.id + ',\'strike\',this.value,true)" />';
-        const dteInput = isStock
-          ? '<input type="text" value="—" disabled title="Not used for stock" style="opacity:0.45;cursor:not-allowed;" />'
-          : '<input type="number" value="' + l.dte + '" min="1" max="730" ' +
-              'onchange="updateLegField(' + l.id + ',\'dte\',this.value,false)" ' +
-              'oninput="updateLegField(' + l.id + ',\'dte\',this.value,true)" />';
+        const dteInput = dteInputFor(l, isStock, futuresLeg);
         const premiumTitle = isStock ? 'Cost per share (entry)' : 'Option Premium per share';
         const premiumVal = (l.premium == null ? '' : l.premium);
         const premiumInput =
@@ -2195,7 +2365,8 @@ and custom structures. View payoff charts, Greeks, profit/loss, break-even, prob
               '<button class="btn-danger" onclick="removeLeg(' + l.id + ')" title="Remove leg">✕</button>' +
             '</div>' +
           '</div>' +
-          '<div class="cash-line ' + cashCls + '">' + cashLabel + '</div>'
+          '<div class="cash-line ' + cashCls + '">' + cashLabel + '</div>' +
+          legGreeksLine(l)
         );
       }).join('');
     }
@@ -2477,7 +2648,7 @@ and custom structures. View payoff charts, Greeks, profit/loss, break-even, prob
               grid: { color: tc.grid }
             },
             y: {
-              title: { display: true, text: 'K/Z ($)', color: tc.text },
+              title: { display: true, text: 'P/L ($)', color: tc.text },
               ticks: { color: tc.text, callback: function(v) { return '$' + v.toFixed(0); } },
               grid: { color: tc.grid }
             }
@@ -2605,18 +2776,35 @@ and custom structures. View payoff charts, Greeks, profit/loss, break-even, prob
       renderLegs();
     }
 
-    function summarizeExpiry(expiry, labels) {
+    // Structural check for unbounded tails: at very large underlying prices,
+    // calls and stock move ~$1-for-$1 per share while puts expire worthless.
+    // Only the right tail can be truly unbounded (prices cannot fall below
+    // $0), so the left tail is always bounded. Returns $ of P/L per $1 move
+    // at large S. This replaces the old chart-edge slope heuristic, which
+    // wrongly flagged all-long positions (e.g. long puts) as "Unlimited" loss
+    // and missed real unlimited risk (e.g. naked short calls).
+    function rightTailSlope(legsArr) {
+      let slope = 0;
+      const list = legsArr || legs;
+      for (let i = 0; i < list.length; i++) {
+        const leg = list[i];
+        if (leg.type === 'put') continue; // worthless at large S
+        if (leg.type === 'call' || leg.type === 'stock') {
+          slope += signedQty(leg) * legShareMult(leg);
+        }
+      }
+      return slope;
+    }
+
+    function summarizeExpiry(expiry, labels, legsArr) {
       if (!expiry || !expiry.length) return { maxProfit: '—', maxLoss: '—', breakevens: '—' };
       const maxP = Math.max.apply(null, expiry);
       const minP = Math.min.apply(null, expiry);
       let maxProfitText = formatMoney(maxP);
       let maxLossText = formatMoney(minP);
-      if (expiry.length > 2) {
-        const lastSlope = expiry[expiry.length - 1] - expiry[expiry.length - 2];
-        if (lastSlope > 15 && maxP > 2000) maxProfitText = 'Unlimited';
-        const firstSlope = expiry[1] - expiry[0];
-        if (firstSlope < -15 && minP < -2000) maxLossText = 'Unlimited';
-      }
+      const tail = rightTailSlope(legsArr);
+      if (tail > 0) maxProfitText = 'Unlimited';
+      else if (tail < 0) maxLossText = 'Unlimited';
       const bes = [];
       for (let i = 1; i < expiry.length; i++) {
         if (expiry[i - 1] * expiry[i] <= 0) {
@@ -2659,7 +2847,7 @@ and custom structures. View payoff charts, Greeks, profit/loss, break-even, prob
         plEl.className = 'pl-value ' + (plB >= 0 ? 'pl-positive' : 'pl-negative');
       }
       setNetLabel(document.getElementById('netPremiumB'), legsB.length ? initialCost(legsB) : 0);
-      const sumB = summarizeExpiry(data.expiryB, data.labels);
+      const sumB = summarizeExpiry(data.expiryB, data.labels, legsB);
       const mp = document.getElementById('maxProfitB');
       const ml = document.getElementById('maxLossB');
       const be = document.getElementById('breakevensB');
@@ -2667,19 +2855,19 @@ and custom structures. View payoff charts, Greeks, profit/loss, break-even, prob
       if (ml) ml.textContent = sumB.maxLoss;
       if (be) be.textContent = sumB.breakevens;
 
-      const sumA = summarizeExpiry(data.expiry, data.labels);
+      const sumA = summarizeExpiry(data.expiry, data.labels, legs);
       const colA = document.getElementById('compareColA');
       const colB = document.getElementById('compareColB');
       const plA = plAt(S, daysLeft, legs);
       if (colA) {
-        colA.innerHTML = '<h3>Strateji A · Underlying $' + S.toFixed(2) + '</h3>' +
-          'P/L now ' + formatMoney(plA) + '<br>Maks. kâr ' + sumA.maxProfit +
-          '<br>Maks. zarar ' + sumA.maxLoss + '<br>Break-Even ' + sumA.breakevens;
+        colA.innerHTML = '<h3>Strategy A · Underlying $' + S.toFixed(2) + '</h3>' +
+          'P/L now ' + formatMoney(plA) + '<br>Max profit ' + sumA.maxProfit +
+          '<br>Max loss ' + sumA.maxLoss + '<br>Break-Even ' + sumA.breakevens;
       }
       if (colB) {
-        colB.innerHTML = '<h3>Strateji B · Underlying $' + S.toFixed(2) + '</h3>' +
-          'P/L now ' + formatMoney(plB) + '<br>Maks. kâr ' + sumB.maxProfit +
-          '<br>Maks. zarar ' + sumB.maxLoss + '<br>Break-Even ' + sumB.breakevens;
+        colB.innerHTML = '<h3>Strategy B · Underlying $' + S.toFixed(2) + '</h3>' +
+          'P/L now ' + formatMoney(plB) + '<br>Max profit ' + sumB.maxProfit +
+          '<br>Max loss ' + sumB.maxLoss + '<br>Break-Even ' + sumB.breakevens;
       }
     }
 
@@ -3035,12 +3223,9 @@ and custom structures. View payoff charts, Greeks, profit/loss, break-even, prob
       const minP = Math.min.apply(null, data.expiry);
       let maxProfitText = formatMoney(maxP);
       let maxLossText = formatMoney(minP);
-      if (data.expiry.length > 2) {
-        const lastSlope = data.expiry[data.expiry.length - 1] - data.expiry[data.expiry.length - 2];
-        if (lastSlope > 15 && maxP > 2000) maxProfitText = 'Unlimited';
-        const firstSlope = data.expiry[1] - data.expiry[0];
-        if (firstSlope < -15 && minP < -2000) maxLossText = 'Unlimited';
-      }
+      const tailSlope = rightTailSlope(legs);
+      if (tailSlope > 0) maxProfitText = 'Unlimited';
+      else if (tailSlope < 0) maxLossText = 'Unlimited';
       document.getElementById('maxProfit').textContent = maxProfitText;
       document.getElementById('maxLoss').textContent = maxLossText;
 
@@ -3096,8 +3281,8 @@ and custom structures. View payoff charts, Greeks, profit/loss, break-even, prob
       const th = g.theta;
       const vg = g.vega;
       document.getElementById('gDeltaImpact').textContent =
-        d > 5 ? 'Bullish tilt: if Underlying rises $1, P/L ≈ $' + Math.abs(d).toFixed(0) + ' artar.'
-        : d < -5 ? 'Bearish tilt: if Underlying drops $1, P/L ≈ $' + Math.abs(d).toFixed(0) + ' artar.'
+        d > 5 ? 'Bullish tilt: if Underlying rises $1, P/L ≈ $' + Math.abs(d).toFixed(0) + ' increases.'
+        : d < -5 ? 'Bearish tilt: if Underlying drops $1, P/L ≈ $' + Math.abs(d).toFixed(0) + ' increases.'
         : 'Near delta-neutral: a small price move has little directional P/L.';
       document.getElementById('gGammaImpact').textContent =
         Math.abs(g.gamma) > 1
@@ -3108,7 +3293,7 @@ and custom structures. View payoff charts, Greeks, profit/loss, break-even, prob
         : th > 5 ? 'Time in your favor: about $' + Math.abs(th).toFixed(0) + ' of Theta expected.'
         : 'Daily Theta is small at these settings.';
       document.getElementById('gVegaImpact').textContent =
-        vg > 5 ? 'Long volatility: +1% IV is about $' + Math.abs(vg).toFixed(0) + ' ekler.'
+        vg > 5 ? 'Long volatility: +1% IV adds about $' + Math.abs(vg).toFixed(0) + '.'
         : vg < -5 ? 'Short volatility: +1% IV is about $' + Math.abs(vg).toFixed(0) + ' of loss; you profit if IV falls.'
         : 'Low Vega: IV moves matter little right now.';
     }
@@ -3286,9 +3471,9 @@ and custom structures. View payoff charts, Greeks, profit/loss, break-even, prob
           (chg >= 0 ? '+' : '') + chg.toFixed(2) + ' (' + (pct >= 0 ? '+' : '') + pct.toFixed(1) + '%)</span>';
       }
 
-      el.innerHTML = '<strong>' + simDayIndex + '</strong> / ' + maxDTE + '. day' +
+      el.innerHTML = '<strong>Day ' + simDayIndex + ' / ' + maxDTE + '</strong>' +
         ' · P/L now <strong class="' + (pl >= 0 ? 'up' : 'down') + '">' + (pl >= 0 ? '+' : '') + formatMoney(pl) + '</strong>' +
-        (atEnd ? ' · <em>expiration geldi</em>' : '');
+        (atEnd ? ' · <em>expiration reached</em>' : '');
     }
 
     function renderSimLog() {
@@ -3324,11 +3509,15 @@ and custom structures. View payoff charts, Greeks, profit/loss, break-even, prob
 
       let svgHtml = '';
       const yTicks = 4;
+      const yRange = yMax - yMin;
+      // Narrow price ranges would print duplicate labels (e.g. "$771" twice)
+      // when rounded to whole dollars — show one decimal instead.
+      const yDec = yRange < 8 ? 1 : 0;
       for (let i = 0; i <= yTicks; i++) {
         const yVal = yMin + ((yMax - yMin) * i) / yTicks;
         const yPix = yScale(yVal);
         svgHtml += '<line x1="' + pad.l + '" y1="' + yPix + '" x2="' + (width - pad.r) + '" y2="' + yPix + '" stroke="var(--border)" stroke-width="1"/>';
-        svgHtml += '<text x="' + (pad.l - 6) + '" y="' + (yPix + 3) + '" text-anchor="end" font-size="9.5" fill="var(--muted)">$' + yVal.toFixed(0) + '</text>';
+        svgHtml += '<text x="' + (pad.l - 6) + '" y="' + (yPix + 3) + '" text-anchor="end" font-size="9.5" fill="var(--muted)">$' + yVal.toFixed(yDec) + '</text>';
       }
       const startXPix = xScale(0);
       svgHtml += '<line x1="' + startXPix + '" y1="' + pad.t + '" x2="' + startXPix + '" y2="' + (height - pad.b) + '" stroke="var(--spot-guide, var(--yellow))" stroke-width="1.2" stroke-dasharray="4,3"/>';
@@ -3463,6 +3652,16 @@ and custom structures. View payoff charts, Greeks, profit/loss, break-even, prob
         const thetaEl = document.getElementById('posTheta');
         if (deltaEl) deltaEl.textContent = (g.delta >= 0 ? '+' : '') + g.delta.toFixed(1);
         if (thetaEl) thetaEl.textContent = (g.theta >= 0 ? '+' : '') + formatMoney(g.theta);
+        const emEl = document.getElementById('posExpMove');
+        if (emEl) {
+          const em = expectedMove();
+          emEl.textContent = (em == null || !isFinite(em)) ? '—' : '±' + formatMoney(em);
+        }
+        const popEl = document.getElementById('posPoP');
+        if (popEl) {
+          const pop = probOfProfit();
+          popEl.textContent = (pop == null || !isFinite(pop)) ? '—' : (pop * 100).toFixed(0) + '%';
+        }
       }
     }
 
@@ -3480,13 +3679,13 @@ and custom structures. View payoff charts, Greeks, profit/loss, break-even, prob
       const hasShort = legs.some(function(l) { return l.side === 'sell'; });
       const hasStock = legs.some(function(l) { return l.type === 'stock'; });
       if (hasStock && hasShort) {
-        tip.innerHTML = '<strong>Hisse + opsiyon:</strong> Stock qty = shares, cost = entry price. Listed option qty = contracts (×100); futures options use the contract multiplier. For a Covered Call use 100 shares + 1 Short Call. <a href="/level2/">Fundamentals lesson</a>';
+        tip.innerHTML = '<strong>Stock + option:</strong> Stock qty = shares, cost = entry price. Listed option qty = contracts (×100); futures options use the contract multiplier. For a Covered Call use 100 shares + 1 Short Call. <a href="/level2/">Fundamentals lesson</a>';
       } else if (hasStock) {
         tip.innerHTML = '<strong>Stock leg:</strong> Qty = shares, cost = entry price. Strike and DTE are unused. Add 1 Short Call for a Covered Call.';
       } else if (legs.length === 1 && hasLong) {
-        tip.innerHTML = '<strong>Long opsiyon:</strong> You pay a Debit. Solid line = Expiry Payoff. Dotted line still has time value. Step days to watch Theta.';
+        tip.innerHTML = '<strong>Long option:</strong> You pay a Debit. Solid line = Expiry Payoff. Dotted line still has time value. Step days to watch Theta.';
       } else if (legs.length === 1 && hasShort) {
-        tip.innerHTML = '<strong>Short opsiyon:</strong> You collect a Credit. Theta helps if Underlying stays near the Strike.';
+        tip.innerHTML = '<strong>Short option:</strong> You collect a Credit. Theta helps if Underlying stays near the Strike.';
       } else if (hasLong && hasShort) {
         tip.innerHTML = '<strong>Multi-leg:</strong> Net Debit/Credit is above. Edit any field live — the chart updates. Use a template for a ready structure.';
       } else {
@@ -3711,6 +3910,14 @@ and custom structures. View payoff charts, Greeks, profit/loss, break-even, prob
       const exp = selectedExpiration();
       const chain = currentChainSlice(exp);
       if (!chain) return false;
+      // A chain quote belongs to the selected expiration. If this leg targets
+      // a different expiration (e.g. chosen in the per-leg expiry dropdown), a
+      // fill from the selected expiration would misprice it — leave the leg
+      // for the modeled premium instead. Callers that sync DTEs pass
+      // setDte/force and bypass this guard.
+      if (!options.setDte && !options.force && exp) {
+        if (Math.abs((Number(leg.dte) || 0) - expirationDte(exp)) > 0) return false;
+      }
       if (options.snapStrikes) {
         leg.strike = nearestListedStrike(leg.strike || parseFloat(document.getElementById('spot').value) || 100, chain);
       }
