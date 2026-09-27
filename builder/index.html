@@ -157,6 +157,12 @@
       gap: 8px;
       flex-wrap: wrap;
     }
+    /* Round 2: the two section headers memoli asked to center. h2s are flex
+       rows, so centering is via justify-content, not text-align. */
+    .card h2.h2-center {
+      justify-content: center;
+      text-align: center;
+    }
 
     label {
       display: block;
@@ -900,7 +906,7 @@
 
   
   <div class="card" id="chainCard" style="border:1px solid var(--border)">
-      <h2>Options Chain <span style="font-size:0.72rem;color:var(--muted);font-weight:500">market data (educational) • ~15min delayed • click a bid to sell, an ask to buy • edit any field after</span></h2>
+      <h2 class="h2-center">Options Chain <span style="font-size:0.72rem;color:var(--muted);font-weight:500">market data (educational) • ~15min delayed • click a bid to sell, an ask to buy • edit any field after</span></h2>
       <div class="top-bar" style="margin-bottom:8px">
         <div class="field">
           <label>Expiration</label>
@@ -923,7 +929,7 @@
 
     <!-- Current Legs, with the strategy's key numbers in a horizontal strip -->
     <div class="card">
-      <h2>Current legs <span class="slot-tag">A</span></h2>
+      <h2 class="h2-center">Current legs <span class="slot-tag">A</span></h2>
       <div class="legs-header">
         <span>Side</span>
         <span>Type</span>

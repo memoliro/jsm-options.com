@@ -3407,7 +3407,7 @@
     }
     // Hypothetical P/L of one leg between two per-share prices.
     function paperLegPnl(leg, pxThen, pxNow) {
-      const dir = leg.side === "buy" ? 1 : -1;
+      const dir = leg.side === 'buy' ? 1 : -1;
       return dir * (pxNow - pxThen) * (leg.qty || 1) * 100;
     }
     function paperEntryCash(legsArr) {
