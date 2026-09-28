@@ -387,7 +387,7 @@
     if (!wrap) return;
     var hs = Array.prototype.slice.call(wrap.querySelectorAll('h1,h2')).filter(function (h) {
       return h.textContent && h.textContent.trim().length > 1;
-    }).slice(0, 14);
+    });
     var tocHtml = hs.map(function (h, i) {
       if (!h.id) h.id = 'sec-' + i;
       return '<a href="#' + h.id + '">' + h.textContent.trim() + '</a>';
