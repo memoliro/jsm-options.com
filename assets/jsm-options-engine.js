@@ -2598,6 +2598,36 @@
       return slope;
     }
 
+    // Exact max profit / max loss of the expiry payoff over S in [0, ∞).
+    // The expiry payoff is piecewise linear with kinks only at the strikes
+    // (options settle to intrinsic; stock legs are linear), so — unless the
+    // right tail runs to ±∞ (handled by rightTailSlope → 'Unlimited') — the
+    // extremes are attained at ~$0 or at a strike. This must NOT be the min/
+    // max over the chart grid: the locked ±20% window can cut off the true
+    // worst/best case (e.g. a bull put spread with both strikes below the
+    // window once showed a *profit* as "max loss"). For multi-expiry
+    // calendars/diagonals the longer-dated legs keep Black-Scholes time
+    // value, so this is a close approximation there — still strictly better
+    // than the window edge.
+    function expiryExtremes(legsArr) {
+      const list = legsArr || legs;
+      const pts = [0.01];
+      const strikes = collectStrikes(list);
+      for (let i = 0; i < strikes.length; i++) {
+        if (strikes[i] > 0) pts.push(strikes[i]);
+      }
+      let maxP = -Infinity, minP = Infinity;
+      for (let i = 0; i < pts.length; i++) {
+        const v = expiryPayoff(pts[i], list);
+        if (!isFinite(v)) continue;
+        if (v > maxP) maxP = v;
+        if (v < minP) minP = v;
+      }
+      if (maxP === -Infinity) maxP = 0;
+      if (minP === Infinity) minP = 0;
+      return { maxP: maxP, minP: minP };
+    }
+
     // Max return on risk + capital at risk (tastytrade-style "return on
     // capital"). Defined-risk only: with an undefined-risk tail the margin
     // can't be modeled here, so both read '—'.
@@ -2628,22 +2658,12 @@
     // with strike ≤ short strike; short puts ← long puts with strike ≤ short
     // strike; short stock ← remaining long calls.
     function definedRiskMaxLoss(legsArr) {
-      // Exact max loss for a defined-risk set of legs: the expiry payoff is
-      // piecewise linear with kinks only at strikes, and (every short being
-      // covered) neither tail runs to -∞, so the minimum is attained at a
-      // strike or near zero.
-      const list = legsArr || legs;
-      const pts = [0.01];
-      list.forEach(function(leg) {
-        if (leg.type !== 'stock' && isFinite(leg.strike) && leg.strike > 0) pts.push(leg.strike);
-      });
-      let min = Infinity;
-      pts.forEach(function(x) {
-        const v = expiryPayoff(x, list);
-        if (isFinite(v) && v < min) min = v;
-      });
-      if (min === Infinity) return 0;
-      return Math.max(0, -min);
+      // Exact max loss for a defined-risk set of legs, via expiryExtremes:
+      // the expiry payoff is piecewise linear with kinks only at strikes,
+      // and (every short being covered) neither tail runs to -∞, so the
+      // minimum is attained at a strike or near zero.
+      const ex = expiryExtremes(legsArr || legs);
+      return Math.max(0, -ex.minP);
     }
 
     function estimateMargin() {
@@ -3625,8 +3645,10 @@
 
     function summarizeExpiry(expiry, labels, legsArr) {
       if (!expiry || !expiry.length) return { maxProfit: '—', maxLoss: '—', breakevens: '—', beNums: [], ror: '—', cap: '—' };
-      const maxP = Math.max.apply(null, expiry);
-      const minP = Math.min.apply(null, expiry);
+      // Exact extremes over [0, ∞), not the chart-grid min/max (see expiryExtremes).
+      const ex = expiryExtremes(legsArr);
+      const maxP = ex.maxP;
+      const minP = ex.minP;
       let maxProfitText = formatMoney(maxP);
       let maxLossText = formatMoney(minP);
       const tail = rightTailSlope(legsArr);
@@ -4407,8 +4429,11 @@
         paintNetPremium(document.getElementById('netPremium'), net);
 
         const data = buildChartData();
-        const maxP = Math.max.apply(null, data.expiry);
-        const minP = Math.min.apply(null, data.expiry);
+        // Exact extremes over [0, ∞): the chart grid's locked ±20% window can
+        // cut off the true worst/best case (see expiryExtremes).
+        const ex = expiryExtremes(legs);
+        const maxP = ex.maxP;
+        const minP = ex.minP;
         let maxProfitText = formatMoney(maxP);
         let maxLossText = formatMoney(minP);
         const tailSlope = rightTailSlope(legs);

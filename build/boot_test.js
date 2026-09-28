@@ -2011,6 +2011,67 @@ async function runAsyncDiscoveryTests() {
   });
 }
 
+// ---------- Q: exact max profit/loss over [0, ∞), not the chart-window grid (2026-09-28, user bug report) ----------
+{
+  const { ctx, els } = run('builder', '');
+  const j = (expr) => vm.runInContext(expr, ctx);
+  const tile = (id) => j(`document.getElementById('${id}').textContent`);
+  const bullPutSpread = () => {
+    j(`document.getElementById('spot').value = '100'`);
+    j(`legs = [
+      { side: 'sell', type: 'put', strike: 80, dte: 30, qty: 1, premium: 2.00, ticker: 'TST' },
+      { side: 'buy',  type: 'put', strike: 70, dte: 30, qty: 1, premium: 1.00, ticker: 'TST' },
+    ]`);
+    j(`applyRangeZoom(100)`); // lock ±20% -> [80,120]; both strikes at/below the left edge
+    j(`recalc()`);
+  };
+  check('Q1 max loss: bull put spread w/ strikes below window shows -$900 (width - credit)', () => {
+    bullPutSpread();
+    if (tile('maxLoss') !== '-$900') throw new Error('maxLoss=' + tile('maxLoss') + ' (want -$900)');
+  });
+  check('Q2 capital at risk follows the true max loss ($900)', () => {
+    if (tile('capitalAtRisk') !== '$900') throw new Error('capitalAtRisk=' + tile('capitalAtRisk'));
+  });
+  check('Q3 max profit: bull put spread capped at the $100 credit', () => {
+    if (tile('maxProfit') !== '$100') throw new Error('maxProfit=' + tile('maxProfit'));
+  });
+  check('Q4 bear call spread w/ strikes above window: max loss -$900, max profit $100', () => {
+    j(`legs = [
+      { side: 'sell', type: 'call', strike: 130, dte: 30, qty: 1, premium: 2.00, ticker: 'TST' },
+      { side: 'buy',  type: 'call', strike: 140, dte: 30, qty: 1, premium: 1.00, ticker: 'TST' },
+    ]`);
+    j(`recalc()`);
+    if (tile('maxLoss') !== '-$900') throw new Error('maxLoss=' + tile('maxLoss') + ' (want -$900)');
+    if (tile('maxProfit') !== '$100') throw new Error('maxProfit=' + tile('maxProfit') + ' (want $100)');
+  });
+  check('Q5 naked short call still reads Unlimited max loss', () => {
+    j(`legs = [{ side: 'sell', type: 'call', strike: 100, dte: 30, qty: 1, premium: 2.10, ticker: 'TST' }]`);
+    j(`recalc()`);
+    if (tile('maxLoss') !== 'Unlimited') throw new Error('maxLoss=' + tile('maxLoss'));
+  });
+  check('Q6 long call max loss is the premium paid (-$210)', () => {
+    j(`legs = [{ side: 'buy', type: 'call', strike: 100, dte: 30, qty: 1, premium: 2.10, ticker: 'TST' }]`);
+    j(`recalc()`);
+    if (tile('maxLoss') !== '-$210') throw new Error('maxLoss=' + tile('maxLoss'));
+  });
+  check('Q7 summarizeExpiry (B side / compare) uses expiryExtremes, not the grid', () => {
+    const src = j(`summarizeExpiry.toString()`);
+    if (src.indexOf('expiryExtremes') < 0) throw new Error('summarizeExpiry does not call expiryExtremes');
+  });
+  check('Q8 definedRiskMaxLoss agrees with the tile ($900) after the refactor', () => {
+    bullPutSpread();
+    const m = j(`definedRiskMaxLoss(legs)`);
+    if (Math.abs(m - 900) > 1e-6) throw new Error('definedRiskMaxLoss=' + m + ' (want 900)');
+  });
+  check('Q9 partition.py M3 recalc template uses expiryExtremes (M3-trap guard)', () => {
+    const py = fs.readFileSync(path.join(SITE, 'build', 'partition.py'), 'utf8');
+    const m = py.match(/new_recalc = """([\s\S]*?)"""/);
+    if (!m) throw new Error('new_recalc template not found');
+    if (m[1].indexOf('expiryExtremes(legs)') < 0) throw new Error('M3 template still uses grid min/max');
+    if (/Math\.(max|min)\.apply\(null, data\.expiry\)/.test(m[1])) throw new Error('M3 template still has grid extremes');
+  });
+}
+
 runAsyncDiscoveryTests().then(() => {
   console.log(failures ? `\n${failures} FAILURES` : '\nALL PASS');
   process.exit(failures ? 1 : 0);

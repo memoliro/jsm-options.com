@@ -102,8 +102,11 @@ new_recalc = """    function recalc() {
         paintNetPremium(document.getElementById('netPremium'), net);
 
         const data = buildChartData();
-        const maxP = Math.max.apply(null, data.expiry);
-        const minP = Math.min.apply(null, data.expiry);
+        // Exact extremes over [0, ∞): the chart grid's locked ±20% window can
+        // cut off the true worst/best case (see expiryExtremes).
+        const ex = expiryExtremes(legs);
+        const maxP = ex.maxP;
+        const minP = ex.minP;
         let maxProfitText = formatMoney(maxP);
         let maxLossText = formatMoney(minP);
         const tailSlope = rightTailSlope(legs);
