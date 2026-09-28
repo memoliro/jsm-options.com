@@ -37,6 +37,15 @@ function check(name, cond, extra) {
   else { failures++; console.log('  FAIL', name, extra || ''); }
 }
 
+// Static guards: the sidebar must list every section (no entry cap), and a
+// long TOC must scroll inside the sticky sidebar instead of overflowing.
+check('site.js has no sidebar entry cap', !/\.slice\(0,\s*\d+\)/.test(SITE_JS));
+const STYLE_CSS = fs.readFileSync(path.join(ROOT, 'assets/style.css'), 'utf8');
+check('style.css lets long TOCs scroll independently',
+  /\.page-toc nav\{[^}]*max-height:\s*calc\(100vh/.test(STYLE_CSS));
+check('style.css resets TOC scrolling on mobile',
+  /max-width:\s*800px\)[\s\S]*?\.page-toc nav\{[^}]*max-height:\s*none/.test(STYLE_CSS));
+
 // Zero-arg rect stub factory: jsdom gives every element a 0 rect, which would
 // make every section look "scrolled past". We stack sections vertically.
 function rectStub(top, height, scrollYRef) {
@@ -77,6 +86,20 @@ function testPage(rel) {
   //    readyState 'interactive': aside.page-toc built, sec-N ids assigned.
   try { window.eval(SITE_JS); } catch (e) { evalError = 'site.js: ' + e.message; }
   check('site.js boot: sidebar TOC built', !!document.querySelector('aside.page-toc nav'), evalError);
+  // No sidebar cap: every qualifying h1/h2 inside the rails wrap must have
+  // a TOC link (this is what cut the Strategies page off at 14 entries).
+  const wrapEl = document.querySelector('.page-main .wrap');
+  const wrapHeads = wrapEl
+    ? [...wrapEl.querySelectorAll('h1,h2')]
+        .filter((h) => h.textContent && h.textContent.trim().length > 1)
+    : [];
+  const tocHrefs = new Set(
+    [...document.querySelectorAll('aside.page-toc nav a')]
+      .map((a) => a.getAttribute('href')));
+  const unlisted = wrapHeads.filter((h) => h.id && !tocHrefs.has('#' + h.id));
+  check(`sidebar lists all ${wrapHeads.length} section headings (no cap)`,
+    wrapHeads.length > 0 && unlisted.length === 0,
+    unlisted.map((h) => h.id).join(', '));
   const secNIds = [...document.querySelectorAll('h2[id]')]
     .map((h) => h.id).filter((id) => /^sec-\d+$/.test(id));
 
