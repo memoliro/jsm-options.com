@@ -1333,6 +1333,16 @@ const el = (els, id) => els.get(id);
     if (!m) throw new Error('no .slice-bell rule');
     if (!/max-width\s*:\s*640px/.test(m[0])) throw new Error('bell not capped: ' + m[0]);
   });
+  check('M10 slices: two-column layout (bell left, target rows right)', () => {
+    const html = fs.readFileSync(path.join(SITE, 'builder', 'index.html'), 'utf8');
+    const bi = html.indexOf('class="slices-body"');
+    if (bi < 0) throw new Error('no .slices-body wrapper');
+    const bell = html.indexOf('id="sliceBell"'), list = html.indexOf('id="priceSlices"');
+    if (!(bi < bell && bell < list)) throw new Error('order wrong: body/bell/list');
+    const m = html.match(/\.slices-body\s*\{[^}]*\}/);
+    if (!m || !/display\s*:\s*flex/.test(m[0])) throw new Error('slices-body not flex');
+    if (!/class="slices-list"/.test(html.slice(bi, bi + 4000))) throw new Error('priceSlices not a slices-list column');
+  });
 }
 {
   const { ctx } = run('builder', '');

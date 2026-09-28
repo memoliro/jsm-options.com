@@ -371,6 +371,15 @@
     .slice-bell { width: 100%; max-width: 640px; height: auto; display: block; margin: 4px 0 6px; }
     /* max-width keeps the bell's SVG text (8.5 units) at UI-consistent sizes
        on wide screens instead of ballooning with the card (2026-09-27). */
+    /* Two-column price-slices layout (2026-09-28): bell on the left, editable
+       target rows stacked on the right; single column on narrow screens. */
+    .slices-body { display: flex; gap: 20px; align-items: flex-start; }
+    .slices-body > .slice-bell { flex: 1 1 640px; margin: 0; }
+    .slices-list { flex: 1 1 280px; min-width: 250px; display: flex; flex-direction: column; gap: 4px; padding-top: 2px; }
+    @media (max-width: 760px) {
+      .slices-body { flex-direction: column; }
+      .slices-list { min-width: 0; width: 100%; }
+    }
     .slice-bell text { font-family: 'Segoe UI', system-ui, sans-serif; }
     .slice-bell .mk-line { stroke: #2dd4bf; }
     .slice-bell .mk-label { fill: #2dd4bf; }
