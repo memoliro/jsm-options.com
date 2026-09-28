@@ -45,15 +45,24 @@
 
   /* ---------- collect sections ---------- */
   var labels = {};   // section id -> short label from the on-page nav
-  var navLinks = []; // {id, a} for active-link highlighting
-  document.querySelectorAll('nav.lesson-toc, nav.otp-nav').forEach(function (n) {
-    n.querySelectorAll('a[href^="#"]').forEach(function (a) {
-      var id = a.getAttribute('href').slice(1);
-      if (!id || labels[id]) return;
-      labels[id] = a.textContent.trim().replace(/\s+/g, ' ');
-      navLinks.push({ id: id, a: a });
+  var navLinks = []; // {id, a, cls} for active-link highlighting
+  function collectLinks(scope, cls) {
+    document.querySelectorAll(scope).forEach(function (n) {
+      n.querySelectorAll('a[href^="#"]').forEach(function (a) {
+        if (a.__spySeen) return;
+        a.__spySeen = true;
+        var id = a.getAttribute('href').slice(1);
+        if (!id) return;
+        // First label wins: the short pill-nav labels (collected first) take
+        // precedence over the sidebar's full heading text for the breadcrumb.
+        if (!labels[id]) labels[id] = a.textContent.trim().replace(/\s+/g, ' ');
+        navLinks.push({ id: id, a: a, cls: cls });
+      });
     });
-  });
+  }
+  collectLinks('nav.lesson-toc, nav.otp-nav', 'active');
+  // The sidebar TOC (aside.page-toc) is built by site.js on DOMContentLoaded,
+  // which runs after this defer script — its links are collected in collectLate() below.
 
   function cleanLabel(s) {
     // collapse whitespace, drop trailing arrow/dingbat ornaments (e.g. "Example ->")
@@ -65,6 +74,7 @@
   var seen = {};
   function consider(el) {
     if (!el || !el.id || seen[el.id]) return;
+    if (el.tagName === 'H1') return; // h1 is the page title: covered by the "Overview" default
     if (el.closest('header, footer, nav, .site-header, .site-footer')) return;
     seen[el.id] = true;
     var label = labels[el.id];
@@ -75,16 +85,29 @@
     sections.push({ id: el.id, el: el, label: label });
   }
 
-  // TOC targets first (any tag, e.g. div#risk-notes), then headings/articles.
-  Object.keys(labels).forEach(function (id) { consider(document.getElementById(id)); });
-  document.querySelectorAll('h2[id], h3[id], article[id]').forEach(consider);
+  function collectSections() {
+    // TOC targets first (any tag, e.g. div#risk-notes), then headings/articles.
+    Object.keys(labels).forEach(function (id) { consider(document.getElementById(id)); });
+    document.querySelectorAll('h2[id], h3[id], article[id]').forEach(consider);
+    // Reading order (the TOC-first pass may be out of order).
+    sections.sort(function (a, b) {
+      if (a.el === b.el) return 0;
+      return (a.el.compareDocumentPosition(b.el) & Node.DOCUMENT_POSITION_FOLLOWING) ? -1 : 1;
+    });
+  }
+  collectSections();
   if (!sections.length) return;
 
-  // Reading order (the TOC-first pass above may be out of order).
-  sections.sort(function (a, b) {
-    if (a.el === b.el) return 0;
-    return (a.el.compareDocumentPosition(b.el) & Node.DOCUMENT_POSITION_FOLLOWING) ? -1 : 1;
-  });
+  // site.js assigns sec-N ids to id-less headings on DOMContentLoaded — after
+  // this defer script has run. Re-collect then so every section is tracked and
+  // every sidebar link can highlight.
+  function collectSideToc() { collectLinks('aside.page-toc nav', 'is-active'); }
+  function collectLate() { collectSideToc(); collectSections(); update(); }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', collectLate);
+  } else {
+    collectLate();
+  }
 
   /* ---------- restructure breadcrumb: Home / Page / Section ---------- */
   function sepEl() {
@@ -117,7 +140,7 @@
     var s = currentId ? byId(currentId) : null;
     secSpan.textContent = s ? s.label : OVERVIEW;
     navLinks.forEach(function (t) {
-      t.a.classList.toggle('active', t.id === currentId);
+      t.a.classList.toggle(t.cls || 'active', t.id === currentId);
     });
   }
   function update() {
