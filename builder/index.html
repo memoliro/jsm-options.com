@@ -772,6 +772,11 @@
     .ba-ask{color:var(--green)}
     .ba:hover{background:rgba(59,130,246,.15);text-decoration:underline}
     .ba-sep{color:var(--muted);font-size:.72em;margin:0 1px}
+    /* Mobile: bigger tap targets on chain bid/ask + Add buttons */
+    @media (max-width:760px){
+      .chain-table .ba{padding:8px 7px;font-size:13px}
+      .chain-table .btn-add{padding:8px 10px;font-size:12px}
+    }
     /* Round 2 item 3: recent-builds dropdown */
     .recent-panel{z-index:60;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:8px;min-width:290px;max-width:350px;box-shadow:0 12px 32px rgba(0,0,0,.45)}
     .recent-item{display:flex;align-items:center;gap:8px;padding:8px;border-radius:8px;cursor:pointer;border:0;background:none;width:100%;text-align:left;color:var(--text);font:inherit;font-size:.82rem}

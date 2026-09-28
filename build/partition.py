@@ -554,7 +554,26 @@ sim_card = sim_card.replace(
         </div>
         <div style="font-size:0.72rem;color:var(--muted);margin-top:4px;">📅 Day-axis markers: <strong style="color:#f59e0b;">E</strong> = earnings · <strong style="color:#a78bfa;">D</strong> = ex-dividend (set the dates in Assumptions above)</div>''',
     1)
+assert '<label>Simulated drift (annual)' in sim_card
+sim_card = sim_card.replace(
+    '''<label>Simulated drift (annual) <strong id="simDriftLabel">0%</strong></label>''',
+    '''<label>Simulated drift (annual) <strong id="simDriftLabel">0%</strong></label>
+            <div style="font-size:0.72rem;color:var(--muted);margin-top:2px;">Average yearly trend of the simulated price path — +10% drifts upward, −10% drifts downward, 0% = no trend.</div>''',
+    1)
 summary_card = html[sum_i:gi]
+# Simulator: plain-English legend for model vs expiry P/L, and a gloss on 1σ.
+assert '<div class="label">Model P/L</div>' in summary_card
+summary_card = summary_card.replace(
+    '<h2>Position summary <span style="font-size:0.72rem;color:var(--muted);font-weight:500;">model vs expiry</span></h2>',
+    '<h2>Position summary <span style="font-size:0.72rem;color:var(--muted);font-weight:500;">model vs expiry</span></h2>\n'
+    '        <div style="font-size:0.78rem;color:var(--muted);margin:-2px 0 10px;"><b>Model P/L</b> = what the position is worth <b>right now</b> (time value included). '
+    '<b>Expiry P/L</b> = what it would be worth <b>at expiration</b> (intrinsic value only).</div>',
+    1)
+assert '<div class="label">Expected move (1σ)</div>' in summary_card
+summary_card = summary_card.replace(
+    '<div class="label">Expected move (1σ)</div>',
+    '<div class="label" title="One-standard-deviation expected move: roughly two-thirds of the time, the stock is expected to stay within this range by expiration. Same idea as the ±1σ band on the Builder chart.">Expected move (±1σ)</div>',
+    1)
 
 # greeks card: from comment through the card's closing </div>
 edu_i = html.find('id="eduTip"', gi)
@@ -641,11 +660,11 @@ assumptions = """  <div class="card">
         <input id="iv" type="number" value="25" step="1" min="1" max="200" oninput="recalc()" />
       </div>
       <div class="field">
-        <label>Rate (%)</label>
+        <label title="Risk-free interest rate used in option pricing. 5% is a typical default; it barely moves short-dated option values.">Rate (%)</label>
         <input id="rate" type="number" value="5" step="0.25" min="0" max="20" oninput="recalc()" />
       </div>
       <div class="field">
-        <label>Dividend (%)</label>
+        <label title="Annual dividend yield of the stock. Dividends slightly lower call values and raise put values; 0% is fine for non-payers.">Dividend (%)</label>
         <input id="divYield" type="number" value="0" step="0.1" min="0" max="15" oninput="recalc()" />
       </div>
       <div class="field">
@@ -677,6 +696,7 @@ sim_body = """<body>
   <div class="builder-wrap">
   <h1>Position Analyzer &amp; Simulator</h1>
   <p class="subtitle"><a href="/builder/">← Back to Builder</a> · Full position detail and what-if simulation for the setup sent from the Builder</p>
+  <p class="subtitle" style="margin-top:-8px;">New here? The <b>Builder</b> draws your strategy's profit/loss picture; this page takes that same position and <b>steps it forward day by day</b> — change the assumptions (price, volatility, time left) and watch what happens to its value <i>before</i> expiration. An educational model, not a prediction.</p>
 
   <div class="card" id="analyzeEmpty" style="display:none;">
     <h2>No position loaded</h2>

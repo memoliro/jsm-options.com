@@ -1358,6 +1358,17 @@ const el = (els, id) => els.get(id);
     if (!/\.slices-body\s*>\s*\.slice-bell\s*\{[^}]*flex\s*:\s*0\s+0\s+auto/.test(seg))
       throw new Error('narrow media query does not reset .slice-bell flex to 0 0 auto');
   });
+  check('M12 chain: narrow screens get bigger bid/ask + Add tap targets', () => {
+    const html = fs.readFileSync(path.join(SITE, 'builder', 'index.html'), 'utf8');
+    // find the 760px media query touching chain tap targets
+    let found = false;
+    for (let p = html.indexOf('@media (max-width:760px)'); p >= 0; p = html.indexOf('@media (max-width:760px)', p + 1)) {
+      const s = html.slice(p, p + 600);
+      if (/\.chain-table\s+\.ba\s*\{[^}]*padding\s*:\s*8px/.test(s) &&
+          /\.chain-table\s+\.btn-add\s*\{[^}]*padding\s*:\s*8px/.test(s)) { found = true; break; }
+    }
+    if (!found) throw new Error('no 760px media query enlarging .chain-table .ba / .btn-add tap targets');
+  });
 }
 {
   const { ctx } = run('builder', '');
