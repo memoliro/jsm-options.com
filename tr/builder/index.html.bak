@@ -651,22 +651,6 @@
         .pl-table th.ax-hover { background: rgba(122,162,255,0.22); color: var(--text); }
         .pl-table tbody td.ax-hover { box-shadow: inset 0 0 0 999px rgba(122,162,255,0.30); }
         .chain-table tr.atm-exact:hover td{background:rgba(59,130,246,.22)}
-    /* Tıklanabilir bid/ask */
-    .chain-table td.ba-cell{padding:3px 4px;white-space:nowrap;text-align:center}
-    .ba{background:none;border:0;cursor:pointer;font:inherit;font-size:12px;padding:3px 4px;border-radius:4px;font-variant-numeric:tabular-nums}
-    .ba-bid{color:var(--red)}
-    .ba-ask{color:var(--green)}
-    .ba:hover{background:rgba(59,130,246,.15);text-decoration:underline}
-    .ba-sep{color:var(--muted);font-size:.72em;margin:0 1px}
-    /* Son kurulumlar paneli */
-    .recent-panel{z-index:60;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:8px;min-width:290px;max-width:350px;box-shadow:0 12px 32px rgba(0,0,0,.45)}
-    .recent-item{display:flex;align-items:center;gap:8px;padding:8px;border-radius:8px;cursor:pointer;border:0;background:none;width:100%;text-align:left;color:var(--text);font:inherit;font-size:.82rem}
-    .recent-item:hover{background:rgba(59,130,246,.12)}
-    .recent-item .rt{font-weight:700;min-width:44px}
-    .recent-item .rl{color:var(--muted);font-size:.75rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-    .recent-item .rw{margin-left:auto;color:var(--muted);font-size:.72rem;white-space:nowrap}
-    .recent-del{background:none;border:0;color:var(--muted);cursor:pointer;font-size:.8rem;padding:2px 6px;border-radius:4px}
-    .recent-del:hover{color:var(--red);background:rgba(239,68,68,.1)}
 </style>
 
 <style id="jsm-mobile-nav">
@@ -828,7 +812,7 @@
       </div>
       <div class="field">
         <label>Hisse fiyatı ($)</label>
-        <input id="spot" type="number" value="100" step="0.5" min="1" oninput="onSpotInput()" onchange="resetSimulation()" />
+        <input id="spot" type="number" value="100" step="0.5" min="1" oninput="liveUpdate()" onchange="resetSimulation()" />
       </div>
       <div class="field">
         <label>IV (%)</label>
@@ -899,14 +883,22 @@
           <div class="btn-row">
             <button class="btn-primary btn-sm" onclick="addEmptyLeg()">+ Bacak ekle</button>
             <button class="btn-secondary btn-sm" onclick="clearLegs()">Tümünü sil</button>
-            <button class="btn-secondary btn-sm" id="recentBtn" onclick="toggleRecentPanel()" title="Son kurulumlarınız (yalnızca bu tarayıcıda saklanır)">🕘 Son</button>
           </div>
-          <div id="recentPanel" class="recent-panel" style="display:none"></div>
           <p style="font-size:0.7rem;color:var(--muted);margin-top:8px;">
             Debit = ödersiniz · Credit = alırsınız · <strong>Listelenen opsiyon:</strong> adet = kontrat (×100) · <strong>Vadeli opsiyon:</strong> kontrat bazlı çarpan · <strong>Hisse:</strong> adet = pay sayısı, maliyet = giriş fiyatı (Strike ve DTE yok sayılır)
           </p>
         </div>
         <div class="legs-summary-col">
+          <div class="pl-box pl-box-split">
+            <div class="pl-split">
+              <div style="font-size:0.68rem;color:var(--muted);">Model K/Z <span style="font-weight:400">(kalan süre · Bid değil)</span></div>
+              <div id="plValue" class="pl-value pl-positive">$0</div>
+            </div>
+            <div class="pl-split">
+              <div style="font-size:0.68rem;color:var(--muted);">Expiry K/Z <span style="font-weight:400">bu fiyatta</span></div>
+              <div id="plExpiry" class="pl-value pl-negative">$0</div>
+            </div>
+          </div>
           <div class="metrics">
             <div class="metric">
               <div class="label">Net Debit/Credit</div>
@@ -919,22 +911,6 @@
             <div class="metric">
               <div class="label">Maks. zarar</div>
               <div class="val" id="maxLoss">—</div>
-            </div>
-            <div class="metric">
-              <div class="label">Kâr olasılığı</div>
-              <div class="val" id="chanceProfit">—</div>
-            </div>
-            <div class="metric">
-              <div class="label">Riskte maks getiri</div>
-              <div class="val" id="maxReturnRisk">—</div>
-            </div>
-            <div class="metric">
-              <div class="label">Riskteki sermaye</div>
-              <div class="val" id="capitalAtRisk">—</div>
-            </div>
-            <div class="metric">
-              <div class="label">Tahm. teminat <span title="Reg-T tarzı tahmin — aracı kurumunuzun kuralları değişebilir" style="cursor:help">ⓘ</span></div>
-              <div class="val" id="estMargin">—</div>
             </div>
             <div class="metric">
               <div class="label">Break-Even</div>
@@ -1181,104 +1157,6 @@
       </div>
     </div>
   </div>
-
-    <div class="card" id="discoveryCard">
-      <h2>Strateji keşfi <span style="font-size:0.72rem;color:var(--muted);font-weight:500;">modellenmiş fiyatlar · tahm. istatistikler — Uygula seçimi A bacaklarına yükler</span></h2>
-      <div class="discovery-grid">
-        <div class="disc-panel">
-          <h3>Optimizer lite</h3>
-          <div class="disc-form">
-            <label>Aile
-              <select id="optFamily">
-                <option value="bullcall">Boğa call</option>
-                <option value="bearput">Ayı put</option>
-                <option value="bullput">Boğa put</option>
-                <option value="bearcall">Ayı call</option>
-                <option value="strangle">Uzun strangle</option>
-              </select>
-            </label>
-            <label>Hedef fiyat
-              <input id="optTarget" type="number" step="0.5" min="0.01" placeholder="spot" />
-            </label>
-            <label>Hedef vade
-              <select id="optExpiry"></select>
-            </label>
-            <label id="optDteWrap" style="display:none">Model DTE
-              <input id="optDte" type="number" value="30" min="1" />
-            </label>
-            <label>Hedef
-              <select id="optGoal">
-                <option value="roc">Maks ROC</option>
-                <option value="pop">Maks POP</option>
-                <option value="profit">Maks kâr</option>
-              </select>
-            </label>
-            <button type="button" class="btn-primary btn-sm" onclick="runOptimizerScan()">Stratejileri tara</button>
-          </div>
-          <div id="optResults" class="disc-results"><p class="disc-empty">Bir aile seçip tarayın — hedefinize göre ilk 5 burada görünür.</p></div>
-        </div>
-        <div class="disc-panel">
-          <h3>Opsiyon bulucu</h3>
-          <div class="disc-form">
-            <label>Beklenen fiyat
-              <input id="findTarget" type="number" step="0.5" min="0.01" placeholder="spot" />
-            </label>
-            <label>Beklenen tarih
-              <select id="findExpiry"></select>
-            </label>
-            <label id="findDteWrap" style="display:none">Model DTE
-              <input id="findDte" type="number" value="30" min="1" />
-            </label>
-            <label>Yön
-              <select id="findDir">
-                <option value="auto">Otomatik</option>
-                <option value="long">Uzun</option>
-                <option value="short">Kısa</option>
-              </select>
-            </label>
-            <label>Maks zarar limiti $
-              <input id="findCap" type="number" step="10" min="0" placeholder="yok" />
-            </label>
-            <button type="button" class="btn-primary btn-sm" onclick="runFinder()">Opsiyon bul</button>
-          </div>
-          <div id="findResults" class="disc-results"><p class="disc-empty">Fiyatın nereye gideceğini düşündüğünüzü girin — hedefteki kâra göre ilk 5 burada görünür.</p></div>
-        </div>
-      </div>
-      <p class="disc-note">Adaylar, zincir yüklüyse strike başına zincir IV'si ile Black-Scholes kullanılarak fiyatlanır, aksi takdirde IV girişi kullanılır. İstatistikler tahmindir — aracı kurumunuzun gerçekleşmeleri farklı olacaktır.</p>
-    </div>
-
-    <div class="card" id="rollCard">
-      <h2>Roll analizörü <span style="font-size:0.72rem;color:var(--muted);font-weight:500;">what-if modeli · emir iletilmez</span></h2>
-      <p class="disc-note" style="margin-top:0">Roll, bir bacağı kapatıp yeni bir strike veya vadede yeniden açar — genellikle daha fazla zaman kazanmak veya yönü ayarlamak için. Bu, roll'un maliyetini ve pozisyonun nasıl değişeceğini modeller. Burada hiçbir işlem emri iletilmez.</p>
-      <div class="disc-form">
-        <label>Roll edilecek bacak
-          <select id="rollLeg" onchange="onRollLegChange();disarmRollQuiet()"></select>
-        </label>
-        <label>Yeni vade
-          <select id="rollExpiry" onchange="disarmRollQuiet()"></select>
-        </label>
-        <label id="rollDteWrap" style="display:none">Model DTE
-          <input id="rollDte" type="number" value="60" min="1" oninput="disarmRollQuiet()" />
-        </label>
-        <label>Yeni strike
-          <input id="rollStrike" type="number" step="0.5" min="0.01" oninput="disarmRollQuiet()" />
-        </label>
-        <button type="button" class="btn-primary btn-sm" onclick="modelRoll()">Roll'u modelle</button>
-      </div>
-      <div id="rollResults" class="disc-results"><p class="disc-empty">Bir bacak, yeni vade ve strike seçin — modellenmiş maliyet ve yeni istatistikler burada görünür.</p></div>
-    </div>
-
-    <div class="card" id="paperCard">
-      <h2>Kâğıt işlemler <span style="font-size:0.72rem;color:var(--muted);font-weight:500;">varsayımsal günlük · gerçek pozisyon değil</span></h2>
-      <p class="disc-note" style="margin-top:0">Mevcut kurulumu kâğıt işlem olarak kaydedin ve nasıl performans göstereceğini görün. Değerler, zincir yüklüyse gecikmeli zincirden, aksi takdirde modelden yeniden fiyatlanır. Burada hiçbir şey gerçek pozisyon değildir ve hiçbir işlem emri iletilmez.</p>
-      <div class="disc-form">
-        <label>Not (isteğe bağlı)
-          <input id="paperNote" type="text" placeholder="örn. SPY boğa spread" maxlength="80" />
-        </label>
-        <button type="button" class="btn-primary btn-sm" onclick="savePaperTrade()">Kâğıt işlemi kaydet</button>
-      </div>
-      <div id="paperResults" class="disc-results"><p class="disc-empty">Henüz kâğıt işlem yok — yukarıdan kaydedin.</p></div>
-    </div>
 
   <div class="card bmc-card">
     <h2>Siteyi destekleyin</h2>
@@ -1972,6 +1850,7 @@ Risk Reversal (synthetic tilt)
       legs = t.map(leg => ({ ...leg, id: nextId++, premiumManual: false }));
       if (chart) { try { chart.destroy(); } catch (e) {} chart = null; }
       syncDTESlider();
+      updateSpotSliderRange();
       refreshModeledPremiums(legs);
       if (typeof applyChainQuotesToLegs === 'function') applyChainQuotesToLegs(legs, { snapStrikes: true, setDte: true });
       renderLegs();
@@ -2124,7 +2003,7 @@ Risk Reversal (synthetic tilt)
         }
       }
       if (field === 'dte' || field === 'type') syncDTESlider();
-      if (field === 'strike' || field === 'type')
+      if (field === 'strike' || field === 'type') updateSpotSliderRange();
       // Re-render only when structure changes or on blur — never on every keystroke
       if (!liveTyping) {
         renderLegs();
@@ -2259,6 +2138,18 @@ Risk Reversal (synthetic tilt)
           '<div class="cash-line ' + cashCls + '">' + cashLabel + '</div>'
         );
       }).join('');
+    }
+
+    function updateSpotSliderRange() {
+      if (!legs.length) return;
+      const strikes = legs.filter(l => l.type !== 'stock').map(l => l.strike);
+      const S = parseFloat(document.getElementById('spot').value) || 100;
+      const all = strikes.length ? strikes : [S];
+      const lo = Math.min(S, ...all) * 0.55;
+      const hi = Math.max(S, ...all) * 1.55;
+      const slider = document.getElementById('spotSlider');
+      slider.min = Math.max(1, Math.floor(lo));
+      slider.max = Math.ceil(hi);
     }
 
     function getParams() {
@@ -2425,19 +2316,10 @@ Risk Reversal (synthetic tilt)
       const gS = 'rgba(34,197,94,0.95)', rS = 'rgba(239,68,68,0.95)';
       const gD = 'rgba(34,197,94,0.65)', rD = 'rgba(239,68,68,0.65)';
       const bS = 'rgba(167,139,250,0.95)', bD = 'rgba(167,139,250,0.62)';
-      // % modu: verileri paydaya göre ölçekle
-      const pctMode = (typeof plMetric !== 'undefined' && plMetric !== '$');
-      const dA = pctMode ? plDenomFor(legs, data.expiry) : 1;
-      const hasB = compareMode && data.expiryB && data.expiryB.length;
-      const dB = (pctMode && hasB) ? plDenomFor(legsB, data.expiryB) : 1;
-      function scaleY(arr, d) { return d ? arr.map(function(y) { return y / d; }) : arr.slice(); }
-      const exA = scaleY(data.expiry, dA), thA = scaleY(data.theoretical, dA);
-      const exB = scaleY(data.expiryB, dB), thB = scaleY(data.theoreticalB, dB);
-      const pctSuffix = pctMode ? ' (%)' : '';
       const sets = [
         {
-          label: (compareMode ? 'A · Payoff (Expiry)' : 'Payoff (Expiry)') + pctSuffix,
-          data: exA,
+          label: compareMode ? 'A · Payoff (Expiry)' : 'Payoff (Expiry)',
+          data: data.expiry,
           borderColor: gS,
           borderWidth: 2.5,
           pointRadius: 0,
@@ -2446,8 +2328,8 @@ Risk Reversal (synthetic tilt)
           segment: { borderColor: function(ctx) { return segmentColor(ctx, gS, rS); } }
         },
         {
-          label: (compareMode ? 'A · time left' : 'Theoretical (time left)') + pctSuffix,
-          data: thA,
+          label: compareMode ? 'A · time left' : 'Theoretical (time left)',
+          data: data.theoretical,
           borderColor: gD,
           borderWidth: 2,
           borderDash: [6, 4],
@@ -2459,8 +2341,8 @@ Risk Reversal (synthetic tilt)
       ];
       if (compareMode && data.expiryB && data.expiryB.length) {
         sets.push({
-          label: 'B · Payoff (Expiry)' + pctSuffix,
-          data: exB,
+          label: 'B · Payoff (Expiry)',
+          data: data.expiryB,
           borderColor: bS,
           borderWidth: 2.5,
           pointRadius: 0,
@@ -2468,8 +2350,8 @@ Risk Reversal (synthetic tilt)
           fill: false
         });
         sets.push({
-          label: 'B · time left' + pctSuffix,
-          data: thB,
+          label: 'B · time left',
+          data: data.theoreticalB,
           borderColor: bD,
           borderWidth: 2,
           borderDash: [5, 4],
@@ -2529,12 +2411,12 @@ Risk Reversal (synthetic tilt)
             x: {
               type: 'linear',
               title: { display: true, text: 'Underlying ($)', color: tc.text },
-              ticks: { color: tc.text, callback: function(v) { return (typeof plMetric !== 'undefined' && plMetric !== '$') ? v.toFixed(0) + '%' : '$' + v.toFixed(0); } },
+              ticks: { color: tc.text, callback: function(v) { return '$' + v.toFixed(0); } },
               grid: { color: tc.grid }
             },
             y: {
               title: { display: true, text: 'K/Z ($)', color: tc.text },
-              ticks: { color: tc.text, callback: function(v) { return (typeof plMetric !== 'undefined' && plMetric !== '$') ? v.toFixed(0) + '%' : '$' + v.toFixed(0); } },
+              ticks: { color: tc.text, callback: function(v) { return '$' + v.toFixed(0); } },
               grid: { color: tc.grid }
             }
           }
@@ -2826,6 +2708,8 @@ Risk Reversal (synthetic tilt)
           const price = priceAtClientX(e.clientX);
           if (price && isFinite(price) && price > 0) {
             document.getElementById('spot').value = price.toFixed(2);
+            const sl = document.getElementById('spotSlider');
+            if (sl) sl.value = price;
             recalc();
           }
         }
@@ -3050,7 +2934,7 @@ Risk Reversal (synthetic tilt)
     else initTemplatePreviews();
 
     function liveUpdate() {
-      if (typeof syncIvSlider === 'function') syncIvSlider();
+      updateSpotSliderRange();
       if (refreshAllModeledPremiums()) {
         if (typeof renderLegs === 'function') renderLegs();
         if (typeof renderLegsB === 'function' && compareMode) renderLegsB();
@@ -3067,6 +2951,8 @@ Risk Reversal (synthetic tilt)
       const daysLeft = params.daysLeft;
       const pl = plAt(S, daysLeft);
       const expPl = expiryPayoff(S);
+      paintPL(document.getElementById('plValue'), pl);
+      paintPL(document.getElementById('plExpiry'), expPl);
       paintPL(document.getElementById('posExpiryPL'), expPl);
 
       const net = initialCost();
@@ -3096,32 +2982,6 @@ Risk Reversal (synthetic tilt)
       document.getElementById('maxProfit').textContent = maxProfitText;
       document.getElementById('maxLoss').textContent = maxLossText;
 
-      // Kâr olasılığı, riskte getiri, riskteki sermaye, tahm. teminat
-      try {
-        const tailSlope = rightTailSlope(legs);
-        const rrA = riskReturnStats(maxP, minP, tailSlope);
-        const rorEl = document.getElementById('maxReturnRisk');
-        const capEl = document.getElementById('capitalAtRisk');
-        if (rorEl) rorEl.textContent = rrA.ror;
-        if (capEl) capEl.textContent = rrA.cap;
-        const cpEl = document.getElementById('chanceProfit');
-        if (cpEl) {
-          const popV = (typeof probOfProfit === 'function') ? probOfProfit() : null;
-          cpEl.textContent = (popV == null || !isFinite(popV)) ? '—' : (popV * 100).toFixed(0) + '%';
-        }
-        const mEl = document.getElementById('estMargin');
-        if (mEl) {
-          const m = estimateMargin();
-          if (m && isFinite(m.amount)) {
-            mEl.textContent = formatMoney(m.amount) + ' tahm.';
-            mEl.title = m.basis + ' — Reg-T tarzı tahmin; aracı kurumunuzun kuralları değişebilir.';
-          } else {
-            mEl.textContent = '—';
-            mEl.title = '';
-          }
-        }
-      } catch (e) {}
-
       const bes = [];
       for (let i = 1; i < data.expiry.length; i++) {
         if (data.expiry[i - 1] * data.expiry[i] <= 0) {
@@ -3133,15 +2993,13 @@ Risk Reversal (synthetic tilt)
         }
       }
       document.getElementById('breakevens').textContent = bes.length ? bes.map(function(b) { return '$' + b; }).join(' / ') : '—';
+      document.getElementById('spotLabel').textContent = '$' + S.toFixed(2);
       document.getElementById('daysLeftLabel').textContent = daysLeft;
 
       crosshairS = S;
       crosshairPL = pl;
       updateChart();
-      if (typeof chartView !== 'undefined' && chartView === 'table' && typeof renderPlTable === 'function') renderPlTable();
       updateComparePanel(data, params);
-      if (typeof refreshSlices === 'function') refreshSlices();
-      if (typeof markBuildDirty === 'function') { markBuildDirty(); scheduleRecentSave(); }
       updateGreeksUI();
       updateEduTip();
       if (simHistory.length) {
@@ -3198,618 +3056,11 @@ Risk Reversal (synthetic tilt)
       recalc();
     }
 
-    // Implied volatility slider (builder chart controls): drives the same #iv
-    // field the setup card uses, so the theoretical P/L curve, the P&L table
-    // and modeled premiums all reprice together. Two-way synced: chain loads
-    // (seedIvFromAtm) and manual #iv edits move the thumb via syncIvSlider().
-    function onIvSliderChange() {
-      const slider = document.getElementById('ivSlider');
-      const v = slider ? (parseFloat(slider.value) || 25) : 25;
-      const ivEl = document.getElementById('iv');
-      if (ivEl) ivEl.value = v;
-      const lbl = document.getElementById('ivSliderLabel');
-      if (lbl) lbl.textContent = v + '%';
-      liveUpdate();
-    }
-    function syncIvSlider() {
-      const ivEl = document.getElementById('iv');
-      const slider = document.getElementById('ivSlider');
-      if (!ivEl || !slider) return;
-      const v = parseFloat(ivEl.value);
-      if (!(v > 0)) return;
-      slider.value = Math.max(parseFloat(slider.min) || 5, Math.min(parseFloat(slider.max) || 120, Math.round(v)));
-      const lbl = document.getElementById('ivSliderLabel');
-      if (lbl) lbl.textContent = Math.round(v) + '%';
-    }
-    // Range slider: the price window shared by the payoff chart and the P&L
-    // table (± % around the underlying). Locked by default; pinch gestures
-    // can take over, double-tap/reset restores the lock.
-    let rangeZoomActive = false;
-    function applyRangeZoom(S) {
-      const pct = parseFloat(document.getElementById('chartRange').value) || 20;
-      const r = pct / 100;
-      chartZoom = { min: Math.max(0, S * (1 - r)), max: S * (1 + r) };
-    }
-    function onRangeChange() {
-      const pct = parseFloat(document.getElementById('chartRange').value) || 20;
-      const lbl = document.getElementById('rangeLabel');
-      if (lbl) lbl.textContent = '±' + pct + '%';
-      rangeZoomActive = true;
-      const S = parseFloat(document.getElementById('spot').value) || 100;
-      applyRangeZoom(S);
-      updateChart();
-      if (typeof chartView !== 'undefined' && chartView === 'table') renderPlTable();
-    }
-    function recenterRangeIfSpotEscaped(S) {
-      if (rangeZoomActive && chartZoom && (S < chartZoom.min || S > chartZoom.max)) applyRangeZoom(S);
-    }
-    function onSpotInput() {
-      const v = parseFloat(document.getElementById('spot').value);
-      if (v > 0) {
-        emAnchorSpot = v;
-        recenterRangeIfSpotEscaped(v);
-      }
-      liveUpdate();
-    }
-
-    // ===== Fiyat dilimleri (hedef fiyatlar + olasılıklar) =====
-    let emAnchorSpot = null;
-    function emRefSpot() {
-      if (!(emAnchorSpot > 0)) {
-        const spotEl = document.getElementById('spot');
-        const s = spotEl ? parseFloat(spotEl.value) || 0 : 0;
-        if (s > 0) emAnchorSpot = s;
-      }
-      return emAnchorSpot > 0 ? emAnchorSpot : 0;
-    }
-    function expectedMove() {
-      if (!legs.length) return null;
-      const p = getParams();
-      const optionDtes = [];
-      for (let i = 0; i < legs.length; i++) {
-        if (legs[i].type !== 'stock' && !legIsIncomplete(legs[i])) optionDtes.push(legs[i].dte);
-      }
-      const S = emRefSpot();
-      if (!optionDtes.length || !(p.iv > 0) || !(S > 0)) return null;
-      const minDte = Math.min.apply(null, optionDtes);
-      return S * p.iv * Math.sqrt(Math.max(minDte, 1) / 365);
-    }
-    function probTouchRaw(S, K, T, sig, r, q) {
-      if (!(S > 0) || !(K > 0) || !(T >= 0)) return null;
-      if (K === S) return 1;
-      if (!(sig > 0) || !(T > 0)) return 0;
-      const mu = r - q - sig * sig / 2;
-      const z = -Math.abs(Math.log(S / K) - mu * T) / (sig * Math.sqrt(T));
-      return Math.max(0, Math.min(1, 2 * normCDF(z)));
-    }
-    function probExpireBeyondRaw(S, K, T, sig, r, q) {
-      if (!(S > 0) || !(K > 0) || !(T >= 0)) return null;
-      if (!(sig > 0) || !(T > 0)) {
-        const fwd = S * Math.exp((r - q) * T);
-        return K >= S ? (fwd > K ? 1 : 0) : (fwd < K ? 1 : 0);
-      }
-      const mu = Math.log(S) + (r - q - 0.5 * sig * sig) * T;
-      const sd = sig * Math.sqrt(T);
-      const z = (Math.log(K) - mu) / sd;
-      return K >= S ? 1 - normCDF(z) : normCDF(z);
-    }
-    function sliceHorizon() {
-      if (!legs.length) return null;
-      const p = getParams();
-      const S = emRefSpot();
-      if (!(S > 0) || !(p.iv > 0)) return null;
-      const dtes = [];
-      for (let i = 0; i < legs.length; i++) {
-        if (legs[i].type !== 'stock' && !legIsIncomplete(legs[i])) dtes.push(legs[i].dte);
-      }
-      if (!dtes.length) return null;
-      return { S: S, iv: p.iv, T: Math.max(Math.min.apply(null, dtes), 1) / 365, r: p.r, q: p.q };
-    }
-    function probTouch(K) {
-      const hh = sliceHorizon();
-      return hh ? probTouchRaw(hh.S, K, hh.T, hh.iv, hh.r, hh.q) : null;
-    }
-    function probExpireBeyond(K) {
-      const hh = sliceHorizon();
-      return hh ? probExpireBeyondRaw(hh.S, K, hh.T, hh.iv, hh.r, hh.q) : null;
-    }
-    const MAX_SLICES = 4;
-    let priceSlices = [];
-    let slicesAuto = true;
-    function roundSlice(x) { return Math.round(x * 100) / 100; }
-    function refreshSlices() {
-      const wrap = document.getElementById('priceSlicesWrap');
-      if (!wrap) return;
-      if (!legs.length) { priceSlices = []; renderSlices(); return; }
-      if (slicesAuto) {
-        const em = expectedMove();
-        const S = emRefSpot();
-        const want = (em && S > 0)
-          ? [roundSlice(Math.max(0.01, S - em)), roundSlice(S + em)]
-          : [];
-        const cur = priceSlices.map(function(s) { return s.price; });
-        const same = cur.length === want.length &&
-          cur.every(function(v, i) { return Math.abs(v - want[i]) < 1e-9; });
-        if (!same) { priceSlices = want.map(function(p) { return { price: p }; }); renderSlices(); }
-        else updateSliceChips();
-        return;
-      }
-      updateSliceChips();
-    }
-    function renderSlices() {
-      const host = document.getElementById('priceSlices');
-      const wrap = document.getElementById('priceSlicesWrap');
-      if (!host || !wrap) return;
-      wrap.style.display = legs.length ? '' : 'none';
-      host.innerHTML = '';
-      priceSlices.forEach(function(s, i) {
-        const row = document.createElement('div');
-        row.className = 'slice-row';
-        const inp = document.createElement('input');
-        inp.type = 'number'; inp.className = 'slice-price'; inp.step = 'any';
-        inp.value = s.price; inp.setAttribute('aria-label', 'Dilim hedef fiyatı ' + (i + 1));
-        inp.oninput = function() { onSliceInput(i, inp); };
-        const pot = document.createElement('span');
-        pot.className = 'slice-chip'; pot.id = 'slicePot' + i;
-        pot.title = 'Vade öncesi bu fiyata en az bir kez temas olasılığı (tahmini).';
-        const bey = document.createElement('span');
-        bey.className = 'slice-chip'; bey.id = 'sliceBey' + i;
-        const x = document.createElement('button');
-        x.type = 'button'; x.className = 'slice-x'; x.textContent = '✕';
-        x.title = 'Dilimi kaldır'; x.setAttribute('aria-label', 'Dilim ' + (i + 1) + ' kaldır');
-        x.onclick = function() { removeSlice(i); };
-        row.appendChild(inp); row.appendChild(pot); row.appendChild(bey); row.appendChild(x);
-        host.appendChild(row);
-      });
-      updateSliceAddBtn();
-      updateSliceChips();
-    }
-    function updateSliceChips() {
-      const S = emRefSpot();
-      priceSlices.forEach(function(s, i) {
-        const potEl = document.getElementById('slicePot' + i);
-        const beyEl = document.getElementById('sliceBey' + i);
-        if (!potEl || !beyEl) return;
-        const pt = probTouch(s.price), be = probExpireBeyond(s.price);
-        if (pt == null) { potEl.textContent = 'PoT —'; potEl.classList.add('dim'); }
-        else { potEl.textContent = 'PoT %' + (pt * 100).toFixed(0); potEl.classList.remove('dim'); }
-        const dir = s.price >= S ? 'üstünde' : 'altında';
-        if (be == null) { beyEl.textContent = 'P(' + dir + ') —'; beyEl.classList.add('dim'); }
-        else {
-          beyEl.textContent = 'P(' + dir + ') %' + (be * 100).toFixed(0);
-          beyEl.classList.remove('dim');
-          beyEl.title = 'Vade sonunda fiyatın $' + s.price + ' ' + dir + ' bitme olasılığı (tahmini, lognormal).';
-        }
-      });
-      if (typeof renderSliceBell === 'function') renderSliceBell();
-    }
-    function updateSliceAddBtn() {
-      const b = document.getElementById('sliceAddBtn');
-      if (b) b.disabled = priceSlices.length >= MAX_SLICES;
-    }
-    function addSlice() {
-      if (priceSlices.length >= MAX_SLICES) return;
-      const S = emRefSpot();
-      priceSlices.push({ price: roundSlice(S > 0 ? S : 100) });
-      slicesAuto = false;
-      renderSlices();
-    }
-    function removeSlice(i) {
-      priceSlices.splice(i, 1);
-      slicesAuto = false;
-      renderSlices();
-    }
-    function onSliceInput(i, el) {
-      const v = parseFloat(el.value);
-      if (isFinite(v) && v > 0) { priceSlices[i].price = v; slicesAuto = false; }
-      updateSliceChips();
-    }
-    function resetSlicesAuto() {
-      slicesAuto = true;
-      refreshSlices();
-    }
-    function renderSliceBell() {
-      const svg = document.getElementById('sliceBell');
-      if (!svg) return;
-      const S = emRefSpot();
-      const em = expectedMove();
-      if (!(S > 0) || !(em > 0)) { svg.innerHTML = ''; return; }
-      const W = 200, H = 60;
-      const lo = S - 2 * em, hi = S + 2 * em;
-      function x(p) { return 10 + (p - lo) / (hi - lo) * (W - 20); }
-      function y(p) {
-        const z = (p - S) / em;
-        const d = Math.exp(-0.5 * z * z);
-        return H - 8 - d * (H - 20);
-      }
-      let path = 'M ' + x(lo).toFixed(1) + ' ' + y(lo).toFixed(1);
-      for (let i = 1; i <= 40; i++) {
-        const p = lo + (hi - lo) * i / 40;
-        path += ' L ' + x(p).toFixed(1) + ' ' + y(p).toFixed(1);
-      }
-      let markers = '';
-      priceSlices.forEach(function(s) {
-        if (s.price >= lo && s.price <= hi) {
-          markers += '<line x1="' + x(s.price).toFixed(1) + '" y1="8" x2="' + x(s.price).toFixed(1) + '" y2="' + (H-8) + '" stroke="#2dd4bf" stroke-width="2"/>';
-        }
-      });
-      svg.innerHTML = '<path d="' + path + '" fill="rgba(59,130,246,.25)" stroke="#3b82f6" stroke-width="2"/>' + markers +
-        '<line x1="' + x(S).toFixed(1) + '" y1="8" x2="' + x(S).toFixed(1) + '" y2="' + (H-8) + '" stroke="#3b82f6" stroke-width="1" stroke-dasharray="3,2"/>';
-      svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
-    }
-
-    // ===== K/Z veri tablosu (fiyat × tarih) =====
-    // Görünüm değiştirme (grafik/tablo) + değer modu ($ / maks risk % / giriş maliyeti %).
-    let chartView = 'chart'; // 'chart' | 'table'
-    let plMetric = '$';      // '$' | 'risk' | 'cost'
-
-    function setChartView(v) {
-      chartView = v;
-      const cb = document.getElementById('viewChartBtn');
-      const tb = document.getElementById('viewTableBtn');
-      if (cb) cb.classList.toggle('active', v === 'chart');
-      if (tb) tb.classList.toggle('active', v === 'table');
-      const cc = document.getElementById('chartContainer');
-      const tw = document.getElementById('plTableWrap');
-      const note = document.getElementById('plTableNote');
-      const gh = document.querySelector('.gesture-hint');
-      if (cc) cc.style.display = v === 'chart' ? '' : 'none';
-      if (tw) tw.style.display = v === 'table' ? '' : 'none';
-      if (note) note.style.display = v === 'table' ? '' : 'none';
-      if (gh) gh.style.display = v === 'chart' ? '' : 'none';
-      if (v === 'table') renderPlTable();
-    }
-
-    function setPlMetric(m) {
-      plMetric = m;
-      const btns = document.querySelectorAll('[data-plmetric]');
-      for (let i = 0; i < btns.length; i++) {
-        btns[i].classList.toggle('active', btns[i].getAttribute('data-plmetric') === m);
-      }
-      if (typeof updateChart === 'function') updateChart();
-      if (chartView === 'table') renderPlTable();
-    }
-
-    function rightTailSlope(legsArr) {
-      let slope = 0;
-      const list = legsArr || legs;
-      for (let i = 0; i < list.length; i++) {
-        const leg = list[i];
-        if (leg.type === 'put') continue;
-        if (leg.type === 'call' || leg.type === 'stock') {
-          slope += signedQty(leg) * legShareMult(leg);
-        }
-      }
-      return slope;
-    }
-
-    function riskDenomFor(legsArr, expiryArr) {
-      if (rightTailSlope(legsArr) < 0) return null;
-      if (!expiryArr || !expiryArr.length) return null;
-      const minP = Math.min.apply(null, expiryArr);
-      return minP < 0 ? -minP : null;
-    }
-    function costDenomFor(legsArr) {
-      const c = Math.abs(initialCost(legsArr));
-      return c > 0 ? c : null;
-    }
-    function plDenomFor(legsArr, expiryArr) {
-      if (plMetric === 'risk') return riskDenomFor(legsArr, expiryArr);
-      if (plMetric === 'cost') return costDenomFor(legsArr);
-      return 1;
-    }
-    function plMetricDenom() {
-      if (plMetric === '$') return 1;
-      const data = buildChartData();
-      return plDenomFor(legs, data.expiry);
-    }
-
-    function formatPlMetric(v) {
-      if (!isFinite(v)) return '—';
-      if (plMetric === '$') {
-        const a = Math.abs(v);
-        const body = a >= 100 ? a.toFixed(0) : a.toFixed(2);
-        if (parseFloat(body) === 0) return body;
-        return (v < 0 ? '-' : (v > 0 ? '+' : '')) + body;
-      }
-      const d = plMetricDenom();
-      if (!(d > 0)) return '—';
-      const pct = v / d * 100;
-      if (!isFinite(pct)) return '—';
-      const r = pct.toFixed(0);
-      if (parseFloat(r) === 0) return '0%';
-      return (pct > 0 ? '+' : '') + r + '%';
-    }
-
-    function formatCrosshairPL(chY, chPct, crosshairPL) {
-      if (chPct) {
-        if (parseFloat(chY.toFixed(1)) === 0) return '0.0%';
-        return (chY >= 0 ? '+' : '') + chY.toFixed(1) + '%';
-      }
-      if (parseFloat(crosshairPL.toFixed(0)) === 0) return '$0';
-      return (crosshairPL >= 0 ? '+' : '') + '$' + crosshairPL.toFixed(0);
-    }
-
-    function legIsIncomplete(leg) {
-      return !!(leg && leg.type !== 'stock' && (leg.strike == null || !isFinite(leg.strike)));
-    }
-
-    function popOf(legsArr) {
-      if (!legsArr || !legsArr.length) return null;
-      const p = getParams();
-      const S = p.S, iv = p.iv, r = p.r, q = p.q;
-      const optionDtes = [];
-      for (let i = 0; i < legsArr.length; i++) {
-        if (legsArr[i].type !== 'stock' && !legIsIncomplete(legsArr[i])) optionDtes.push(legsArr[i].dte);
-      }
-      if (!optionDtes.length || !(iv > 0) || !(S > 0)) return null;
-      const minDte = Math.min.apply(null, optionDtes);
-      const T = Math.max(minDte, 1) / 365;
-      const sigma = Math.max(iv, 0.005);
-      const cost = initialCost(legsArr);
-      function payoffExp(x) {
-        return positionValueAt(x, 0, true, legsArr) - cost;
-      }
-      const lo = Math.max(0.01, S * 0.05);
-      const hi = Math.max(S * 4, S + 1);
-      const N = 300;
-      const bes = [];
-      let px = lo, py = payoffExp(lo);
-      for (let i = 1; i <= N; i++) {
-        const x = lo + (hi - lo) * i / N;
-        const y = payoffExp(x);
-        if (py === 0) { bes.push(px); }
-        else if (y === 0) { bes.push(x); }
-        else if (py * y < 0) {
-          let a = px, b = x, fa = py;
-          for (let j = 0; j < 50; j++) {
-            const m = (a + b) / 2, fm = payoffExp(m);
-            if (fa * fm <= 0) { b = m; } else { a = m; fa = fm; }
-          }
-          bes.push((a + b) / 2);
-        }
-        px = x; py = y;
-      }
-      bes.sort(function(a, b) { return a - b; });
-      const uniq = [];
-      for (let i = 0; i < bes.length; i++) {
-        if (!uniq.length || bes[i] - uniq[uniq.length - 1] > Math.max(0.05, S * 0.002)) uniq.push(bes[i]);
-      }
-      const mu = Math.log(S) + (r - q - 0.5 * sigma * sigma) * T;
-      const sd = sigma * Math.sqrt(T);
-      function cdf(x) {
-        if (x <= 0) return 0;
-        if (!isFinite(x)) return 1;
-        return normCDF((Math.log(x) - mu) / sd);
-      }
-      let pop = 0;
-      const bounds = [0].concat(uniq).concat([Infinity]);
-      for (let i = 0; i < bounds.length - 1; i++) {
-        const a = bounds[i], b = bounds[i + 1];
-        let mid;
-        if (a === 0) mid = Math.min(b, S) / 2;
-        else if (b === Infinity) mid = Math.max(a * 1.5, S * 2);
-        else mid = (a + b) / 2;
-        if (!(mid > 0)) mid = 0.01;
-        if (payoffExp(mid) > 0) pop += cdf(b) - cdf(a);
-      }
-      return Math.max(0, Math.min(1, pop));
-    }
-    function probOfProfit() {
-      if (!legs.length) return null;
-      return popOf(legs);
-    }
-
-    function riskReturnStats(maxP, minP, tailSlope) {
-      let rorText = '—', capText = '—';
-      if (minP < 0) {
-        if (tailSlope === 0 && maxP > 0) {
-          rorText = (maxP / -minP * 100).toFixed(0) + '%';
-          capText = formatMoney(-minP);
-        } else if (tailSlope > 0) {
-          rorText = '∞';
-          capText = formatMoney(-minP);
-        }
-      }
-      return { ror: rorText, cap: capText };
-    }
-
-    function definedRiskMaxLoss(legsArr) {
-      const list = legsArr || legs;
-      const pts = [0.01];
-      list.forEach(function(leg) {
-        if (leg.type !== 'stock' && isFinite(leg.strike) && leg.strike > 0) pts.push(leg.strike);
-      });
-      let min = Infinity;
-      pts.forEach(function(x) {
-        const v = expiryPayoff(x, list);
-        if (isFinite(v) && v < min) min = v;
-      });
-      if (min === Infinity) return 0;
-      return Math.max(0, -min);
-    }
-
-    function estimateMargin() {
-      if (!legs.length) return null;
-      const S = getParams().S;
-      if (!(S > 0)) return null;
-      let longStock = 0, shortStockShares = 0;
-      const longCalls = [], longPuts = [], shortCalls = [], shortPuts = [];
-      legs.forEach(function(leg) {
-        if (legIsIncomplete(leg)) return;
-        const sq = signedQty(leg);
-        if (sq === 0) return;
-        const shares = Math.abs(sq) * legShareMult(leg);
-        if (leg.type === 'stock') {
-          if (sq > 0) longStock += shares; else shortStockShares += shares;
-        } else if (sq > 0) {
-          (leg.type === 'call' ? longCalls : longPuts).push({ strike: leg.strike, shares: shares });
-        } else {
-          (leg.type === 'call' ? shortCalls : shortPuts).push({ leg: leg, shares: shares });
-        }
-      });
-      const hasShort = shortCalls.length > 0 || shortPuts.length > 0 || shortStockShares > 0;
-      if (!hasShort) {
-        return { amount: Math.max(0, initialCost(legs)), basis: 'nakit — tam borç' };
-      }
-      // Simplified: defined-risk → max loss, naked → Reg-T-style, short stock → 50%
-      const maxLoss = definedRiskMaxLoss(legs);
-      const tail = rightTailSlope(legs);
-      if (tail >= 0 && maxLoss > 0) {
-        return { amount: maxLoss, basis: 'tanımlı risk — maks zarar' };
-      }
-      // Naked short: Reg-T-style estimate
-      let margin = 0;
-      shortCalls.forEach(function(sc) {
-        const contracts = sc.shares / legShareMult(sc.leg);
-        const prem = Math.abs(sc.leg.premium) * legShareMult(sc.leg);
-        const otm = Math.max(0, sc.leg.strike - S);
-        const perShare = Math.max(prem + 0.2 * S - otm, prem + 0.1 * S);
-        margin = Math.max(margin, perShare * sc.shares);
-      });
-      shortPuts.forEach(function(sp) {
-        const prem = Math.abs(sp.leg.premium) * legShareMult(sp.leg);
-        const otm = Math.max(0, S - sp.leg.strike);
-        const perShare = Math.max(prem + 0.2 * S - otm, prem + 0.1 * S);
-        margin = Math.max(margin, perShare * sp.shares);
-      });
-      if (shortStockShares > 0) {
-        margin = Math.max(margin, 0.5 * S * shortStockShares);
-      }
-      return { amount: margin, basis: 'Reg-T tarzı tahmin' };
-    }
-
-    function chartXWindowA() {
-      const win = { lo: 0, hi: 100 };
-      if (chartZoom && chartZoom.min > 0 && chartZoom.max > chartZoom.min) {
-        win.lo = chartZoom.min; win.hi = chartZoom.max;
-      } else {
-        const S = parseFloat(document.getElementById('spot').value) || 100;
-        win.lo = S * 0.8; win.hi = S * 1.2;
-      }
-      return win;
-    }
-
-    function clearPlAxHover(tbl) {
-      const els = tbl.querySelectorAll('.ax-hover');
-      for (let i = 0; i < els.length; i++) els[i].classList.remove('ax-hover');
-    }
-    function bindPlAxHover(tbl) {
-      if (tbl._axBound) return;
-      tbl._axBound = true;
-      tbl.addEventListener('mousemove', function (e) {
-        const td = e.target.closest ? e.target.closest('td') : null;
-        clearPlAxHover(tbl);
-        if (!td) return;
-        const tr = td.parentElement;
-        const idx = Array.prototype.indexOf.call(tr.children, td);
-        if (idx < 1) return;
-        td.classList.add('ax-hover');
-        const rowHead = tr.querySelector('th');
-        if (rowHead) rowHead.classList.add('ax-hover');
-        const theadTh = tbl.querySelector('thead tr').children[idx];
-        if (theadTh) theadTh.classList.add('ax-hover');
-      });
-      tbl.addEventListener('mouseleave', function () { clearPlAxHover(tbl); });
-    }
-
-    function renderPlTable() {
-      const tbl = document.getElementById('plTable');
-      if (!tbl) return;
-      bindPlAxHover(tbl);
-      if (!legs.length) {
-        tbl.innerHTML = '<tbody><tr><td style="padding:16px;color:var(--muted)">K/Z tablosunu görmek için bir bacak ekleyin.</td></tr></tbody>';
-        return;
-      }
-      const params = getParams();
-      const S = params.S;
-      const win = chartXWindowA();
-      const ROWS = 21;
-      let minDte = 0, maxDte = 0;
-      for (let i = 0; i < legs.length; i++) {
-        const d = legs[i].dte;
-        if (legs[i].type !== 'stock' && isFinite(d) && d > 0) {
-          minDte = minDte ? Math.min(minDte, d) : d;
-          maxDte = Math.max(maxDte, d);
-        }
-      }
-      minDte = Math.max(0, Math.round(minDte));
-      maxDte = Math.max(minDte, Math.round(maxDte));
-      const today = new Date(); today.setHours(0, 0, 0, 0);
-      const expDtes = [];
-      const chainExps = (window._cboeData && Array.isArray(window._cboeData.expirations))
-        ? window._cboeData.expirations : [];
-      chainExps.forEach(function (es) {
-        const t = Date.parse(es + 'T00:00:00Z');
-        if (!isFinite(t)) return;
-        const d = Math.round((t - today.getTime()) / 86400000);
-        if (d > 0 && d <= maxDte) expDtes.push({ d: d, label: es });
-      });
-      if (!expDtes.length) {
-        const seen = {};
-        legs.forEach(function (l) {
-          if (l.type === 'stock') return;
-          const d = Math.max(0, Math.round(l.dte));
-          if (d > 0 && !seen[d] && d <= maxDte) { seen[d] = 1; expDtes.push({ d: d, label: null }); }
-        });
-      }
-      expDtes.sort(function (a, b) { return a.d - b.d; });
-      const MONTHS_TR = ['Oca', 'Şub', 'Mar', 'Nis', 'May', 'Haz', 'Tem', 'Ağu', 'Eyl', 'Eki', 'Kas', 'Ara'];
-      const colDefs = [{ daysLeft: minDte, head: 'Bugün', sub: today.toISOString().slice(0, 10) }];
-      expDtes.forEach(function (e) {
-        let head, sub;
-        if (e.label) {
-          const dt = new Date(Date.parse(e.label + 'T00:00:00Z'));
-          head = MONTHS_TR[dt.getUTCMonth()] + ' ' + dt.getUTCDate();
-          sub = e.d + 'g';
-        } else {
-          head = 'V-' + e.d;
-          sub = e.d + ' gün sonra';
-        }
-        colDefs.push({ daysLeft: minDte - e.d, head: head, sub: sub });
-      });
-      if (!colDefs.some(function (c) { return c.daysLeft === 0; })) {
-        const expDt = new Date(today.getTime() + minDte * 86400000).toISOString().slice(0, 10);
-        colDefs.push({ daysLeft: 0, head: 'Vade', sub: expDt });
-      }
-      let html = '<thead><tr><th>Fiyat</th>';
-      for (let j = 0; j < colDefs.length; j++) {
-        html += '<th>' + colDefs[j].head + '<br><span style="font-weight:400;text-transform:none;letter-spacing:0">' + colDefs[j].sub + '</span></th>';
-      }
-      html += '</tr></thead><tbody>';
-      const prices = [];
-      let spotRow = 0, best = Infinity;
-      for (let i = 0; i < ROWS; i++) {
-        const p = win.hi - (win.hi - win.lo) * (i / (ROWS - 1));
-        prices.push(p);
-        const dd = Math.abs(p - S);
-        if (dd < best) { best = dd; spotRow = i; }
-      }
-      for (let i = 0; i < ROWS; i++) {
-        const p = prices[i];
-        const pctMove = S > 0 ? (p - S) / S * 100 : 0;
-        const vals = colDefs.map(function(c) { return plAt(p, c.daysLeft, legs); });
-        let mx = 0;
-        for (let j = 0; j < vals.length; j++) if (isFinite(vals[j])) mx = Math.max(mx, Math.abs(vals[j]));
-        html += '<tr' + (i === spotRow ? ' class="spot-row"' : '') + '><th>' + p.toFixed(1) +
-          ' <span style="color:var(--muted);font-weight:400">(' + (pctMove >= 0 ? '+' : '') + pctMove.toFixed(0) + '%)</span></th>';
-        for (let j = 0; j < vals.length; j++) {
-          const v = vals[j];
-          const cls = !isFinite(v) ? '' : (v > 0.005 ? 'pv-pos' : (v < -0.005 ? 'pv-neg' : ''));
-          const be = isFinite(v) && Math.abs(v) < 1 ? ' be' : '';
-          const alpha = mx > 0 && isFinite(v) ? Math.min(0.8, Math.abs(v) / mx * 0.8) : 0;
-          const bg = v > 0 ? 'background:rgba(34,197,94,' + alpha.toFixed(2) + ');'
-                   : (v < 0 ? 'background:rgba(239,68,68,' + alpha.toFixed(2) + ');' : '');
-          html += '<td class="' + (cls + be).trim() + '" style="' + bg + '">' + formatPlMetric(v) + '</td>';
-        }
-        html += '</tr>';
-      }
-      html += '</tbody>';
-      tbl.innerHTML = html;
-      const note = document.getElementById('plTableModeNote');
-      if (note) note.textContent = 'mod: ' + (plMetric === '$' ? 'dolar' : (plMetric === 'risk' ? "maks riskin %'si" : "giriş maliyetinin %'si"));
-      const ivNote = document.getElementById('plTableIvNote');
-      if (ivNote) ivNote.textContent = 'IV %' + Math.round(params.iv * 100);
+    function onSpotSlide() {
+      const v = parseFloat(document.getElementById('spotSlider').value);
+      document.getElementById('spot').value = v.toFixed(1);
+      document.getElementById('spotLabel').textContent = '$' + v.toFixed(2);
+      recalc();
     }
 
     function resetTime() {
@@ -3839,6 +3090,8 @@ Risk Reversal (synthetic tilt)
       const shock = (Math.random() * 2 - 1) * (iv / Math.sqrt(365)) * S * 2.5;
       S = Math.max(1, S + shock);
       document.getElementById('spot').value = S.toFixed(1);
+      document.getElementById('spotSlider').value = S;
+      document.getElementById('spotLabel').textContent = '$' + S.toFixed(2);
       recalc();
     }
 
@@ -3926,6 +3179,9 @@ Risk Reversal (synthetic tilt)
         p = c.close;
       }
       document.getElementById('spot').value = p.toFixed(2);
+      updateSpotSliderRange();
+      const spotSlider = document.getElementById('spotSlider');
+      if (spotSlider) spotSlider.value = p;
       const newDaysLeft = Math.max(0, maxDTE - simDayIndex);
       document.getElementById('daysLeft').value = newDaysLeft;
       const pl = plAt(p, newDaysLeft);
@@ -4216,6 +3472,8 @@ Risk Reversal (synthetic tilt)
         });
         if (obj.S && document.getElementById('spot')) {
           document.getElementById('spot').value = obj.S;
+          var sl = document.getElementById('spotSlider');
+          if (sl) sl.value = obj.S;
         }
         return true;
       } catch (e) { return false; }
@@ -4232,1099 +3490,6 @@ Risk Reversal (synthetic tilt)
         window.history.replaceState(null, '', url.pathname + '?' + url.searchParams.toString());
       } catch (e) {}
     }
-
-    // ===== Son kurulumlar (yalnızca localStorage) =====
-    const RECENT_KEY = 'jsm.recent.v1';
-    const RECENT_MAX = 12;
-    let recentSaveTimer = null;
-    let buildDirty = false;
-    function markBuildDirty(){ buildDirty = true; }
-    function escapeHtml(s){
-      return String(s == null ? '' : s).replace(/[&<>"']/g, function(c){
-        return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
-      });
-    }
-    function relTime(ts){
-      const d = Date.now() - ts;
-      if (!(d >= 0)) return 'az önce';
-      const m = Math.floor(d / 60000);
-      if (m < 1) return 'az önce';
-      if (m < 60) return m + ' dk önce';
-      const hh = Math.floor(m / 60);
-      if (hh < 24) return hh + ' sa önce';
-      const days = Math.floor(hh / 24);
-      if (days < 7) return days + ' g önce';
-      return new Date(ts).toISOString().slice(0, 10);
-    }
-    function describeLegs(list){
-      const ls = (list || []).filter(function(l){ return l && l.type && l.type !== 'stock'; });
-      const st = (list || []).filter(function(l){ return l && l.type === 'stock'; });
-      if (!ls.length){
-        if (st.length) return (st[0].side === 'sell' ? 'Kısa Hisse' : 'Uzun Hisse');
-        return 'Boş';
-      }
-      if (st.length === 1 && ls.length === 1 && ls[0].type === 'call' && ls[0].side === 'sell') return 'Covered Call';
-      if (st.length === 1 && ls.length === 1 && ls[0].type === 'put' && ls[0].side === 'sell') return 'Cash-Secured Put';
-      if (ls.length === 1){
-        const l = ls[0];
-        return (l.side === 'sell' ? 'Kısa ' : 'Uzun ') + (l.type === 'put' ? 'Put ' : 'Call ') + l.strike;
-      }
-      if (ls.length === 2){
-        let p1 = ls[0], p2 = ls[1];
-        if (p2.strike < p1.strike || (p2.strike === p1.strike && p2.type === 'put' && p1.type !== 'put')){
-          const t = p1; p1 = p2; p2 = t;
-        }
-        const a = p1, b = p2;
-        const sameQty = Math.abs(a.qty) === Math.abs(b.qty);
-        if (a.dte === b.dte && sameQty){
-          if (a.type === 'call' && b.type === 'call'){
-            if (a.side === 'buy' && b.side === 'sell') return 'Boğa Call Spread';
-            if (a.side === 'sell' && b.side === 'buy') return 'Ayı Call Spread';
-          }
-          if (a.type === 'put' && b.type === 'put'){
-            if (a.side === 'buy' && b.side === 'sell') return 'Boğa Put Spread';
-            if (a.side === 'sell' && b.side === 'buy') return 'Ayı Put Spread';
-          }
-          if (a.type === 'put' && b.type === 'call' && a.side === 'buy' && b.side === 'buy')
-            return a.strike === b.strike ? 'Uzun Straddle' : 'Uzun Strangle';
-          if (a.type === 'put' && b.type === 'call' && a.side === 'sell' && b.side === 'sell')
-            return a.strike === b.strike ? 'Kısa Straddle' : 'Kısa Strangle';
-        } else if (a.dte !== b.dte && a.type === b.type && a.strike === b.strike){
-          return 'Takvim Spread';
-        }
-        return 'Özel (2 bacak)';
-      }
-      if ((ls.length === 3 || ls.length === 4) && ls.every(function(l){ return l.dte === ls[0].dte; })){
-        const types = {};
-        ls.forEach(function(l){ types[l.type] = 1; });
-        const nTypes = Object.keys(types).length;
-        const shorts = ls.filter(function(l){ return l.side === 'sell'; }).length;
-        if (ls.length === 4 && nTypes === 2 && shorts === 2) return 'Iron Condor';
-        if (nTypes === 1) return ls.length === 3 ? 'Kelebek' : 'Kondor';
-      }
-      return 'Özel (' + list.length + ' bacak)';
-    }
-    function loadRecent(){
-      try {
-        const raw = localStorage.getItem(RECENT_KEY);
-        if (!raw) return [];
-        const arr = JSON.parse(raw);
-        return Array.isArray(arr) ? arr.filter(function(r){ return r && r.token; }) : [];
-      } catch (e){ return []; }
-    }
-    function persistRecent(arr){
-      try { localStorage.setItem(RECENT_KEY, JSON.stringify(arr.slice(0, RECENT_MAX))); } catch (e){}
-    }
-    function scheduleRecentSave(){
-      if (recentSaveTimer) clearTimeout(recentSaveTimer);
-      recentSaveTimer = setTimeout(saveRecentBuild, 1500);
-    }
-    function saveRecentBuild(){
-      try {
-        if (!buildDirty || !legs.length) return;
-        if (!document.getElementById('legsList')) return;
-        const token = legsToQuery();
-        if (!token) return;
-        let arr = loadRecent();
-        if (arr.length && arr[0].token === token) return;
-        arr = arr.filter(function(r){ return r.token !== token; });
-        const tkrEl = document.getElementById('ticker');
-        arr.unshift({
-          ts: Date.now(),
-          ticker: tkrEl ? (tkrEl.value || '').toUpperCase() : '',
-          label: describeLegs(legs),
-          token: token
-        });
-        persistRecent(arr);
-        const p = document.getElementById('recentPanel');
-        if (p && p.style.display !== 'none') renderRecentList();
-      } catch (e){}
-    }
-    function renderRecentList(){
-      const p = document.getElementById('recentPanel');
-      if (!p) return;
-      const arr = loadRecent();
-      if (!arr.length){
-        p.innerHTML = '<div style="padding:12px;color:var(--muted);font-size:.8rem">Henüz son kurulum yok.<br>Oluşturduğunuz kurulumlar burada görünecek.</div>';
-        return;
-      }
-      let html = '';
-      arr.forEach(function(r, i){
-        html += '<div class="recent-item" role="button" tabindex="0" onclick="loadRecentBuild(' + i + ')">' +
-          '<span class="rt">' + escapeHtml(r.ticker || '—') + '</span>' +
-          '<span class="rl">' + escapeHtml(r.label || '') + '</span>' +
-          '<span class="rw">' + escapeHtml(relTime(r.ts)) + '</span>' +
-          '<button type="button" class="recent-del" title="Kaldır" onclick="event.stopPropagation();deleteRecentBuild(' + i + ')">✕</button></div>';
-      });
-      html += '<div style="display:flex;justify-content:space-between;align-items:center;margin-top:6px;padding:2px 4px">' +
-        '<span style="font-size:.68rem;color:var(--muted)">Yalnızca bu tarayıcıda saklanır</span>' +
-        '<button type="button" class="btn-secondary btn-sm" onclick="clearRecentBuilds()">Tümünü temizle</button></div>';
-      p.innerHTML = html;
-    }
-    function toggleRecentPanel(){
-      const p = document.getElementById('recentPanel');
-      const btn = document.getElementById('recentBtn');
-      if (!p || !btn) return;
-      if (p.style.display !== 'none'){ p.style.display = 'none'; return; }
-      renderRecentList();
-      const r = btn.getBoundingClientRect();
-      p.style.position = 'fixed';
-      p.style.top = Math.min(r.bottom + 6, window.innerHeight - 120) + 'px';
-      p.style.left = Math.max(8, Math.min(r.left, window.innerWidth - 360)) + 'px';
-      p.style.display = '';
-    }
-    function loadRecentBuild(i){
-      const arr = loadRecent();
-      const r = arr[i];
-      const p = document.getElementById('recentPanel');
-      if (p) p.style.display = 'none';
-      if (!r) return;
-      if (legsFromQuery(r.token)){
-        markBuildDirty();
-        if (typeof syncDTESlider === 'function') syncDTESlider();
-        renderLegs(); recalc();
-        if (typeof resetSimulation === 'function') resetSimulation();
-        if (typeof onRangeChange === 'function') onRangeChange();
-        const tip = document.getElementById('templateTip');
-        if (tip) tip.innerHTML = 'Son kurulumlardan yüklendi. Serbestçe düzenleyin.';
-      } else {
-        arr.splice(i, 1); persistRecent(arr);
-      }
-    }
-    function deleteRecentBuild(i){
-      const arr = loadRecent();
-      arr.splice(i, 1); persistRecent(arr);
-      renderRecentList();
-    }
-    function clearRecentBuilds(){
-      persistRecent([]);
-      renderRecentList();
-    }
-    document.addEventListener('click', function(ev){
-      const p = document.getElementById('recentPanel');
-      if (!p || p.style.display === 'none') return;
-      const t = ev.target;
-      if (p.contains(t)) return;
-      const btn = document.getElementById('recentBtn');
-      if (btn && (btn === t || btn.contains(t))) return;
-      p.style.display = 'none';
-    });
-
-    function discoveryUniverse(expStr, dteFallback) {
-      const p = getParams();
-      const S = p.S;
-      const uni = {
-        S: S,
-        dte: Math.max(1, Math.round(dteFallback || 30)),
-        expStr: expStr || '',
-        strikes: [],
-        usedChain: false,
-        ivOf: function () { return p.iv; }
-      };
-      const data = window._cboeData;
-      const chain = data && data.chains ? data.chains[expStr || ''] : null;
-      if (chain && chain.strikes && chain.strikes.length) {
-        uni.usedChain = true;
-        uni.dte = Math.max(1, expirationDte(expStr));
-        uni.strikes = chain.strikes.filter(function (k) { return k >= S * 0.8 && k <= S * 1.2; });
-        uni.ivOf = function (type, strike) {
-          const q = findChainContract(type, strike, expStr);
-          const pct = quoteIvPct(q);
-          return pct ? pct / 100 : p.iv;
-        };
-      } else {
-        const step = Math.max(0.5, Math.round(S * 0.01 * 2) / 2);
-        for (let k = Math.ceil(S * 0.7 / step) * step; k <= S * 1.3 + 1e-9; k += step) {
-          uni.strikes.push(Math.round(k * 100) / 100);
-        }
-      }
-      return uni;
-    }
-
-    function nearestGridStrike(strikes, x) {
-      let best = strikes[0], bd = Infinity;
-      for (let i = 0; i < strikes.length; i++) {
-        const d = Math.abs(strikes[i] - x);
-        if (d < bd) { bd = d; best = strikes[i]; }
-      }
-      return best;
-    }
-
-    // Modeled premium for a candidate leg (per-share, like leg.premium).
-    function discoveryPremium(type, strike, uni) {
-      const p = getParams();
-      const iv = Math.max(0.01, uni.ivOf(type, strike) || p.iv);
-      return blackScholes(uni.S, strike, Math.max(1, uni.dte) / 365, p.r, p.q, iv, type);
-    }
-
-    function discoveryLeg(side, type, strike, uni) {
-      return {
-        id: nextId++,
-        side: side,
-        type: type,
-        strike: Math.round(strike * 100) / 100,
-        dte: Math.max(1, Math.round(uni.dte)),
-        qty: 1,
-        premium: Math.max(0.01, Math.round(discoveryPremium(type, strike, uni) * 100) / 100),
-        premiumManual: true,
-        ticker: currentTicker()
-      };
-    }
-
-    // Family recipes. k1 < k2 are the two grid strikes.
-    function buildFamilyLegs(family, k1, k2, uni) {
-      const out = [];
-      function mk(side, type, k) { out.push(discoveryLeg(side, type, k, uni)); }
-      if (family === 'bullcall') { mk('buy', 'call', k1); mk('sell', 'call', k2); }
-      else if (family === 'bearput') { mk('buy', 'put', k2); mk('sell', 'put', k1); }
-      else if (family === 'bullput') { mk('sell', 'put', k2); mk('buy', 'put', k1); }
-      else if (family === 'bearcall') { mk('sell', 'call', k1); mk('buy', 'call', k2); }
-      else if (family === 'strangle') { mk('buy', 'put', k1); mk('buy', 'call', k2); }
-      return out;
-    }
-
-    // Exact expiry-P/L extrema for a candidate: the payoff is piecewise
-    // linear with kinks only at strikes, so min/max are attained at a strike
-    // or near zero, or on an unbounded tail.
-    function candidateStats(legsArr) {
-      const pts = [0.01];
-      legsArr.forEach(function (l) { if (isFinite(l.strike) && l.strike > 0) pts.push(l.strike); });
-      let min = Infinity, max = -Infinity;
-      pts.forEach(function (x) {
-        const v = expiryPayoff(x, legsArr);
-        if (!isFinite(v)) return;
-        if (v < min) min = v;
-        if (v > max) max = v;
-      });
-      const rs = rightTailSlope(legsArr);
-      let ls = 0; // left-tail slope: calls flatten; puts move -signedQty*mult per $1
-      legsArr.forEach(function (l) { if (l.type === 'put') ls -= signedQty(l) * legShareMult(l); });
-      if (rs > 0) max = Infinity; else if (rs < 0) min = -Infinity;
-      if (ls > 0) max = Infinity; else if (ls < 0) min = -Infinity;
-      if (min === Infinity) min = 0;
-      if (max === -Infinity) max = 0;
-      const maxLoss = min < 0 ? -min : 0;
-      const maxProfit = max > 0 ? max : 0;
-      const net = initialCost(legsArr);
-      let roc = null;
-      if (maxLoss > 0) roc = (maxProfit === Infinity) ? Infinity : maxProfit / maxLoss;
-      return { net: net, maxProfit: maxProfit, maxLoss: maxLoss, roc: roc, pop: popOf(legsArr) };
-    }
-
-    function familyLabel(fam) {
-      return fam === 'bullcall' ? 'Bull call' : fam === 'bearput' ? 'Bear put'
-        : fam === 'bullput' ? 'Bull put' : fam === 'bearcall' ? 'Bear call' : 'Long strangle';
-    }
-
-    function fmtStatMoney(v) {
-      if (v === Infinity) return 'Unlimited';
-      return formatMoney(v);
-    }
-    function fmtRoc(roc) {
-      if (roc == null || !isFinite(roc)) return roc === Infinity ? '∞' : '—';
-      return (roc * 100).toFixed(0) + '%';
-    }
-    function fmtPop(pop) {
-      return (pop == null || !isFinite(pop)) ? '—' : (pop * 100).toFixed(0) + '%';
-    }
-    function fmtNet(net) {
-      if (net > 0.005) return 'Debit ' + formatMoney(net);
-      if (net < -0.005) return 'Credit ' + formatMoney(-net);
-      return '$0';
-    }
-
-    // ---- Item 7: optimizer lite -------------------------------------------
-    function runOptimizerScan() {
-      syncDiscoveryExpiries();
-      const fam = document.getElementById('optFamily').value;
-      const goal = document.getElementById('optGoal').value;
-      const S = getParams().S;
-      let target = parseFloat(document.getElementById('optTarget').value);
-      if (!(target > 0)) target = S;
-      const expStr = document.getElementById('optExpiry').value;
-      const dteInput = document.getElementById('optDte');
-      const uni = discoveryUniverse(expStr, dteInput ? parseFloat(dteInput.value) : 30);
-      const box = document.getElementById('optResults');
-      optResults = [];
-      optUsedChain = !!uni.usedChain;
-      if (uni.strikes.length < 2) {
-        box.innerHTML = '<p class="disc-empty">Taranacak yeterli kullanım fiyatı yok — önce bir opsiyon zinciri yükleyin.</p>';
-        return;
-      }
-      const widths = [0.01, 0.02, 0.03].map(function (w) { return Math.max(0.5, Math.round(S * w * 2) / 2); });
-      const seen = {};
-      const cands = [];
-      for (let i = 0; i < uni.strikes.length; i++) {
-        const k1 = uni.strikes[i];
-        for (let w = 0; w < widths.length; w++) {
-          const k2 = nearestGridStrike(uni.strikes, k1 + widths[w]);
-          if (!(k2 > k1)) continue;
-          const key = k1 + '|' + k2;
-          if (seen[key]) continue;
-          seen[key] = true;
-          // Mild directional filter so the scan doesn't surface structures
-          // that are dead at the target price.
-          if (fam === 'bullcall' && target <= k1) continue;
-          if (fam === 'bearput' && target >= k2) continue;
-          if (fam === 'bullput' && target <= k1) continue;
-          if (fam === 'bearcall' && target >= k2) continue;
-          if (fam === 'strangle' && target > k1 && target < k2) continue;
-          const legsArr = buildFamilyLegs(fam, k1, k2, uni);
-          const st = candidateStats(legsArr);
-          if (!isFinite(st.net)) continue;
-          cands.push({ fam: fam, k1: k1, k2: k2, legs: legsArr, label: familyLabel(fam) + ' ' + k1 + '/' + k2, st: st });
-        }
-      }
-      function score(c) {
-        if (goal === 'roc') return c.st.roc == null ? -Infinity : c.st.roc;
-        if (goal === 'pop') return c.st.pop == null ? -Infinity : c.st.pop;
-        return c.st.maxProfit; // Infinity sorts first for the strangle
-      }
-      cands.sort(function (a, b) { return score(b) - score(a); });
-      optResults = cands.slice(0, 5);
-      renderOptimizerResults();
-    }
-
-    function renderOptimizerResults() {
-      const box = document.getElementById('optResults');
-      if (!optResults.length) {
-        box.innerHTML = '<p class="disc-empty">Bu girdiler için aday yok — farklı bir aile veya hedef deneyin.</p>';
-        return;
-      }
-      let h = '<table class="pl-table"><thead><tr><th style="text-align:left">Yapı</th><th>Net</th><th>Maks kâr</th><th>Maks zarar</th><th>ROC</th><th>POP</th><th></th></tr></thead><tbody>';
-      optResults.forEach(function (c, i) {
-        h += '<tr><td style="text-align:left">' + c.label + '</td>' +
-          '<td>' + fmtNet(c.st.net) + '</td>' +
-          '<td>' + fmtStatMoney(c.st.maxProfit) + '</td>' +
-          '<td>' + fmtStatMoney(c.st.maxLoss) + '</td>' +
-          '<td>' + fmtRoc(c.st.roc) + '</td>' +
-          '<td>' + fmtPop(c.st.pop) + '</td>' +
-          '<td><button type="button" class="btn-primary btn-sm" onclick="applyDiscoveryLegs(\'opt\',' + i + ')">Uygula</button></td></tr>';
-      });
-      box.innerHTML = h + '</tbody></table><p class="disc-note">tahm. istatistikler · Uygula, A bacaklarını değiştirir</p>';
-    }
-
-    // ---- Item 8: option finder --------------------------------------------
-    function runFinder() {
-      syncDiscoveryExpiries();
-      const dir = document.getElementById('findDir').value; // auto | long | short
-      const S = getParams().S;
-      let target = parseFloat(document.getElementById('findTarget').value);
-      if (!(target > 0)) target = S;
-      const capRaw = parseFloat(document.getElementById('findCap').value);
-      const cap = capRaw > 0 ? capRaw : Infinity;
-      const expStr = document.getElementById('findExpiry').value;
-      const dteInput = document.getElementById('findDte');
-      const uni = discoveryUniverse(expStr, dteInput ? parseFloat(dteInput.value) : 30);
-      const box = document.getElementById('findResults');
-      findResults = [];
-      findUsedChain = !!uni.usedChain;
-      if (uni.strikes.length < 2) {
-        box.innerHTML = '<p class="disc-empty">Taranacak yeterli kullanım fiyatı yok — önce bir opsiyon zinciri yükleyin.</p>';
-        return;
-      }
-      const cands = [];
-      const seen = {};
-      function consider(legsArr, label) {
-        const st = candidateStats(legsArr);
-        if (!isFinite(st.net)) return;
-        if (st.maxLoss > cap) return;
-        if (dir === 'long' && !(st.net > 0.005)) return;
-        if (dir === 'short' && !(st.net < -0.005)) return;
-        const key = label;
-        if (seen[key]) return;
-        seen[key] = true;
-        cands.push({ legs: legsArr, label: label, st: st, score: expiryPayoff(target, legsArr) });
-      }
-      // Singles near the expected price (±10% of target, at least 3 strikes).
-      const nearT = uni.strikes.filter(function (k) { return Math.abs(k - target) <= target * 0.10; });
-      const singleStrikes = nearT.length >= 3 ? nearT : uni.strikes.slice(0, 12);
-      singleStrikes.forEach(function (k) {
-        consider([discoveryLeg('buy', 'call', k, uni)], 'Long call ' + k);
-        consider([discoveryLeg('buy', 'put', k, uni)], 'Long put ' + k);
-        consider([discoveryLeg('sell', 'call', k, uni)], 'Short call ' + k);
-        consider([discoveryLeg('sell', 'put', k, uni)], 'Short put ' + k);
-      });
-      // Vertical spreads, widths 1–3% of spot.
-      const widths = [0.01, 0.02, 0.03].map(function (w) { return Math.max(0.5, Math.round(S * w * 2) / 2); });
-      for (let i = 0; i < uni.strikes.length; i++) {
-        const k1 = uni.strikes[i];
-        for (let w = 0; w < widths.length; w++) {
-          const k2 = nearestGridStrike(uni.strikes, k1 + widths[w]);
-          if (!(k2 > k1)) continue;
-          consider(buildFamilyLegs('bullcall', k1, k2, uni), 'Bull call ' + k1 + '/' + k2);
-          consider(buildFamilyLegs('bearput', k1, k2, uni), 'Bear put ' + k1 + '/' + k2);
-          consider(buildFamilyLegs('bullput', k1, k2, uni), 'Bull put ' + k1 + '/' + k2);
-          consider(buildFamilyLegs('bearcall', k1, k2, uni), 'Bear call ' + k1 + '/' + k2);
-        }
-      }
-      // Rank by profit at the expected price, tiebreak by POP.
-      cands.sort(function (a, b) {
-        if (b.score !== a.score) return b.score - a.score;
-        const pa = a.st.pop == null ? -1 : a.st.pop, pb = b.st.pop == null ? -1 : b.st.pop;
-        return pb - pa;
-      });
-      findResults = cands.slice(0, 5);
-      findResults.forEach(function (c) { c.profitAtTarget = c.score; });
-      renderFinderResults(target);
-    }
-
-    function renderFinderResults(target) {
-      const box = document.getElementById('findResults');
-      if (!findResults.length) {
-        box.innerHTML = '<p class="disc-empty">Bu filtrelerle aday yok — maks-zarar limitini gevşetin veya yönü değiştirin.</p>';
-        return;
-      }
-      let h = '<table class="pl-table"><thead><tr><th style="text-align:left">Yapı</th><th>Maliyet</th><th>P/L @ ' + formatMoney(target) + '</th><th>POP</th><th>Maks zarar</th><th></th></tr></thead><tbody>';
-      findResults.forEach(function (c, i) {
-        h += '<tr><td style="text-align:left">' + c.label + '</td>' +
-          '<td>' + fmtNet(c.st.net) + '</td>' +
-          '<td class="' + (c.profitAtTarget >= 0 ? 'pv-pos' : 'pv-neg') + '">' + formatMoney(c.profitAtTarget) + '</td>' +
-          '<td>' + fmtPop(c.st.pop) + '</td>' +
-          '<td>' + fmtStatMoney(c.st.maxLoss) + '</td>' +
-          '<td><button type="button" class="btn-primary btn-sm" onclick="applyDiscoveryLegs(\'find\',' + i + ')">Uygula</button></td></tr>';
-      });
-      box.innerHTML = h + '</tbody></table><p class="disc-note">tahm. istatistikler · Uygula, A bacaklarını değiştirir</p>';
-    }
-
-    // Apply a discovery candidate into legs A.
-    function applyDiscoveryLegs(which, i) {
-      const arr = which === 'opt' ? optResults : findResults;
-      const c = arr[i];
-      if (!c) return;
-      if (legs.length && typeof confirm === 'function' && !confirm('A slotundaki mevcut bacakları şununla değiştir: "' + c.label + '"?')) return;
-      markBuildDirty();
-      legs = c.legs;
-      syncDTESlider();
-      updateSpotSliderRange();
-      renderLegs();
-      recalc();
-      if (typeof resetSimulation === 'function') resetSimulation();
-    }
-
-    // Populate the target-expiry selects from the loaded chain; without a
-    // chain they offer a modeled-DTE fallback input instead.
-    function syncDiscoveryExpiries() {      const data = window._cboeData;
-      const exps = (data && data.expirations) || [];
-      [['optExpiry', 'optDteWrap'], ['findExpiry', 'findDteWrap']].forEach(function (cfg) {
-        const sel = document.getElementById(cfg[0]);
-        const wrap = document.getElementById(cfg[1]);
-        if (!sel) return;
-        const keep = sel.value;
-        sel.innerHTML = '';
-        if (exps.length) {
-          exps.forEach(function (exp) {
-            const opt = document.createElement('option');
-            opt.value = exp;
-            const d = expirationDte(exp);
-            opt.textContent = exp + (d ? ' (' + d + 'd)' : '');
-            sel.appendChild(opt);
-          });
-          const prefer = (keep && exps.indexOf(keep) >= 0) ? keep : pickDefaultExpiration(exps, 30, true);
-          if (prefer) sel.value = prefer;
-          if (wrap) wrap.style.display = 'none';
-        } else {
-          const opt = document.createElement('option');
-          opt.value = '';
-          opt.textContent = 'Zincir yok — model DTE';
-          sel.appendChild(opt);
-          if (wrap) wrap.style.display = '';
-        }
-      });
-    }
-
-    // Init the expiry selects at engine boot (chain hook refreshes them later).
-    try {
-      if (typeof document !== 'undefined' && document.getElementById('optExpiry')) syncDiscoveryExpiries();
-      if (typeof document !== 'undefined' && typeof syncRollLegs === 'function') { syncRollLegs(); }
-    } catch (e) {}
-
-    // Batch C fix: settle discovery panels after a ticker/chain change. The
-    // expiry selects always refresh; scans the user already ran are re-run
-    // against the new chain so the tables follow the new ticker instead of
-    // showing the old one's strikes. A scan that ran on the synthetic grid
-    // while the chain was still loading is also upgraded to real quotes, and
-    // a scan cleared by an intermediate no-chain ticker is re-run too.
-    // Panels that never had a scan get a stale "No chain" note cleared back
-    // to the default prompt. No-op otherwise.
-    function resolveDiscoveryStale() {
-      if (typeof syncDiscoveryExpiries === 'function') syncDiscoveryExpiries();
-      if (typeof syncRollExpiries === 'function') { try { syncRollExpiries(); } catch (e) {} }
-      if (discOptStale || discOptHadScan || (optResults.length && !optUsedChain)) {
-        discOptStale = false; discOptHadScan = false;
-        try { runOptimizerScan(); } catch (e) {}
-      } else {
-        clearNoChainNote('optResults', 'Pick a family and scan — the top 5 by your goal appear here.');
-      }
-      if (discFindStale || discFindHadScan || (findResults.length && !findUsedChain)) {
-        discFindStale = false; discFindHadScan = false;
-        try { runFinder(); } catch (e) {}
-      } else {
-        clearNoChainNote('findResults', 'Enter where you think the price goes — the top 5 by profit at target appear here.');
-      }
-    }
-
-    // Batch C fix: a "Bu sembol için zincir yok" note written by manual-data
-    // mode is stale once a chain loads — restore the default empty prompt.
-    function clearNoChainNote(boxId, defaultText) {
-      var box = document.getElementById(boxId);
-      if (box && box.innerHTML.indexOf('Bu sembol için zincir yok') >= 0) {
-        box.innerHTML = '<p class="disc-empty">' + defaultText + '</p>';
-      }
-    }
-
-    // ---- Item 9: roll analyzer (slim, educational) -------------------------
-    // Models closing one leg and reopening it at a new strike/expiry: the net
-    // debit/credit of the roll plus the before/after risk picture. Pure
-    // what-if — nothing here places a trade.
-    let lastRoll = null;
-    // Two-step inline confirm (no native confirm() dialog: those are invisible
-    // to automated browsers and to anyone who dismisses popups, which made
-    // "Çevirmeyi uygula" look like a no-op in QA). First click arms, second applies.
-    let rollArmed = false;
-
-    function rollLegLabel(l) {
-      const side = l.side === 'buy' ? 'Buy' : 'Sell';
-      const type = l.type === 'call' ? 'call' : 'put';
-      return side + ' ' + type + ' ' + l.strike + ' (' + l.dte + 'd)';
-    }
-
-    function rollSelectedLeg() {
-      const sel = document.getElementById('rollLeg');
-      if (!sel || sel.value === '' || sel.value == null) return null;
-      const l = legs[parseInt(sel.value, 10)];
-      return (l && l.type !== 'stock') ? l : null;
-    }
-
-    function syncRollLegs() {
-      const sel = document.getElementById('rollLeg');
-      if (!sel) return;
-      const keep = sel.value;
-      sel.innerHTML = '';
-      const idxs = [];
-      legs.forEach(function (l, i) {
-        if (l.type === 'stock') return;
-        idxs.push(i);
-        const opt = document.createElement('option');
-        opt.value = String(i);
-        opt.textContent = rollLegLabel(l);
-        sel.appendChild(opt);
-      });
-      if (idxs.indexOf(parseInt(keep, 10)) >= 0) sel.value = keep;
-      else if (idxs.length) sel.value = String(idxs[0]);
-      else sel.value = '';
-      onRollLegChange(true);
-    }
-
-    // Nearest chain expiration to a leg's DTE — legs store DTE, not an expiry
-    // date, so the close side is quoted off the closest listed expiry.
-    function nearestExpiryForDte(dte) {
-      const data = window._cboeData;
-      const exps = (data && data.expirations) || [];
-      let best = '', bestDiff = Infinity;
-      exps.forEach(function (exp) {
-        const diff = Math.abs(expirationDte(exp) - dte);
-        if (diff < bestDiff) { bestDiff = diff; best = exp; }
-      });
-      return best;
-    }
-
-    function syncRollExpiries() {
-      const sel = document.getElementById('rollExpiry');
-      if (!sel) return;
-      const wrap = document.getElementById('rollDteWrap');
-      const data = window._cboeData;
-      const exps = (data && data.expirations) || [];
-      const leg = rollSelectedLeg();
-      const keep = sel.value;
-      sel.innerHTML = '';
-      if (!exps.length) {
-        const opt = document.createElement('option');
-        opt.value = '';
-        opt.textContent = 'Zincir yok — modellendi';
-        sel.appendChild(opt);
-        if (wrap) wrap.style.display = '';
-        return;
-      }
-      if (wrap) wrap.style.display = 'none';
-      exps.forEach(function (exp) {
-        const opt = document.createElement('option');
-        opt.value = exp;
-        const d = expirationDte(exp);
-        opt.textContent = exp + (d ? ' (' + d + 'd)' : '');
-        sel.appendChild(opt);
-      });
-      let prefer = (keep && exps.indexOf(keep) >= 0) ? keep : '';
-      if (!prefer && leg) {
-        // Nearest later expiry first — buying time is the usual motive.
-        let best = '', bestD = Infinity;
-        exps.forEach(function (exp) {
-          const d = expirationDte(exp);
-          if (d > leg.dte && d - leg.dte < bestD) { bestD = d - leg.dte; best = exp; }
-        });
-        prefer = best || pickDefaultExpiration(exps, 30, true);
-      }
-      if (!prefer) prefer = pickDefaultExpiration(exps, 30, true);
-      if (prefer) sel.value = prefer;
-    }
-
-    // Default the new-strike input to the selected leg's strike; the expiry
-    // select follows unless the user already picked one (keepExpiry).
-    function onRollLegChange(keepExpiry) {
-      const leg = rollSelectedLeg();
-      const strikeEl = document.getElementById('rollStrike');
-      if (leg && strikeEl && !keepExpiry) strikeEl.value = leg.strike;
-      const sel = document.getElementById('rollExpiry');
-      const hadPick = keepExpiry && sel && sel.value;
-      if (!hadPick) syncRollExpiries();
-    }
-
-    // Per-share close/open quote for a roll. Closing a long sells at the bid,
-    // closing a short buys at the ask; opening mirrors it. Falls back to the
-    // mid, then to a Black-Scholes model quote (per-strike chain IV, else the
-    // global IV input).
-    function rollQuote(type, strike, expStr, legDte, action, side) {
-      const q = findChainContract(type, strike, expStr);
-      let px = NaN, src = '';
-      if (q) {
-        const b = Number(q.bid), a = Number(q.ask);
-        const wantBid = (action === 'close') === (side === 'buy');
-        if (wantBid && b > 0) { px = b; src = 'bid'; }
-        else if (!wantBid && a > 0) { px = a; src = 'ask'; }
-        else {
-          const m = midPrice(q);
-          if (m > 0) { px = m; src = 'mid'; }
-        }
-      }
-      if (!(px > 0)) {
-        const uni = discoveryUniverse(expStr, legDte);
-        px = discoveryPremium(type, strike, uni);
-        src = uni.usedChain ? 'modeled @ chain IV' : 'modeled';
-      }
-      return { px: px, src: src };
-    }
-
-    // Pure computation behind modelRoll — kept DOM-free for testing.
-    function computeRoll(oldLeg, newStrike, newExpStr, newDte) {
-      const mult = legShareMult(oldLeg) * oldLeg.qty;
-      const closeExp = nearestExpiryForDte(oldLeg.dte);
-      const closeQ = rollQuote(oldLeg.type, oldLeg.strike, closeExp, oldLeg.dte, 'close', oldLeg.side);
-      const openQ = rollQuote(oldLeg.type, newStrike, newExpStr, newDte, 'open', oldLeg.side);
-      // Cash flow per share: long → +close − open; short → −close + open.
-      // Negative = net debit (you pay to roll), positive = net credit.
-      const perShare = oldLeg.side === 'buy' ? closeQ.px - openQ.px : openQ.px - closeQ.px;
-      const netCash = perShare * mult;
-      const newLeg = {
-        id: nextId++,
-        side: oldLeg.side,
-        type: oldLeg.type,
-        strike: Math.round(newStrike * 100) / 100,
-        dte: Math.max(1, Math.round(newDte)),
-        qty: oldLeg.qty,
-        premium: Math.max(0.01, Math.round(openQ.px * 100) / 100),
-        premiumManual: true,
-        ticker: oldLeg.ticker || currentTicker()
-      };
-      return {
-        closeQ: closeQ, openQ: openQ, perShare: perShare, netCash: netCash,
-        newLeg: newLeg,
-        modeled: closeQ.src.indexOf('model') === 0 || openQ.src.indexOf('model') === 0
-      };
-    }
-
-    // Expiry-payoff breakevens by sign-change scan (mirrors summarizeExpiry).
-    function breakevensOf(legsArr) {
-      const strikes = legsArr.filter(function (l) { return l.type !== 'stock'; })
-        .map(function (l) { return l.strike; });
-      const hi = Math.max.apply(null, [10].concat(strikes)) * 3;
-      const bes = [];
-      let prevX = 0.01, prevY = expiryPayoff(0.01, legsArr);
-      for (let i = 1; i <= 400; i++) {
-        const x = hi * i / 400;
-        const y = expiryPayoff(x, legsArr);
-        if (prevY === 0) bes.push(prevX);
-        else if (y === 0) bes.push(x);
-        else if ((prevY < 0) !== (y < 0)) bes.push(prevX - prevY * (x - prevX) / (y - prevY));
-        prevX = x; prevY = y;
-      }
-      return bes;
-    }
-
-    function fmtBesList(bes) {
-      return bes.length ? bes.map(function (b) { return '$' + b.toFixed(1); }).join(' / ') : '—';
-    }
-
-
-    function modelRoll() {
-      syncRollLegs();
-      rollArmed = false; // a fresh model always disarms a pending confirm
-      disarmRollPaint();
-      const box = document.getElementById('rollResults');
-      if (!box) return;
-      const leg = rollSelectedLeg();
-      const strikeEl = document.getElementById('rollStrike');
-      const newStrike = strikeEl ? parseFloat(strikeEl.value) : NaN;
-      const expSel = document.getElementById('rollExpiry');
-      const newExp = expSel ? expSel.value : '';
-      const dteEl = document.getElementById('rollDte');
-      if (!leg) {
-        box.innerHTML = '<p class="disc-empty">Önce yukarıya bir opsiyon bacağı ekleyin — çevrilecek bir şey yok.</p>';
-        lastRoll = null; return;
-      }
-      if (!(newStrike > 0)) {
-        box.innerHTML = '<p class="disc-empty">Çevirmeyi modellemek için yeni bir kullanım fiyatı girin.</p>';
-        lastRoll = null; return;
-      }
-      const newDte = newExp ? expirationDte(newExp)
-        : Math.max(1, Math.round(parseFloat(dteEl && dteEl.value) || leg.dte));
-      if (Math.abs(newStrike - leg.strike) < 1e-9 && Math.abs(newDte - leg.dte) < 1) {
-        box.innerHTML = '<p class="disc-empty">Aynı kullanım fiyatı ve vade — çevirme en az birini değiştirir.</p>';
-        lastRoll = null; return;
-      }
-      const r = computeRoll(leg, newStrike, newExp, newDte);
-      const afterLegs = legs.map(function (l) { return l === leg ? r.newLeg : l; });
-      const before = candidateStats(legs);
-      const after = candidateStats(afterLegs);
-      lastRoll = { legId: leg.id, newLeg: r.newLeg };
-      const debit = r.netCash < -0.005, credit = r.netCash > 0.005;
-      const dirWord = debit ? 'Debit' : credit ? 'Credit' : 'Even';
-      const dirCls = debit ? 'var(--red)' : credit ? 'var(--green)' : 'var(--text)';
-      function row(lbl, b, a) {
-        return '<tr><td style="text-align:left">' + lbl + '</td><td>' + b + '</td><td>' + a + '</td></tr>';
-      }
-      let h = '<p style="font-size:0.82rem;margin:0 0 6px">Roll <b>' + rollLegLabel(leg) + '</b> → <b>' + rollLegLabel(r.newLeg) + '</b></p>';
-      h += '<p style="font-size:0.82rem;margin:0 0 6px">Close at ' + formatMoney(r.closeQ.px) +
-        ' <span style="color:var(--muted)">(' + r.closeQ.src + ')</span> · open at ' + formatMoney(r.openQ.px) +
-        ' <span style="color:var(--muted)">(' + r.openQ.src + ')</span> → ' +
-        '<b style="color:' + dirCls + '">' + dirWord + ' ' + formatMoney(Math.abs(r.netCash)) + '</b></p>';
-      h += '<table class="pl-table"><thead><tr><th style="text-align:left"></th><th>Before</th><th>After roll</th></tr></thead><tbody>';
-      h += row('Net cost', fmtNet(before.net), fmtNet(after.net));
-      h += row('Max profit', fmtStatMoney(before.maxProfit), fmtStatMoney(after.maxProfit));
-      h += row('Max loss', fmtStatMoney(before.maxLoss), fmtStatMoney(after.maxLoss));
-      h += row('Breakeven', fmtBesList(breakevensOf(legs)), fmtBesList(breakevensOf(afterLegs)));
-      h += row('Chance of profit', fmtPop(before.pop), fmtPop(after.pop));
-      h += '</tbody></table>';
-      if (r.modeled) h += '<p class="disc-note">Modellenmiş fiyatlar — bir veya iki taraf için zincir kotasyonu yok.</p>';
-      h += '<p style="margin:6px 0 0"><button type="button" class="btn-primary btn-sm" id="rollApplyBtn" onclick="applyRoll()">Çevirmeyi uygula</button> ' +
-        '<span class="disc-note" id="rollApplyCap">Yukarıdaki bacağı çevrilmiş olanla değiştirir.</span></p>';
-      box.innerHTML = h;
-    }
-
-    // Repaints the apply button/caption for the disarmed state (no-ops if the
-    // results box was re-rendered and the nodes are gone).
-    function disarmRollPaint() {
-      const btn = document.getElementById('rollApplyBtn');
-      if (btn) btn.textContent = 'Çevirmeyi uygula';
-      const cap = document.getElementById('rollApplyCap');
-      if (cap) cap.textContent = 'Yukarıdaki bacağı çevrilmiş olanla değiştirir.';
-    }
-    // Any form change cancels a pending "Çevirmeyi onayla" so the armed button can
-    // never apply a model the user has already edited away from. The model is
-    // re-rendered from the new inputs so the display always matches what a
-    // fresh "Çevirmeyi uygula" would do — no stale table beside an armed button.
-    function disarmRollQuiet() {
-      if (!rollArmed) return;
-      rollArmed = false;
-      modelRoll();
-    }
-    function disarmRoll() { disarmRollQuiet(); }
-    // ===== Round 2 item 10: paper trades (slim hypothetical journal) =====
-    const PAPER_KEY = 'jsmPaperTradesV1';
-    const PAPER_MAX = 20;
-    // id of the trade with an armed inline confirm ("Confirm close/delete")
-    let paperArmedId = null;
-    let paperArmedAction = null;
-    function loadPaperTrades() {
-      try {
-        const raw = window.localStorage ? window.localStorage.getItem(PAPER_KEY) : null;
-        const arr = raw ? JSON.parse(raw) : [];
-        return Array.isArray(arr) ? arr : [];
-      } catch (e) { return []; }
-    }
-    function persistPaperTrades(list) {
-      try {
-        if (window.localStorage) window.localStorage.setItem(PAPER_KEY, JSON.stringify(list));
-      } catch (e) { /* storage full/blocked — journal just won't persist */ }
-    }
-    function paperLegLabel(l) {
-      if (l.type === 'stock') return (l.side === 'buy' ? 'Long' : 'Short') + ' stock';
-      return (l.side === 'buy' ? 'Buy ' : 'Sell ') + l.type + ' ' + l.strike + ' (' + l.dte + 'd)';
-    }
-    // Current per-share value of a paper leg: chain mid when available,
-    // otherwise the same Black-Scholes model the chain fallback uses.
-    // Stock legs track the spot input.
-    function paperQuote(leg) {
-      if (leg.type === 'stock') {
-        const px = parseFloat((document.getElementById('spot') || {}).value) || 0;
-        return { px: px, src: 'spot' };
-      }
-      const expStr = nearestExpiryForDte(leg.dte);
-      const q = findChainContract(leg.type, leg.strike, expStr);
-      const m = midPrice(q);
-      if (m > 0) return { px: m, src: 'chain' };
-      const uni = discoveryUniverse(expStr, leg.dte);
-      const px = discoveryPremium(leg.type, leg.strike, uni);
-      return { px: px > 0 ? px : 0, src: uni.usedChain ? 'modeled @ chain IV' : 'modeled' };
-    }
-    // Hypothetical P/L of one leg between two per-share prices.
-    function paperLegPnl(leg, pxThen, pxNow) {
-      const dir = leg.side === 'buy' ? 1 : -1;
-      return dir * (pxNow - pxThen) * (leg.qty || 1) * 100;
-    }
-    function paperEntryCash(legsArr) {
-      // >0 = net credit received, <0 = net debit paid (per whole position)
-      let c = 0;
-      legsArr.forEach(function (l) {
-        c += (l.side === 'sell' ? 1 : -1) * (Number(l.premium) || 0) * (l.qty || 1) * 100;
-      });
-      return c;
-    }
-
-    function savePaperTrade() {
-      const box = document.getElementById('paperList');
-      paperArmedId = null; paperArmedAction = null;
-      if (!legs.length) {
-        if (box) box.innerHTML = '<p class="disc-empty">Kaydedilecek bir şey yok — önce en az bir bacak ekleyin.</p>';
-        return;
-      }
-      const list = loadPaperTrades();
-      if (list.length >= PAPER_MAX) {
-        if (box) box.innerHTML = '<p class="disc-empty">Günlük dolu (20 işlem) — önce eskilerden birini kapatın veya silin.</p>';
-        return;
-      }
-      const noteEl = document.getElementById('paperNote');
-      const note = noteEl ? noteEl.value.trim().slice(0, 80) : '';
-      const S = parseFloat((document.getElementById('spot') || {}).value) || 0;
-      const t = {
-        id: 'pt' + Date.now().toString(36) + Math.floor(Math.random() * 1e4).toString(36),
-        note: note,
-        createdAt: Date.now(),
-        ticker: (legs[0] && legs[0].ticker) || currentTicker() || '',
-        entrySpot: Math.round(S * 100) / 100,
-        legs: legs.map(function (l) {
-          return { side: l.side, type: l.type, strike: l.strike, dte: l.dte, qty: l.qty, premium: Math.round(Number(l.premium) * 100) / 100 };
-        }),
-        status: 'open',
-        exitPx: null,
-        closedAt: null
-      };
-      list.unshift(t);
-      persistPaperTrades(list);
-      if (noteEl) noteEl.value = '';
-      renderPaperTrades();
-    }
-    function paperTradeById(id) {
-      const list = loadPaperTrades();
-      for (let i = 0; i < list.length; i++) if (list[i].id === id) return { t: list[i], list: list, idx: i };
-      return null;
-    }
-    function paperUnrealized(t) {
-      let pnl = 0, modeled = false;
-      t.legs.forEach(function (l) {
-        const q = paperQuote(l);
-        if (q.src === 'modeled') modeled = true;
-        pnl += paperLegPnl(l, l.premium, q.px);
-      });
-      return { pnl: pnl, modeled: modeled };
-    }
-    function paperDaysHeld(t) {
-      const end = t.status === 'closed' && t.closedAt ? t.closedAt : Date.now();
-      return Math.max(0, Math.round((end - t.createdAt) / 86400000));
-    }
-    function paperDateStr(ts) {
-      try { return new Date(ts).toLocaleDateString(); } catch (e) { return ''; }
-    }
-    function renderPaperTrades() {
-      const box = document.getElementById('paperList');
-      if (!box) return;
-      const list = loadPaperTrades();
-      if (!list.length) {
-        box.innerHTML = '<p class="disc-empty">Henüz sanal işlem yok — yukarıda bir pozisyon kurun ve nasıl performans göstereceğini takip etmek için buraya kaydedin.</p>';
-        return;
-      }
-      let h = '';
-      list.forEach(function (t) {
-        const legsTxt = t.legs.map(paperLegLabel).join(' · ');
-        const entryCash = paperEntryCash(t.legs);
-        const entryTxt = (entryCash >= 0 ? 'Credit ' : 'Debit ') + formatMoney(Math.abs(entryCash));
-        const days = paperDaysHeld(t);
-        const dayTxt = days === 1 ? '1 day' : days + ' days';
-        h += '<div class="disc-card" style="margin-bottom:10px">';
-        h += '<div class="disc-title">' + escapeHtml(t.note || 'Paper trade') +
-          ' <span class="disc-sub">' + escapeHtml(t.ticker || '') + ' · ' + paperDateStr(t.createdAt) + ' · ' + dayTxt + '</span></div>';
-        h += '<div class="disc-note">' + escapeHtml(legsTxt) + '</div>';
-        h += '<div class="disc-note">Entry: ' + entryTxt + ' @ spot ' + formatMoney(t.entrySpot) + '</div>';
-        if (t.status === 'open') {
-          const u = paperUnrealized(t);
-          const cls = u.pnl >= 0 ? 'var(--green)' : 'var(--red)';
-          h += '<div class="disc-note">Now: <b style="color:' + cls + '">' + (u.pnl >= 0 ? '+' : '−') + formatMoney(Math.abs(u.pnl)) + '</b>' +
-            (u.modeled ? ' <span class="disc-sub">(partly modeled)</span>' : ' <span class="disc-sub">(chain)</span>') + '</div>';
-          const armedClose = paperArmedId === t.id && paperArmedAction === 'close';
-          const armedDel = paperArmedId === t.id && paperArmedAction === 'delete';
-          h += '<p style="margin:6px 0 0">' +
-            '<button type="button" class="btn-sm" onclick="armPaperTrade(\'' + t.id + '\',\'close\')">' + (armedClose ? 'Kapatmayı onayla' : 'İşlemi kapat') + '</button> ' +
-            '<button type="button" class="btn-sm" onclick="armPaperTrade(\'' + t.id + '\',\'delete\')">' + (armedDel ? 'Silmayı onayla' : 'Sil') + '</button>' +
-            (armedClose || armedDel ? ' <button type="button" class="btn-sm" onclick="disarmPaperTrade()">İptal</button>' : '') +
-            '</p>';
-        } else {
-          const rpnl = t.realized || 0;
-          const cls = rpnl >= 0 ? 'var(--green)' : 'var(--red)';
-          h += '<div class="disc-note">Closed ' + paperDateStr(t.closedAt) + ': <b style="color:' + cls + '">' + (rpnl >= 0 ? '+' : '−') + formatMoney(Math.abs(rpnl)) + '</b> realized</div>';
-          h += '<p style="margin:6px 0 0"><button type="button" class="btn-sm" onclick="armPaperTrade(\'' + t.id + '\',\'delete\')">' +
-            (paperArmedId === t.id ? 'Silmayı onayla' : 'Sil') + '</button>' +
-            (paperArmedId === t.id ? ' <button type="button" class="btn-sm" onclick="disarmPaperTrade()">İptal</button>' : '') + '</p>';
-        }
-        h += '</div>';
-      });
-      box.innerHTML = h;
-    }
-    // Inline two-step confirm for close/delete (same pattern as the roll card:
-    // no native dialogs). First click arms and repaints; second executes.
-    function armPaperTrade(id, action) {
-      if (paperArmedId === id && paperArmedAction === action) {
-        if (action === 'close') closePaperTrade(id);
-        else deletePaperTrade(id);
-        return;
-      }
-      paperArmedId = id; paperArmedAction = action;
-      renderPaperTrades();
-    }
-    function disarmPaperTrade() {
-      paperArmedId = null; paperArmedAction = null;
-      renderPaperTrades();
-    }
-    function closePaperTrade(id) {
-      const found = paperTradeById(id);
-      paperArmedId = null; paperArmedAction = null;
-      if (!found || found.t.status !== 'open') { renderPaperTrades(); return; }
-      const exitPx = {};
-      let rpnl = 0;
-      found.t.legs.forEach(function (l, i) {
-        const q = paperQuote(l);
-        exitPx[i] = Math.round(q.px * 100) / 100;
-        rpnl += paperLegPnl(l, l.premium, q.px);
-      });
-      found.t.status = 'closed';
-      found.t.closedAt = Date.now();
-      found.t.exitPx = exitPx;
-      found.t.realized = Math.round(rpnl * 100) / 100;
-      persistPaperTrades(found.list);
-      renderPaperTrades();
-    }
-    function deletePaperTrade(id) {
-      const found = paperTradeById(id);
-      paperArmedId = null; paperArmedAction = null;
-      if (!found) { renderPaperTrades(); return; }
-      found.list.splice(found.idx, 1);
-      persistPaperTrades(found.list);
-      renderPaperTrades();
-    }
-
-    function applyRoll() {
-      if (!lastRoll) return;
-      if (!rollArmed) {
-        // First click arms — an inline, visible confirm. (A native confirm()
-        // dialog proved invisible to automated browsers in QA, making Apply
-        // look like a no-op.)
-        rollArmed = true;
-        const btn = document.getElementById('rollApplyBtn');
-        if (btn) btn.textContent = 'Çevirmeyi onayla';
-        const cap = document.getElementById('rollApplyCap');
-        if (cap) cap.innerHTML = 'Bacağı değiştirmek için tekrar tıklayın. <button type="button" class="btn-sm" style="margin-left:6px" onclick="disarmRoll()">Vazgeç</button>';
-        return;
-      }
-      rollArmed = false;
-      disarmRollPaint();
-      const box = document.getElementById('rollResults');
-      // Re-resolve the leg by id and recompute from the CURRENT form inputs,
-      // so a leg edited (or removed) after modeling can't silently apply a
-      // stale quote — the applied roll always matches what's on screen now.
-      const idx = legs.findIndex(function (l) { return l.id === lastRoll.legId; });
-      if (idx < 0) {
-        lastRoll = null;
-        if (box) box.innerHTML = '<p class="disc-empty">O bacak artık yok — çevirmeyi yeniden modelleyin.</p>';
-        return;
-      }
-      const leg = legs[idx];
-      const strikeEl = document.getElementById('rollStrike');
-      const expEl = document.getElementById('rollExpiry');
-      const newStrike = strikeEl ? parseFloat(strikeEl.value) : NaN;
-      if (!isFinite(newStrike) || newStrike <= 0) {
-        lastRoll = null;
-        if (box) box.innerHTML = '<p class="disc-empty">Çevirmeyi modellemek için yeni bir kullanım fiyatı girin.</p>';
-        return;
-      }
-      let newExpStr = expEl ? expEl.value : '';
-      let newDte = leg.dte;
-      if (newExpStr) newDte = Math.max(1, expirationDte(newExpStr));
-      else newDte = parseInt((document.getElementById('rollDte') || {}).value, 10) || leg.dte;
-      if (Math.abs(newStrike - leg.strike) < 1e-9 && newDte === leg.dte) {
-        lastRoll = null;
-        if (box) box.innerHTML = '<p class="disc-empty">Aynı kullanım fiyatı ve vade — çevirme en az birini değiştirir.</p>';
-        return;
-      }
-      const r = computeRoll(leg, newStrike, newExpStr, newDte);
-      markBuildDirty();
-      legs[idx] = r.newLeg;
-      lastRoll = null;
-      if (typeof syncDTESlider === 'function') syncDTESlider();
-      updateSpotSliderRange();
-      renderLegs();
-      recalc();
-      if (typeof resetSimulation === 'function') resetSimulation();
-      syncRollLegs();
-      if (box) {
-        const dir = r.netCash >= 0 ? 'Credit' : 'Debit';
-        box.innerHTML = '<p class="disc-note" style="color:var(--green)">Şuraya çevrildi: ' + escapeHtml(rollLegLabel(r.newLeg)) +
-          ' — ' + dir + ' ' + formatMoney(Math.abs(r.netCash)) + '.</p>' +
-          '<p class="disc-empty">Yukarıdan başka bir roll modelleyin veya bacakları ayarlayın.</p>';
-      }
-    }
-
-    function summarizeExpiry(expiry, labels, legsArr) {
-      if (!expiry || !expiry.length) return { maxProfit: '—', maxLoss: '—', breakevens: '—', beNums: [], ror: '—', cap: '—' };
-      const maxP = Math.max.apply(null, expiry);
-      const minP = Math.min.apply(null, expiry);
-      let maxProfitText = formatMoney(maxP);
-      let maxLossText = formatMoney(minP);
-      const tail = rightTailSlope(legsArr);
-      if (tail > 0) maxProfitText = 'Unlimited';
-      else if (tail < 0) maxLossText = 'Unlimited';
-      const bes = [];
-      for (let i = 1; i < expiry.length; i++) {
-        if (expiry[i - 1] * expiry[i] <= 0) {
-          const x0 = labels[i - 1], x1 = labels[i];
-          const y0 = expiry[i - 1], y1 = expiry[i];
-          if (Math.abs(y1 - y0) > 1e-9) {
-            bes.push((x0 - y0 * (x1 - x0) / (y1 - y0)).toFixed(1));
-          }
-        }
-      }
-      const rr = riskReturnStats(maxP, minP, tail);
-      return {
-        maxProfit: maxProfitText,
-        maxLoss: maxLossText,
-        breakevens: bes.length ? bes.map(function (b) { return '$' + b; }).join(' / ') : '—',
-        beNums: bes.map(Number),
-        ror: rr.ror,
-        cap: rr.cap
-      };
-    }
-
-    function setNetLabel(el, net) {
-      if (!el) return;
-      if (net > 0) {
-        el.textContent = 'Debit ' + formatMoney(net);
-        el.style.color = 'var(--red)';
-      } else if (net < 0) {
-        el.textContent = 'Credit ' + formatMoney(Math.abs(net));
-        el.style.color = 'var(--green)';
-      } else {
-        el.textContent = '$0';
-        el.style.color = 'var(--text)';
-      }
-    }
-
 
     var shareBtn = document.getElementById('shareSetup');
     if (shareBtn) {
@@ -5471,7 +3636,6 @@ Risk Reversal (synthetic tilt)
       const put = findChainContract('put', k, exp);
       const iv = quoteIvPct(call) || quoteIvPct(put);
       if (iv) ivEl.value = iv;
-      if (typeof syncIvSlider === 'function') syncIvSlider();
     }
     function tryFillLegFromChain(leg, opts) {
       const options = opts || {};
@@ -5569,6 +3733,7 @@ Risk Reversal (synthetic tilt)
         renderLegs();
         if (typeof renderLegsB === 'function' && compareMode) renderLegsB();
         syncDTESlider();
+        updateSpotSliderRange();
         if (typeof resetSimulation === 'function') resetSimulation(); else if (typeof recalc === 'function') recalc();
         return;
       }
@@ -5663,6 +3828,7 @@ Risk Reversal (synthetic tilt)
           applyChainQuotesToLegs(legsB, { snapStrikes: true, setDte: true, force: false });
         }
         syncDTESlider();
+        updateSpotSliderRange();
         renderLegs();
         if (typeof renderLegsB === 'function' && compareMode) renderLegsB();
         renderChainTable();
@@ -5683,20 +3849,6 @@ Risk Reversal (synthetic tilt)
         statusEl.textContent = 'Zincir başarısız: ' + err.message + ' — SPY, QQQ, AAPL veya SPX gibi listelenen bir hisse/endeks ticker’ı deneyin';
         statusEl.className='quote-status err';
       }
-    }
-    // Tıklanabilir bid/ask: bid'e tıklamak bid'den SATIŞ bacağı, ask'e tıklamak
-    // ask'ten ALIŞ bacağı ekler. Bid/ask yoksa orta fiyat gösterilir.
-    function baCell(q, type, strike, expStr){
-      if (!q) return `<td class="price">—</td>`;
-      const b = Number(q.bid), a = Number(q.ask);
-      if (b > 0 && a > 0){
-        return `<td class="price has ba-cell">` +
-          `<button type="button" class="ba ba-bid" title="Bid'den sat $${b.toFixed(2)}" onclick="addLegFromChain('${type}', ${strike}, ${b}, '${expStr}', 'sell')">${b.toFixed(2)}</button>` +
-          `<span class="ba-sep">×</span>` +
-          `<button type="button" class="ba ba-ask" title="Ask'ten al $${a.toFixed(2)}" onclick="addLegFromChain('${type}', ${strike}, ${a}, '${expStr}', 'buy')">${a.toFixed(2)}</button></td>`;
-      }
-      const m = midPrice(q);
-      return `<td class="price ${m?'has':''}">${m? '$'+m.toFixed(2):'—'}</td>`;
     }
     function renderChainTable(){
       const wrap = document.getElementById('chainTableWrap');
@@ -5736,43 +3888,36 @@ Risk Reversal (synthetic tilt)
         return d.toFixed(2);
       }
       let html = '<table class="chain-table"><thead><tr><th>Δ</th><th>Call</th><th></th><th>Strike</th><th></th><th>Put</th><th>Δ</th></tr></thead><tbody>';
-      // Exact ATM strike (closest to spot) for the atm-exact highlight
-      let atmStrike = null, atmD = Infinity;
-      visible.forEach(s => { const d = Math.abs(s - spotManual); if (d < atmD) { atmD = d; atmStrike = s; } });
       visible.slice().reverse().forEach(strike=>{
         const c = callMap.get(strike);
         const p2 = putMap.get(strike);
         const cPrice = c ? midPrice(c) : 0;
         const pPrice = p2 ? midPrice(p2) : 0;
         const isATM = Math.abs(strike-spotManual) < spotManual*0.02;
-        const isExactATM = atmStrike !== null && strike === atmStrike;
-        const cls = (isATM?'atm':'') + (isExactATM?' atm-exact':'');
-        const dat = (isATM?' data-atm="1"':'') + (isExactATM?' data-atm-exact="1"':'');
-        html += `<tr class="${cls.trim()}"${dat}>`;
+        html += `<tr class="${isATM?'atm':''}"${isATM?' data-atm="1"':''}>`;
         html += `<td class="delta">${deltaFor(c, 'call', strike)}</td>`;
-        html += baCell(c, 'call', strike, exp);
+        html += `<td class="price ${cPrice?'has':''}">${cPrice? '$'+cPrice.toFixed(2):'—'}</td>`;
         html += `<td><button class="btn-add" onclick="addLegFromChain('call', ${strike}, ${cPrice||0}, '${exp}')">Call Ekle</button></td>`;
         html += `<td class="strike">${strike}</td>`;
         html += `<td><button class="btn-add" onclick="addLegFromChain('put', ${strike}, ${pPrice||0}, '${exp}')">Put Ekle</button></td>`;
-        html += baCell(p2, 'put', strike, exp);
+        html += `<td class="price ${pPrice?'has':''}">${pPrice? '$'+pPrice.toFixed(2):'—'}</td>`;
         html += `<td class="delta">${deltaFor(p2, 'put', strike)}</td>`;
         html += `</tr>`;
       });
       html += '</tbody></table>';
       wrap.innerHTML = html;
-      const atmRow = wrap.querySelector('tr[data-atm-exact="1"],tr[data-atm="1"]');
+      const atmRow = wrap.querySelector('tr[data-atm="1"]');
       if (atmRow && atmRow.scrollIntoView) {
         atmRow.scrollIntoView({ block: 'center' });
       }
     }
-    function addLegFromChain(type, strike, premium, expStr, side){
+    function addLegFromChain(type, strike, premium, expStr){
       const today = new Date(); today.setHours(0,0,0,0);
       const expDate = new Date(expStr);
       const dte = Math.max(0, Math.round((expDate - today)/86400000));
-      const legSide = side === 'sell' ? 'sell' : 'buy';
       const leg = {
         id: nextId++,
-        side: legSide,
+        side: 'buy',
         type: type,
         strike: Number(strike),
         dte: dte,
@@ -5794,9 +3939,12 @@ Risk Reversal (synthetic tilt)
       try { params = new URLSearchParams(window.location.search); } catch (e) {}
       var setupToken = params ? params.get('setup') : null;
       var templateKey = params ? params.get('template') : null;
+      var spotEl = document.getElementById('spotSlider');
+      if (spotEl) spotEl.value = 100;
 
       if (setupToken && legsFromQuery(setupToken)) {
         syncDTESlider();
+        updateSpotSliderRange();
         renderLegs();
         recalc();
         resetSimulation();
@@ -5826,13 +3974,8 @@ Risk Reversal (synthetic tilt)
       }
       legs = defaultLongCall();
       syncDTESlider();
+      updateSpotSliderRange();
       renderLegs();
-      // Lock the Range window at ±20% around spot on boot.
-      if (typeof applyRangeZoom === 'function') {
-        rangeZoomActive = true;
-        const S0 = parseFloat(document.getElementById('spot').value) || 100;
-        applyRangeZoom(S0);
-      }
       recalc();
       resetSimulation();
       if (typeof loadCboeChain === 'function') loadCboeChain();
