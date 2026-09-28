@@ -832,6 +832,21 @@ const el = (els, id) => els.get(id);
     if (html.indexOf('onclick="openInAnalyzer()"') >= 0) throw new Error('Analyze button present');
     if (html.indexOf('id="shareSetup"') < 0) throw new Error('Share link button lost');
   });
+
+  // F23: chart crosshair P/L label never shows signed zero either.
+  check('F23 crosshair label never shows signed zero', () => {
+    const res = vm.runInContext(`[
+      formatCrosshairPL(0.04, true, 0),
+      formatCrosshairPL(-0.04, true, 0),
+      formatCrosshairPL(12.34, true, 0),
+      formatCrosshairPL(-4.26, true, 0),
+      formatCrosshairPL(0, false, 0.4),
+      formatCrosshairPL(0, false, -0.4),
+      formatCrosshairPL(0, false, 56.5),
+      formatCrosshairPL(0, false, -6.71)
+    ].join('|')`, ctx);
+    if (res !== '0.0%|0.0%|+12.3%|-4.3%|$0|$0|+$57|$-7') throw new Error(res);
+  });
 }
 
 // ---------- G: Round 2 item 2 — clickable bid/ask on the chain ----------

@@ -2088,9 +2088,9 @@
         const priceLbl = '$' + crosshairS.toFixed(1);
         ctx.fillText(priceLbl, Math.min(x + 4, right - 48), top + 12);
         ctx.fillStyle = plColor;
-        const plLbl = chPct
-          ? ((chY >= 0 ? '+' : '') + chY.toFixed(1) + '%')
-          : ((crosshairPL >= 0 ? '+' : '') + '$' + crosshairPL.toFixed(0));
+        const plLbl = (typeof formatCrosshairPL === 'function')
+          ? formatCrosshairPL(chY, chPct, crosshairPL)
+          : ((chY >= 0 ? '+' : '') + chY.toFixed(1) + '%');
         ctx.fillText(plLbl, left + 4, Math.max(y - 4, top + 12));
         ctx.restore();
       }
@@ -4220,6 +4220,18 @@
       const r = pct.toFixed(0);
       if (parseFloat(r) === 0) return '0%';
       return (pct > 0 ? '+' : '') + r + '%';
+    }
+
+    // Chart crosshair P/L label with the same no-signed-zero rule as the
+    // table cells: "+12.3%"/"0.0%" in pct mode, "+$56"/"$-7"/"$0" in dollars
+    // (the "$-7" shape is the pre-existing convention — only ±0 is fixed).
+    function formatCrosshairPL(chY, chPct, crosshairPL) {
+      if (chPct) {
+        if (parseFloat(chY.toFixed(1)) === 0) return '0.0%';
+        return (chY >= 0 ? '+' : '') + chY.toFixed(1) + '%';
+      }
+      if (parseFloat(crosshairPL.toFixed(0)) === 0) return '$0';
+      return (crosshairPL >= 0 ? '+' : '') + '$' + crosshairPL.toFixed(0);
     }
 
     // Same X window the payoff chart uses, so rows line up with the chart.
