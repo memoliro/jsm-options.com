@@ -378,6 +378,12 @@
     .slices-list { flex: 1 1 280px; min-width: 250px; display: flex; flex-direction: column; gap: 4px; padding-top: 2px; }
     @media (max-width: 760px) {
       .slices-body { flex-direction: column; }
+      /* flex-basis:640px is the bell's *width* in the row layout; in a column
+         layout it would become a ~640px-tall flex basis, stretching the SVG so
+         the 118-unit drawing centers vertically (default preserveAspectRatio)
+         with big empty bands above/below the bell on narrow screens. Reset so
+         the bell's height follows its aspect ratio instead (2026-09-28). */
+      .slices-body > .slice-bell { flex: 0 0 auto; }
       .slices-list { min-width: 0; width: 100%; }
     }
     .slice-bell text { font-family: 'Segoe UI', system-ui, sans-serif; }

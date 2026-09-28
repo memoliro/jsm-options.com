@@ -378,6 +378,11 @@
     .slices-list { flex: 1 1 280px; min-width: 250px; display: flex; flex-direction: column; gap: 4px; padding-top: 2px; }
     @media (max-width: 760px) {
       .slices-body { flex-direction: column; }
+      /* flex-basis:640px, satir duzeninde zilin *genisligidir*; sutun duzeninde
+         ~640px yukseklik tabani olur ve SVG gerilip cizim dikeyde ortalanir
+         (dar ekranlarda zilin ustunde/altinda bos bantlar). Yuksekligin en-boy
+         oranini izlemesi icin sifirla (2026-09-28). */
+      .slices-body > .slice-bell { flex: 0 0 auto; }
       .slices-list { min-width: 0; width: 100%; }
     }
     .slice-bell text { font-family: 'Segoe UI', system-ui, sans-serif; }

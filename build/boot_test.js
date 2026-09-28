@@ -1343,6 +1343,21 @@ const el = (els, id) => els.get(id);
     if (!m || !/display\s*:\s*flex/.test(m[0])) throw new Error('slices-body not flex');
     if (!/class="slices-list"/.test(html.slice(bi, bi + 4000))) throw new Error('priceSlices not a slices-list column');
   });
+  check('M11 slices: narrow single-column resets bell flex-basis (no stretched SVG)', () => {
+    const html = fs.readFileSync(path.join(SITE, 'builder', 'index.html'), 'utf8');
+    // find the 760px media query that stacks .slices-body into a column
+    let i = -1, seg = '';
+    for (let p = html.indexOf('@media (max-width: 760px)'); p >= 0; p = html.indexOf('@media (max-width: 760px)', p + 1)) {
+      const s = html.slice(p, p + 900);
+      if (/\.slices-body\s*\{\s*flex-direction\s*:\s*column/.test(s)) { i = p; seg = s; break; }
+    }
+    if (i < 0) throw new Error('no 760px media query stacking .slices-body');
+    // flex:1 1 640px is the bell's WIDTH in row layout; in column layout the
+    // 640px basis would become height and vertically center the 118-unit
+    // drawing inside a tall SVG (empty bands above/below the bell).
+    if (!/\.slices-body\s*>\s*\.slice-bell\s*\{[^}]*flex\s*:\s*0\s+0\s+auto/.test(seg))
+      throw new Error('narrow media query does not reset .slice-bell flex to 0 0 auto');
+  });
 }
 {
   const { ctx } = run('builder', '');
