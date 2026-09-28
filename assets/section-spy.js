@@ -100,14 +100,10 @@
 
   // site.js assigns sec-N ids to id-less headings on DOMContentLoaded — after
   // this defer script has run. Re-collect then so every section is tracked and
-  // every sidebar link can highlight.
+  // every sidebar link can highlight. (Registered at the end of the IIFE so
+  // the immediate path below can safely call update()/render().)
   function collectSideToc() { collectLinks('aside.page-toc nav', 'is-active'); }
   function collectLate() { collectSideToc(); collectSections(); update(); }
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', collectLate);
-  } else {
-    collectLate();
-  }
 
   /* ---------- restructure breadcrumb: Home / Page / Section ---------- */
   function sepEl() {
@@ -161,4 +157,14 @@
   window.addEventListener('scroll', onScroll, { passive: true });
   window.addEventListener('resize', onScroll);
   update();
+
+  // Late collection (see above): run after DOMContentLoaded, or immediately if it
+  // already fired. Safe here — secSpan, render(), and update() all exist.
+  // Note: defer scripts run at readyState 'interactive', BEFORE DOMContentLoaded
+  // fires, so the listener branch is the one that runs in practice.
+  if (document.readyState === 'complete') {
+    collectLate();
+  } else {
+    document.addEventListener('DOMContentLoaded', collectLate);
+  }
 })();
