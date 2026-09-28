@@ -787,6 +787,19 @@ const el = (els, id) => els.get(id);
     if (clearBody.indexOf("classList.remove('ax-hover')") < 0) throw new Error('hover is never cleared');
     if ((bindBody.match(/clearPlAxHover\(tbl\)/g) || []).length < 2) throw new Error('binding does not clear hover');
   });
+
+  // F20: P&L heatmap cells use the neutral text color — the green/red cell
+  // backgrounds already signal sign/magnitude, and colored text on colored
+  // backgrounds hurts contrast (user preference, 2026-09-27). Scoped to
+  // #plTable so the finder/roll tables keep their semantic text colors.
+  check('F20 P&L heatmap cells use neutral text color', () => {
+    const html = fs.readFileSync(path.join(SITE, 'builder', 'index.html'), 'utf8');
+    const m = html.match(/#plTable td\.pv-pos,\s*#plTable td\.pv-neg\s*\{[^}]*\}/);
+    if (!m) throw new Error('#plTable pv-pos/pv-neg override rule missing');
+    if (m[0].indexOf('var(--text)') < 0) throw new Error('heatmap cells do not use var(--text): ' + m[0]);
+    // the generic semantic-color rule must survive for the finder/roll tables
+    if (!/\.pl-table td\.pv-pos\s*\{\s*color:\s*var\(--green\)/.test(html)) throw new Error('base pv-pos rule lost');
+  });
 }
 
 // ---------- G: Round 2 item 2 — clickable bid/ask on the chain ----------
