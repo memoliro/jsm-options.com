@@ -361,13 +361,13 @@ const el = (els, id) => els.get(id);
     const html = fs.readFileSync(path.join(SITE, 'builder', 'index.html'), 'utf8');
     if (!html.includes('id="rangeLabel">±20%<')) throw new Error('rangeLabel default missing in HTML');
   });
-  check('E6 builder: stat strip has 10 tiles (A) + 7 (B)', () => {
+  check('E6 builder: stat strip has 8 tiles (A) + 7 (B)', () => {
     const html = fs.readFileSync(path.join(SITE, 'builder', 'index.html'), 'utf8');
     const aPart = html.split('Compare legs')[0];
     const bPart = html.split('Compare legs')[1] || '';
     const aCount = (aPart.match(/class="stat-tile/g) || []).length;
     const bCount = (bPart.match(/class="stat-tile/g) || []).length;
-    if (aCount !== 10) throw new Error('A tiles=' + aCount); // Item 6 added Est. margin
+    if (aCount !== 8) throw new Error('A tiles=' + aCount); // Item 6 added Est. margin; 2026-09-28 removed the 2 P/L hero tiles
     if (bCount !== 7) throw new Error('B tiles=' + bCount);
   });
   check('E7 builder: stat tiles use flat background (no gradient)', () => {
@@ -1974,6 +1974,29 @@ async function runAsyncDiscoveryTests() {
     const after = j('JSON.stringify(loadPaperTrades())');
     if (before !== after) throw new Error('storage changed across render');
     if (j('loadPaperTrades().length') !== 1) throw new Error('lost the trade');
+  });
+}
+
+// ---------- N: stat-strip trim + lower card order (2026-09-28) ----------
+{
+  const html = fs.readFileSync(path.join(SITE, 'builder', 'index.html'), 'utf8');
+  check('N1 tiles: Model P/L and Expiry P/L tiles removed, Net Debit/Credit stays', () => {
+    if (html.indexOf('id="plValue"') !== -1) throw new Error('plValue tile still present');
+    if (html.indexOf('id="plExpiry"') !== -1) throw new Error('plExpiry tile still present');
+    if (html.indexOf('id="netPremium"') === -1) throw new Error('netPremium tile missing');
+    if (/Model P\/L · time left/.test(html)) throw new Error('stale Model P/L label present');
+    if (/Expiry P\/L @ price/.test(html)) throw new Error('stale Expiry P/L label present');
+  });
+  check('N2 cards: discovery + roll + paper sit together just before Support the site', () => {
+    const d = html.indexOf('id="discoveryCard"'), r = html.indexOf('id="rollCard"'),
+          pa = html.indexOf('id="paperCard"'), bmc = html.indexOf('bmc-card'),
+          bell = html.indexOf('id="sliceBell"');
+    for (const [n, v] of [['discovery', d], ['roll', r], ['paper', pa], ['support', bmc], ['bell', bell]]) {
+      if (v === -1) throw new Error(n + ' not found');
+    }
+    if (!(bell < d && d < r && r < pa && pa < bmc)) {
+      throw new Error(`order wrong: bell=${bell} discovery=${d} roll=${r} paper=${pa} support=${bmc}`);
+    }
   });
 }
 
