@@ -9,6 +9,21 @@
 (function () {
   'use strict';
 
+  // Pin the sticky breadcrumb just below the sticky site header, whatever its
+  // rendered height is (it changes with viewport width). Re-measure on resize,
+  // full load, and once webfonts settle, so the offset never drifts.
+  function pinCrumbOffset() {
+    var header = document.querySelector('.site-header');
+    var h = header ? Math.ceil(header.getBoundingClientRect().height) : 68;
+    document.documentElement.style.setProperty('--crumb-top', h + 'px');
+  }
+  pinCrumbOffset();
+  window.addEventListener('resize', pinCrumbOffset);
+  window.addEventListener('load', pinCrumbOffset);
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(pinCrumbOffset).catch(function () {});
+  }
+
   var nav = document.querySelector('nav.breadcrumbs');
   if (!nav || !('requestAnimationFrame' in window)) return;
 
