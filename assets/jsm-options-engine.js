@@ -4237,7 +4237,7 @@
     // (horizontal axis). Delegated on the table element so the binding
     // survives renderPlTable() re-renders (innerHTML replacement).
     function clearPlAxHover(tbl) {
-      const marked = tbl.querySelectorAll('th.ax-hover');
+      const marked = tbl.querySelectorAll('.ax-hover');
       for (let i = 0; i < marked.length; i++) marked[i].classList.remove('ax-hover');
     }
     function bindPlAxHover(tbl) {
@@ -4250,6 +4250,7 @@
         tbl._axHoverTd = td;
         clearPlAxHover(tbl);
         if (!td || !tbl.contains(td)) return;
+        td.classList.add('ax-hover'); // the hovered cell itself
         const tr = td.parentElement;
         const rowTh = tr ? tr.querySelector('th') : null;
         if (rowTh) rowTh.classList.add('ax-hover');

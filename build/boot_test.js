@@ -761,7 +761,8 @@ const el = (els, id) => els.get(id);
   // installs the binding.
   check('F19 table hover crosshair: ax-hover wiring present', () => {
     const html = fs.readFileSync(path.join(SITE, 'builder', 'index.html'), 'utf8');
-    if (!/\.pl-table th\.ax-hover\s*\{/.test(html)) throw new Error('ax-hover CSS rule missing');
+    if (!/\.pl-table th\.ax-hover\s*\{/.test(html)) throw new Error('ax-hover th CSS rule missing');
+    if (!/\.pl-table tbody td\.ax-hover\s*\{/.test(html)) throw new Error('ax-hover td CSS rule missing');
     const iRender = engineSrc.indexOf('function renderPlTable');
     if (iRender < 0) throw new Error('renderPlTable missing from engine');
     const iBind = engineSrc.indexOf('function bindPlAxHover');
@@ -777,7 +778,7 @@ const el = (els, id) => els.get(id);
     if (bindBody.indexOf("tr.querySelector('th')") < 0) throw new Error('hover does not find row header');
     if (bindBody.indexOf('td.cellIndex') < 0) throw new Error('hover does not find column header');
     const nAdd = (bindBody.match(/classList\.add\('ax-hover'\)/g) || []).length;
-    if (nAdd !== 2) throw new Error('expected 2 ax-hover adds (row+column), got ' + nAdd);
+    if (nAdd !== 3) throw new Error('expected 3 ax-hover adds (cell+row+column), got ' + nAdd);
     // clearing: clearPlAxHover removes the class, and the binding calls it
     // on every cell change and on mouseleave
     const iClear = engineSrc.indexOf('function clearPlAxHover');
@@ -1615,10 +1616,12 @@ async function runAsyncDiscoveryTests() {
   const j = (expr) => vm.runInContext(expr, ctx);
   const set = (id, v) => j('document.getElementById("' + id + '").value = "' + v + '"');
   j(`(function(){
-    // DST-safe: build the date string from UTC parts so the local->UTC
-    // conversion can't push it a day forward when the span crosses a
-    // DST boundary (e.g. EDT evening + 60d lands on EST, +1h -> next UTC day).
-    function dstr(days){ var n = new Date(); var d = new Date(Date.UTC(n.getUTCFullYear(), n.getUTCMonth(), n.getUTCDate() + days)); return d.toISOString().slice(0,10); }
+    // Date strings built from LOCAL calendar parts, mirroring the engine's
+    // expirationDte() (local-midnight diff). DST stays correct: the +/-1h
+    // fall/spring shift sits inside Math.round's tolerance. (A previous
+    // UTC-parts version broke every evening 20:00-24:00 EDT: the UTC date
+    // had already rolled to tomorrow while the engine still used today.)
+    function dstr(days){ var d = new Date(); d.setHours(0,0,0,0); d.setDate(d.getDate() + days); var m = d.getMonth()+1, dd = d.getDate(); return d.getFullYear() + '-' + (m<10?'0':'') + m + '-' + (dd<10?'0':'') + dd; }
     window.__exp30 = dstr(30); window.__exp60 = dstr(60);
     window.__seedRollChain = function(){
       window._cboeData = {
