@@ -2000,6 +2000,17 @@ async function runAsyncDiscoveryTests() {
   });
 }
 
+// ---------- P2: ATM row highlight (2026-09-28, user request) ----------
+{
+  const html = fs.readFileSync(path.join(SITE, 'builder', 'index.html'), 'utf8');
+  check('P2 chain: ATM row has no static double border; hover deepens highlight', () => {
+    const m = html.match(/\.chain-table tr\.atm-exact td\{[^}]*\}/);
+    if (!m) throw new Error('no atm-exact td rule');
+    if (/border-top|border-bottom/.test(m[0])) throw new Error('static double border still present: ' + m[0]);
+    if (!/\.chain-table tr\.atm-exact:hover td\{[^}]*\}/.test(html)) throw new Error('no atm-exact hover rule');
+  });
+}
+
 runAsyncDiscoveryTests().then(() => {
   console.log(failures ? `\n${failures} FAILURES` : '\nALL PASS');
   process.exit(failures ? 1 : 0);

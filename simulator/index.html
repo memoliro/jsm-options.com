@@ -769,9 +769,14 @@
     .recent-del:hover{color:var(--red);background:rgba(239,68,68,.12)}
     .chain-table td.delta{color:var(--muted);font-size:11px;background:rgba(59,130,246,.06)}
     .chain-table tr.atm td.delta{background:rgba(59,130,246,.14)}
-    .chain-table tr.atm-exact td{border-top:2px solid var(--accent);border-bottom:2px solid var(--accent);background:rgba(59,130,246,.10)}
+    .chain-table tr.atm-exact td{background:rgba(59,130,246,.10)}
     .chain-table tr.atm-exact td.strike{background:rgba(59,130,246,.30)}
     .chain-table tr.atm-exact td.delta{background:rgba(59,130,246,.20)}
+    /* ATM row: no static double border (2026-09-28 per user request) — the ATM
+       tag marks the row; hovering deepens the blue highlight instead. */
+    .chain-table tr.atm-exact:hover td{background:rgba(59,130,246,.22)}
+    .chain-table tr.atm-exact:hover td.strike{background:rgba(59,130,246,.40)}
+    .chain-table tr.atm-exact:hover td.delta{background:rgba(59,130,246,.30)}
     .atm-tag{display:inline-block;margin-left:6px;font-size:9px;font-weight:800;letter-spacing:.08em;color:#fff;background:var(--accent);border-radius:4px;padding:1px 5px;vertical-align:1px;white-space:nowrap}
     #ticker, select#chainFilterTop, select#chainExpiration{background:var(--card);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:8px}
 
