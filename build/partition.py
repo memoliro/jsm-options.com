@@ -587,11 +587,13 @@ builder_body = builder_body.replace(
           <label>Implied volatility <strong id="ivSliderLabel">25%</strong></label>''',
     '''        <div class="slider-group">
           <label>Implied volatility <strong id="ivSliderLabel">25%</strong></label>''')
-# analyze button next to share
-builder_body = builder_body.replace(
-    '''<button class="btn-secondary btn-sm" id="shareSetup">🔗 Share link</button>''',
-    '''<button class="btn-secondary btn-sm" id="shareSetup">🔗 Share link</button>
-            <button class="btn-secondary btn-sm" onclick="openInAnalyzer()" title="Open this position in the Analyzer &amp; Simulator">📊 Analyze →</button>''')
+# analyze button next to share — REMOVED 2026-09-27 per user request ("don't need
+# it for now"). Kept here commented for easy restore; the openInAnalyzer()
+# function stays in the engine and A6 still covers it.
+# builder_body = builder_body.replace(
+#     '''<button class="btn-secondary btn-sm" id="shareSetup">🔗 Share link</button>''',
+#     '''<button class="btn-secondary btn-sm" id="shareSetup">🔗 Share link</button>
+#             <button class="btn-secondary btn-sm" onclick="openInAnalyzer()" title="Open this position in the Analyzer &amp; Simulator">📊 Analyze →</button>''')
 
 builder_head = head.replace(
     '    .hidden-controls { display: none; }',

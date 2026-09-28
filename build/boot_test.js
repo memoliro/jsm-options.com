@@ -800,6 +800,38 @@ const el = (els, id) => els.get(id);
     // the generic semantic-color rule must survive for the finder/roll tables
     if (!/\.pl-table td\.pv-pos\s*\{\s*color:\s*var\(--green\)/.test(html)) throw new Error('base pv-pos rule lost');
   });
+
+  // F21: no negative zero in table cells — values that round to zero show
+  // as unsigned "0.00"/"0%", never "-0.00"/"-0%"/"+0%".
+  check('F21 table cells never show negative zero', () => {
+    const res = vm.runInContext(`(function(){
+      plMetric = 'risk';
+      var d = plMetricDenom();
+      var out = [];
+      out.push(formatPlMetric(-0.004 * d)); // pct -0.4 -> "-0%" before
+      out.push(formatPlMetric(0.004 * d));  // pct +0.4 -> "+0%" before
+      out.push(formatPlMetric(-0.126 * d)); // pct -12.6 -> "-13%"
+      out.push(formatPlMetric(0.126 * d));  // pct +12.6 -> "+13%"
+      plMetric = '$';
+      out.push(formatPlMetric(-0.001));     // "-0.00" before
+      out.push(formatPlMetric(-0.4));       // "-0.40" (real value, keeps sign)
+      out.push(formatPlMetric(250));        // "+250"
+      out.push(formatPlMetric(0));          // "0.00"
+      plMetric = '$';
+      return out.join('|');
+    })()`, ctx);
+    if (res !== '0%|0%|-13%|+13%|0.00|-0.40|+250|0.00') throw new Error(res);
+  });
+
+  // F22: the "Analyze →" button is removed from the builder (user request
+  // 2026-09-27, "don't need it for now"). The openInAnalyzer() function
+  // stays in the engine (A6 covers it) for easy restore.
+  check('F22 no Analyze button in builder', () => {
+    const html = fs.readFileSync(path.join(SITE, 'builder', 'index.html'), 'utf8');
+    if (html.indexOf('Analyze →') >= 0) throw new Error('Analyze button present');
+    if (html.indexOf('onclick="openInAnalyzer()"') >= 0) throw new Error('Analyze button present');
+    if (html.indexOf('id="shareSetup"') < 0) throw new Error('Share link button lost');
+  });
 }
 
 // ---------- G: Round 2 item 2 — clickable bid/ask on the chain ----------

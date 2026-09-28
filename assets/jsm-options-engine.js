@@ -4206,14 +4206,20 @@
       if (!isFinite(v)) return '—';
       if (plMetric === '$') {
         // No $ sign in table cells (user preference): plain signed numbers.
+        // A value that rounds to zero shows as unsigned "0.00", never "-0.00".
         const a = Math.abs(v);
-        return (v < 0 ? '-' : (v > 0 ? '+' : '')) + (a >= 100 ? a.toFixed(0) : a.toFixed(2));
+        const body = a >= 100 ? a.toFixed(0) : a.toFixed(2);
+        if (parseFloat(body) === 0) return body;
+        return (v < 0 ? '-' : (v > 0 ? '+' : '')) + body;
       }
       const d = plMetricDenom();
       if (!(d > 0)) return '—';
       const pct = v / d * 100;
       if (!isFinite(pct)) return '—';
-      return (pct > 0 ? '+' : '') + pct.toFixed(0) + '%';
+      // Same no-negative-zero rule: "-0%" and "+0%" both become "0%".
+      const r = pct.toFixed(0);
+      if (parseFloat(r) === 0) return '0%';
+      return (pct > 0 ? '+' : '') + r + '%';
     }
 
     // Same X window the payoff chart uses, so rows line up with the chart.
