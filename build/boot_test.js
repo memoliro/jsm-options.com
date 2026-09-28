@@ -1312,6 +1312,12 @@ const el = (els, id) => els.get(id);
     if (!/34\.1%/.test(v) || !/13\.6%/.test(v)) throw new Error('band labels missing');
     if (!/μ \$105/.test(v)) throw new Error('ref tick missing');
   });
+  check('M9 bell: width capped so SVG text matches UI scale', () => {
+    const html = fs.readFileSync(path.join(SITE, 'builder', 'index.html'), 'utf8');
+    const m = html.match(/\.slice-bell\s*\{[^}]*\}/);
+    if (!m) throw new Error('no .slice-bell rule');
+    if (!/max-width\s*:\s*640px/.test(m[0])) throw new Error('bell not capped: ' + m[0]);
+  });
 }
 {
   const { ctx } = run('builder', '');

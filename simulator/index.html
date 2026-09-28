@@ -368,7 +368,9 @@
     .slice-chip.dim { opacity: 0.5; }
     [data-theme="light"] .slice-chip { color: #0f766e; background: rgba(13,148,136,0.10); border-color: rgba(13,148,136,0.35); }
     /* Round 2 follow-up: price-slice distribution visual (bell curve with σ bands) */
-    .slice-bell { width: 100%; height: auto; display: block; margin: 4px 0 6px; }
+    .slice-bell { width: 100%; max-width: 640px; height: auto; display: block; margin: 4px 0 6px; }
+    /* max-width keeps the bell's SVG text (8.5 units) at UI-consistent sizes
+       on wide screens instead of ballooning with the card (2026-09-27). */
     .slice-bell text { font-family: 'Segoe UI', system-ui, sans-serif; }
     .slice-bell .mk-line { stroke: #2dd4bf; }
     .slice-bell .mk-label { fill: #2dd4bf; }
