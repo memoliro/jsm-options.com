@@ -1,10 +1,12 @@
-/* Section scroll-spy for lesson pages (level1-level4).
+/* Section scroll-spy for content pages (home, level1-level4, strategies, cheat-sheet).
  *
- * - Extends the breadcrumb trail to "Home / <Page> / <Current section>",
- *   updating the section crumb as the reader scrolls.
- * - Highlights the matching link in the on-page TOC / playbook nav.
+ * - Highlights the matching link in the left sidebar TOC (aside.page-toc)
+ *   and in the on-page TOC / playbook nav as the reader scrolls.
+ * - Where breadcrumb markup exists, extends the trail to
+ *   "Home / <Page> / <Current section>", updating the section crumb on scroll.
  *
- * Pure enhancement: without JS the breadcrumb stays "Home / <Page>".
+ * Pure enhancement: without JS (or without breadcrumbs) the breadcrumb stays
+ * "Home / <Page>" and the sidebar simply doesn't highlight.
  */
 (function () {
   'use strict';
@@ -32,15 +34,8 @@
     document.fonts.ready.then(pinStickyOffsets).catch(function () {});
   }
 
-  if (!nav || !('requestAnimationFrame' in window)) return;
+  if (!('requestAnimationFrame' in window)) return;
 
-  var pageCrumb = nav.querySelector('[aria-current="page"]');
-  if (!pageCrumb) return;
-  var pageLabel = pageCrumb.textContent.trim().replace(/\s+/g, ' ');
-  var pageHref = window.location.pathname.replace(/index\.html?$/, '') || '/';
-  // Keep the existing home link as-is (text + href), so Turkish pages stay Turkish.
-  var homeA = nav.querySelector('a');
-  if (!homeA) return;
   var OVERVIEW = document.documentElement.lang === 'tr' ? 'Genel Bakış' : 'Overview';
 
   /* ---------- collect sections ---------- */
@@ -61,8 +56,7 @@
     });
   }
   collectLinks('nav.lesson-toc, nav.otp-nav', 'active');
-  // The sidebar TOC (aside.page-toc) is built by site.js on DOMContentLoaded,
-  // which runs after this defer script — its links are collected in collectLate() below.
+  // Sidebar links (aside.page-toc) are collected in collectLate() below.
 
   function cleanLabel(s) {
     // collapse whitespace, drop trailing arrow/dingbat ornaments (e.g. "Example ->")
@@ -98,31 +92,75 @@
   collectSections();
   if (!sections.length) return;
 
-  // site.js assigns sec-N ids to id-less headings on DOMContentLoaded — after
-  // this defer script has run. Re-collect then so every section is tracked and
-  // every sidebar link can highlight. (Registered at the end of the IIFE so
-  // the immediate path below can safely call update()/render().)
-  function collectSideToc() { collectLinks('aside.page-toc nav', 'is-active'); }
-  function collectLate() { collectSideToc(); collectSections(); update(); }
+  // Sidebar links cover h1/h2 only, but the spy also tracks h3/article/div
+  // subsections (e.g. level4's article#otp-syn-long inside the "Synthetic
+  // stock" h2). When the current section has no sidebar link of its own,
+  // keep highlighting the nearest preceding h2 that does — the highlight
+  // then sticks for the whole parent section instead of blinking out on
+  // every subsection. Pill navs keep exact matching (they link subsections
+  // directly).
+  var sectionPos = {}; // section id -> index in sections (document order)
+  function indexSections() {
+    sectionPos = {};
+    for (var i = 0; i < sections.length; i++) sectionPos[sections[i].id] = i;
+  }
+  indexSections();
+  function sideIdFor(id) {
+    if (!id) return null;
+    if (sideLinkIds[id]) return id;
+    var i = sectionPos[id];
+    if (i === undefined) return null;
+    for (var j = i - 1; j >= 0; j--) {
+      var s = sections[j];
+      if (s.el.tagName === 'H2' && sideLinkIds[s.id]) return s.id;
+    }
+    return null;
+  }
 
-  /* ---------- restructure breadcrumb: Home / Page / Section ---------- */
+  // Sidebar links are collected late (safety net): site.js normally builds
+  // aside.page-toc at defer time before this script runs, but if script order
+  // ever changes, the DOMContentLoaded pass below still picks them up.
+  // (Registered at the end of the IIFE so the immediate path below can safely
+  // call update()/render().)
+  var sideLinkIds = {}; // section id -> true when the sidebar links to it
+  function collectSideToc() {
+    var before = navLinks.length;
+    collectLinks('aside.page-toc nav', 'is-active');
+    for (var i = before; i < navLinks.length; i++) sideLinkIds[navLinks[i].id] = true;
+  }
+  function collectLate() { collectSideToc(); collectSections(); indexSections(); update(); }
+
+  /* ---------- breadcrumb (only where breadcrumb markup exists) ---------- */
   function sepEl() {
     var s = document.createElement('span');
     s.setAttribute('aria-hidden', 'true');
     s.textContent = '/';
     return s;
   }
-  var pageA = document.createElement('a');
-  pageA.href = pageHref;
-  pageA.textContent = pageLabel;
-  var secSpan = document.createElement('span');
-  secSpan.setAttribute('aria-current', 'page');
-  secSpan.setAttribute('data-section-crumb', '');
-  secSpan.textContent = OVERVIEW;
-  nav.textContent = '';
-  nav.appendChild(homeA); nav.appendChild(sepEl());
-  nav.appendChild(pageA); nav.appendChild(sepEl());
-  nav.appendChild(secSpan);
+  // Restructured trail: Home / Page / Section. Skipped entirely on pages
+  // without breadcrumb markup (e.g. the homepages) — the sidebar scroll-spy
+  // below still works there.
+  var secSpan = null;
+  if (nav) {
+    var pageCrumb = nav.querySelector('[aria-current="page"]');
+    // Keep the existing home link as-is (text + href), so Turkish pages stay Turkish.
+    var homeA = nav.querySelector('a');
+    if (pageCrumb && homeA) {
+      var pageLabel = pageCrumb.textContent.trim().replace(/\s+/g, ' ');
+      var pageHref = window.location.pathname.replace(/index\.html?$/, '') || '/';
+      var pageA = document.createElement('a');
+      pageA.href = pageHref;
+      pageA.textContent = pageLabel;
+      secSpan = document.createElement('span');
+      secSpan.setAttribute('aria-current', 'page');
+      secSpan.setAttribute('data-section-crumb', '');
+      secSpan.textContent = OVERVIEW;
+      nav.textContent = '';
+      nav.appendChild(homeA); nav.appendChild(sepEl());
+      nav.appendChild(pageA); nav.appendChild(sepEl());
+      nav.appendChild(secSpan);
+    }
+  }
 
   /* ---------- scroll spy ---------- */
   var currentId = null; // null => "Overview" (above the first section)
@@ -134,9 +172,11 @@
   }
   function render() {
     var s = currentId ? byId(currentId) : null;
-    secSpan.textContent = s ? s.label : OVERVIEW;
+    if (secSpan) secSpan.textContent = s ? s.label : OVERVIEW;
+    var sideId = sideIdFor(currentId);
     navLinks.forEach(function (t) {
-      t.a.classList.toggle(t.cls || 'active', t.id === currentId);
+      var on = (t.cls === 'is-active') ? (t.id === sideId) : (t.id === currentId);
+      t.a.classList.toggle(t.cls || 'active', on);
     });
   }
   function update() {
