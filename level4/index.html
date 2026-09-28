@@ -279,12 +279,106 @@ html[data-theme="light"] #otp-playbook .otp-ico.vi{color:#6d28d9}
   <h2 class="otp-title">Jade Lizard, PMCC, ratio spreads &amp; synthetic stock</h2>
   <p class="otp-lead"> Long / Short, Call / Put, Strike, DTE, Debit / Credit. Educational framework only.</p>
   <nav class="otp-nav" aria-label="Playbook strategies">
+    <a href="#csp">Cash-Secured Put · start here</a>
     <a href="#otp-jade">Jade Lizard</a>
     <a href="#otp-pmcc">Poor Man’s Covered Call</a>
     <a href="#otp-ratio">Ratio Spread</a>
     <a href="#otp-syn-long">Synthetic Long</a>
     <a href="#otp-syn-short">Synthetic Short</a>
   </nav>
+
+  <p class="otp-lead" style="margin-top:14px"><b>Start here.</b> Time decay (theta) is the engine behind every income strategy on this page — then the cash-secured put, the foundation for the <a href="#otp-jade">Jade Lizard</a> (a short put plus a bear call spread) and <a href="#wheel">the Wheel</a> (repeated CSPs). Learn these first; the structures built on top will make sense.</p>
+
+  <div class="card">
+    <h2 id="theta">Theta decay — sample shape</h2>
+    <p>Typical teaching picture: with other factors fixed, <b>time value</b> often falls faster in the last weeks before expiry than early in the life of the option. Long options usually <span class="loss">pay</span> theta; short premium often <span class="profit">collects</span> it — with risk attached.</p>
+    <div class="theta-box">
+      <svg viewBox="0 0 640 280" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Illustrative theta decay: time value falls faster as expiry approaches">
+        <defs>
+          <linearGradient id="tvFill" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#3b82f6" stop-opacity="0.35"/>
+            <stop offset="100%" stop-color="#3b82f6" stop-opacity="0.02"/>
+          </linearGradient>
+        </defs>
+        <!-- plot area -->
+        <rect x="56" y="24" width="520" height="200" fill="#0f1419" stroke="#2d3a4f" rx="6"/>
+        <!-- grid lines -->
+        <g stroke="#2d3a4f" stroke-width="1">
+          <line x1="56" y1="74" x2="576" y2="74"/>
+          <line x1="56" y1="124" x2="576" y2="124"/>
+          <line x1="56" y1="174" x2="576" y2="174"/>
+          <line x1="186" y1="24" x2="186" y2="224"/>
+          <line x1="316" y1="24" x2="316" y2="224"/>
+          <line x1="446" y1="24" x2="446" y2="224"/>
+        </g>
+        <!-- area under curve: high at left (90 DTE), steep drop near right (0 DTE) -->
+        <path d="M56,48 C120,50 180,55 250,70 C320,88 380,115 440,155 C500,200 540,215 576,220 L576,224 L56,224 Z"
+              fill="url(#tvFill)"/>
+        <path d="M56,48 C120,50 180,55 250,70 C320,88 380,115 440,155 C500,200 540,215 576,220"
+              fill="none" stroke="#3b82f6" stroke-width="2.5" stroke-linecap="round"/>
+        <!-- axis labels -->
+        <g fill="#8b9bb4" font-family="Segoe UI, system-ui, sans-serif" font-size="12">
+          <text x="56" y="248">90 DTE</text>
+          <text x="186" y="248" text-anchor="middle">60</text>
+          <text x="316" y="248" text-anchor="middle">30</text>
+          <text x="446" y="248" text-anchor="middle">15</text>
+          <text x="576" y="248" text-anchor="end">0 (expiry)</text>
+          <text x="28" y="124" text-anchor="middle" transform="rotate(-90 28 124)">Time value →</text>
+          <text x="56" y="40" fill="#93c5fd" font-size="11">More time value</text>
+          <text x="500" y="210" fill="#93c5fd" font-size="11">Little left</text>
+        </g>
+        <!-- annotation -->
+        <g fill="#eab308" font-family="Segoe UI, system-ui, sans-serif" font-size="11">
+          <text x="400" y="100">Decay often accelerates</text>
+          <text x="400" y="114">near expiry →</text>
+        </g>
+      </svg>
+      <p class="theta-caption">Static illustration only — not a live pricing model. Actual theta depends on strike, IV, and moneyness.</p>
+    </div>
+    <p style="font-size:.85rem;color:var(--muted)">Sample only — real theta depends on strike, IV, rates, and moneyness. Use the Builder’s Days Remaining slider on a live template to see <em>your</em> structure decay.</p>
+  </div>
+
+  <!-- ========== CSP ========== -->
+  <div class="card">
+    <div class="small">Bullish-to-neutral · income</div>
+    <h2 id="csp">Cash-secured put (CSP)</h2>
+    <p>You <b>sell a put</b> and keep enough cash in the account to <b>buy 100 shares</b> at the strike if the buyer exercises. You receive a <b>credit</b> (premium) up front.</p>
+    <p><strong>In plain English:</strong> you are paid to stand ready to buy the stock at a lower price. If the stock stays above the strike, the put often expires worthless and you keep the credit. If the stock falls and you are assigned, you <b>buy the shares</b> at the strike (your broker uses the cash you set aside).</p>
+    <ul>
+      <li><b>Max profit</b> = premium received (×100 per contract) if the put expires out of the money</li>
+      <li><b>Breakeven</b> ≈ strike − premium per share</li>
+      <li><b>Max loss</b> (if stock → $0) ≈ (strike − premium) × 100 — still large. “Cash-secured” means cash is reserved, <em>not</em> that risk is small</li>
+      <li><b>Assignment</b> = you buy 100 shares at the strike; cost basis ≈ strike − premium kept</li>
+    </ul>
+    <div class="analogy">
+      <b>Example:</b> Stock $100. Sell the $95 put for $2.00 → <span class="profit">+$200</span> credit. Reserve $9,500 cash.<br>
+      Stock stays above $95 → put expires → keep $200.<br>
+      Assigned at $95 → you <b>buy 100 shares</b> for $9,500; effective cost ≈ $93/share after the $2 premium.
+    </div>
+
+    <div class="payoff-box">
+      <svg viewBox="0 0 520 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Cash-secured put payoff at expiry">
+  <line x1="40" y1="150" x2="500" y2="150" stroke="#8b9bb4" stroke-width="1.5" opacity=".55"/>
+  <line x1="40" y1="30" x2="40" y2="230" stroke="#8b9bb4" stroke-width="1" opacity=".3"/>
+  <polygon points="40.0,220.0 173.9,150 40.0,150" fill="#ef4444" opacity="0.3"/><polygon points="173.9,150 260.0,105.0 260.0,150" fill="#22c55e" opacity="0.3"/><polygon points="260.0,105.0 500.0,105.0 500.0,150 260.0,150" fill="#22c55e" opacity="0.3"/>
+  <path d="M40.0 220.0 L260.0 105.0 L500.0 105.0" fill="none" stroke="#e7ecf3" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
+  <text x="14" y="36" fill="#8b9bb4" font-size="11" font-family="system-ui,sans-serif">P/L</text>
+  <text x="250" y="250" fill="#8b9bb4" font-size="11" font-family="system-ui,sans-serif" text-anchor="middle">Stock price at expiry →</text>
+  <text x="360" y="92" fill="#86efac" font-size="12" font-family="system-ui,sans-serif" text-anchor="start">Max profit = premium</text><text x="70" y="220" fill="#fca5a5" font-size="12" font-family="system-ui,sans-serif" text-anchor="start">Loss if stock falls</text>
+</svg>
+      <div class="payoff-legend"><span class="lg">Green = profit</span><span class="lr">Red = loss</span></div>
+      <p class="payoff-caption">Short put at expiry: continuous line from max loss through breakeven to flat max profit (premium).</p>
+    </div>
+
+    <h3>Why many learners use ~30–45+ DTE</h3>
+    <ul>
+      <li>More premium than ultra-short puts at a similar strike</li>
+      <li>Time to close early or roll if the trade goes against you</li>
+      <li>Avoid treating weeklies like lottery tickets until you understand assignment and gaps</li>
+    </ul>
+    <div class="warn"><strong>Risk:</strong> Only sell puts on stocks you are willing to <b>buy</b>. A CSP can lose far more than the credit. Educational only.</div>
+    <a class="btn" href="/builder/?template=cash_secured_put">Load Cash Secured Put in Builder →</a>
+  </div>
 
   <div class="otp-section">
     <div class="otp-sec-head am">
@@ -698,100 +792,9 @@ html[data-theme="light"] #otp-playbook .otp-ico.vi{color:#6d28d9}
     <div class="note">This is a common teaching guideline, not a rule. Weekly options and 0-DTE products exist and behave very differently (high gamma, fast theta).</div>
   </div>
 
-  <div class="card">
-    <h2 id="theta">Theta decay — sample shape</h2>
-    <p>Typical teaching picture: with other factors fixed, <b>time value</b> often falls faster in the last weeks before expiry than early in the life of the option. Long options usually <span class="loss">pay</span> theta; short premium often <span class="profit">collects</span> it — with risk attached.</p>
-    <div class="theta-box">
-      <svg viewBox="0 0 640 280" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Illustrative theta decay: time value falls faster as expiry approaches">
-        <defs>
-          <linearGradient id="tvFill" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stop-color="#3b82f6" stop-opacity="0.35"/>
-            <stop offset="100%" stop-color="#3b82f6" stop-opacity="0.02"/>
-          </linearGradient>
-        </defs>
-        <!-- plot area -->
-        <rect x="56" y="24" width="520" height="200" fill="#0f1419" stroke="#2d3a4f" rx="6"/>
-        <!-- grid lines -->
-        <g stroke="#2d3a4f" stroke-width="1">
-          <line x1="56" y1="74" x2="576" y2="74"/>
-          <line x1="56" y1="124" x2="576" y2="124"/>
-          <line x1="56" y1="174" x2="576" y2="174"/>
-          <line x1="186" y1="24" x2="186" y2="224"/>
-          <line x1="316" y1="24" x2="316" y2="224"/>
-          <line x1="446" y1="24" x2="446" y2="224"/>
-        </g>
-        <!-- area under curve: high at left (90 DTE), steep drop near right (0 DTE) -->
-        <path d="M56,48 C120,50 180,55 250,70 C320,88 380,115 440,155 C500,200 540,215 576,220 L576,224 L56,224 Z"
-              fill="url(#tvFill)"/>
-        <path d="M56,48 C120,50 180,55 250,70 C320,88 380,115 440,155 C500,200 540,215 576,220"
-              fill="none" stroke="#3b82f6" stroke-width="2.5" stroke-linecap="round"/>
-        <!-- axis labels -->
-        <g fill="#8b9bb4" font-family="Segoe UI, system-ui, sans-serif" font-size="12">
-          <text x="56" y="248">90 DTE</text>
-          <text x="186" y="248" text-anchor="middle">60</text>
-          <text x="316" y="248" text-anchor="middle">30</text>
-          <text x="446" y="248" text-anchor="middle">15</text>
-          <text x="576" y="248" text-anchor="end">0 (expiry)</text>
-          <text x="28" y="124" text-anchor="middle" transform="rotate(-90 28 124)">Time value →</text>
-          <text x="56" y="40" fill="#93c5fd" font-size="11">More time value</text>
-          <text x="500" y="210" fill="#93c5fd" font-size="11">Little left</text>
-        </g>
-        <!-- annotation -->
-        <g fill="#eab308" font-family="Segoe UI, system-ui, sans-serif" font-size="11">
-          <text x="400" y="100">Decay often accelerates</text>
-          <text x="400" y="114">near expiry →</text>
-        </g>
-      </svg>
-      <p class="theta-caption">Static illustration only — not a live pricing model. Actual theta depends on strike, IV, and moneyness.</p>
-    </div>
-    <p style="font-size:.85rem;color:var(--muted)">Sample only — real theta depends on strike, IV, rates, and moneyness. Use the Builder’s Days Remaining slider on a live template to see <em>your</em> structure decay.</p>
-  </div>
-
 
   <div class="note" role="note">
     <strong>Mindset:</strong> “Advanced” means <em>more structure</em>, not “guaranteed income.” Every strategy below can lose money. Prefer stocks you understand, size small, and use the Builder to see red vs green before risking cash. Educational only.
-  </div>
-
-  <!-- ========== CSP ========== -->
-  <div class="card">
-    <div class="small">Bullish-to-neutral · income</div>
-    <h2 id="csp">Cash-secured put (CSP)</h2>
-    <p>You <b>sell a put</b> and keep enough cash in the account to <b>buy 100 shares</b> at the strike if the buyer exercises. You receive a <b>credit</b> (premium) up front.</p>
-    <p><strong>In plain English:</strong> you are paid to stand ready to buy the stock at a lower price. If the stock stays above the strike, the put often expires worthless and you keep the credit. If the stock falls and you are assigned, you <b>buy the shares</b> at the strike (your broker uses the cash you set aside).</p>
-    <ul>
-      <li><b>Max profit</b> = premium received (×100 per contract) if the put expires out of the money</li>
-      <li><b>Breakeven</b> ≈ strike − premium per share</li>
-      <li><b>Max loss</b> (if stock → $0) ≈ (strike − premium) × 100 — still large. “Cash-secured” means cash is reserved, <em>not</em> that risk is small</li>
-      <li><b>Assignment</b> = you buy 100 shares at the strike; cost basis ≈ strike − premium kept</li>
-    </ul>
-    <div class="analogy">
-      <b>Example:</b> Stock $100. Sell the $95 put for $2.00 → <span class="profit">+$200</span> credit. Reserve $9,500 cash.<br>
-      Stock stays above $95 → put expires → keep $200.<br>
-      Assigned at $95 → you <b>buy 100 shares</b> for $9,500; effective cost ≈ $93/share after the $2 premium.
-    </div>
-
-    <div class="payoff-box">
-      <svg viewBox="0 0 520 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Cash-secured put payoff at expiry">
-  <line x1="40" y1="150" x2="500" y2="150" stroke="#8b9bb4" stroke-width="1.5" opacity=".55"/>
-  <line x1="40" y1="30" x2="40" y2="230" stroke="#8b9bb4" stroke-width="1" opacity=".3"/>
-  <polygon points="40.0,220.0 173.9,150 40.0,150" fill="#ef4444" opacity="0.3"/><polygon points="173.9,150 260.0,105.0 260.0,150" fill="#22c55e" opacity="0.3"/><polygon points="260.0,105.0 500.0,105.0 500.0,150 260.0,150" fill="#22c55e" opacity="0.3"/>
-  <path d="M40.0 220.0 L260.0 105.0 L500.0 105.0" fill="none" stroke="#e7ecf3" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
-  <text x="14" y="36" fill="#8b9bb4" font-size="11" font-family="system-ui,sans-serif">P/L</text>
-  <text x="250" y="250" fill="#8b9bb4" font-size="11" font-family="system-ui,sans-serif" text-anchor="middle">Stock price at expiry →</text>
-  <text x="360" y="92" fill="#86efac" font-size="12" font-family="system-ui,sans-serif" text-anchor="start">Max profit = premium</text><text x="70" y="220" fill="#fca5a5" font-size="12" font-family="system-ui,sans-serif" text-anchor="start">Loss if stock falls</text>
-</svg>
-      <div class="payoff-legend"><span class="lg">Green = profit</span><span class="lr">Red = loss</span></div>
-      <p class="payoff-caption">Short put at expiry: continuous line from max loss through breakeven to flat max profit (premium).</p>
-    </div>
-
-    <h3>Why many learners use ~30–45+ DTE</h3>
-    <ul>
-      <li>More premium than ultra-short puts at a similar strike</li>
-      <li>Time to close early or roll if the trade goes against you</li>
-      <li>Avoid treating weeklies like lottery tickets until you understand assignment and gaps</li>
-    </ul>
-    <div class="warn"><strong>Risk:</strong> Only sell puts on stocks you are willing to <b>buy</b>. A CSP can lose far more than the credit. Educational only.</div>
-    <a class="btn" href="/builder/?template=cash_secured_put">Load Cash Secured Put in Builder →</a>
   </div>
 
   <!-- ========== WHEEL ========== -->

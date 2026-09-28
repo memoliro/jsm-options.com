@@ -428,8 +428,8 @@
     <p>You only need the stock to rise enough so that the gain in the option covers what you paid. Your maximum loss is the premium you paid. Your potential gain is theoretically unlimited if the stock keeps rising.</p>
 
     <div class="analogy">
-      <strong>Simple numbers:</strong> Stock is $100. You buy the $105 call for $3 → you pay $300 total (because 1 contract = 100 shares).<br>
-      At expiration if stock is $110: intrinsic value = $5 → profit = ($5 − $3) × 100 = <span class="profit">+$200</span>.<br>
+      <strong>Simple numbers:</strong> Stock is $100. You buy the $105 call for $3 → $3 × 100 shares = <b>$300</b> total for one contract.<br>
+      At expiration if stock is $110: intrinsic value = $5 <em>(the option's built-in value if you exercised right now — <a href="#intrinsic">explained in detail below</a>)</em> → profit = ($5 − $3) × 100 = <span class="profit">+$200</span>.<br>
       If stock stays below $105: option expires worthless → max loss = <span class="loss">$300</span>.
     </div>
 
@@ -497,6 +497,7 @@
       <li><strong>At-the-money (ATM)</strong> — Strike is roughly equal to the stock price. Almost all of the price is time value (extrinsic). Highest sensitivity to big moves (gamma) and to time decay (theta).</li>
       <li><strong>Out-of-the-money (OTM)</strong> — Strike is above the stock price. Cheap, only time value. Needs a bigger move to become profitable. Lower probability, lower delta.</li>
     </ul>
+    <div class="note">New words — <b>delta</b>, <b>gamma</b>, <b>theta</b>? They are the "Greeks": delta ≈ how much the option price moves per $1 of stock move, gamma ≈ how fast delta itself changes, theta ≈ daily time decay. <a href="#greeks">Plain-English Greeks section below</a> explains each with numbers.</div>
     <div class="note">Beginners often start with slightly OTM or ATM calls because they cost less. Just remember: cheaper usually means lower odds of success.</div>
   </div>
 
@@ -591,7 +592,7 @@
   <!-- LONG PUT -->
   <div class="grid2">
     <div class="card">
-      <div class="small">Bearish · Defined risk</div>
+      <div class="small">Bearish · Defined risk · quick recap</div>
       <h3>Long Put</h3>
       <p>Gives you the right to <em>sell</em> 100 shares at the strike. You profit when the stock falls enough to cover the premium you paid. Max loss is still only the premium.</p>
       <div class="analogy">
