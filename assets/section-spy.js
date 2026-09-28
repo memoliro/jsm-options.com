@@ -9,22 +9,29 @@
 (function () {
   'use strict';
 
+  var nav = document.querySelector('nav.breadcrumbs');
+
   // Pin the sticky breadcrumb just below the sticky site header, whatever its
-  // rendered height is (it changes with viewport width). Re-measure on resize,
-  // full load, and once webfonts settle, so the offset never drifts.
-  function pinCrumbOffset() {
+  // rendered height is (it changes with viewport width), and park the sticky
+  // lesson TOC just below the breadcrumb so the two bars never overlap.
+  // Re-measure on resize, full load, and once webfonts settle, so the offsets
+  // never drift.
+  function pinStickyOffsets() {
     var header = document.querySelector('.site-header');
     var h = header ? Math.ceil(header.getBoundingClientRect().height) : 68;
     document.documentElement.style.setProperty('--crumb-top', h + 'px');
+    if (nav) {
+      var ch = Math.ceil(nav.getBoundingClientRect().height) || 40;
+      document.documentElement.style.setProperty('--toc-top', (h + ch) + 'px');
+    }
   }
-  pinCrumbOffset();
-  window.addEventListener('resize', pinCrumbOffset);
-  window.addEventListener('load', pinCrumbOffset);
+  pinStickyOffsets();
+  window.addEventListener('resize', pinStickyOffsets);
+  window.addEventListener('load', pinStickyOffsets);
   if (document.fonts && document.fonts.ready) {
-    document.fonts.ready.then(pinCrumbOffset).catch(function () {});
+    document.fonts.ready.then(pinStickyOffsets).catch(function () {});
   }
 
-  var nav = document.querySelector('nav.breadcrumbs');
   if (!nav || !('requestAnimationFrame' in window)) return;
 
   var pageCrumb = nav.querySelector('[aria-current="page"]');
