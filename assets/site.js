@@ -7,7 +7,8 @@
     { href: '/level4/', label: 'Advanced' },
     { href: '/strategies/', label: 'Strategies' },
     { href: '/cheat-sheet/', label: 'Cheat sheet' },
-    { href: '/builder/', label: 'Builder' }
+    { href: '/builder/', label: 'Builder' },
+    { href: '/backtest/', label: 'Backtest' }
   ];
 
   var FOOTER_LINKS = [
@@ -19,6 +20,7 @@
     { href: '/strategies/', label: 'Strategies' },
     { href: '/cheat-sheet/', label: 'Cheat sheet' },
     { href: '/builder/', label: 'Builder' },
+    { href: '/backtest/', label: 'Backtest' },
     { href: '/about/', label: 'About' },
     { href: '/contact/', label: 'Contact' },
     { href: '/disclaimer/', label: 'Disclaimer' },
@@ -35,7 +37,8 @@
     '/level4/': 'İleri Seviye',
     '/strategies/': 'Stratejiler',
     '/cheat-sheet/': 'Özet',
-    '/builder/': 'Builder'
+    '/builder/': 'Builder',
+    '/backtest/': 'Backtest'
   };
 
   function lang() {
@@ -118,7 +121,7 @@
         var href = (item.href === '/') ? (pre ? '/tr/' : '/') : (pre + item.href);
         var label = item.label;
         if (lang() === 'tr') {
-          var map = { 'Home':'Ana Sayfa','Basics':'Giriş','Fundamentals':'Temeller','Spreads':'Spreadler','Advanced':'İleri Seviye','Strategies':'Stratejiler','Cheat sheet':'Özet','Builder':'Builder','About':'Hakkında','Contact':'İletişim','Disclaimer':'Sorumluluk','Privacy':'Gizlilik' };
+          var map = { 'Home':'Ana Sayfa','Basics':'Giriş','Fundamentals':'Temeller','Spreads':'Spreadler','Advanced':'İleri Seviye','Strategies':'Stratejiler','Cheat sheet':'Özet','Builder':'Builder','Backtest':'Backtest','About':'Hakkında','Contact':'İletişim','Disclaimer':'Sorumluluk','Privacy':'Gizlilik' };
           label = map[item.label] || item.label;
         }
         return '<a href="' + href + '">' + label + '</a>';
