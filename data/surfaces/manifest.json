@@ -1,0 +1,50 @@
+[
+  {
+    "ticker": "SPY",
+    "days": 504,
+    "updated": "2026-09-29",
+    "first": 20020,
+    "last": 20725,
+    "q": 0.013
+  },
+  {
+    "ticker": "QQQ",
+    "days": 504,
+    "updated": "2026-09-29",
+    "first": 20020,
+    "last": 20725,
+    "q": 0.006
+  },
+  {
+    "ticker": "IWM",
+    "days": 504,
+    "updated": "2026-09-29",
+    "first": 20020,
+    "last": 20725,
+    "q": 0.012
+  },
+  {
+    "ticker": "AAPL",
+    "days": 504,
+    "updated": "2026-09-29",
+    "first": 20020,
+    "last": 20725,
+    "q": 0.005
+  },
+  {
+    "ticker": "TSLA",
+    "days": 504,
+    "updated": "2026-09-29",
+    "first": 20020,
+    "last": 20725,
+    "q": 0.013
+  },
+  {
+    "ticker": "SPX",
+    "days": 504,
+    "updated": "2026-09-29",
+    "first": 20020,
+    "last": 20725,
+    "q": 0.013
+  }
+]
