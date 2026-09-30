@@ -203,8 +203,8 @@ html[data-theme="light"] .site-header .nav a.active{background:#2563eb;color:#ff
     <div class="body">
       <label class="f">Source
         <select id="dataSrc">
-        <option value="surfaces" selected>CBOE Historical (built-in 2y)</option>
-        <option value="sim">Simulated underlying</option>
+        <option value="sim" selected>Simulated underlying (until history grows)</option>
+        <option value="surfaces">CBOE stored sessions (daily snapshots)</option>
         <option value="csv">My daily prices (CSV) - advanced</option>
       </select>
       <div style="margin-top:8px;display:grid;gap:6px" id="tickerRow">
@@ -232,7 +232,7 @@ html[data-theme="light"] .site-header .nav a.active{background:#2563eb;color:#ff
             <option value="GOOGL">GOOGL – Alphabet</option>
           </select>
         </label>
-        <div class="hint" id="surfaceInfo">20 names. Daily CBOE delayed snapshots only — no synthetic surface. Start date is the first stored session. History grows one trading day at a time.</div>
+        <div class="hint" id="surfaceInfo">Default is a simulated price path so you can backtest now. CBOE stored sessions start 2026-09-30 and grow each weekday. Switch source to CBOE when that series is long enough (60+ sessions).</div>
       </div>
       </label>
       <div class="simOnly" style="display:grid;gap:10px">
@@ -259,7 +259,7 @@ html[data-theme="light"] .site-header .nav a.active{background:#2563eb;color:#ff
         <p class="err" id="csvMsg"></p>
       </div>
       <div class="g2">
-        <label class="f">Start date<input type="date" id="start" value="2026-09-30"></label>
+        <label class="f">Start date<input type="date" id="start" value="2024-09-30"></label>
         <label class="f">End date<input type="date" id="end" value="2026-09-29"></label>
       </div>
       <div class="g2">
@@ -793,7 +793,12 @@ function getData(cfg){
     const start=Date.parse($('start').value), end=Date.parse($('end').value);
     const idx=[];
     for(let i=0;i<b.ts.length;i++) if(b.ts[i]>=start && b.ts[i]<=end) idx.push(i);
-    if(idx.length<2) throw new Error('Need at least two stored CBOE sessions. First date is the earliest actual snapshot. Daily updates add one session at a time.');
+    if(idx.length<60){
+      const src=document.getElementById('dataSrc');
+      if(src) src.value='sim';
+      if(typeof toggleUI==='function') toggleUI();
+      throw new Error('CBOE stored history is still short ('+idx.length+' session'+(idx.length===1?'':'s')+'). Switched to Simulated underlying. Pick CBOE again after ~60 weekday snapshots.');
+    }
     const ts=idx.map(i=>b.ts[i]), S=idx.map(i=>b.S[i]), iv=idx.map(i=>b.iv[i]);
     return {ts,S,iv,label:b.label, surf:b.surf, sp:idx.map(i=>b.sp[i]), sc:idx.map(i=>b.sc[i])};
   }
@@ -1213,12 +1218,15 @@ async function loadSurfaceTicker(ticker){
     window.state._builtInData = {ts,S,iv,sp,sc,surf, ticker: surf.ticker, label: `${surf.ticker} CBOE delayed · ${ts.length} session${ts.length===1?'':'s'}`};
     if(ts.length){
       const iso = ms => new Date(ms).toISOString().slice(0,10);
-      const sEl = document.getElementById('start');
-      const eEl = document.getElementById('end');
-      if(sEl){ sEl.value = iso(ts[0]); sEl.min = iso(ts[0]); sEl.max = iso(ts[ts.length-1]); }
-      if(eEl){ eEl.value = iso(ts[ts.length-1]); eEl.min = iso(ts[0]); eEl.max = iso(ts[ts.length-1]); }
+      const src = document.getElementById('dataSrc');
       const info = document.getElementById('surfaceInfo');
-      if(info) info.textContent = `${surf.ticker}: actual data ${iso(ts[0])} → ${iso(ts[ts.length-1])} (${ts.length} session${ts.length===1?'':'s'}). No fake surface.`;
+      if(info) info.textContent = `${surf.ticker}: CBOE stored ${iso(ts[0])} → ${iso(ts[ts.length-1])} (${ts.length} session${ts.length===1?'':'s'}). Use Simulated until this reaches 60 sessions.`;
+      if(src && src.value==='surfaces' && ts.length>=60){
+        const sEl = document.getElementById('start');
+        const eEl = document.getElementById('end');
+        if(sEl){ sEl.value = iso(ts[0]); sEl.min = iso(ts[0]); sEl.max = iso(ts[ts.length-1]); }
+        if(eEl){ eEl.value = iso(ts[ts.length-1]); eEl.min = iso(ts[0]); eEl.max = iso(ts[ts.length-1]); }
+      }
     }
     const dataSrcSel = document.getElementById('dataSrc');
     if(dataSrcSel && !Array.from(dataSrcSel.options).some(o=>o.value==='surfaces')){
