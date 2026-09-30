@@ -1,0 +1,27 @@
+name: Daily CBOE surfaces
+on:
+  schedule:
+    - cron: "20 21 * * 1-5"
+  workflow_dispatch:
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Append today's CBOE delayed surface
+        run: python scripts/update_surfaces_monthly.py
+      - name: Merge DataShop CSVs if present
+        run: |
+          if compgen -G "cboe_inbox/*.csv" > /dev/null; then
+            python scripts/cboe_to_surface.py --in "cboe_inbox/*.csv" --out data/surfaces --keep 3y --tickers SPY QQQ IWM DIA SPX XLF XLK XLE SMH TLT GLD SLV USO AAPL MSFT NVDA TSLA META AMZN GOOGL
+          fi
+      - name: Commit surfaces
+        run: |
+          git config user.name "jsm-surfaces"
+          git config user.email "surfaces@jsm-options.com"
+          git add data/surfaces data/snapshots
+          git diff --staged --quiet || git commit -m "Daily CBOE surface snapshot"
+          git push
