@@ -1,489 +1,1444 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1" name="viewport"/>
-<link href="/favicon-32.png" rel="icon" sizes="32x32" type="image/png"/>
-<link href="/favicon-48.png" rel="icon" sizes="48x48" type="image/png"/>
-<link href="/apple-touch-icon.png" rel="apple-touch-icon" sizes="180x180"/>
-<link rel="manifest" href="/manifest.json"/>
-<meta name="theme-color" content="#0f172a"/>
-<title>Free Options Trading Course for Beginners | Live Strategy Builder</title><meta content="Free options trading course for beginners: calls, puts, spreads, and a live strategy builder with payoff graphs. Learn step by step — educational only, not financial advice." name="description"/><link href="https://jsm-options.com/" rel="canonical"/>
-<link href="https://jsm-options.com/" hreflang="en" rel="alternate"/>
-<link href="https://jsm-options.com/tr/" hreflang="tr" rel="alternate"/>
-<link href="https://jsm-options.com/" hreflang="x-default" rel="alternate"/><meta content="website" property="og:type"/><meta content="JSM Options" property="og:site_name"/><meta content="Free Options Trading Course for Beginners | Live Strategy Builder" property="og:title"/><meta content="Free options course for beginners with a live strategy builder. Calls, puts, spreads, and payoff graphs — educational only." property="og:description"/><meta content="https://jsm-options.com/" property="og:url"/>
-<meta content="https://jsm-options.com/images/og-default.png" property="og:image"/>
-<meta content="https://jsm-options.com/images/og-default.png" name="twitter:image"/><meta content="summary_large_image" name="twitter:card"/><meta content="Free Options Trading Course for Beginners | Live Strategy Builder" name="twitter:title"/><meta content="Free options trading course for beginners plus a live strategy builder. Calls, puts, covered calls, spreads, and more." name="twitter:description"/><link href="/assets/style.css?v=20260928d" rel="stylesheet"/><style>
-.home-hero{padding:48px 0 30px;display:grid;grid-template-columns:1.15fr .85fr;gap:28px;align-items:center}.home-hero h1{font-size:clamp(38px,5.5vw,68px);line-height:1.02;letter-spacing:-.045em;margin:10px 0 18px;max-width:760px}.home-hero p{font-size:17px;line-height:1.65;color:var(--muted);max-width:680px}.hero-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:24px}.btn-primary,.btn-secondary{display:inline-flex;align-items:center;justify-content:center;padding:12px 17px;border-radius:10px;text-decoration:none;font-weight:700;border:1px solid var(--border)}.btn-primary{background:var(--accent);color:#06110a!important;border-color:var(--accent)}.btn-secondary{background:var(--card);color:var(--text)!important}.eyebrow{font-size:11px;text-transform:uppercase;letter-spacing:.12em;color:var(--accent);font-weight:800}.payoff-demo{border:1px solid var(--border);border-radius:20px;background:linear-gradient(145deg,var(--card),var(--input));padding:18px;box-shadow:0 18px 45px rgba(0,0,0,.12)}.payoff-demo svg{width:100%;height:auto;display:block}.demo-legend{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-top:8px}.home-section{margin:28px 0}.section-head{display:flex;justify-content:space-between;gap:18px;align-items:end;margin-bottom:15px}.section-head h2{margin:0;font-size:25px}.section-head p{margin:5px 0 0;color:var(--muted);font-size:13px}.path-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.path-card{display:block;padding:18px;border:1px solid var(--border);border-radius:15px;background:var(--card);color:var(--text)!important;text-decoration:none!important;transition:.15s transform,.15s border-color}.path-card:hover{transform:translateY(-2px);border-color:var(--accent)}.path-num{font-size:11px;color:var(--dim)}.path-card h3{margin:9px 0 6px;font-size:17px}.path-card p{margin:0;color:var(--muted);font-size:13px;line-height:1.5}.outlook-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.outlook{padding:17px;border:1px solid var(--border);border-radius:15px;background:var(--card)}.outlook b{font-size:15px}.outlook p{margin:6px 0 0;color:var(--muted);font-size:12px;line-height:1.45}.builder-feature{display:grid;grid-template-columns:1fr 1fr;gap:18px;padding:24px;border:1px solid var(--border);border-radius:18px;background:linear-gradient(145deg,var(--card),var(--input))}.builder-feature h2{margin:0 0 8px;font-size:28px}.builder-feature p{color:var(--muted);line-height:1.6}.checklist{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:16px}.check{padding:10px 12px;border-radius:10px;background:var(--input);font-size:12px}.strategy-preview{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.mini-strategy{padding:17px;border:1px solid var(--border);border-radius:14px;background:var(--card)}.mini-strategy .tag{font-size:10px;color:var(--accent);text-transform:uppercase;letter-spacing:.08em;font-weight:800}.mini-strategy h3{margin:7px 0 5px}.mini-strategy p{font-size:12px;color:var(--muted);line-height:1.45;margin:0}.home-note{font-size:11px;color:var(--dim);margin:25px 0}.concept-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}.concept-card{padding:20px;border:1px solid var(--border);border-radius:16px;background:var(--card)}.concept-card h3{margin:0 0 10px;font-size:18px}.concept-card p{margin:0 0 10px;color:var(--muted);font-size:14px;line-height:1.55}.concept-card .analogy-box{margin:12px 0;padding:12px;border-radius:10px;background:var(--input);font-size:13px;line-height:1.5;color:var(--text)}.payoff-mini{margin-top:12px;border:1px solid var(--border);border-radius:12px;padding:10px;background:var(--input)}.payoff-mini svg{width:100%;height:auto;display:block}@media(max-width:700px){.concept-grid{grid-template-columns:1fr}}
-@media(max-width:900px){.home-hero,.builder-feature{grid-template-columns:1fr}.path-grid,.outlook-grid{grid-template-columns:1fr 1fr}.strategy-preview{grid-template-columns:1fr}}@media(max-width:600px){.home-hero{padding-top:30px}.path-grid,.outlook-grid,.checklist{grid-template-columns:1fr}.section-head{display:block}}
-
-/* PWA Install (footer button only) */
-.pwa-ios-modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.6);z-index:9999;padding:18px}
-.pwa-ios-modal.open{display:flex}
-.pwa-ios-card{max-width:360px;width:100%;background:var(--card,#1a2332);border:1px solid var(--border,#2d3a4f);border-radius:16px;padding:22px;box-shadow:0 20px 50px rgba(0,0,0,.4)}
-.pwa-ios-card h3{margin:0 0 8px;font-size:18px}
-.pwa-ios-card p{margin:0 0 10px;font-size:13px;color:var(--muted,#9aa8bd);line-height:1.5}
-.pwa-ios-card ol{margin:10px 0 0 18px;font-size:13px;line-height:1.6}
-.pwa-ios-card .close{margin-top:14px;width:100%;padding:10px;border-radius:10px;border:1px solid var(--border);background:var(--input,#111a28);color:var(--text);font-weight:700;cursor:pointer}
-
-/* Call Option Porch Story Slideshow */
-.slideshow-section { max-width:900px; margin:28px auto; }
-.slideshow-card { border:1px solid var(--border); border-radius:18px; background:var(--card); padding:24px; box-shadow:0 10px 30px rgba(0,0,0,.06); }
-.slide-item { display:none; }
-.slide-item.active { display:block; }
-.slide-top { display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border); padding-bottom:12px; margin-bottom:16px; }
-.slide-top h3 { margin:0; font-size:20px; color:var(--text); }
-.slide-num { font-size:12px; color:var(--accent); font-weight:800; text-transform:uppercase; }
-.dialogue { padding:12px 16px; border-radius:10px; margin-bottom:10px; font-size:14px; line-height:1.6; }
-.dialogue.alex { background:var(--input); border-left:4px solid var(--accent); color:var(--text); }
-.dialogue.sam { background:var(--input); border-left:4px solid #3b82f6; color:var(--text); }
-.slide-badge { background:var(--input); border:1px solid var(--border); border-radius:10px; padding:12px 14px; margin-top:12px; font-size:13px; color:var(--muted); }
-.slide-badge strong { color:var(--text); }
-.slide-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:12px; }
-.slide-box { padding:14px; border-radius:10px; background:var(--input); border:1px solid var(--border); font-size:13px; }
-.slide-box h4 { margin:0 0 6px; color:var(--text); font-size:15px; }
-.slide-box ul { margin:0; padding-left:18px; color:var(--muted); line-height:1.5; }
-.slide-controls { display:flex; justify-content:space-between; align-items:center; margin-top:20px; padding-top:14px; border-top:1px solid var(--border); }
-.slide-btn { padding:8px 16px; border-radius:8px; border:1px solid var(--border); background:var(--input); color:var(--text); font-weight:700; cursor:pointer; transition:.15s background; }
-.slide-btn:hover { background:var(--border); }
-@media(max-width:600px){ .slide-grid { grid-template-columns:1fr; } }
-</style>
-<style id="jsm-mobile-nav">
-.nav-toggle{display:none;box-sizing:border-box;width:44px;height:44px;min-width:44px;min-height:44px;padding:0;border:1px solid var(--border,#2d3a4f);border-radius:10px;background:var(--card,#1a2332);color:var(--text,#e7ecf3);cursor:pointer;align-items:center;justify-content:center;flex-direction:column;gap:5px;-webkit-tap-highlight-color:transparent;touch-action:manipulation;position:relative;z-index:40}
-.nav-toggle span{display:block;width:18px;height:2px;border-radius:1px;background:currentColor;pointer-events:none}
-.nav-toggle[aria-expanded="true"] span:nth-child(1){transform:translateY(7px) rotate(45deg)}
-.nav-toggle[aria-expanded="true"] span:nth-child(2){opacity:0}
-.nav-toggle[aria-expanded="true"] span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
-@media (max-width:900px){
-  .nav-toggle{display:inline-flex!important}
-  .site-header{z-index:100!important;position:sticky;top:0}
-  .site-header .nav{
-    display:none!important;
-    position:fixed!important;
-    top:56px!important;left:0!important;right:0!important;
-    width:100%!important;
-    max-height:calc(100vh - 56px)!important;
-    overflow-y:auto!important;
-    -webkit-overflow-scrolling:touch;
-    flex-direction:column!important;
-    align-items:stretch!important;
-    gap:6px!important;
-    padding:12px 16px 20px!important;
-    margin:0!important;
-    background:#0f1419!important;
-    border-bottom:1px solid #2d3a4f!important;
-    box-shadow:0 12px 28px rgba(0,0,0,.45)!important;
-    z-index:9999!important;
-  }
-  html[data-theme="light"] .site-header .nav{background:#ffffff!important;border-bottom-color:#e2e8f0!important}
-  .site-header .nav.is-open{display:flex!important}
-  .site-header .nav a{
-    width:100%!important;text-align:left!important;
-    padding:14px!important;font-size:16px!important;
-    min-height:48px!important;display:flex!important;align-items:center!important;
-    border-radius:10px!important;box-sizing:border-box!important;
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Free Options Backtester | Simulate & Test Options Strategies Online</title>
+<meta name="description" content="Backtest options strategies like Iron Condor, Wheel, and Credit Spreads with fast historical simulation tools.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#E8EDF1; --panel:#FFFFFF; --panel-2:#F3F6F9; --ink:#14212E; --muted:#5B6A79; --line:#CDD6DE;
+  --gain:#0B6BCB; --loss:#D4501E; --accent:#4B36C9; --bench:#8492A0;
+  --c1:#0E9384; --c2:#C0267A; --c3:#B7791F; --focus:#4B36C9; --tip-bg:#14212E; --tip-ink:#F3F6F9;
+  color-scheme: light;
+  box-sizing:border-box; padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0D1520; --panel:#142031; --panel-2:#1A2A3E; --ink:#E6EDF5; --muted:#93A4B6; --line:#27384D;
+    --gain:#5AAEFF; --loss:#FF8F60; --accent:#A093FF; --bench:#7C8DA0;
+    --c1:#3CC7B4; --c2:#F26BAE; --c3:#E5B04F; --focus:#A093FF; --tip-bg:#E6EDF5; --tip-ink:#0D1520;
+    color-scheme: dark;
   }
 }
+:root[data-theme="dark"]{
+  --bg:#0D1520; --panel:#142031; --panel-2:#1A2A3E; --ink:#E6EDF5; --muted:#93A4B6; --line:#27384D;
+  --gain:#5AAEFF; --loss:#FF8F60; --accent:#A093FF; --bench:#7C8DA0;
+  --c1:#3CC7B4; --c2:#F26BAE; --c3:#E5B04F; --focus:#A093FF; --tip-bg:#E6EDF5; --tip-ink:#0D1520;
+  color-scheme: dark;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{height:100%;scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;min-height:100%;background:var(--bg);color:var(--ink);
+  font:14px/1.45 "Schibsted Grotesk",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  font-variant-numeric:tabular-nums;-webkit-font-smoothing:antialiased}
+input,select,button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 20px;background:var(--panel);border-bottom:1px solid var(--line)}
+.brand{display:flex;align-items:center;gap:10px;min-width:0}
+.brand svg{flex:none}
+.brand .name{font-weight:700;font-size:19px;letter-spacing:-.02em}
+.brand .sub{color:var(--muted);font-size:13px}
+.hdr-right{display:flex;align-items:center;gap:10px}
+.badge{font-size:12px;padding:4px 10px;border:1px solid var(--line);border-radius:999px;background:var(--panel-2);color:var(--muted);white-space:nowrap;max-width:46vw;overflow:hidden;text-overflow:ellipsis}
+
+.app{display:grid;grid-template-columns:356px minmax(0,1fr);align-items:start}
+.side{position:sticky;top:0;max-height:100vh;overflow:auto;background:var(--panel);border-right:1px solid var(--line)}
+.sec{border-bottom:1px solid var(--line)}
+.sec>summary{cursor:pointer;list-style:none;padding:13px 16px;font-weight:600;display:flex;justify-content:space-between;align-items:center}
+.sec>summary::-webkit-details-marker{display:none}
+.sec>summary::after{content:"";width:7px;height:7px;border-right:2px solid var(--muted);border-bottom:2px solid var(--muted);transform:rotate(45deg);margin-right:3px}
+.sec[open]>summary::after{transform:rotate(-135deg)}
+.sec .body{padding:0 16px 16px;display:grid;gap:10px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+label.f{display:grid;gap:4px;font-size:12px;color:var(--muted)}
+input[type=number],input[type=text],input[type=date],select{width:100%;padding:7px 9px;border:1px solid var(--line);border-radius:6px;background:var(--panel-2);color:var(--ink);font-size:14px;min-width:0}
+input[type=file]{font-size:12px;width:100%}
+.hint{font-size:12px;color:var(--muted);margin:0}
+.err{color:var(--loss);font-size:12px;margin:0}
+.btn{cursor:pointer;border:1px solid var(--line);background:var(--panel-2);border-radius:6px;padding:7px 12px;font-size:13px;font-weight:500}
+.btn:hover{border-color:var(--muted)}
+.btn.pri{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn.sm{padding:4px 9px;font-size:12px}
+.btn[disabled]{opacity:.5;cursor:not-allowed}
+.rowb{display:flex;gap:8px;align-items:end}
+.rowb>label{flex:1}
+
+.leg{border:1px solid var(--line);border-radius:8px;padding:8px;display:grid;gap:6px;background:var(--panel-2)}
+.leg-h{display:grid;grid-template-columns:auto 1fr 58px 1fr auto;gap:6px;align-items:center}
+.leg-b{display:grid;grid-template-columns:1.3fr 1fr 1fr;gap:6px}
+.leg-b.two{grid-template-columns:1.3fr 1fr}
+.lg-n{font-size:12px;color:var(--muted);font-weight:600}
+.leg .x{border:0;background:transparent;cursor:pointer;font-size:18px;line-height:1;color:var(--muted);padding:0 4px}
+.leg .x:hover{color:var(--loss)}
+
+.main{padding:18px 20px 44px;display:grid;gap:16px;min-width:0}
+.notice{display:flex;gap:12px;align-items:flex-start;justify-content:space-between;border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:8px;background:var(--panel);padding:10px 12px;font-size:13px;color:var(--muted)}
+.notice button{border:0;background:transparent;cursor:pointer;font-size:18px;line-height:1;color:var(--muted)}
+.banner-err{border:1px solid var(--loss);border-radius:8px;padding:10px 12px;background:var(--panel);color:var(--loss);font-size:13px}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px 16px;min-width:0}
+.ph{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+.ph h2{font-size:15px;margin:0;font-weight:600}
+.ph .sub{color:var(--muted);font-size:12px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(132px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.kpi{background:var(--panel);padding:12px 14px}
+.kpi .v{font-size:23px;font-weight:600;letter-spacing:-.02em;line-height:1.15}
+.kpi .l{font-size:12px;color:var(--muted);margin-top:2px}
+.kpi .s{font-size:11px;color:var(--muted);margin-top:1px}
+.pos{color:var(--gain)} .neg{color:var(--loss)}
+.two{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+
+.legend{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.chip{display:inline-flex;gap:6px;align-items:center;font-size:12px;padding:3px 9px;border:1px solid var(--line);border-radius:999px;background:var(--panel-2)}
+.chip i{width:14px;height:3px;border-radius:2px;display:inline-block}
+.chip button{border:0;background:transparent;cursor:pointer;color:var(--muted);font-size:14px;line-height:1;padding:0}
+.wrap{position:relative;touch-action:pan-y}
+.tip{position:absolute;top:8px;pointer-events:none;background:var(--tip-bg);color:var(--tip-ink);padding:8px 10px;border-radius:6px;font-size:12px;line-height:1.5;white-space:nowrap;display:none;z-index:3}
+svg text{font-family:inherit}
+.ax text{fill:var(--muted);font-size:11px}
+.gl{stroke:var(--line);stroke-width:1}
+.empty{padding:28px 8px;text-align:center;color:var(--muted)}
+
+.tbl-wrap{overflow:auto;max-width:100%}
+table{border-collapse:collapse;width:100%;font-size:13px}
+th,td{padding:6px 9px;text-align:right;white-space:nowrap;border-bottom:1px solid var(--line)}
+th{font-weight:600;color:var(--muted);font-size:12px;position:sticky;top:0;background:var(--panel);cursor:default}
+th.s{cursor:pointer}
+th.s:hover{color:var(--ink)}
+th:first-child,td:first-child{text-align:left}
+td.l,th.l{text-align:left}
+tbody tr.sel td{background:var(--panel-2)}
+tbody tr.click{cursor:pointer}
+tbody tr.click:hover td{background:var(--panel-2)}
+.tr-max{max-height:420px}
+.hm td{text-align:center;padding:5px 4px;font-size:12px;border-bottom:0}
+.hm th{text-align:center;padding:4px}
+.hm td:first-child,.hm th:first-child{text-align:left;padding-left:2px}
+.hm td.tot{font-weight:600}
+.kv{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:12px;color:var(--muted);margin-top:8px}
+.kv b{color:var(--ink);font-weight:600}
+
+@media (max-width:1100px){.two{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:900px){
+  .app{grid-template-columns:minmax(0,1fr)}
+  .side{position:static;max-height:none;border-right:0;border-bottom:1px solid var(--line)}
+  .main{padding:14px 12px 36px}
+  .top{padding:10px 12px}
+  .brand .sub{display:none}
+}
+@media (prefers-reduced-motion:no-preference){ .sec>summary::after{transition:transform .15s} }
+
+.site-footer{margin-top:28px;padding:22px 16px 28px;border-top:1px solid #2d3a4f;background:#0f1419;color:#9aa6b2;font-size:13px}
+.site-footer .footer-note{max-width:1280px;margin:0 auto 10px;color:#c5d0dc}
+.site-footer .footer-links,.site-footer .footer-tools{max-width:1280px;margin:0 auto;display:flex;flex-wrap:wrap;gap:10px 14px}
+.site-footer a{color:#9ecbff;text-decoration:none}
+.site-footer a:hover{text-decoration:underline}
 </style>
-<script defer="" src="/assets/site.js?v=20260928e"></script>
-<script defer="" src="/assets/section-spy.js?v=20260928f"></script>
 
-<style id="what-is-option-home">
-.what-is-option-article{max-width:980px;margin-left:auto;margin-right:auto}.article-card{padding:28px;border:1px solid var(--border);border-radius:18px;background:var(--card);box-shadow:0 10px 30px rgba(0,0,0,.06)}.article-card p{font-size:15px;line-height:1.7;color:var(--muted)}.article-card .lead{font-size:18px;color:var(--text)}.article-card h3{margin:30px 0 10px;font-size:22px;color:var(--text)}.article-card ul{padding-left:22px;color:var(--muted);line-height:1.7}.article-list{display:grid;grid-template-columns:1fr 1fr;gap:9px;padding-left:22px;color:var(--muted);line-height:1.6}.article-list li{padding:9px 10px}.article-card .concept-grid{margin:15px 0}.article-card .concept-card{padding:16px}.article-card .concept-card h4{margin:0 0 6px;font-size:16px}.article-card .concept-card p{margin:0;font-size:13px}.article-card .analogy-box,.article-card .example-box{margin:16px 0;padding:15px 17px;border-radius:11px;background:var(--input);color:var(--text);line-height:1.6}.article-card .example-box{border-left:3px solid var(--accent)}.beginner-table{width:100%;border-collapse:collapse;margin:15px 0 20px;font-size:13px}.beginner-table th,.beginner-table td{border:1px solid var(--border);padding:11px;text-align:left}.beginner-table th{background:var(--input);color:var(--text)}.beginner-table td{color:var(--muted)}.six-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:15px 0}.six-grid div{padding:14px;border:1px solid var(--border);border-radius:12px;background:var(--input)}.six-grid strong{display:block;color:var(--text);margin-bottom:5px}.six-grid span{display:block;color:var(--muted);font-size:12px;line-height:1.45}.key-takeaway{margin:24px 0;padding:18px;border:1px solid var(--accent);border-radius:14px;background:var(--input)}.key-takeaway strong{color:var(--text)}.key-takeaway p{margin:7px 0 0!important}.what-is-option-article .home-note{font-size:11px}.article-card .concept-grid{grid-template-columns:1fr 1fr}@media(max-width:700px){.article-card{padding:20px}.article-list,.article-card .concept-grid,.six-grid{grid-template-columns:1fr}.article-card h3{font-size:20px}.beginner-table{font-size:12px}.beginner-table th,.beginner-table td{padding:8px}}
-.walkthrough{max-width:1080px;margin:0 auto}
-.walk-steps{display:grid;gap:14px;margin:16px 0 8px}
-.walk-step{display:grid;grid-template-columns:52px 1fr;gap:14px;align-items:start;padding:16px;border:1px solid var(--border);border-radius:14px;background:var(--input)}
-.walk-num{width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;background:var(--card);border:1px solid var(--border);font-weight:800;color:var(--accent);font-size:18px}
-.walk-step h3{margin:0 0 6px;font-size:17px}
-.walk-step p{margin:0;color:var(--muted);font-size:14px;line-height:1.55}
-.shot-wrap{margin:16px 0 8px;border:1px solid var(--border);border-radius:16px;overflow:hidden;background:#0b1220}
-.shot-wrap img{width:100%;height:auto;display:block}
-.shot-caption{padding:12px 14px;font-size:12px;line-height:1.5;color:var(--muted);background:var(--card);border-top:1px solid var(--border)}
-.shot-caption strong{color:var(--text)}
-.callout-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0}
-.callout{padding:13px 14px;border-radius:12px;background:var(--input);border:1px solid var(--border);font-size:13px;line-height:1.5;color:var(--muted)}
-.callout b{display:block;color:var(--text);margin-bottom:4px;font-size:14px}
-.chain-legend{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
-.chain-legend span{font-size:11px;padding:6px 9px;border-radius:999px;border:1px solid var(--border);background:var(--input);color:var(--muted)}
-.flow-row{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;gap:8px;align-items:center;margin:16px 0}
-.flow-box{padding:12px;border:1px solid var(--border);border-radius:12px;background:var(--input);font-size:12px;line-height:1.45;text-align:center;color:var(--muted)}
-.flow-box b{display:block;color:var(--text);margin-bottom:4px;font-size:13px}
-.flow-arrow{color:var(--accent);font-weight:800}
-@media(max-width:800px){.callout-grid,.flow-row{grid-template-columns:1fr}.flow-arrow{display:none}.walk-step{grid-template-columns:40px 1fr}.walk-num{width:40px;height:40px;font-size:15px}}
-.quiz-card{padding:26px;border:1px solid var(--border);border-radius:18px;background:var(--card)}
-.quiz-q{padding:16px 0;border-bottom:1px solid var(--border)}
-.quiz-q:first-child{padding-top:0}
-.quiz-q:last-of-type{border-bottom:0}
-.quiz-q-title{margin:0 0 10px;font-weight:700;color:var(--text);font-size:15px;line-height:1.5}
-.quiz-opt{display:flex;align-items:center;gap:9px;padding:9px 10px;border-radius:10px;margin-bottom:5px;cursor:pointer;font-size:14px;color:var(--muted);transition:.12s background}
-.quiz-opt:hover{background:var(--input)}
-.quiz-opt input{accent-color:var(--accent);width:15px;height:15px;flex:none}
-.quiz-explain{margin:10px 0 0;padding:11px 13px;border-radius:10px;background:var(--input);font-size:13px;line-height:1.55;color:var(--text);border-left:3px solid var(--border)}
-.quiz-q.is-correct .quiz-explain{border-left-color:#22c55e}
-.quiz-q.is-incorrect .quiz-explain{border-left-color:#ef4444}
-.quiz-submit{margin-top:20px;border:0;cursor:pointer;font:inherit}
-.quiz-result{margin-top:20px;padding-top:20px;border-top:1px solid var(--border)}
-.quiz-score{font-size:28px;font-weight:800;color:var(--text)}
-.quiz-result p{color:var(--muted);margin:8px 0 16px;font-size:14px;line-height:1.5}
-.quiz-result .btn-secondary{cursor:pointer;font:inherit}
-@media(max-width:700px){.quiz-card{padding:18px}}
-.faq{max-width:900px}
-.faq details{background:var(--card);border:1px solid var(--border);border-radius:12px;margin-bottom:10px;overflow:hidden}
-.faq details[open]{border-color:var(--accent)}
-.faq summary{padding:16px 18px;cursor:pointer;font-weight:700;color:var(--text);list-style:none;display:flex;justify-content:space-between;align-items:center;gap:14px;font-size:15px}
-.faq summary::-webkit-details-marker{display:none}
-.faq summary::after{content:'+';font-size:20px;color:var(--muted);flex-shrink:0;line-height:1;font-weight:400}
-.faq details[open] summary::after{content:'−';color:var(--accent)}
-.faq .faq-body{padding:0 18px 18px;color:var(--muted);font-size:14px;line-height:1.65;border-top:1px solid var(--border)}
-.faq .faq-body p{margin:12px 0 0}
-.faq .faq-body p:first-child{margin-top:12px}
-.faq .faq-body ul{margin:10px 0 0;padding-left:20px;line-height:1.65}
-.faq .faq-body li{margin-bottom:4px}
-@media(max-width:700px){.faq summary{padding:14px 16px;font-size:14px}.faq .faq-body{padding:0 16px 16px}}
+<script>
+// Embedded built-in surfaces for file:// testing - no server needed
+const BUILT_IN_MANIFEST = [{"ticker": "SPY", "days": 504, "updated": "2026-09-29", "first": 20020, "last": 20725, "q": 0.013}, {"ticker": "QQQ", "days": 504, "updated": "2026-09-29", "first": 20020, "last": 20725, "q": 0.006}, {"ticker": "IWM", "days": 504, "updated": "2026-09-29", "first": 20020, "last": 20725, "q": 0.012}, {"ticker": "AAPL", "days": 504, "updated": "2026-09-29", "first": 20020, "last": 20725, "q": 0.005}, {"ticker": "TSLA", "days": 504, "updated": "2026-09-29", "first": 20020, "last": 20725, "q": 0.013}, {"ticker": "SPX", "days": 504, "updated": "2026-09-29", "first": 20020, "last": 20725, "q": 0.013}];
+const BUILT_IN_SURFACES = {};;
+</script>
+
+
+<style id="jsm-site-header">
+.site-header{position:sticky;top:0;z-index:40;background:rgba(15,20,25,.92);backdrop-filter:blur(12px);border-bottom:1px solid #2d3a4f;width:100%}
+.site-header-inner{max-width:1280px;margin:0 auto;padding:12px 16px;display:flex;justify-content:space-between;align-items:center;gap:12px}
+.site-header .logo{display:flex;align-items:center;gap:10px;text-decoration:none;color:#e7ecf3}
+.site-header .logo-icon{width:32px;height:32px;background:linear-gradient(135deg,#3b82f6,#34d399);color:#fff;border-radius:50%;display:grid;place-items:center;font-weight:800;font-size:12px}
+.site-header .brand-sub{font-size:12px;color:#8b9bb4}
+.header-right{display:flex;align-items:center;justify-content:flex-end;gap:8px;min-width:0}
+.site-header .nav{display:flex;gap:6px;flex-wrap:wrap;align-items:center;justify-content:flex-end}
+.site-header .nav a{padding:6px 11px;border-radius:9999px;border:1px solid #2d3a4f;background:#1a2332;font-size:12px;color:#8b9bb4;text-decoration:none}
+.site-header .nav a:hover{color:#e7ecf3;border-color:#3b82f6}
+.site-header .nav a.active{background:#3b82f6;color:#fff;border-color:#3b82f6}
+.theme-toggle{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border:1px solid #2d3a4f;border-radius:9999px;background:#1a2332;color:#8b9bb4;font:600 12px/1 system-ui,sans-serif;cursor:pointer}
+.data-badge{font-size:11px;padding:4px 8px;border-radius:999px;border:1px solid #2d3a4f;color:#8b9bb4}
+.nav-toggle{display:none;width:44px;height:44px;border:1px solid #2d3a4f;border-radius:10px;background:#1a2332;color:#e7ecf3;cursor:pointer;align-items:center;justify-content:center;flex-direction:column;gap:5px}
+.nav-toggle span{display:block;width:18px;height:2px;background:currentColor}
+html[data-theme="light"] .site-header{background:rgba(255,255,255,.94);border-bottom-color:#d8dee9}
+html[data-theme="light"] .site-header .logo{color:#0f172a}
+html[data-theme="light"] .site-header .nav a,html[data-theme="light"] .theme-toggle,html[data-theme="light"] .nav-toggle{background:#fff;color:#64748b;border-color:#d8dee9}
+html[data-theme="light"] .site-header .nav a.active{background:#2563eb;color:#fff}
+@media(max-width:900px){
+  .nav-toggle{display:inline-flex}
+  .site-header .nav{display:none;position:fixed;top:56px;left:0;right:0;flex-direction:column;align-items:stretch;padding:12px 16px 20px;background:#0f1419;z-index:99;border-bottom:1px solid #2d3a4f}
+  .site-header .nav.is-open{display:flex}
+  .site-header .nav a{width:100%;padding:14px;font-size:16px}
+}
+@media(max-width:600px){.site-header .brand-sub,.theme-label{display:none}}
 </style>
-</head><body><header class="site-header"><div class="site-header-inner"><a aria-label="JSM Options Home" class="logo logo-link" href="/"><div class="logo-icon">JSM</div><div><div style="font-weight:700">JSM Options</div><div class="brand-sub">jsm-options.com · Educational</div></div></a><div class="header-right"><nav aria-label="Primary navigation" class="nav"><a class="active" href="/">Home</a><a href="/level1/">Basics</a><a href="/level2/">Fundamentals</a><a href="/level3/">Spreads</a><a href="/level4/">Advanced</a><a href="/strategies/">Strategies</a><a href="/cheat-sheet/">Cheat sheet</a><a href="/builder/">Builder</a></nav><button aria-expanded="false" aria-label="Open menu" class="nav-toggle" id="navToggle" type="button"><span></span><span></span><span></span></button><button aria-label="Toggle color theme" class="theme-toggle" id="themeToggle" type="button"><span class="theme-icon" id="themeIcon">☼</span><span class="theme-label" id="themeLabel">Dark</span></button></div></div></header><main class="wrap wide">
-<section class="home-hero"><div><div class="eyebrow">Free course · Live strategy builder</div><h1>Free options trading course for beginners</h1><p>Start by opening a brokerage account, reading a stock chart, and learning the options chain. Then practice the same numbers in the live Strategy Builder before you ever click Buy or Sell. Educational only — not financial advice.</p></div><div class="payoff-demo"><div class="eyebrow">Sample · Long Iron Condor</div>
-<svg aria-label="Long iron condor payoff at expiry" role="img" viewbox="0 0 520 260" xmlns="http://www.w3.org/2000/svg">
-<line opacity=".55" stroke="#8b9bb4" stroke-width="1.5" x1="40" x2="500" y1="150" y2="150"></line>
-<line opacity=".3" stroke="#8b9bb4" stroke-width="1" x1="40" x2="40" y1="30" y2="230"></line>
-<polygon fill="#22c55e" opacity="0.3" points="40.0,85.0 100.0,85.0 100.0,150 40.0,150"></polygon><polygon fill="#22c55e" opacity="0.3" points="100.0,85.0 147.3,150 100.0,150"></polygon><polygon fill="#ef4444" opacity="0.3" points="147.3,150 180.0,195.0 180.0,150"></polygon><polygon fill="#ef4444" opacity="0.3" points="180.0,195.0 340.0,195.0 340.0,150 180.0,150"></polygon><polygon fill="#ef4444" opacity="0.3" points="340.0,195.0 372.7,150 340.0,150"></polygon><polygon fill="#22c55e" opacity="0.3" points="372.7,150 420.0,85.0 420.0,150"></polygon><polygon fill="#22c55e" opacity="0.3" points="420.0,85.0 500.0,85.0 500.0,150 420.0,150"></polygon>
-<path d="M40.0 85.0 L100.0 85.0 L180.0 195.0 L340.0 195.0 L420.0 85.0 L500.0 85.0" fill="none" stroke="#e7ecf3" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"></path>
-<text fill="#8b9bb4" font-family="system-ui,sans-serif" font-size="11" x="14" y="36">P/L</text>
-<text fill="#8b9bb4" font-family="system-ui,sans-serif" font-size="11" text-anchor="middle" x="250" y="250">Stock price at expiry →</text>
-<text fill="#fca5a5" font-family="system-ui,sans-serif" font-size="12" text-anchor="middle" x="230" y="215">Loss in the middle</text><text fill="#86efac" font-family="system-ui,sans-serif" font-size="12" text-anchor="start" x="55" y="75">Profit</text><text fill="#86efac" font-family="system-ui,sans-serif" font-size="12" text-anchor="start" x="450" y="75">Profit</text>
-</svg>
-<div class="demo-legend"><span style="color:#ef4444">■ Red = loss</span><span style="color:#22c55e">■ Green = profit</span><span style="opacity:.7">White line = P/L at expiry</span></div></div></section>
-<section class="home-section what-is-option-article walkthrough" id="broker-walkthrough">
-<div class="section-head"><div><div class="eyebrow">Start here · Any broker</div><h2>From brokerage account to first options order</h2><p>These steps work at any options-approved broker. The pictures are one example layout only — buttons and menus will look different on your platform. The ideas (chart → chain → builder → order) do not belong to any firm.</p></div></div>
-<div class="article-card">
-<p class="lead">This lesson is broker-neutral. JSM Options is not affiliated with Interactive Brokers or any other firm. You can study here with no account. To trade, open an account at <strong>whichever reputable broker you choose</strong>, get options approval, then follow the same sequence below. The screenshots use Netflix (NFLX) near $72 only so you can match numbers to a picture.</p>
-<div class="analogy-box"><strong>Screenshots are examples, not a required platform.</strong> One trading window is shown because a real chain is easier to teach than a blank diagram. Find the same pieces at your broker: a stock chart, an Options or Option Chain tab, expirations, strikes, bid/ask, and an order ticket. Labels such as “SMART”, “Show Weeklies”, or blue/red Buy/Sell buttons are that platform’s wording — not rules you must copy.</div>
 
-<h3>1. Open a brokerage account first</h3>
-<p>Pick any reputable broker that offers listed options. Beginners usually prefer platforms with <strong>low or zero stock commissions</strong> and transparent options contract fees, because a $0.65 fee on a $2.00 option is a large bite of the premium.</p>
-<div class="callout-grid">
-<div class="callout"><b>What to look for</b>Stock and ETF commissions at or near $0. Options fees quoted per contract, not as a surprise percentage. Paper-trading / simulator if available. Clear options-approval application.</div>
-<div class="callout"><b>Any broker is fine</b>Use the firm you already trust, or compare a few that list U.S. options. This site does not open accounts, does not rank brokers, and is not affiliated with the platform in the screenshots or with any other broker.</div>
-</div>
-<div class="analogy-box"><strong>Margin account vs cash account.</strong> Most brokers require a <strong>margin account</strong> plus a separate <strong>options trading application</strong> before you can trade options. Buying a single call or put is sometimes allowed in a cash account; selling premium, spreads, and multi-leg strategies almost always need margin approval. Approval is granted in levels (long calls/puts first, then covered calls and cash-secured puts, then spreads). Answer the application honestly — overstating experience can get you products you are not ready to risk.</div>
-<p>After the account is funded and options permission is on, you search a ticker the same way you would for a stock. That is where the first screenshot starts.</p>
-
-<h3>2. Read the stock chart before you touch options</h3>
-<p>Options are priced off the underlying stock. If you cannot read the chart and quote panel, the chain will look like random numbers. Every broker shows the same core data: last price, change, open/high/low/close, volume, and a candlestick (or bar/line) chart. In the <em>example</em> screenshot, NFLX is selected in a watchlist and the main pane is a <strong>4-hour candlestick chart</strong>.</p>
-<figure class="shot-wrap">
-<img src="/images/ibkr-nflx-chart.png" alt="Example brokerage chart for NFLX showing 4-hour candlesticks, volume, and a quote panel with last price 72.00" width="1600" height="900"/>
-<div class="shot-caption"><strong>Screenshot — example chart workspace (any broker).</strong> NFLX last 72.00 (−1.36 / −1.85%). OHLC: Header prints O 72.08 · H 72.17 · L 71.58 · C 72.01 on the 4h timeframe, with volume 8.39M. The dotted line is the current price. Your watchlist, colors, and button names will differ.</div>
-</figure>
-<div class="callout-grid">
-<div class="callout"><b>Watchlist (left)</b>Favorites such as SPY, QQQ, AAPL, AMZN, TSLA, MSFT, META, NFLX. Last price and day’s % change sit beside each symbol. Click NFLX so the chart and quote panel load that stock.</div>
-<div class="callout"><b>Chart toolbar</b>Timeframe is set to <strong>4h</strong>. Below the chart: 5y, 1y, 6m, 3m, 1m, 1w, 1d. Use a higher timeframe to see the trend, then drop to 1d or 4h before you pick a strike.</div>
-<div class="callout"><b>Candlesticks</b>Green candle = close above open (buyers won that bar). Red candle = close below open. The wick is the high/low. NFLX rallied into April, sold off into July, then chopped sideways into September around the low-$70s.</div>
-<div class="callout"><b>Volume histogram</b>The green/red bars under the price pane. Spikes often mark news or earnings. Current bar is labeled 8.39M. Thin volume on a big candle is less trustworthy than a move on heavy volume.</div>
-<div class="callout"><b>Quote panel (right)</b>Last <strong>72.00</strong>, bid 72.00 × 3,500, ask 72.01 × 2,300. Opening 73.75, prior close 73.36, high 73.76, low 71.58. 52-week high 124.86 / low 65.08. Volume 25.2M vs average 39.1M.</div>
-<div class="callout"><b>Options-relevant stats</b>Opt. IV% 42.3% and Hist Vol 33.5% tell you implied vs realized volatility. Open interest 4.78M and put/call volume 0.59 live on this panel too. Earnings on this shot: Oct 20, 2026.</div>
-</div>
-<div class="example-box"><strong>How to read one bar.</strong> The header <em>O 72.08 H 72.17 L 71.58 C 72.01</em> is the current 4-hour candle: it opened at 72.08, traded as high as 72.17, as low as 71.58, and last printed 72.01. That last print is the number the options chain is marking to.</div>
-<p>Also glance at the news card: the stock is down from a 52-week high of $124.86, so many strikes on the chain will be far from today’s price. That matters when you choose expiration and strike next.</p>
-<p>When you have a directional view — or a “I think it stays near $72” view — leave the stock order ticket alone. Open your broker’s <strong>Options</strong> or <strong>Option Chain</strong> view instead. That menu may be a tab, a right-click on the symbol, or a Trade → Options screen. The name changes; the destination does not.</p>
-
-<h3>3. Switch from the chart to the options chain</h3>
-<p>Look for a control labeled Options, Option Chain, Calls/Puts, or similar. In the example window the tabs read Charts · Options · News · Fundamentals — that is only one firm’s layout. Stay on the chain itself (skip “wizard” or “strategy builder” tools inside the broker until you can read a raw chain).</p>
-<div class="walk-steps">
-<div class="walk-step"><div class="walk-num">1</div><div><h3>Select the stock</h3><p>Confirm the header still shows the same ticker and last price (here NFLX 72.00, −1.85%). The chain is always for one underlying at a time at every broker.</p></div></div>
-<div class="walk-step"><div class="walk-num">2</div><div><h3>Pick an expiration</h3><p>Every listed expiry appears as a date row or dropdown. Some platforms mark weeklies with a <strong>W</strong>. In the example, <strong>NOV 20 ’26 · 59 Days</strong> is selected. Shorter dates move faster and decay faster; longer dates cost more premium. That relationship is the same everywhere.</p></div></div>
-<div class="walk-step"><div class="walk-num">3</div><div><h3>Set the view</h3><p>Narrow the table to a handful of strikes around the stock price (the example uses 10 strikes). Optional filters — weeklies, routing, call/put only — are convenience settings. You only need: expiry, strike list, calls, puts, bid, and ask.</p></div></div>
-</div>
-<figure class="shot-wrap">
-<img src="/images/ibkr-nflx-chain.png" alt="Example brokerage NFLX option chain for November 20 2026 showing calls on the left, strikes in the center, and puts on the right" width="1600" height="900"/>
-<div class="shot-caption"><strong>Screenshot — example option chain (any broker).</strong> Calls on one side, strikes in the middle, puts on the other. Center header shows IV 40.1%. November 20, 2026 (59 days) is the active expiry. Column order and colors vary by platform; bid, ask, last, strike, and expiry do not.</div>
-</figure>
-
-<h3>4. How to read every column on the chain</h3>
-<p>An option chain is just a price list of contracts that share the same underlying and expiration. Each <strong>row</strong> is one strike. Each <strong>side</strong> is a call or a put on that strike.</p>
-<div class="chain-legend">
-<span>Calls = right to buy</span>
-<span>Puts = right to sell</span>
-<span>Strike = contract price</span>
-<span>Bid = buyers pay up to</span>
-<span>Ask = sellers want at least</span>
-<span>Last = last trade</span>
-<span>Delta / Gamma = sensitivity</span>
-<span>× 100 shares per contract</span>
-</div>
-<table class="beginner-table">
-<thead><tr><th>Column</th><th>What it means</th><th>From this screenshot</th></tr></thead>
-<tbody>
-<tr><td><strong>Strike</strong></td><td>The price locked into the contract. Rows near the stock price are at-the-money (ATM).</td><td>Spot ≈ 72. The 72.5 row is the closest ATM strike. 55–70 are in-the-money calls / out-of-the-money puts. 75–82.5 are the opposite.</td></tr>
-<tr><td><strong>Bid</strong></td><td>Highest price a buyer is currently bidding. If you <em>sell</em> the option, this is the realistic credit you can lift now.</td><td>72.5 call bid <strong>4.60</strong>. 72.5 put bid <strong>4.60</strong>.</td></tr>
-<tr><td><strong>Ask</strong></td><td>Lowest price a seller is offering. If you <em>buy</em> the option, this is what you typically pay (or you work a limit between bid and ask).</td><td>72.5 call ask <strong>4.70</strong>. 72.5 put ask <strong>4.70</strong>.</td></tr>
-<tr><td><strong>Last</strong></td><td>Most recent print. Useful context, not a guaranteed next fill — the live market is bid/ask.</td><td>72.5 call last 4.65. Deep 55-strike call last shows C19.02 (a closing print style).</td></tr>
-<tr><td><strong>Delta</strong></td><td>How much the option price tends to move if the stock moves $1. Also a rough “chance it expires in the money” for beginners.</td><td>72.5 call delta <strong>0.532</strong> (about a coin-flip ATM call). 72.5 put delta <strong>−0.474</strong>. Puts have negative delta because they gain when the stock falls.</td></tr>
-<tr><td><strong>Gamma</strong></td><td>How fast delta itself changes as the stock moves. Highest near ATM.</td><td>72.5 call gamma 0.03451 — the peak area of the table.</td></tr>
-<tr><td><strong>IV</strong></td><td>Implied volatility of this expiry, shown in the center header. Higher IV = richer premiums and wider expected ranges.</td><td><strong>IV 40.1%</strong> for the Nov ’26 expiration on this shot.</td></tr>
-</tbody>
-</table>
-<div class="example-box"><strong>Worked row — NFLX 72.5 call, 59 days.</strong><br>
-Stock 72.00. Strike 72.50. Bid 4.60 / Ask 4.70 / Last 4.65 / Delta 0.532.<br>
-To <em>buy</em> one contract you plan on paying about $4.70 × 100 = <strong>$470</strong> (plus fees). That is the most you can lose as a buyer if you hold to expiry and it finishes worthless.<br>
-To <em>sell</em> that same call you would take in about $4.60 × 100 = <strong>$460</strong>, but selling naked calls is an advanced, high-risk permission — do not start there.
-</div>
-<div class="concept-grid">
-<div class="concept-card"><h4>In-, at-, and out-of-the-money</h4><p>With NFLX at $72: a 65 call is in-the-money (you could buy stock cheaper than the market). A 72.5 call is at-the-money. An 80 call is out-of-the-money and cheaper (bid 2.06 / ask 2.09) because the stock must rally for it to be worth exercising.</p></div>
-<div class="concept-card"><h4>The bid/ask spread is a cost</h4><p>On the 72.5 line the spread is $0.10. That is $10 per contract if you buy the ask and immediately sell the bid. Tight spreads (a few cents) are easier for beginners than wide penny-stock option spreads.</p></div>
-</div>
-<p>Notice the 72.5 call and 72.5 put cost almost the same here (both ~$4.65). That is common near ATM when rates and dividends are not dominating: put-call parity keeps the two sides related. You do not need the formula yet — just know both sides of the same strike are two different bets, not two copies of the same trade.</p>
-
-<h3>5. Visualize the trade in the Strategy Builder before you order</h3>
-<p>The chain tells you <em>price</em>. It does not show you the profit and loss shape. Copy the numbers into the free builder first so you can see max gain, max loss, and breakeven on a graph.</p>
-<div class="flow-row">
-<div class="flow-box"><b>From the chain</b>Ticker NFLX · Type Call or Put · Strike 72.5 · DTE 59 · Premium 4.70 (buy) or 4.60 (sell)</div>
-<div class="flow-arrow">→</div>
-<div class="flow-box"><b>In the builder</b>Add a leg. Set Side Long or Short, Type, Strike, DTE, Qty 1, Premium. The graph updates live.</div>
-<div class="flow-arrow">→</div>
-<div class="flow-box"><b>What you check</b>Green / red payoff at expiry, breakeven, and that the dollar risk matches what you can afford to lose.</div>
-</div>
-<div class="analogy-box"><strong>Mapping this screenshot into the builder</strong><br>
-Ticker: <strong>NFLX</strong> &nbsp;·&nbsp; Type: <strong>Call</strong> &nbsp;·&nbsp; Side: <strong>Long</strong> (you are buying) &nbsp;·&nbsp; Strike: <strong>72.5</strong> &nbsp;·&nbsp; DTE: <strong>59</strong> &nbsp;·&nbsp; Premium: <strong>4.70</strong> (use the ask when you model a buy; use the bid when you model a sell).<br>
-One contract = 100 shares, so the builder treats $4.70 as $470 of debit. Add a second leg if you are studying a spread. Compare strategy A vs B if you want two ideas on one graph.
-</div>
-<p><a class="btn-primary" href="https://jsm-options.com/builder/" style="margin-top:8px">Open Strategy Builder →</a></p>
-<p>Use the graph to answer three beginner questions: Where do I lose the whole premium? Where do I break even? Does a $5 stock move help or hurt this position? If the picture is unclear, do not send the order yet — change strike or expiration in the builder until the risk is obvious.</p>
-
-<h3>6. Place the order back on the options chain</h3>
-<p>When the builder payoff is the trade you actually want, return to the broker chain. You do not type a stock order. You click the <strong>option</strong> you modeled.</p>
-<div class="walk-steps">
-<div class="walk-step"><div class="walk-num">1</div><div><h3>Click the bid or the ask on the correct row</h3><p>Buying? Click the <strong>Ask</strong> of the call or put you modeled (or the Bid if you intend to join the bid with a limit). Selling? Click the <strong>Bid</strong>. The order ticket should show NFLX, call/put, strike 72.5, and Nov 20 2026 — verify every field.</p></div></div>
-<div class="walk-step"><div class="walk-num">2</div><div><h3>Choose Buy or Sell, then a limit price</h3><p>Do not use the stock Buy/Sell buttons unless the ticket clearly lists the option contract (call or put, strike, expiry). Clicking the chain row is the usual way to attach the right contract. Prefer a <strong>limit</strong> between bid and ask rather than a market order while you learn. Quantity 1 = one contract = 100 shares of exposure at every standard U.S. broker.</p></div></div>
-<div class="walk-step"><div class="walk-num">3</div><div><h3>Read the ticket before you transmit</h3><p>Confirm: action (BUY TO OPEN or SELL TO OPEN), expiry, strike, right (C or P), limit price, estimated debit/credit × 100, and commission. On a long call or long put, max loss is the debit you pay. On short or multi-leg tickets, max loss can be much larger — stop if the ticket does not match what the builder showed.</p></div></div>
-<div class="walk-step"><div class="walk-num">4</div><div><h3>Transmit, then watch fills</h3><p>A fill at 4.65 on that 72.5 call means you paid $465 plus fees. The position then lives in your options portfolio, not as 100 NFLX shares, unless it is later exercised or assigned. You can close it any day before expiration by selling (if long) or buying back (if short) the same contract.</p></div></div>
-</div>
-<div class="key-takeaway"><strong>Beginner sequence to memorize</strong>
-<p>Fund a low-fee account → get margin + options approval → read the stock chart and quote → open the Options chain → pick expiry and strike → copy strike / DTE / bid-ask into <a href="https://jsm-options.com/builder/">the Strategy Builder</a> → only then click the chain to buy or sell. The builder is practice. The chain is live money.</p>
-</div>
-<p class="home-note">Educational walkthrough only — not financial advice and not a recommendation of any broker, stock, or option. Screenshots are one frozen example window so the numbers are visible; they are not a required platform and will not match live prices. Column names, colors, and menu paths differ by firm. Bid, ask, strike, expiration, and the 100-share multiplier are the same idea everywhere. Options can expire worthless. Naked short options can lose more than the credit received. Approval levels and margin rules differ by firm and country.</p>
-</div>
-</section>
-
-<section class="home-section what-is-option-article" id="what-is-an-option">
-<div class="section-head"><div><div class="eyebrow">Step 1 · Start here</div><h2>What Is an Option?</h2><p>The first lesson every options beginner should read.</p></div></div>
-<div class="article-card">
-<p class="lead">If you're completely new to options trading, the first thing to understand is <strong>what an option actually is</strong>.</p>
-<p>An option is not a stock. You are not buying or selling shares when you trade an option. Instead, you are trading a <strong>financial contract</strong> that gives one person certain rights and another person certain obligations.</p>
-<p>That may sound complicated at first, but the basic idea is surprisingly simple. Every option has a few important characteristics. Once you understand them, reading an options chain and learning strategies such as Covered Calls and Cash-Secured Puts becomes much easier.</p>
-<h3>The 6 Things You Need to Know About Every Option</h3>
-<ol class="article-list"><li><strong>It is a contract</strong></li><li><strong>There are two sides to the contract</strong></li><li><strong>The buyer receives a right</strong></li><li><strong>The option has a strike price</strong></li><li><strong>The option has an expiration date</strong></li><li><strong>The option has a premium (price)</strong></li></ol>
-<p>Don't worry about memorizing these. The goal is to understand what they mean.</p>
-<h3>1. An Option Is a Contract</h3>
-<p>An option is a <strong>financial contract</strong>. When you buy shares of a company, you actually own part of that company. When you buy an option, you don't own the stock. Instead, you own a contract that gives you specific rights involving the stock.</p>
-<p>For example, an option might give you the right to buy shares of Apple at a certain price before a certain date. The stock is called the <strong>underlying asset</strong>.</p>
-<div class="analogy-box"><strong>Think of it this way:</strong><br>Stock → the underlying asset<br>Option → a contract whose value is connected to that asset</div>
-<h3>2. Every Option Has Two Sides</h3>
-<p>An option contract always has two sides: the <strong>buyer</strong> and the <strong>seller</strong>. The buyer pays money to obtain the option. The seller receives that money and takes on an obligation.</p>
-<p>This is important because an options trade isn't simply you "trading against the market." There is another side to the contract.</p>
-<h3>3. The Buyer Gets a Right — Not an Obligation</h3>
-<p>This is one of the most important concepts for beginners.</p>
-<p>When you <strong>buy an option</strong>, you receive a <strong>right</strong>. You are not automatically required to buy or sell the stock.</p>
-<div class="concept-grid"><div class="concept-card"><h4>Call Option</h4><p>A call gives the buyer the <strong>right to buy</strong> the underlying stock at the strike price.</p></div><div class="concept-card"><h4>Put Option</h4><p>A put gives the buyer the <strong>right to sell</strong> the underlying stock at the strike price.</p></div></div>
-<p>The seller of the option is in a different position. The seller receives the premium and takes on an <strong>obligation</strong> if the buyer exercises the option.</p>
-<div class="analogy-box"><strong>Remember:</strong> Option buyer → Right &nbsp; | &nbsp; Option seller → Obligation</div>
-<h3>4. Every Option Has a Strike Price</h3>
-<p>The <strong>strike price</strong> is the price specified in the option contract. Think of it as the price at which the option allows the underlying stock to be bought or sold, according to the contract.</p>
-<p>For example, suppose Apple is trading at $240. You could purchase a call option with a <strong>$250 strike price</strong>. That contract could give you the right to buy Apple shares at $250, subject to the contract terms.</p>
-<div class="analogy-box"><strong>Simple example:</strong><br>Call → right to <strong>BUY</strong> at the strike price<br>Put → right to <strong>SELL</strong> at the strike price</div>
-<h3>5. Every Option Has an Expiration Date</h3>
-<p>Options don't last forever. Every option has an <strong>expiration date</strong>, which tells you when the contract ends.</p>
-<p>An option might expire in two days, 30 days, six months, or even two years. Once it reaches expiration, the contract is no longer an active option.</p>
-<p>This is very different from owning a stock. Shares normally don't have an expiration date. An option does.</p>
-<p><strong>Why does this matter?</strong> Time is an important part of an option's value. An option with months remaining generally has more time for something to happen than an otherwise similar option expiring tomorrow. Later, you'll learn about <strong>time decay</strong> and the Greek <strong>Theta</strong>.</p>
-<div class="analogy-box"><strong>Beginner takeaway:</strong> Every option has a deadline.</div>
-<h3>6. Every Option Has a Premium</h3>
-<p>The <strong>premium</strong> is the price of the option. It is what the buyer pays the seller for the rights provided by the contract.</p>
-<p>Suppose an Apple option has a premium of <strong>$15</strong>. There is one important detail: options are normally quoted per share, but one standard options contract generally represents <strong>100 shares</strong>.</p>
-<div class="example-box"><strong>Example:</strong><br>$15 premium × 100 shares = <strong>$1,500</strong> for one standard contract, before commissions and fees.</div>
-<p>So you are not paying $1,500 to buy Apple shares. You are paying $1,500 for the rights provided by the option contract.</p>
-<h3>Putting Everything Together</h3>
-<p>Suppose Apple is trading at <strong>$240</strong>. You find a call option with:</p>
-<ul><li><strong>Underlying:</strong> Apple</li><li><strong>Type:</strong> Call</li><li><strong>Strike price:</strong> $250</li><li><strong>Expiration:</strong> 30 days from now</li><li><strong>Premium:</strong> $15</li></ul>
-<p>This means you would be buying a contract that gives you the <strong>right to buy Apple at $250</strong>, according to the contract terms, until its expiration.</p>
-<p>The premium is $15 per share. With a standard 100-share contract, that is <strong>$1,500</strong>.</p>
-<h3>Calls and Puts: The Quick Version</h3>
-<table class="beginner-table"><thead><tr><th></th><th>Call</th><th>Put</th></tr></thead><tbody><tr><td>Buyer gets the right to</td><td><strong>Buy</strong></td><td><strong>Sell</strong></td></tr><tr><td>Strike price</td><td>Agreed price to buy</td><td>Agreed price to sell</td></tr><tr><td>Buyer pays</td><td>Premium</td><td>Premium</td></tr><tr><td>Seller receives</td><td>Premium</td><td>Premium</td></tr></tbody></table>
-<p>A useful beginner shortcut is <strong>Call = right to buy</strong> and <strong>Put = right to sell</strong>. Remember that this describes the <strong>option buyer</strong>; selling an option creates a different position and obligation.</p>
-<h3>The 6 Characteristics at a Glance</h3>
-<div class="six-grid"><div><strong>① Contract</strong><span>A financial contract connected to an underlying asset.</span></div><div><strong>② Two Sides</strong><span>There is a buyer and a seller.</span></div><div><strong>③ Rights &amp; Obligations</strong><span>The buyer receives rights; the seller takes on obligations.</span></div><div><strong>④ Strike Price</strong><span>The specified price for buying or selling the underlying.</span></div><div><strong>⑤ Expiration</strong><span>The contract has a deadline.</span></div><div><strong>⑥ Premium</strong><span>The buyer pays the seller a price for the option.</span></div></div>
-<div class="key-takeaway"><strong>What should you remember?</strong><p>Options are contracts. Every contract has a buyer and a seller. The buyer receives rights, while the seller takes on obligations. Every option has a strike price, an expiration date, and a premium.</p></div>
-<p>Once these concepts become familiar, the numbers you see in an options chain will start making much more sense. <strong>Next, we'll look at how these characteristics appear in a brokerage account and how to read an options chain.</strong></p>
-<p class="home-note">Educational only — not financial advice. Options involve risk and can result in losses. Examples are simplified and do not account for every real-world factor.</p>
-</div></section>
-
-<section class="home-section" id="video-intro">
-  <div class="card" style="padding:0;overflow:hidden;border-radius:16px;">
-    <div style="padding:22px 22px 14px;">
-      <div class="section-head" style="margin-bottom:0">
-        <div>
-          <h2 style="margin:0 0 6px">Watch: Options Trading for Beginners</h2>
-          <p style="margin:0">Quick video overview before the FAQ — plays right here, no need to leave the site.</p>
-        </div>
-      </div>
-    </div>
-    <div class="video-embed-wrap" style="position:relative;width:100%;aspect-ratio:16/9;background:#000;overflow:hidden">
-      <iframe
-        style="position:absolute;inset:0;width:100%;height:100%;border:0;display:block"
-        src="https://www.youtube-nocookie.com/embed/EkuJaH3KhpM?rel=0&modestbranding=1&playsinline=1"
-        title="YouTube video player - Options Trading for Beginners"
-        frameborder="0"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-        allowfullscreen
-        loading="lazy"
-        referrerpolicy="strict-origin-when-cross-origin"></iframe>
+</head>
+<body>
+<header class="site-header">
+  <div class="site-header-inner">
+    <a class="logo logo-link" href="/" aria-label="JSM Options Home">
+      <div class="logo-icon">JSM</div>
+      <div><div style="font-weight:700">JSM Options</div><div class="brand-sub">jsm-options.com · Educational</div></div>
+    </a>
+    <div class="header-right">
+      <nav class="nav" aria-label="Primary navigation">
+        <a href="/">Home</a>
+        <a href="/level1/">Basics</a>
+        <a href="/level2/">Fundamentals</a>
+        <a href="/level3/">Spreads</a>
+        <a href="/level4/">Advanced</a>
+        <a href="/strategies/">Strategies</a>
+        <a href="/cheat-sheet/">Cheat sheet</a>
+        <a href="/builder/">Builder</a>
+        <a href="/backtest/" class="active">Backtest</a>
+      </nav>
+      <button type="button" class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
+      <!--
+      <span class="data-badge" id="dataBadge">Simulated data</span>
+      -->
+      <button type="button" class="theme-toggle" id="themeBtn" aria-label="Toggle color theme"><span id="themeIcon">☼</span><span class="theme-label" id="themeLabel">Theme</span></button>
     </div>
   </div>
-</section>
+</header>
 
 
-<section class="home-section faq-section" id="faq">
-<div class="section-head"><div><div class="eyebrow">Common questions</div><h2>Beginner FAQ</h2><p>The questions almost every new options trader asks first. Click any question to open the answer.</p></div></div>
-<div class="faq">
+<div class="app">
+<aside class="side" id="side" aria-label="Backtest settings">
 
-<details>
-<summary>Why do options exist at all?</summary>
-<div class="faq-body">
-<p>Options aren't just for speculation. In real markets, traders and investors use them to:</p>
-<ul>
-<li><strong>Hedge</strong> — e.g. buying a put as insurance on shares you already own.</li>
-<li><strong>Generate income</strong> — e.g. selling a call against stock you own (a covered call), which you'll meet in Fundamentals.</li>
-<li><strong>Speculate with defined risk</strong> — a long call or put risks only the premium you paid, unlike buying shares on margin.</li>
-</ul>
-<p>None of these uses require risking your whole account. Size small while you learn.</p>
-</div>
-</details>
+  <details class="sec" open>
+    <summary>Market data</summary>
+    <div class="body">
+      <label class="f">Source
+        <select id="dataSrc">
+        <option value="sim" selected>Simulated underlying (until history grows)</option>
+        <option value="surfaces">CBOE stored sessions (daily snapshots)</option>
+        <option value="csv">My daily prices (CSV) - advanced</option>
+      </select>
+      <div style="margin-top:8px;display:grid;gap:6px" id="tickerRow">
+        <label class="f">Symbol / Ticker (built-in)
+          <select id="tickerSel">
+            <option value="SPY">SPY – S&amp;P 500 ETF</option>
+            <option value="QQQ">QQQ – Nasdaq 100 ETF</option>
+            <option value="IWM">IWM – Russell 2000 ETF</option>
+            <option value="DIA">DIA – Dow 30 ETF</option>
+            <option value="SPX">SPX – S&amp;P 500 Index</option>
+            <option value="XLF">XLF – Financials ETF</option>
+            <option value="XLK">XLK – Tech ETF</option>
+            <option value="XLE">XLE – Energy ETF</option>
+            <option value="SMH">SMH – Semiconductors ETF</option>
+            <option value="TLT">TLT – 20Y Treasury ETF</option>
+            <option value="GLD">GLD – Gold ETF</option>
+            <option value="SLV">SLV – Silver ETF</option>
+            <option value="USO">USO – Oil ETF</option>
+            <option value="AAPL">AAPL – Apple</option>
+            <option value="MSFT">MSFT – Microsoft</option>
+            <option value="NVDA">NVDA – Nvidia</option>
+            <option value="TSLA">TSLA – Tesla</option>
+            <option value="META">META – Meta</option>
+            <option value="AMZN">AMZN – Amazon</option>
+            <option value="GOOGL">GOOGL – Alphabet</option>
+          </select>
+        </label>
+        <div class="hint" id="surfaceInfo">Default is a simulated price path so you can backtest now. CBOE stored sessions start 2026-09-30 and grow each weekday. Switch source to CBOE when that series is long enough (60+ sessions).</div>
+      </div>
+      </label>
+      <div class="simOnly" style="display:grid;gap:10px">
+        <div class="g2">
+          <label class="f">Market regime
+            <select id="regime">
+              <option value="balanced">Balanced</option>
+              <option value="bull">Steady bull</option>
+              <option value="bear">Bear market</option>
+              <option value="chop">Sideways chop</option>
+              <option value="crash">Crash mid-way</option>
+            </select>
+          </label>
+          <div class="rowb">
+            <label class="f">Seed<input type="number" id="seed" value="7" step="1"></label>
+            <button class="btn" id="dice" type="button" title="New random path">Shuffle</button>
+          </div>
+        </div>
+        <label class="f">Start price<input type="number" id="s0" value="400" min="5" step="any"></label>
+      </div>
+      <div class="csvOnly" style="display:none;gap:8px">
+        <input type="file" id="csvFile" accept=".csv,.txt,text/csv">
+        <p class="hint">Columns: Date, Close. An optional IV or VIX column is used as implied volatility; otherwise IV is estimated from 20-day realized volatility.</p>
+        <p class="err" id="csvMsg"></p>
+      </div>
+      <div class="g2">
+        <label class="f">Start date<input type="date" id="start" value="2024-09-30"></label>
+        <label class="f">End date<input type="date" id="end" value="2026-09-29"></label>
+      </div>
+      <div class="g2">
+        <label class="f">IV premium over realized (%)<input type="number" id="vrp" value="12" step="1"></label>
+        <label class="f">Put skew slope<input type="number" id="skew" value="2" step="0.25" min="0"></label>
+      </div>
+      <div class="g2">
+        <label class="f">Risk-free rate (%)<input type="number" id="rate" value="4" step="0.25"></label>
+        <label class="f">Starting capital ($)<input type="number" id="capital" value="100000" min="1000" step="1000"></label>
+      </div>
+    </div>
+  </details>
 
-<details>
-<summary>What's the difference between a "right" and an "obligation"?</summary>
-<div class="faq-body">
-<p>This is the single most important distinction in options. The <strong>buyer</strong> pays a premium and receives a <strong>right</strong> — the choice, but never the requirement, to buy (call) or sell (put) the underlying at the strike price. If the trade doesn't work out, the buyer can simply let the option expire and walk away, losing only the premium paid.</p>
-<p>The <strong>seller</strong> (also called the "writer") receives that premium up front and takes on an <strong>obligation</strong> instead. If the buyer chooses to exercise, the seller must honor the contract — deliver the shares (call) or buy them (put) — whether or not it's convenient. Sellers don't get to change their mind once assigned.</p>
-</div>
-</details>
+  <details class="sec" open>
+    <summary>Strategy</summary>
+    <div class="body">
+      <label class="f">Template<select id="tmpl"></select></label>
+      <div id="legs" style="display:grid;gap:8px"></div>
+      <button class="btn" id="addLeg" type="button">Add leg</button>
+      <p class="hint">Strikes come from a target delta, a dollar offset from the spot price, or a dollar offset from an earlier leg (for wings).</p>
+    </div>
+  </details>
 
-<details>
-<summary>Who is actually on the other side of my trade?</summary>
-<div class="faq-body">
-<p>It's a common beginner assumption that the underlying company is somehow involved — it isn't. Every option has exactly <strong>two parties</strong>: a buyer and a seller. When you buy a call or put, another trader or market maker is selling it to you, and vice versa.</p>
-<p>The exchange and the Options Clearing Corporation (OCC) sit in the middle to guarantee both sides perform, but the actual obligation always rests with whichever trader is <em>short</em> (sold) the contract — never with the company whose stock underlies it.</p>
-</div>
-</details>
+  <details class="sec" open>
+    <summary>Entry</summary>
+    <div class="body">
+      <div class="g2">
+        <label class="f">Open a trade
+          <select id="freq">
+            <option value="weekly">Once a week</option>
+            <option value="daily">Every trading day</option>
+            <option value="monthly">First trading day of month</option>
+            <option value="reenter">When nothing is open</option>
+          </select>
+        </label>
+        <label class="f" id="dowWrap">Day of week
+          <select id="dow"><option value="1">Monday</option><option value="2">Tuesday</option><option value="3">Wednesday</option><option value="4">Thursday</option><option value="5">Friday</option></select>
+        </label>
+      </div>
+      <div class="g2">
+        <label class="f">Days to expiration<input type="number" id="dte" value="45" min="1" step="1"></label>
+        <label class="f">Max open trades<input type="number" id="maxOpen" value="4" min="1" step="1"></label>
+      </div>
+      <div class="g2">
+        <label class="f">Min IV rank (0 = off)<input type="number" id="ivMin" value="0" min="0" max="100" step="5"></label>
+        <label class="f">Max IV rank<input type="number" id="ivMax" value="100" min="0" max="100" step="5"></label>
+      </div>
+    </div>
+  </details>
 
-<details>
-<summary>What happens when an option reaches its expiration date?</summary>
-<div class="faq-body">
-<p>One of three things, depending on where the stock ends up relative to the strike:</p>
-<ul>
-<li><strong>Out-of-the-money:</strong> the option simply expires worthless. The buyer loses the premium paid; no further action is needed.</li>
-<li><strong>In-the-money:</strong> most brokers automatically exercise it on the buyer's behalf, converting the contract into a stock position (100 shares per contract).</li>
-<li><strong>Closed early:</strong> the buyer can sell the option before expiration to capture its remaining value instead of exercising it.</li>
-</ul>
-<p>Sellers who are assigned must deliver (call) or purchase (put) the underlying shares at the strike price.</p>
-</div>
-</details>
+  <details class="sec" open>
+    <summary>Exit</summary>
+    <div class="body">
+      <div class="g2">
+        <label class="f">Profit target (% of credit/debit)<input type="number" id="pt" value="50" min="0" step="5"></label>
+        <label class="f">Stop loss (% of credit/debit)<input type="number" id="sl" value="200" min="0" step="10"></label>
+      </div>
+      <label class="f">Close at DTE (0 = hold to expiration)<input type="number" id="exitDTE" value="21" min="0" step="1"></label>
+      <p class="hint">Exits are checked at each daily close. Profit target, stop, and close-at-DTE are part of the saved setup. Trade rows show why the position closed.</p>
+      <div class="g2" style="margin-top:8px">
+        <button class="btn sm" id="shareSetupBtn" type="button">Copy share link</button>
+        <button class="btn sm pri" id="sweepBtn" type="button">Sweep DTE / target</button>
+      </div>
+      <p class="hint" id="shareStatus"></p>
+      <div id="sweepOut" class="hint"></div>
+    </div>
+  </details>
 
-<details>
-<summary>Do I have to hold an option until it expires?</summary>
-<div class="faq-body">
-<p>No — this is another common misconception. Most options are actively traded and can be bought or sold to close a position at any time before expiration, at the option's current market price. Many traders close well before expiration specifically to avoid assignment risk or last-minute volatility.</p>
-</div>
-</details>
+  <details class="sec">
+    <summary>Sizing and costs</summary>
+    <div class="body">
+      <div class="g2">
+        <label class="f">Position size
+          <select id="sizing"><option value="pct">% of capital at risk</option><option value="fixed">Fixed contracts</option></select>
+        </label>
+        <label class="f" id="allocWrap">Capital per trade (%)<input type="number" id="alloc" value="5" min="0.1" step="0.5"></label>
+        <label class="f" id="contractsWrap" style="display:none">Contracts<input type="number" id="contracts" value="1" min="1" step="1"></label>
+      </div>
+      <div class="g2">
+        <label class="f">Commission ($/contract/side)<input type="number" id="comm" value="0.65" min="0" step="0.05"></label>
+        <label class="f">Slippage ($/share per order, per side)<input type="number" id="slip" value="0.03" min="0" step="0.01"></label>
+      </div>
+      <label class="f">Strike increment ($)<input type="number" id="step" value="1" min="0.01" step="0.5"></label>
+    </div>
+  </details>
+</aside>
 
-<details>
-<summary>What's the most I can lose as an option buyer?</summary>
-<div class="faq-body">
-<p>As a buyer, your maximum loss is limited to the premium you paid, plus any commissions — nothing more, even if the stock moves dramatically against you. This defined, known-in-advance downside is one reason buying calls and puts is often taught before selling them.</p>
-</div>
-</details>
+<main class="main" id="main">
+  <div class="notice" id="notice">
+    <span>Prices and implied volatility are simulated, and every fill is a Black-Scholes mid price with a skew model. Results show how a rule set behaves, not what it would have earned. Upload a daily price CSV to test on real underlying prices.</span>
+    <button type="button" id="noticeX" aria-label="Dismiss">×</button>
+  </div>
+  <div class="banner-err" id="errBox" style="display:none"></div>
 
-<details>
-<summary>Is selling (writing) options riskier than buying them?</summary>
-<div class="faq-body">
-<p>It depends on the strategy. Selling a "naked" call — one not backed by owning the underlying shares — carries theoretically <strong>unlimited risk</strong>, since a stock price has no upper limit. Selling a covered call (against shares you already own) or a cash-secured put (backed by enough cash to buy the shares) defines and limits that risk considerably.</p>
-<p>This is why beginners are typically taught covered strategies — like the Covered Call and Cash-Secured Put — well before naked, undefined-risk positions.</p>
-</div>
-</details>
+  <div class="kpis" id="kpis"></div>
 
-<details>
-<summary>Do I need 100 shares or a lot of money to get started?</summary>
-<div class="faq-body">
-<p>Not to buy a call or put. One contract typically controls 100 shares, but as a buyer you only pay the premium — for example, a $15 premium × 100 shares = $1,500, usually far less than buying 100 shares outright. Covered strategies, like a covered call, do require owning (or buying) those 100 shares first, which needs more capital.</p>
-</div>
-</details>
+  <section class="panel">
+    <div class="ph">
+      <h2>Equity and drawdown</h2>
+      <div class="legend" id="legend"></div>
+      <button class="btn sm pri" id="pinBtn" type="button">Pin this run to compare</button>
+    </div>
+    <div class="wrap" id="eqWrap">
+      <div id="eqChart"></div>
+      <div id="ddChart"></div>
+      <div class="tip" id="tip"></div>
+    </div>
+  </section>
 
-<details>
-<summary>Is options trading just gambling?</summary>
-<div class="faq-body">
-<p>Options are a tool, not a strategy in themselves — how they're used determines the risk. Buying far out-of-the-money calls with money you can't afford to lose is closer to gambling. Using options to hedge a stock position, generate income against shares you already own, or speculate with a small, clearly defined amount of risk is closer to disciplined trading. The instrument is neutral; position sizing and strategy selection make the difference.</p>
-</div>
-</details>
+  <div class="two">
+    <section class="panel">
+      <div class="ph"><h2>Payoff of selected trade</h2><span class="sub" id="payoffSub"></span></div>
+      <div id="payoff"></div>
+      <div class="kv" id="payoffKv"></div>
+    </section>
+    <section class="panel">
+      <div class="ph"><h2>Trade P&amp;L distribution</h2><span class="sub" id="histSub"></span></div>
+      <div id="hist"></div>
+    </section>
+  </div>
 
-</div>
-</section>
+  <section class="panel">
+    <div class="ph"><h2>Monthly returns</h2><span class="sub">Change in account value, per month</span></div>
+    <div class="tbl-wrap" id="monthly"></div>
+  </section>
 
-<section class="home-section quiz-section" id="page-quiz">
-<div class="section-head"><div><div class="eyebrow">Quick check</div><h2>Test Your Knowledge</h2><p>Six beginner questions covering what you just read. No account needed.</p></div></div>
-<div class="quiz-card card">
-<form id="quizForm" class="quiz-form" data-lang="en" novalidate>
-<div class="quiz-q" data-name="q1">
-<p class="quiz-q-title">1. When you buy an option, what are you actually buying?</p>
-<label class="quiz-opt"><input type="radio" name="q1" value="a"> Shares of the underlying company</label>
-<label class="quiz-opt"><input type="radio" name="q1" value="b"> A contract that gives you certain rights</label>
-<label class="quiz-opt"><input type="radio" name="q1" value="c"> A loan from your broker</label>
-<label class="quiz-opt"><input type="radio" name="q1" value="d"> A guaranteed profit</label>
-<p class="quiz-explain" hidden></p>
+  <div class="two">
+    <section class="panel">
+      <div class="ph"><h2>How trades ended</h2></div>
+      <div class="tbl-wrap" id="exits"></div>
+    </section>
+    <section class="panel">
+      <div class="ph"><h2>Statistics</h2><span class="sub" id="cmpSub"></span></div>
+      <div class="tbl-wrap" id="compare"></div>
+    </section>
+  </div>
+
+  <section class="panel">
+    <div class="ph">
+      <h2>Trade log</h2>
+      <div style="display:flex;gap:8px;align-items:center"><span class="sub" id="copyMsg"></span><button class="btn sm" id="copyCsv" type="button">Copy trades as CSV</button></div>
+    </div>
+    <div class="tbl-wrap tr-max" id="trades"></div>
+  </section>
+</main>
 </div>
-<div class="quiz-q" data-name="q2">
-<p class="quiz-q-title">2. A call option gives the buyer the right to:</p>
-<label class="quiz-opt"><input type="radio" name="q2" value="a"> Sell the stock at the strike price</label>
-<label class="quiz-opt"><input type="radio" name="q2" value="b"> Buy the stock at the strike price</label>
-<label class="quiz-opt"><input type="radio" name="q2" value="c"> Cancel the contract for a refund</label>
-<label class="quiz-opt"><input type="radio" name="q2" value="d"> Receive the company's dividends</label>
-<p class="quiz-explain" hidden></p>
-</div>
-<div class="quiz-q" data-name="q3">
-<p class="quiz-q-title">3. A put option gives the buyer the right to:</p>
-<label class="quiz-opt"><input type="radio" name="q3" value="a"> Buy the stock at the strike price</label>
-<label class="quiz-opt"><input type="radio" name="q3" value="b"> Sell the stock at the strike price</label>
-<label class="quiz-opt"><input type="radio" name="q3" value="c"> Borrow shares from the seller</label>
-<label class="quiz-opt"><input type="radio" name="q3" value="d"> Extend the expiration date</label>
-<p class="quiz-explain" hidden></p>
-</div>
-<div class="quiz-q" data-name="q4">
-<p class="quiz-q-title">4. What is the "strike price"?</p>
-<label class="quiz-opt"><input type="radio" name="q4" value="a"> The current market price of the stock</label>
-<label class="quiz-opt"><input type="radio" name="q4" value="b"> The broker's commission on the trade</label>
-<label class="quiz-opt"><input type="radio" name="q4" value="c"> The price in the contract for buying/selling the underlying</label>
-<label class="quiz-opt"><input type="radio" name="q4" value="d"> The maximum loss allowed on the trade</label>
-<p class="quiz-explain" hidden></p>
-</div>
-<div class="quiz-q" data-name="q5">
-<p class="quiz-q-title">5. A contract represents 100 shares and the premium is $15. What does one contract cost, before fees?</p>
-<label class="quiz-opt"><input type="radio" name="q5" value="a"> $15</label>
-<label class="quiz-opt"><input type="radio" name="q5" value="b"> $150</label>
-<label class="quiz-opt"><input type="radio" name="q5" value="c"> $1,500</label>
-<label class="quiz-opt"><input type="radio" name="q5" value="d"> $15,000</label>
-<p class="quiz-explain" hidden></p>
-</div>
-<div class="quiz-q" data-name="q6">
-<p class="quiz-q-title">6. In an option contract, who takes on an obligation instead of a right?</p>
-<label class="quiz-opt"><input type="radio" name="q6" value="a"> The buyer</label>
-<label class="quiz-opt"><input type="radio" name="q6" value="b"> The seller</label>
-<label class="quiz-opt"><input type="radio" name="q6" value="c"> Both sides equally</label>
-<label class="quiz-opt"><input type="radio" name="q6" value="d"> Neither side</label>
-<p class="quiz-explain" hidden></p>
-</div>
-<button type="submit" class="btn quiz-submit">Check my answers</button>
-</form>
-<div class="quiz-result" id="quizResult" hidden>
-<div class="quiz-score" id="quizScore"></div>
-<p id="quizScoreMsg" data-quiz-msg></p>
-<button type="button" class="btn btn-secondary" id="quizRetry" data-quiz-retry">Retake the test</button>
-</div>
-<script type="application/json" id="quizAnswers">{"q1": {"correct": "b", "explain": "An option is a financial contract, not stock ownership — it gives the buyer certain rights tied to an underlying asset."}, "q2": {"correct": "b", "explain": "A call option gives its buyer the right to buy the underlying stock at the strike price."}, "q3": {"correct": "b", "explain": "A put option gives its buyer the right to sell the underlying stock at the strike price."}, "q4": {"correct": "c", "explain": "The strike price is the price written into the contract for buying or selling the underlying asset."}, "q5": {"correct": "c", "explain": "Premium is quoted per share, and a standard contract covers 100 shares: $15 × 100 = $1,500 before fees."}, "q6": {"correct": "b", "explain": "The buyer pays the premium for a right. The seller receives that premium and takes on an obligation instead."}}</script>
-<script>window.JSM_QUIZ_MSGS = {"perfect": "Perfect score — you've got the basics down cold.", "good": "Solid work. Skim the explanations above, then move on to Basics whenever you’re ready.", "retry": "No worries — options take a couple of passes. Re-read the page and try again."};</script>
-<p class="home-note">Educational only — not financial advice. Options involve risk and can result in losses. Examples are simplified and do not account for every real-world factor.</p></main>
+
+<script>
+//<ENGINE>
+const DAY=86400000, Q=0.013;
+
+function ncdf(x){
+  const a1=0.319381530,a2=-0.356563782,a3=1.781477937,a4=-1.821255978,a5=1.330274429;
+  const k=1/(1+0.2316419*Math.abs(x));
+  const w=1-Math.exp(-x*x/2)/Math.sqrt(2*Math.PI)*(a1*k+a2*k*k+a3*k**3+a4*k**4+a5*k**5);
+  return x<0?1-w:w;
+}
+function bsPrice(type,S,K,T,sig,r){
+  if(T<=0||sig<=0) return type==='C'?Math.max(0,S-K):Math.max(0,K-S);
+  const sq=sig*Math.sqrt(T), d1=(Math.log(S/K)+(r-Q+0.5*sig*sig)*T)/sq, d2=d1-sq;
+  const eq=Math.exp(-Q*T), er=Math.exp(-r*T);
+  return type==='C'?S*eq*ncdf(d1)-K*er*ncdf(d2):K*er*ncdf(-d2)-S*eq*ncdf(-d1);
+}
+function bsDelta(type,S,K,T,sig,r){
+  if(T<=0||sig<=0) return type==='C'?(S>K?1:0):(S<K?-1:0);
+  const d1=(Math.log(S/K)+(r-Q+0.5*sig*sig)*T)/(sig*Math.sqrt(T)), eq=Math.exp(-Q*T);
+  return type==='C'?eq*ncdf(d1):eq*(ncdf(d1)-1);
+}
+function legIV(K,S,T,atm,skew,r){
+  const F=S*Math.exp((r-Q)*T);
+  const x=Math.log(K/F);
+  return Math.min(3,Math.max(0.05,atm*(1-skew*x*(x<0?1:0.5))));
+}
+function strikeByDelta(type,target,S,T,atm,skew,r){
+  let lo=S*0.3,hi=S*3;
+  for(let it=0;it<60;it++){
+    const mid=(lo+hi)/2, iv=legIV(mid,S,T,atm,skew,r), d=Math.abs(bsDelta(type,S,mid,T,iv,r));
+    if(type==='C'){ if(d>target) lo=mid; else hi=mid; } else { if(d>target) hi=mid; else lo=mid; }
+  }
+  return (lo+hi)/2;
+}
+
+function rng(seed){let a=seed>>>0;return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+function randn(r){let u=0;while(!u)u=r();const v=r();return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v)}
+
+const REGIMES={
+  balanced:{mu:.09,theta:.030,kappa:4,xi:.55,rho:-.7,revert:0},
+  bull:{mu:.16,theta:.020,kappa:5,xi:.45,rho:-.7,revert:0},
+  bear:{mu:-.12,theta:.075,kappa:3,xi:.70,rho:-.7,revert:0},
+  chop:{mu:0,theta:.036,kappa:6,xi:.60,rho:-.6,revert:1.2},
+  crash:{mu:.10,theta:.028,kappa:4,xi:.55,rho:-.7,revert:0,crash:true}
+};
+function genSim(o){
+  const R=REGIMES[o.regime]||REGIMES.balanced, rnd=rng(o.seed);
+  const ts=[];
+  for(let t=o.start;t<=o.end;t+=DAY){const d=new Date(t).getUTCDay(); if(d!==0&&d!==6) ts.push(t);}
+  const n=ts.length, S=new Array(n), iv=new Array(n), dt=1/252, anchor=Math.log(o.s0);
+  let v=R.theta, lnS=anchor;
+  const cA=Math.floor(n*0.45), cL=30;
+  for(let i=0;i<n;i++){
+    if(i>0){
+      const z1=randn(rnd), z2=R.rho*z1+Math.sqrt(1-R.rho*R.rho)*randn(rnd), vp=Math.max(v,0);
+      let ret=(R.mu-0.5*vp)*dt+Math.sqrt(vp*dt)*z1-R.revert*(lnS-anchor)*dt;
+      const inCrash=R.crash&&i>=cA&&i<cA+cL;
+      if(inCrash) ret-=0.010;
+      lnS+=ret;
+      v=v+R.kappa*(R.theta-vp)*dt+R.xi*Math.sqrt(vp*dt)*z2;
+      if(inCrash) v=Math.max(v,0.18);
+      v=Math.max(v,0.0025);
+    }
+    S[i]=Math.exp(lnS);
+    const eff=R.theta+(v-R.theta)*0.6;
+    iv[i]=Math.min(1.5,Math.max(0.08,Math.sqrt(Math.max(eff,0))*(1+o.vrp)));
+  }
+  return {ts,S,iv};
+}
+function withIV(ts,S,ivcol,vrp){
+  const iv=[];
+  for(let i=0;i<S.length;i++){
+    if(ivcol&&ivcol[i]>0){ iv.push(ivcol[i]>3?ivcol[i]/100:ivcol[i]); continue; }
+    const a=Math.max(1,i-19); const rs=[];
+    for(let j=a;j<=i;j++) rs.push(Math.log(S[j]/S[j-1]));
+    if(rs.length<5){ iv.push(0.16); continue; }
+    const m=rs.reduce((x,y)=>x+y,0)/rs.length;
+    const sd=Math.sqrt(rs.reduce((x,y)=>x+(y-m)*(y-m),0)/(rs.length-1));
+    iv.push(Math.min(1.5,Math.max(0.08,sd*Math.sqrt(252)*(1+vrp))));
+  }
+  return iv;
+}
+function parseCSV(text){
+  const lines=text.replace(/^\uFEFF/,'').split(/\r?\n/).filter(l=>l.trim());
+  if(lines.length<20) throw new Error('The file needs at least 20 rows of daily prices.');
+  const delim=(lines[0].match(/;/g)||[]).length>(lines[0].match(/,/g)||[]).length?';':(lines[0].includes('\t')?'\t':',');
+  const split=l=>l.split(delim).map(c=>c.trim().replace(/^"|"$/g,''));
+  let head=split(lines[0]), hasHeader=isNaN(Date.parse(head[0])), dc=0,cc=1,ic=-1, start=0;
+  if(hasHeader){
+    const h=head.map(x=>x.toLowerCase()); start=1;
+    const find=(names)=>{for(const nm of names){const k=h.indexOf(nm); if(k>=0) return k;} return -1;};
+    dc=find(['date','timestamp','time','day']); if(dc<0) dc=0;
+    cc=find(['adj close','adj_close','adjclose','close','price','last','settle']);
+    if(cc<0) throw new Error('No Close column found. Add a header such as Date,Close.');
+    ic=find(['iv','vix','implied_vol','implied volatility','atm_iv']);
+  }
+  const rows=[];
+  for(let i=start;i<lines.length;i++){
+    const c=split(lines[i]); const ds=c[dc]; if(!ds) continue;
+    let t; if(/^\d{4}-\d{2}-\d{2}/.test(ds)) t=Date.parse(ds.slice(0,10)); else { const d=new Date(ds); t=Date.UTC(d.getFullYear(),d.getMonth(),d.getDate()); }
+    const px=parseFloat(String(c[cc]).replace(/[$,]/g,'')); if(!isFinite(t)||!isFinite(px)||px<=0) continue;
+    const iv=ic>=0?parseFloat(c[ic]):null;
+    rows.push({t,px,iv:isFinite(iv)?iv:null});
+  }
+  if(rows.length<20) throw new Error('Could not read enough valid Date/Close rows.');
+  rows.sort((a,b)=>a.t-b.t);
+  const out=[]; for(const r of rows){ if(!out.length||r.t>out[out.length-1].t) out.push(r); }
+  return {ts:out.map(r=>r.t),S:out.map(r=>r.px),iv:out.some(r=>r.iv)?out.map(r=>r.iv):null};
+}
+
+function roundStrike(k,step){return Math.max(step,Math.round(k/step)*step);}
+function posValue(p,px,s,atm,cfg){
+  const T=Math.max(0,(p.expTs-s)/DAY/365); let v=0;
+  for(const l of p.legs){ const sig=T>0?legIV(l.K,px,T,atm,cfg.skew,cfg.rate):0; v+=l.side*l.qty*bsPrice(l.type,px,l.K,T,sig,cfg.rate); }
+  return v;
+}
+function estBPR(legs,S,V0){
+  let netP=0,netC=0;
+  for(const l of legs){ if(l.type==='P') netP+=l.side*l.qty; else netC+=l.side*l.qty; }
+  const pay=x=>{let a=0;for(const l of legs){a+=l.side*l.qty*(l.type==='C'?Math.max(0,x-l.K):Math.max(0,l.K-x));}return a-V0;};
+  if(netP>=0&&netC>=0){
+    let mn=0; for(const x of [0,S*10,...legs.map(l=>l.K)]) mn=Math.min(mn,pay(x));
+    return Math.max(1,-mn*100);
+  }
+  let best=0;
+  for(const type of ['P','C']){
+    const net=type==='P'?netP:netC; if(net>=0) continue;
+    const sh=legs.filter(l=>l.type===type&&l.side<0);
+    const K=type==='P'?Math.max(...sh.map(l=>l.K)):Math.min(...sh.map(l=>l.K));
+    const otm=type==='P'?Math.max(0,S-K):Math.max(0,K-S);
+    const per=Math.max(0.2*S-otm,0.1*S)+Math.max(0,-V0);
+    best=Math.max(best,per*100*(-net));
+  }
+  return Math.max(1,best);
+}
+function legsText(legs){return legs.map(l=>(l.side>0?'+':'−')+(l.qty>1?l.qty:'')+l.type+(Math.round(l.K*100)/100)).join(' ');}
+
+function runBacktest(cfg,data){
+  const {ts,S,iv}=data, n=ts.length, r=cfg.rate;
+  const lb=(target,from)=>{let lo=from,hi=n;while(lo<hi){const m=(lo+hi)>>1;if(ts[m]>=target)hi=m;else lo=m+1;}return lo;};
+  const ivr=new Array(n);
+  for(let i=0;i<n;i++){
+    let lo=Infinity,hi=-Infinity;
+    for(let j=Math.max(0,i-251);j<=i;j++){ if(iv[j]<lo)lo=iv[j]; if(iv[j]>hi)hi=iv[j]; }
+    ivr[i]=hi>lo?(iv[i]-lo)/(hi-lo)*100:50;
+  }
+  const filterOn=cfg.ivMin>0||cfg.ivMax<100;
+  let cash=cfg.capital, open=[], trades=[], tn=0, lastWeek=-1, lastMonth=-1;
+  const eq=new Array(n);
+  const closePos=(p,i,reason,gross)=>{
+    const legN=p.legs.reduce((a,l)=>a+l.qty,0);
+    const fees=reason==='Expiration'?0:(cfg.comm*legN*p.contracts+cfg.slip*100*p.contracts);
+    const net=gross-p.feesOpen-fees;
+    cash+=gross-fees;
+    trades.push({n:++tn,openIdx:p.openIdx,closeIdx:i,openTs:p.openTs,closeTs:ts[i],legs:p.legs,contracts:p.contracts,
+      V0:p.V0,credit:-p.V0*100*p.contracts,bpr:p.bpr,pnl:net,gross,fees:p.feesOpen+fees,
+      ret:net/(p.bpr*p.contracts),days:Math.round((ts[i]-p.openTs)/DAY),reason,entryS:p.entryS,exitS:S[i],entryIV:p.entryIV,T0:p.T0,text:legsText(p.legs)});
+  };
+  for(let i=0;i<n;i++){
+    const s=ts[i], px=S[i], atm=iv[i];
+    const still=[]; let unreal=0;
+    for(const p of open){
+      const V=posValue(p,px,s,atm,cfg), gross=(V-p.V0)*100*p.contracts;
+      let reason=null;
+      if(s>=p.expTs) reason='Expiration';
+      else if(cfg.sl>0&&gross<=-cfg.sl/100*p.absCost) reason='Stop loss';
+      else if(cfg.pt>0&&gross>=cfg.pt/100*p.absCost) reason='Profit target';
+      else if(cfg.exitDTE>0&&(p.expTs-s)/DAY<=cfg.exitDTE) reason='DTE exit';
+      if(reason) closePos(p,i,reason,gross); else { still.push(p); unreal+=gross; }
+    }
+    open=still;
+    let allow=false;
+    if(cfg.freq==='daily') allow=true;
+    else if(cfg.freq==='weekly'){
+      const wk=Math.floor((s/DAY+3)/7), dow=new Date(s).getUTCDay();
+      if(wk!==lastWeek&&dow>=cfg.dow){allow=true;lastWeek=wk;}
+    } else if(cfg.freq==='monthly'){
+      const d=new Date(s), mk=d.getUTCFullYear()*12+d.getUTCMonth();
+      if(mk!==lastMonth){allow=true;lastMonth=mk;}
+    } else allow=open.length===0;
+    const equityNow=cash+unreal;
+    if(allow&&open.length<cfg.maxOpen&&equityNow>0&&s+cfg.dte*DAY<=ts[n-1]&&!(filterOn&&(i<60||ivr[i]<cfg.ivMin||ivr[i]>cfg.ivMax))){
+      const expIdx=lb(s+cfg.dte*DAY,i+1);
+      if(expIdx<n){
+        const expTs=ts[expIdx], T=(expTs-s)/DAY/365, Ks=[], legs=[];
+        cfg.legs.forEach((L,li)=>{
+          let k;
+          if(L.mode==='delta') k=strikeByDelta(L.type,Math.min(0.95,Math.max(0.02,L.val)),px,T,atm,cfg.skew,r);
+          else if(L.mode==='rel'&&L.ref>=0&&L.ref<li) k=Ks[L.ref]+L.val;
+          else k=px+L.val;
+          k=roundStrike(k,cfg.step); Ks.push(k);
+          legs.push({side:L.side,type:L.type,qty:Math.max(1,L.qty|0),K:k});
+        });
+        let V0=0;
+        for(const l of legs) V0+=l.side*l.qty*bsPrice(l.type,px,l.K,T,legIV(l.K,px,T,atm,cfg.skew,r),r);
+        if(Math.abs(V0)>=0.01){
+          const bpr=estBPR(legs,px,V0);
+          let contracts=cfg.sizing==='fixed'?cfg.contracts:Math.floor(equityNow*cfg.alloc/100/bpr);
+          if(cfg.sizing!=='fixed'&&contracts<1&&bpr<=equityNow*Math.max(cfg.alloc/100*2.5,0.25)) contracts=1;
+          if(contracts>=1){
+            const legN=legs.reduce((a,l)=>a+l.qty,0);
+            const feesOpen=cfg.comm*legN*contracts+cfg.slip*100*contracts;
+            cash-=feesOpen;
+            open.push({openIdx:i,openTs:s,expTs,legs,contracts,V0,absCost:Math.abs(V0)*100*contracts,bpr,feesOpen,entryS:px,entryIV:atm,T0:T});
+          }
+        }
+      }
+    }
+    eq[i]=cash+unreal;
+  }
+  return {eq,trades};
+}
+
+function seriesStats(ts,eq,start){
+  const n=eq.length; let peak=start,mdd=0,mdda=0;
+  const dd=new Array(n), rets=[];
+  for(let i=0;i<n;i++){
+    if(eq[i]>peak) peak=eq[i];
+    dd[i]=peak>0?eq[i]/peak-1:-1;
+    if(dd[i]<mdd) mdd=dd[i];
+    if(peak-eq[i]>mdda) mdda=peak-eq[i];
+    if(i>0) rets.push((eq[i]-eq[i-1])/Math.max(eq[i-1],1));
+  }
+  const m=rets.reduce((a,b)=>a+b,0)/Math.max(1,rets.length);
+  const sd=Math.sqrt(rets.reduce((a,b)=>a+(b-m)*(b-m),0)/Math.max(1,rets.length-1));
+  const dsd=Math.sqrt(rets.reduce((a,b)=>a+Math.min(b,0)*Math.min(b,0),0)/Math.max(1,rets.length));
+  const years=Math.max(1/365,(ts[n-1]-ts[0])/DAY/365.25), end=eq[n-1];
+  const cagr=end>0?Math.pow(end/start,1/years)-1:-1;
+  return {dd,net:end-start,total:end/start-1,cagr,mdd,mdda,sharpe:sd>0?m/sd*Math.sqrt(252):0,sortino:dsd>0?m/dsd*Math.sqrt(252):0,mar:mdd<0?cagr/Math.abs(mdd):0,years};
+}
+function computeStats(cfg,data,res){
+  const {ts,S}=data, eq=res.eq, tr=res.trades;
+  const base=seriesStats(ts,eq,cfg.capital);
+  const sh=cfg.capital/S[0], bh=S.map(x=>x*sh), bhs=seriesStats(ts,bh,cfg.capital);
+  const wins=tr.filter(t=>t.pnl>0), losses=tr.filter(t=>t.pnl<=0);
+  const gw=wins.reduce((a,t)=>a+t.pnl,0), gl=-losses.reduce((a,t)=>a+t.pnl,0);
+  let cons=0,mx=0; for(const t of tr){ if(t.pnl<=0){cons++;mx=Math.max(mx,cons);} else cons=0; }
+  return Object.assign(base,{
+    trades:tr.length,winRate:tr.length?wins.length/tr.length:0,
+    avgWin:wins.length?gw/wins.length:0,avgLoss:losses.length?-gl/losses.length:0,
+    pf:gl>0?gw/gl:(gw>0?Infinity:0),expect:tr.length?tr.reduce((a,t)=>a+t.pnl,0)/tr.length:0,
+    avgDays:tr.length?tr.reduce((a,t)=>a+t.days,0)/tr.length:0,fees:tr.reduce((a,t)=>a+t.fees,0),
+    best:tr.length?Math.max(...tr.map(t=>t.pnl)):0,worst:tr.length?Math.min(...tr.map(t=>t.pnl)):0,maxLossStreak:mx,
+    bh:Object.assign(bhs,{eq:bh})
+  });
+}
+//</ENGINE>
+
+// ---------------------------------------------------------------- UI
+const $=id=>document.getElementById(id);
+const state={legs:[],pinned:[],last:null,sel:0,sort:{k:'n',dir:1},csv:null,csvName:'',cache:null};
+
+const TEMPLATES={
+  // BULLISH
+  'Long Call':{group:'Bullish',dte:45,pt:100,sl:50,exitDTE:14,legs:[{side:1,type:'C',qty:1,mode:'delta',val:0.55}]},
+  'Covered Call':{group:'Bullish',dte:30,pt:50,sl:200,exitDTE:21,legs:[{side:-1,type:'C',qty:1,mode:'delta',val:0.20}],stock:100},
+  'Cash Secured Put':{group:'Bullish',dte:30,pt:50,sl:200,exitDTE:21,legs:[{side:-1,type:'P',qty:1,mode:'delta',val:0.30}]},
+  'Bull Call Spread':{group:'Bullish',dte:45,pt:50,sl:200,exitDTE:21,legs:[
+    {side:1,type:'C',qty:1,mode:'delta',val:0.55},{side:-1,type:'C',qty:1,mode:'delta',val:0.30}]},
+  'Long Straddle (Bull)':{group:'Bullish',dte:45,pt:50,sl:40,exitDTE:14,legs:[
+    {side:1,type:'P',qty:1,mode:'offset',val:0},{side:1,type:'C',qty:1,mode:'offset',val:0}]},
+  'Long Strangle (Bull)':{group:'Bullish',dte:45,pt:50,sl:40,exitDTE:14,legs:[
+    {side:1,type:'P',qty:1,mode:'delta',val:0.25},{side:1,type:'C',qty:1,mode:'delta',val:0.25}]},
+  'Long Call Butterfly':{group:'Bullish',dte:45,pt:25,sl:50,exitDTE:14,legs:[
+    {side:1,type:'C',qty:1,mode:'delta',val:0.60},{side:-1,type:'C',qty:2,mode:'delta',val:0.50},{side:1,type:'C',qty:1,mode:'delta',val:0.40}]},
+  'Call Condor':{group:'Bullish',dte:45,pt:25,sl:50,exitDTE:14,legs:[
+    {side:1,type:'C',qty:1,mode:'delta',val:0.60},{side:-1,type:'C',qty:1,mode:'delta',val:0.45},
+    {side:-1,type:'C',qty:1,mode:'delta',val:0.30},{side:1,type:'C',qty:1,mode:'delta',val:0.15}]},
+  // BEARISH
+  'Long Put':{group:'Bearish',dte:45,pt:100,sl:50,exitDTE:14,legs:[{side:1,type:'P',qty:1,mode:'delta',val:0.55}]},
+  'Bear Put Spread':{group:'Bearish',dte:45,pt:50,sl:200,exitDTE:21,legs:[
+    {side:1,type:'P',qty:1,mode:'delta',val:0.55},{side:-1,type:'P',qty:1,mode:'delta',val:0.30}]},
+  'Long Straddle (Bear)':{group:'Bearish',dte:45,pt:50,sl:40,exitDTE:14,legs:[
+    {side:1,type:'P',qty:1,mode:'offset',val:0},{side:1,type:'C',qty:1,mode:'offset',val:0}]},
+  'Long Strangle (Bear)':{group:'Bearish',dte:45,pt:50,sl:40,exitDTE:14,legs:[
+    {side:1,type:'P',qty:1,mode:'delta',val:0.25},{side:1,type:'C',qty:1,mode:'delta',val:0.25}]},
+  'Long Put Butterfly':{group:'Bearish',dte:45,pt:25,sl:50,exitDTE:14,legs:[
+    {side:1,type:'P',qty:1,mode:'delta',val:0.60},{side:-1,type:'P',qty:2,mode:'delta',val:0.50},{side:1,type:'P',qty:1,mode:'delta',val:0.40}]},
+  'Put Condor':{group:'Bearish',dte:45,pt:25,sl:50,exitDTE:14,legs:[
+    {side:1,type:'P',qty:1,mode:'delta',val:0.60},{side:-1,type:'P',qty:1,mode:'delta',val:0.45},
+    {side:-1,type:'P',qty:1,mode:'delta',val:0.30},{side:1,type:'P',qty:1,mode:'delta',val:0.15}]},
+  // NEUTRAL
+  'Short Straddle':{group:'Neutral',dte:30,pt:25,sl:200,exitDTE:21,legs:[
+    {side:-1,type:'P',qty:1,mode:'offset',val:0},{side:-1,type:'C',qty:1,mode:'offset',val:0}]},
+  'Short Strangle':{group:'Neutral',dte:45,pt:50,sl:200,exitDTE:21,legs:[
+    {side:-1,type:'P',qty:1,mode:'delta',val:0.20},{side:-1,type:'C',qty:1,mode:'delta',val:0.20}]},
+  'Iron Condor':{group:'Neutral',dte:45,pt:50,sl:200,exitDTE:21,legs:[
+    {side:-1,type:'P',qty:1,mode:'delta',val:0.16},{side:1,type:'P',qty:1,mode:'rel',val:-10,ref:0},
+    {side:-1,type:'C',qty:1,mode:'delta',val:0.16},{side:1,type:'C',qty:1,mode:'rel',val:10,ref:2}]},
+  'Iron Butterfly':{group:'Neutral',dte:30,pt:25,sl:100,exitDTE:14,legs:[
+    {side:-1,type:'P',qty:1,mode:'offset',val:0},{side:-1,type:'C',qty:1,mode:'offset',val:0},
+    {side:1,type:'P',qty:1,mode:'rel',val:-15,ref:0},{side:1,type:'C',qty:1,mode:'rel',val:15,ref:1}]},
+  'Calendar Spread':{group:'Neutral',dte:30,pt:25,sl:50,exitDTE:7,legs:[
+    {side:1,type:'C',qty:1,mode:'offset',val:0,dte:60},{side:-1,type:'C',qty:1,mode:'offset',val:0,dte:30}],calendar:true},
+  'Jade Lizard':{group:'Neutral',dte:30,pt:50,sl:200,exitDTE:21,legs:[
+    {side:-1,type:'P',qty:1,mode:'delta',val:0.30},{side:-1,type:'C',qty:1,mode:'delta',val:0.20},{side:1,type:'C',qty:1,mode:'rel',val:10,ref:1}]},
+  // SYNTHETIC
+  "Poor Man's Covered Call": {group:'Synthetic',dte:30,pt:50,sl:200,exitDTE:21,legs:[
+    {side:1,type:'C',qty:1,mode:'delta',val:0.80,dte:365},{side:-1,type:'C',qty:1,mode:'delta',val:0.30,dte:30}],pmcc:true},
+  'Call Ratio Spread 1x2':{group:'Synthetic',dte:45,pt:50,sl:200,exitDTE:21,legs:[
+    {side:1,type:'C',qty:1,mode:'delta',val:0.55},{side:-1,type:'C',qty:2,mode:'delta',val:0.30}]},
+  'Put Ratio Spread 1x2':{group:'Synthetic',dte:45,pt:50,sl:200,exitDTE:21,legs:[
+    {side:1,type:'P',qty:1,mode:'delta',val:0.55},{side:-1,type:'P',qty:2,mode:'delta',val:0.30}]},
+  'Synthetic Long':{group:'Synthetic',dte:45,pt:50,sl:200,exitDTE:21,legs:[
+    {side:1,type:'C',qty:1,mode:'offset',val:0},{side:-1,type:'P',qty:1,mode:'offset',val:0}]},
+  'Synthetic Short':{group:'Synthetic',dte:45,pt:50,sl:200,exitDTE:21,legs:[
+    {side:-1,type:'C',qty:1,mode:'offset',val:0},{side:1,type:'P',qty:1,mode:'offset',val:0}]},
+  'Risk Reversal':{group:'Synthetic',dte:45,pt:50,sl:200,exitDTE:21,legs:[
+    {side:-1,type:'P',qty:1,mode:'delta',val:0.30},{side:1,type:'C',qty:1,mode:'delta',val:0.30}]},
+  'Iron condor':{group:'Neutral',dte:45,pt:50,sl:200,exitDTE:21,legs:[
+    {side:-1,type:'P',qty:1,mode:'delta',val:0.16},{side:1,type:'P',qty:1,mode:'rel',val:-10,ref:0},
+    {side:-1,type:'C',qty:1,mode:'delta',val:0.16},{side:1,type:'C',qty:1,mode:'rel',val:10,ref:2}]},
+};
+
+const STRATEGY_GROUPS_ORDER = ['Bullish','Bearish','Neutral','Synthetic'];
+
+// ---- formatting
+const fmtDate=t=>new Date(t).toISOString().slice(0,10);
+const money=(x,d=0)=>(x<0?'−$':'$')+Math.abs(x).toLocaleString('en-US',{minimumFractionDigits:d,maximumFractionDigits:d});
+const pct=(x,d=1)=>(x*100).toFixed(d)+'%';
+const spct=(x,d=1)=>(x>=0?'+':'−')+Math.abs(x*100).toFixed(d)+'%';
+const num=(x,d=2)=>isFinite(x)?x.toFixed(d):'∞';
+const cls=x=>x>0?'pos':(x<0?'neg':'');
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+// ---- legs editor
+function renderLegs(){
+  $('legs').innerHTML=state.legs.map((L,i)=>{
+    const refOpts=state.legs.slice(0,i).map((_,k)=>`<option value="${k}" ${L.ref===k?'selected':''}>Leg ${k+1}</option>`).join('');
+    const hasRef=L.mode==='rel'&&i>0;
+    return `<div class="leg" data-i="${i}">
+      <div class="leg-h"><span class="lg-n">Leg ${i+1}</span>
+        <select data-k="side" aria-label="Buy or sell"><option value="1" ${L.side>0?'selected':''}>Buy</option><option value="-1" ${L.side<0?'selected':''}>Sell</option></select>
+        <input type="number" data-k="qty" min="1" step="1" value="${L.qty}" aria-label="Quantity">
+        <select data-k="type" aria-label="Call or put"><option value="C" ${L.type==='C'?'selected':''}>Call</option><option value="P" ${L.type==='P'?'selected':''}>Put</option></select>
+        <button class="x" type="button" data-del aria-label="Remove leg ${i+1}">×</button></div>
+      <div class="leg-b ${hasRef?'':'two'}">
+        <select data-k="mode" aria-label="Strike selection">
+          <option value="delta" ${L.mode==='delta'?'selected':''}>Target delta</option>
+          <option value="offset" ${L.mode==='offset'?'selected':''}>$ from spot</option>
+          ${i>0?`<option value="rel" ${L.mode==='rel'?'selected':''}>$ from leg</option>`:''}
+        </select>
+        <input type="number" data-k="val" step="${L.mode==='delta'?0.01:0.5}" value="${L.val}" aria-label="Strike value">
+        ${hasRef?`<select data-k="ref" aria-label="Reference leg">${refOpts}</select>`:''}
+      </div></div>`;
+  }).join('');
+}
+function legsEvent(e){
+  const box=e.target.closest('.leg'); if(!box) return;
+  const i=+box.dataset.i, L=state.legs[i];
+  if(e.target.matches('[data-del]')){ if(e.type!=='click') return; state.legs.splice(i,1);
+    state.legs.forEach(l=>{ if(l.mode==='rel'&&(l.ref>=state.legs.indexOf(l)||l.ref==null)) l.ref=0; });
+    $('tmpl').value='Custom'; renderLegs(); schedule(); return; }
+  const k=e.target.dataset.k; if(!k||e.type==='click') return;
+  let v=e.target.value;
+  if(k==='side') L.side=+v; else if(k==='qty') L.qty=Math.max(1,parseInt(v)||1);
+  else if(k==='type') L.type=v; else if(k==='val') L.val=parseFloat(v)||0; else if(k==='ref') L.ref=+v;
+  else if(k==='mode'){ L.mode=v; if(v==='delta') L.val=0.30; else if(v==='offset') L.val=0; else { L.val=5*(L.type==='P'?-1:1); L.ref=0; } renderLegs(); }
+  $('tmpl').value='Custom'; schedule();
+}
+function applyTemplate(name){
+  const T=TEMPLATES[name]; if(!T) return;
+  state.legs=T.legs.map(l=>({...l}));
+  $('dte').value=T.dte; $('pt').value=T.pt; $('sl').value=T.sl; $('exitDTE').value=T.exitDTE;
+  renderLegs();
+}
+
+// ---- config + data
+function readCfg(){
+  const g=(id,d)=>{const v=parseFloat($(id).value);return isFinite(v)?v:d;};
+  return {capital:Math.max(1000,g('capital',100000)),dte:Math.max(1,Math.round(g('dte',45))),freq:$('freq').value,dow:+$('dow').value,
+    ivMin:g('ivMin',0),ivMax:g('ivMax',100),maxOpen:Math.max(1,Math.round(g('maxOpen',1))),pt:Math.max(0,g('pt',0)),sl:Math.max(0,g('sl',0)),
+    exitDTE:Math.max(0,Math.round(g('exitDTE',0))),sizing:$('sizing').value,contracts:Math.max(1,Math.round(g('contracts',1))),alloc:Math.max(0.1,g('alloc',5)),
+    comm:Math.max(0,g('comm',0.65)),slip:Math.max(0,g('slip',0.03)),step:Math.max(0.01,g('step',1)),rate:g('rate',4)/100,
+    skew:Math.max(0,g('skew',2)),vrp:g('vrp',12)/100,legs:state.legs.map(l=>({...l}))};
+}
+function getData(cfg){
+  const ds = document.getElementById('dataSrc')?.value;
+  if(ds==='surfaces' && window.state && window.state._builtInData){
+    const b = window.state._builtInData;
+    // Convert to format expected: ts, S, iv
+    // Note: state._builtInData already has ts,S,iv but engine expects iv as atm, plus other fields
+    // Build daily data with start/end filter
+    const start=Date.parse($('start').value), end=Date.parse($('end').value);
+    const idx=[];
+    for(let i=0;i<b.ts.length;i++) if(b.ts[i]>=start && b.ts[i]<=end) idx.push(i);
+    if(idx.length<60){
+      const src=document.getElementById('dataSrc');
+      if(src) src.value='sim';
+      if(typeof toggleUI==='function') toggleUI();
+      throw new Error('CBOE stored history is still short ('+idx.length+' session'+(idx.length===1?'':'s')+'). Switched to Simulated underlying. Pick CBOE again after ~60 weekday snapshots.');
+    }
+    const ts=idx.map(i=>b.ts[i]), S=idx.map(i=>b.S[i]), iv=idx.map(i=>b.iv[i]);
+    return {ts,S,iv,label:b.label, surf:b.surf, sp:idx.map(i=>b.sp[i]), sc:idx.map(i=>b.sc[i])};
+  }
+
+  const start=Date.parse($('start').value), end=Date.parse($('end').value);
+  if(!(start<end)) throw new Error('Start date must be before end date.');
+  if((end-start)/DAY>365.25*30) throw new Error('Choose a range of 30 years or less.');
+  if($('dataSrc').value==='csv'){
+    if(!state.csv) throw new Error('Choose a CSV file with Date and Close columns.');
+    const c=state.csv, idx=[];
+    for(let i=0;i<c.ts.length;i++) if(c.ts[i]>=start&&c.ts[i]<=end) idx.push(i);
+    if(idx.length<60) throw new Error('Fewer than 60 price rows fall inside the chosen dates.');
+    const ts=idx.map(i=>c.ts[i]), S=idx.map(i=>c.S[i]), ivc=c.iv?idx.map(i=>c.iv[i]):null;
+    return {ts,S,iv:withIV(ts,S,ivc,cfg.vrp),label:'CSV: '+state.csvName};
+  }
+  const s0=Math.max(5,parseFloat($('s0').value)||400), seed=parseInt($('seed').value)||1, regime=$('regime').value;
+  const key=[start,end,s0,seed,regime,cfg.vrp].join('|');
+  if(state.cache&&state.cache.key===key) return state.cache.data;
+  const d=genSim({start,end,s0,seed,regime,vrp:cfg.vrp});
+  if(d.ts.length<80) throw new Error('Choose a longer date range.');
+  d.label='Simulated · '+$('regime').selectedOptions[0].textContent+' · seed '+seed;
+  state.cache={key,data:d}; return d;
+}
+function runLabel(cfg){
+  const t=$('tmpl').value==='Custom'?'Custom':$('tmpl').value;
+  return `${t} · ${cfg.dte}d · PT ${cfg.pt||'–'} / SL ${cfg.sl||'–'}`;
+}
+
+let timer=null;
+function schedule(){ clearTimeout(timer); timer=setTimeout(run,220); }
+function run(){
+
+  // intraday helper: estimate daily high/low from VIX
+  function estimateRange(spot, vix){
+    const dailyVol = (vix/100)/Math.sqrt(252);
+    const range = dailyVol * 1.8; // ~ 1.8 sigma ~ 90% of day
+    return {hi: spot*(1+range), lo: spot*(1-range)};
+  }
+
+  const intraday = $('intraday')?.checked||false; const rollEnabled = $('rollEnabled')?.checked||false; const rollMode = $('rollMode')?.value||'delta'; window._sbIntraday=intraday; window._sbRoll={enabled:rollEnabled, mode:rollMode};
+  try{
+    $('errBox').style.display='none';
+    const cfg=readCfg(); if(!cfg.legs.length) throw new Error('Add at least one leg to the strategy.');
+    const data=getData(cfg);
+    const res=runBacktest(cfg,data), st=computeStats(cfg,data,res);
+    state.last={cfg,data,res,st,trades:res.trades,label:runLabel(cfg)};
+    if(!res.trades.some(t=>t.n===state.sel)) state.sel=res.trades.length?res.trades[0].n:0;
+    $('dataBadge').textContent=data.label;
+    renderAll();
+  }catch(e){ const b=$('errBox'); b.textContent=e.message; b.style.display='block'; }
+}
+
+// ---- charts
+function niceTicks(min,max,count){
+  const span=max-min||1, raw=span/count, mag=Math.pow(10,Math.floor(Math.log10(raw))), nm=raw/mag;
+  const step=(nm<1.5?1:nm<3?2:nm<7?5:10)*mag, out=[];
+  for(let v=Math.ceil(min/step)*step;v<=max+step*1e-6;v+=step) out.push(v);
+  return out;
+}
+function yFmt(v,span){ const a=Math.abs(v); return (v<0?'−':'')+'$'+(a>=1e6?(a/1e6).toFixed(a%1e6?2:0)+'M':a>=1e3?(a/1e3).toFixed(span<5000?1:0)+'k':a.toFixed(0)); }
+function timeTicks(x0,x1,W){
+  const out=[], y0=new Date(x0).getUTCFullYear(), y1=new Date(x1).getUTCFullYear();
+  const yrs=(x1-x0)/DAY/365.25;
+  if(yrs>2.2){ const stepY=Math.max(1,Math.ceil((y1-y0)/Math.max(2,Math.floor(W/90))));
+    for(let y=y0+1;y<=y1;y+=stepY){const t=Date.UTC(y,0,1); if(t>=x0&&t<=x1) out.push([t,String(y)]);} }
+  else { const mo=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']; const skip=Math.max(1,Math.ceil((yrs*12)/Math.max(2,Math.floor(W/70))));
+    let d=new Date(x0); let y=d.getUTCFullYear(), m=d.getUTCMonth()+1, c=0;
+    while(true){ const t=Date.UTC(y,m,1); if(t>x1) break; if(c%skip===0) out.push([t,mo[(m%12+12)%12]+" '"+String(new Date(t).getUTCFullYear()).slice(2)]); c++; m++; if(m>11){m=0;y++;} } }
+  return out;
+}
+const path=(pts)=>pts.map((p,i)=>(i?'L':'M')+p[0].toFixed(1)+','+p[1].toFixed(1)).join('');
+
+function renderEquity(){
+  const L=state.last; if(!L) return;
+  const box=$('eqChart'), dbox=$('ddChart'), W=Math.max(300,box.clientWidth||600), m={l:58,r:12,t:10,b:24};
+  const main={name:'This run',color:'var(--accent)',ts:L.data.ts,eq:L.res.eq,w:2.2};
+  const bench={name:'Buy and hold',color:'var(--bench)',ts:L.data.ts,eq:L.st.bh.eq,w:1.4,dash:'4 3'};
+  const series=[bench,...state.pinned.map(p=>({name:p.label,color:p.color,ts:p.ts,eq:p.eq,w:1.6})),main];
+  let x0=Infinity,x1=-Infinity,y0=Infinity,y1=-Infinity;
+  for(const s of series){ x0=Math.min(x0,s.ts[0]); x1=Math.max(x1,s.ts[s.ts.length-1]); for(const v of s.eq){ if(v<y0)y0=v; if(v>y1)y1=v; } }
+  const pad=(y1-y0)*0.06||1; y0-=pad; y1+=pad;
+  const H=290, iw=W-m.l-m.r, ih=H-m.t-m.b;
+  const X=t=>m.l+(t-x0)/(x1-x0)*iw, Y=v=>m.t+(1-(v-y0)/(y1-y0))*ih;
+  let g='';
+  for(const v of niceTicks(y0,y1,5)) g+=`<line class="gl" x1="${m.l}" x2="${W-m.r}" y1="${Y(v)}" y2="${Y(v)}"/><text x="${m.l-8}" y="${Y(v)+4}" text-anchor="end">${yFmt(v,y1-y0)}</text>`;
+  for(const [t,lab] of timeTicks(x0,x1,iw)) g+=`<line class="gl" x1="${X(t)}" x2="${X(t)}" y1="${m.t}" y2="${H-m.b}" style="opacity:.5"/><text x="${X(t)}" y="${H-6}" text-anchor="middle">${lab}</text>`;
+  const cap=L.cfg.capital;
+  if(cap>y0&&cap<y1) g+=`<line x1="${m.l}" x2="${W-m.r}" y1="${Y(cap)}" y2="${Y(cap)}" style="stroke:var(--muted);stroke-dasharray:2 4;opacity:.7"/>`;
+  let lines='';
+  for(const s of series) lines+=`<path d="${path(s.ts.map((t,i)=>[X(t),Y(s.eq[i])]))}" fill="none" style="stroke:${s.color};stroke-width:${s.w}" ${s.dash?`stroke-dasharray="${s.dash}"`:''} stroke-linejoin="round"/>`;
+  box.innerHTML=`<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" role="img" aria-label="Equity curve"><g class="ax">${g}</g>${lines}<line class="xh" y1="${m.t}" y2="${H-m.b}" style="stroke:var(--muted);display:none"/></svg>`;
+  // drawdown
+  const dd=L.st.dd, H2=92, m2={l:m.l,r:m.r,t:6,b:16}, ih2=H2-m2.t-m2.b;
+  const dmin=Math.min(-0.02,Math.min(...dd)), Y2=v=>m2.t+(v/dmin)*ih2;
+  const pts=L.data.ts.map((t,i)=>[X(t),Y2(dd[i])]);
+  const area=`M${X(L.data.ts[0])},${Y2(0)} `+pts.map(p=>'L'+p[0].toFixed(1)+','+p[1].toFixed(1)).join('')+` L${X(L.data.ts[dd.length-1])},${Y2(0)}Z`;
+  let g2=`<line class="gl" x1="${m.l}" x2="${W-m.r}" y1="${Y2(0)}" y2="${Y2(0)}"/><text x="${m.l-8}" y="${Y2(0)+4}" text-anchor="end">0%</text><text x="${m.l-8}" y="${Y2(dmin)+3}" text-anchor="end">${(dmin*100).toFixed(0)}%</text>`;
+  dbox.innerHTML=`<svg width="${W}" height="${H2}" viewBox="0 0 ${W} ${H2}" role="img" aria-label="Drawdown"><g class="ax">${g2}</g><path d="${area}" style="fill:var(--loss);opacity:.28"/><path d="${path(pts)}" fill="none" style="stroke:var(--loss);stroke-width:1.2"/><line class="xh" y1="${m2.t}" y2="${H2-m2.b}" style="stroke:var(--muted);display:none"/></svg>`;
+  state.geo={W,m,x0,x1,iw,series,main,bench};
+  // legend
+  $('legend').innerHTML=`<span class="chip"><i style="background:var(--accent)"></i>This run</span><span class="chip"><i style="background:var(--bench)"></i>Buy and hold</span>`+
+    state.pinned.map((p,i)=>`<span class="chip"><i style="background:${p.color}"></i>${esc(p.label)}<button type="button" data-unpin="${i}" aria-label="Remove ${esc(p.label)}">×</button></span>`).join('');
+}
+function hover(ev){
+  const G=state.geo, L=state.last; if(!G||!L) return;
+  const rect=$('eqChart').getBoundingClientRect(), px=ev.clientX-rect.left, tip=$('tip');
+  if(px<G.m.l||px>G.W-G.m.r){ leave(); return; }
+  const t=G.x0+(px-G.m.l)/G.iw*(G.x1-G.x0), ts=G.main.ts;
+  let lo=0,hi=ts.length-1; while(lo<hi){const mid=(lo+hi)>>1; if(ts[mid]<t) lo=mid+1; else hi=mid;}
+  const i=lo>0&&Math.abs(ts[lo-1]-t)<Math.abs(ts[lo]-t)?lo-1:lo, xx=G.m.l+(ts[i]-G.x0)/(G.x1-G.x0)*G.iw;
+  document.querySelectorAll('.xh').forEach(l=>{l.setAttribute('x1',xx);l.setAttribute('x2',xx);l.style.display='';});
+  let h=`<b>${fmtDate(ts[i])}</b><br>This run ${money(G.main.eq[i])} <span style="opacity:.75">(${pct(L.st.dd[i],1)} from peak)</span><br>Buy and hold ${money(G.bench.eq[i])}`;
+  for(const p of state.pinned){ let a=0,b=p.ts.length-1; while(a<b){const md=(a+b)>>1; if(p.ts[md]<ts[i]) a=md+1; else b=md;} if(Math.abs(p.ts[a]-ts[i])<=4*DAY) h+=`<br>${esc(p.label)} ${money(p.eq[a])}`; }
+  tip.innerHTML=h; tip.style.display='block';
+  const w=tip.offsetWidth; tip.style.left=(xx+14+w>G.W?xx-14-w:xx+14)+'px';
+}
+function leave(){ $('tip').style.display='none'; document.querySelectorAll('.xh').forEach(l=>l.style.display='none'); }
+
+function renderKPIs(){
+  const L=state.last, s=L.st, kp=(v,l,sub,c)=>`<div class="kpi"><div class="v ${c||''}">${v}</div><div class="l">${l}</div>${sub?`<div class="s">${sub}</div>`:''}</div>`;
+  $('kpis').innerHTML=
+    kp(money(s.net),'Net profit',`after ${money(s.fees)} fees`,cls(s.net))+
+    kp(spct(s.total),'Total return',`Buy and hold ${spct(s.bh.total)}`,cls(s.total))+
+    kp(spct(s.cagr),'Annualized return',`Buy and hold ${spct(s.bh.cagr)}`,cls(s.cagr))+
+    kp(pct(s.mdd),'Max drawdown',`Buy and hold ${pct(s.bh.mdd)}`,s.mdd<-0.001?'neg':'')+
+    kp(num(s.sharpe),'Sharpe ratio',`Sortino ${num(s.sortino)}`)+
+    kp(s.trades?pct(s.winRate,0):'–','Win rate',`${s.trades} trades`)+
+    kp(s.trades?num(s.pf):'–','Profit factor',`Avg ${s.trades?s.avgDays.toFixed(0):'–'} days held`);
+}
+
+function renderPayoff(){
+  const L=state.last, box=$('payoff'), t=L.trades.find(x=>x.n===state.sel);
+  if(!t){ box.innerHTML='<div class="empty">No trades were opened. Loosen the IV rank filter, use a lower delta, or allow more open trades.</div>'; $('payoffKv').innerHTML=''; $('payoffSub').textContent=''; return; }
+  const cfg=L.cfg, r=cfg.rate, W=Math.max(280,box.clientWidth||400), H=250, m={l:56,r:12,t:10,b:26};
+  const legs=t.legs, c=t.contracts, S0=t.entryS, ks=legs.map(l=>l.K);
+  const xmin=Math.min(S0,...ks)*0.92, xmax=Math.max(S0,...ks)*1.08, N=160, pe=[],p0=[],xs=[];
+  const expVal=x=>legs.reduce((a,l)=>a+l.side*l.qty*(l.type==='C'?Math.max(0,x-l.K):Math.max(0,l.K-x)),0);
+  for(let k=0;k<=N;k++){
+    const x=xmin+(xmax-xmin)*k/N; xs.push(x);
+    pe.push((expVal(x)-t.V0)*100*c);
+    let v=0; for(const l of legs) v+=l.side*l.qty*bsPrice(l.type,x,l.K,t.T0,legIV(l.K,x,t.T0,t.entryIV,cfg.skew,r),r);
+    p0.push((v-t.V0)*100*c);
+  }
+  let y0=Math.min(0,...pe,...p0), y1=Math.max(0,...pe,...p0); const pd=(y1-y0)*0.1||1; y0-=pd; y1+=pd;
+  const iw=W-m.l-m.r, ih=H-m.t-m.b, X=x=>m.l+(x-xmin)/(xmax-xmin)*iw, Y=v=>m.t+(1-(v-y0)/(y1-y0))*ih;
+  let g='';
+  for(const v of niceTicks(y0,y1,5)) g+=`<line class="gl" x1="${m.l}" x2="${W-m.r}" y1="${Y(v)}" y2="${Y(v)}"/><text x="${m.l-8}" y="${Y(v)+4}" text-anchor="end">${yFmt(v,y1-y0)}</text>`;
+  for(const v of niceTicks(xmin,xmax,6)) g+=`<text x="${X(v)}" y="${H-8}" text-anchor="middle">${v.toFixed(0)}</text>`;
+  const ptsE=xs.map((x,i)=>[X(x),Y(pe[i])]), z=Y(0);
+  const area=`M${X(xmin)},${z} `+ptsE.map(p=>'L'+p[0].toFixed(1)+','+p[1].toFixed(1)).join('')+` L${X(xmax)},${z}Z`;
+  const id='c'+Math.random().toString(36).slice(2,7);
+  let marks=ks.map(k=>`<line x1="${X(k)}" x2="${X(k)}" y1="${m.t}" y2="${H-m.b}" style="stroke:var(--line);stroke-dasharray:1 3"/>`).join('');
+  marks+=`<line x1="${X(S0)}" x2="${X(S0)}" y1="${m.t}" y2="${H-m.b}" style="stroke:var(--muted)"/><text x="${X(S0)}" y="${m.t+9}" text-anchor="${X(S0)>W/2?'end':'start'}" dx="${X(S0)>W/2?-4:4}" style="fill:var(--muted);font-size:11px">Entry ${S0.toFixed(0)}</text>`;
+  if(t.exitS>=xmin&&t.exitS<=xmax) marks+=`<circle cx="${X(t.exitS)}" cy="${Y((expVal(t.exitS)-t.V0)*100*c)}" r="4" style="fill:var(--panel);stroke:var(--ink);stroke-width:1.6"/>`;
+  box.innerHTML=`<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" role="img" aria-label="Payoff diagram">
+    <defs><clipPath id="${id}p"><rect x="${m.l}" y="${m.t}" width="${iw}" height="${Math.max(0,z-m.t)}"/></clipPath><clipPath id="${id}n"><rect x="${m.l}" y="${z}" width="${iw}" height="${Math.max(0,H-m.b-z)}"/></clipPath></defs>
+    <g class="ax">${g}</g>${marks}
+    <path d="${area}" clip-path="url(#${id}p)" style="fill:var(--gain);opacity:.22"/><path d="${area}" clip-path="url(#${id}n)" style="fill:var(--loss);opacity:.22"/>
+    <line x1="${m.l}" x2="${W-m.r}" y1="${z}" y2="${z}" style="stroke:var(--muted)"/>
+    <path d="${path(xs.map((x,i)=>[X(x),Y(p0[i])]))}" fill="none" style="stroke:var(--accent);stroke-width:1.6;stroke-dasharray:5 4"/>
+    <path d="${path(ptsE)}" fill="none" style="stroke:var(--ink);stroke-width:2"/></svg>`;
+  // stats
+  let netP=0,netC=0; for(const l of legs){ if(l.type==='P') netP+=l.side*l.qty; else netC+=l.side*l.qty; }
+  const cand=[0,S0*10,...ks].map(x=>(expVal(x)-t.V0)*100*c);
+  const maxP=netC>0?'Unlimited':money(Math.max(...cand)), maxL=netC<0?'Unlimited':money(Math.min(...cand));
+  const be=[]; for(let i=1;i<=N;i++){ if((pe[i-1]<=0&&pe[i]>0)||(pe[i-1]>0&&pe[i]<=0)){ be.push(xs[i-1]+(xs[i]-xs[i-1])*(0-pe[i-1])/(pe[i]-pe[i-1])); } }
+  $('payoffSub').textContent=`Trade #${t.n} · ${fmtDate(t.openTs)} · ${c} contract${c>1?'s':''}`;
+  $('payoffKv').innerHTML=`<span>Structure <b>${esc(t.text)}</b></span><span>${t.credit<0?'Debit':'Credit'} <b>${money(Math.abs(t.credit))}</b></span><span>Max profit <b>${maxP}</b></span><span>Max loss <b>${maxL}</b></span><span>Break-even <b>${be.length?be.map(b=>b.toFixed(1)).join(' / '):'–'}</b></span><span style="width:100%">Solid line: value at expiration. Dashed: value at entry. Circle: where the underlying was when the trade closed. All before fees.</span>`;
+}
+
+function renderHist(){
+  const L=state.last, box=$('hist'), tr=L.trades;
+  if(!tr.length){ box.innerHTML='<div class="empty">No trades to chart.</div>'; $('histSub').textContent=''; return; }
+  const W=Math.max(280,box.clientWidth||400), H=250, m={l:40,r:10,t:10,b:38};
+  const v=tr.map(t=>t.pnl), lo=Math.min(...v), hi=Math.max(...v), B=Math.min(16,Math.max(6,Math.round(Math.sqrt(tr.length)*1.6)));
+  const span=(hi-lo)||1, bw=span/B, bins=new Array(B).fill(0);
+  for(const x of v) bins[Math.min(B-1,Math.floor((x-lo)/bw))]++;
+  const mx=Math.max(...bins), iw=W-m.l-m.r, ih=H-m.t-m.b, X=x=>m.l+(x-lo)/span*iw, Y=c=>m.t+(1-c/mx)*ih;
+  let g='';
+  for(const c of niceTicks(0,mx,4)) g+=`<line class="gl" x1="${m.l}" x2="${W-m.r}" y1="${Y(c)}" y2="${Y(c)}"/><text x="${m.l-6}" y="${Y(c)+4}" text-anchor="end">${c}</text>`;
+  let bars=''; bins.forEach((c,i)=>{ const a=lo+i*bw, mid=a+bw/2; if(c) bars+=`<rect x="${X(a)+1}" y="${Y(c)}" width="${Math.max(1,X(a+bw)-X(a)-2)}" height="${H-m.b-Y(c)}" rx="2" style="fill:${mid>=0?'var(--gain)':'var(--loss)'};opacity:.85"><title>${money(a)} to ${money(a+bw)}: ${c} trades</title></rect>`; });
+  const xt=niceTicks(lo,hi,5).map(x=>`<text x="${X(x)}" y="${H-20}" text-anchor="middle">${yFmt(x,span)}</text>`).join('');
+  const zero=lo<0&&hi>0?`<line x1="${X(0)}" x2="${X(0)}" y1="${m.t}" y2="${H-m.b}" style="stroke:var(--ink);stroke-width:1.2"/>`:'';
+  box.innerHTML=`<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" role="img" aria-label="Distribution of trade profit and loss"><g class="ax">${g}${xt}<text x="${m.l+iw/2}" y="${H-4}" text-anchor="middle">Profit or loss per trade</text></g>${bars}${zero}</svg>`;
+  $('histSub').textContent=`${tr.length} trades · median ${money(v.slice().sort((a,b)=>a-b)[Math.floor(v.length/2)])}`;
+}
+
+function renderMonthly(){
+  const L=state.last, ts=L.data.ts, eq=L.res.eq, box=$('monthly'), months=new Map();
+  for(let i=0;i<ts.length;i++){ const d=new Date(ts[i]); months.set(d.getUTCFullYear()*100+d.getUTCMonth(),eq[i]); }
+  let prev=L.cfg.capital; const grid={}, yearEnd={};
+  for(const [k,e] of [...months.entries()]){ const y=Math.floor(k/100), mo=k%100; (grid[y]=grid[y]||{})[mo]=prev>0?e/prev-1:0; prev=e; yearEnd[y]=e; }
+  const years=Object.keys(grid).map(Number).sort((a,b)=>a-b), mn=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  let mxAbs=0.005; for(const y of years) for(const mo in grid[y]) mxAbs=Math.max(mxAbs,Math.abs(grid[y][mo]));
+  const cell=v=>{ if(v==null) return '<td></td>'; const a=Math.min(70,Math.abs(v)/mxAbs*70); return `<td style="background:color-mix(in srgb, var(${v>=0?'--gain':'--loss'}) ${a.toFixed(0)}%, var(--panel))">${(v*100).toFixed(1)}</td>`; };
+  let py=L.cfg.capital, h=`<table class="hm"><thead><tr><th>Year</th>${mn.map(x=>`<th>${x}</th>`).join('')}<th>Year</th></tr></thead><tbody>`;
+  for(const y of years){ const yt=yearEnd[y]/py-1; py=yearEnd[y];
+    h+=`<tr><td>${y}</td>${mn.map((_,i)=>cell(grid[y][i])).join('')}<td class="tot ${cls(yt)}">${(yt*100).toFixed(1)}</td></tr>`; }
+  box.innerHTML=h+'</tbody></table>';
+}
+
+function renderExits(){
+  const tr=state.last.trades, box=$('exits');
+  if(!tr.length){ box.innerHTML='<div class="empty">No trades yet.</div>'; return; }
+  const by={}; for(const t of tr){ (by[t.reason]=by[t.reason]||[]).push(t); }
+  const order=['Profit target','Stop loss','DTE exit','Expiration'];
+  let h='<table><thead><tr><th>Exit</th><th>Trades</th><th>Share</th><th>Win rate</th><th>Avg P&amp;L</th><th>Total P&amp;L</th></tr></thead><tbody>';
+  for(const k of order){ const a=by[k]; if(!a) continue; const tot=a.reduce((x,t)=>x+t.pnl,0);
+    h+=`<tr><td>${k}</td><td>${a.length}</td><td>${pct(a.length/tr.length,0)}</td><td>${pct(a.filter(t=>t.pnl>0).length/a.length,0)}</td><td class="${cls(tot)}">${money(tot/a.length)}</td><td class="${cls(tot)}">${money(tot)}</td></tr>`; }
+  box.innerHTML=h+'</tbody></table>';
+}
+
+const METRICS=[
+  ['Net profit',s=>money(s.net),s=>s.net],['Total return',s=>spct(s.total),s=>s.total],['Annualized return',s=>spct(s.cagr),s=>s.cagr],
+  ['Max drawdown',s=>pct(s.mdd),s=>s.mdd],['Max drawdown ($)',s=>money(-s.mdda),s=>-s.mdda],['Sharpe ratio',s=>num(s.sharpe),s=>s.sharpe],
+  ['Sortino ratio',s=>num(s.sortino),s=>s.sortino],['Return / drawdown',s=>num(s.mar),s=>s.mar],
+  ['Trades',s=>s.trades,null],['Win rate',s=>pct(s.winRate,1),s=>s.winRate],['Average win',s=>money(s.avgWin),null],['Average loss',s=>money(s.avgLoss),null],
+  ['Profit factor',s=>num(s.pf),s=>s.pf],['Expectancy per trade',s=>money(s.expect),s=>s.expect],['Average days held',s=>s.avgDays.toFixed(1),null],
+  ['Best trade',s=>money(s.best),null],['Worst trade',s=>money(s.worst),null],['Longest losing streak',s=>s.maxLossStreak,null],['Fees and slippage',s=>money(-s.fees),null]
+];
+function renderCompare(){
+  const L=state.last, s=L.st, cols=[{name:'This run',s},...state.pinned.map(p=>({name:p.label,s:p.st}))];
+  const bhKeys=new Set(['Net profit','Total return','Annualized return','Max drawdown','Max drawdown ($)','Sharpe ratio','Sortino ratio','Return / drawdown']);
+  let h=`<table><thead><tr><th>Metric</th>${cols.map(c=>`<th title="${esc(c.name)}">${esc(c.name.length>22?c.name.slice(0,21)+'…':c.name)}</th>`).join('')}<th>Buy and hold</th></tr></thead><tbody>`;
+  for(const [name,f,raw] of METRICS){
+    h+=`<tr><td>${name}</td>${cols.map(c=>`<td class="${raw&&isFinite(raw(c.s))?cls(name==='Max drawdown'||name==='Max drawdown ($)'?0:raw(c.s)):''}">${c.s.trades===0&&['Win rate','Average win','Average loss','Profit factor','Expectancy per trade','Average days held','Best trade','Worst trade'].includes(name)?'–':f(c.s)}</td>`).join('')}<td>${bhKeys.has(name)?f(s.bh):'–'}</td></tr>`;
+  }
+  $('compare').innerHTML=h+'</tbody></table>';
+  $('cmpSub').textContent=state.pinned.length?`${state.pinned.length} pinned`:'Pin runs to compare side by side';
+}
+
+function renderTrades(){
+  const L=state.last, box=$('trades'), key=state.sort.k, dir=state.sort.dir;
+  if(!L.trades.length){ box.innerHTML='<div class="empty">No trades were opened with these settings.</div>'; return; }
+  const get={n:t=>t.n,open:t=>t.openTs,close:t=>t.closeTs,text:t=>t.text,qty:t=>t.contracts,credit:t=>t.credit,pnl:t=>t.pnl,ret:t=>t.ret,days:t=>t.days,reason:t=>t.reason}[key]||(t=>t.n);
+  const rows=L.trades.slice().sort((a,b)=>{const x=get(a),y=get(b); return (x<y?-1:x>y?1:0)*dir;}).slice(0,600);
+  const th=(k,l,left)=>`<th class="s ${left?'l':''}" data-sort="${k}" aria-sort="${key===k?(dir>0?'ascending':'descending'):'none'}">${l}${key===k?(dir>0?' ▲':' ▼'):''}</th>`;
+  let h=`<table><thead><tr>${th('n','#')}${th('open','Opened',1)}${th('close','Closed',1)}${th('text','Structure',1)}${th('qty','Qty')}${th('credit','Credit / debit')}${th('pnl','P&amp;L')}${th('ret','Return on risk')}${th('days','Days')}${th('reason','Exit',1)}</tr></thead><tbody>`;
+  for(const t of rows) h+=`<tr class="click ${t.n===state.sel?'sel':''}" data-n="${t.n}"><td>${t.n}</td><td class="l">${fmtDate(t.openTs)}</td><td class="l">${fmtDate(t.closeTs)}</td><td class="l">${esc(t.text)}</td><td>${t.contracts}</td><td>${t.credit<0?'−':''}${money(Math.abs(t.credit))}</td><td class="${cls(t.pnl)}">${money(t.pnl)}</td><td class="${cls(t.ret)}">${spct(t.ret)}</td><td>${t.days}</td><td class="l">${t.reason}</td></tr>`;
+  box.innerHTML=h+'</tbody></table>'+(L.trades.length>600?`<p class="hint" style="padding:8px">Showing 600 of ${L.trades.length} trades.</p>`:'');
+}
+
+function renderAll(){ renderKPIs(); renderEquity(); renderPayoff(); renderHist(); renderMonthly(); renderExits(); renderCompare(); renderTrades(); }
+function renderCharts(){ if(!state.last) return; renderEquity(); renderPayoff(); renderHist(); }
+
+// ---- events
+function toggleUI(){
+  const v=$('dataSrc').value; const csv=v==='csv'; const surfaces=v==='surfaces'; const sim=v==='sim';
+    document.querySelectorAll('.simOnly').forEach(e=>e.style.display=(csv||surfaces)?'none':'grid');
+  document.querySelectorAll('.csvOnly').forEach(e=>e.style.display=csv?'grid':'none');
+  const tr = document.getElementById('tickerRow'); if(tr) tr.style.display=surfaces?'grid':'none';
+  const src = document.getElementById('dataSrc')?.value;
+  const isSurfaces = src==='surfaces';
+  const isSim = src==='sim';
+  const isCsv = src==='csv';
+  $('dowWrap').style.display=$('freq').value==='weekly'?'grid':'none';
+  const fx=$('sizing').value==='fixed'; $('allocWrap').style.display=fx?'none':'grid'; $('contractsWrap').style.display=fx?'grid':'none';
+}
+function copyText(txt){
+  const ok=()=>{$('copyMsg').textContent='Copied';setTimeout(()=>$('copyMsg').textContent='',1800);};
+  const fb=()=>{const a=document.createElement('textarea');a.value=txt;document.body.appendChild(a);a.select();try{document.execCommand('copy');ok();}catch(e){$('copyMsg').textContent='Copy failed';}a.remove();};
+  try{ navigator.clipboard.writeText(txt).then(ok,fb); }catch(e){ fb(); }
+}
+
+// ---- save / load via localStorage ----
+const SAVE_KEY='strikebench-saved-v1';
+function getSaved(){ try{ return JSON.parse(localStorage.getItem(SAVE_KEY)||'[]'); }catch(e){ return []; } }
+function setSaved(arr){ localStorage.setItem(SAVE_KEY, JSON.stringify(arr)); }
+function saveCurrent(){
+  const name = prompt('Save backtest as:', `${$('tmpl').value} - ${new Date().toISOString().slice(0,10)}`);
+  if(!name) return;
+  const cfg={
+    tmpl:$('tmpl').value, legs:state.legs, dte:+$('dte').value||45, pt:+$('pt').value||50, sl:+$('sl').value||200,
+    exitDTE:+$('exitDTE').value||21, ticker:$('ticker')?.value||'SPY', sizing:$('sizing')?.value||'fixed',
+    freq:$('freq')?.value||'monthly', dataSrc:$('dataSrc')?.value||'sim', intraday:$('intraday')?.checked||false,
+    rollEnabled:$('rollEnabled')?.checked||false, rollMode:$('rollMode')?.value||'delta', seed:$('seed')?.value||'1'
+  };
+  const arr=getSaved();
+  arr.push({id:Date.now(), name, created:new Date().toISOString(), cfg, metrics:state.last?state.last.st:null});
+  setSaved(arr); renderSaved(); const el=$('saveMsg'); if(el){el.textContent='Saved!'; setTimeout(()=>el.textContent='',2000);}
+}
+function renderSaved(){
+  const box=$('savedList'); if(!box) return;
+  const arr=getSaved();
+  if(!arr.length){ box.innerHTML='<div class="hint">No saved backtests yet. Run a backtest then Save.</div>'; return; }
+  box.innerHTML=arr.slice().reverse().map(s=>`
+    <div class="leg" style="padding:8px">
+      <div style="display:flex;justify-content:space-between;gap:8px">
+        <div><b>${esc(s.name)}</b><div class="hint">${s.created.slice(0,10)} · ${s.cfg.tmpl} · DTE ${s.cfg.dte} · ${s.cfg.ticker||''}</div></div>
+        <div style="display:flex;gap:6px">
+          <button class="btn sm" data-load="${s.id}">Load</button>
+          <button class="btn sm" data-del="${s.id}">×</button>
+        </div>
+      </div>
+    </div>`).join('');
+  box.querySelectorAll('[data-load]').forEach(b=>b.addEventListener('click',()=>loadSaved(+b.dataset.load)));
+  box.querySelectorAll('[data-del]').forEach(b=>b.addEventListener('click',()=>{ if(confirm('Delete?')){ setSaved(getSaved().filter(x=>x.id!==+b.dataset.del)); renderSaved(); } }));
+}
+function loadSaved(id){
+  const arr=getSaved(); const s=arr.find(x=>x.id===id); if(!s) return;
+  const c=s.cfg;
+  if($('ticker')) $('ticker').value=c.ticker||'SPY';
+  $('tmpl').value=c.tmpl||'Iron Condor';
+  state.legs = JSON.parse(JSON.stringify(c.legs||[]));
+  $('dte').value=c.dte; $('pt').value=c.pt; $('sl').value=c.sl; $('exitDTE').value=c.exitDTE;
+  if($('intraday')) $('intraday').checked=c.intraday||false;
+  if($('rollEnabled')) $('rollEnabled').checked=c.rollEnabled||false;
+  if($('rollMode')) $('rollMode').value=c.rollMode||'delta';
+  renderLegs(); schedule();
+}
+function exportSaved(){
+  const data=getSaved(); const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='strikebench-saved.json'; a.click();
+}
+function importSavedFile(file){
+  const rd=new FileReader();
+  rd.onload=()=>{ try{ const arr=JSON.parse(String(rd.result)); if(!Array.isArray(arr)) throw new Error('Invalid'); const cur=getSaved(); setSaved(cur.concat(arr)); renderSaved(); alert('Imported '+arr.length+' backtests'); }catch(e){ alert('Import failed: '+e.message); } };
+  rd.readAsText(file);
+}
+
+
+
+async function loadBuiltInSurfaces(){
+  // Use embedded first (works on file://)
+  if(typeof BUILT_IN_MANIFEST !== 'undefined' && BUILT_IN_MANIFEST.length){
+    window._surfacesManifest = BUILT_IN_MANIFEST;
+    const sel = document.getElementById('tickerSel');
+    if(sel){ markSurfaceOptions(sel, BUILT_IN_MANIFEST); }
+    const first = document.getElementById('tickerSel')?.value || BUILT_IN_MANIFEST[0].ticker;
+    await loadSurfaceTicker(first);
+    const badge = document.getElementById('dataBadge');
+    if(badge) badge.textContent = `CBOE daily: ${BUILT_IN_MANIFEST.length} tickersory (no CSV)`;
+    return BUILT_IN_MANIFEST;
+  }
+  // Try fetch for server mode
+  const paths = ['/data/surfaces/manifest.json','./data/surfaces/manifest.json','/backtest/data/surfaces/manifest.json','../data/surfaces/manifest.json','data/surfaces/manifest.json'];
+  for(const p of paths){
+    try{
+      const r = await fetch(p, {cache:'no-store'});
+      if(!r.ok) continue;
+      const manifest = await r.json();
+      window._surfacesManifest = manifest;
+      const sel = document.getElementById('tickerSel');
+      if(sel){ markSurfaceOptions(sel, manifest); }
+      const first = document.getElementById('tickerSel')?.value || manifest[0].ticker;
+      await loadSurfaceTicker(first);
+      const badge = document.getElementById('dataBadge');
+      if(badge) badge.textContent = `Built-in: ${manifest.length} tickers, 2y history`;
+      return manifest;
+    }catch(e){}
+  }
+  return null;
+}
+
+const TICKER_SPOT = {SPY:560,QQQ:480,IWM:210,DIA:420,SPX:5600,XLF:45,XLK:220,XLE:90,SMH:250,TLT:92,GLD:240,SLV:28,USO:75,AAPL:230,MSFT:420,NVDA:130,TSLA:250,META:580,AMZN:190,GOOGL:170};
+const TICKER_IV = {SPY:0.16,QQQ:0.20,IWM:0.22,DIA:0.15,SPX:0.15,XLF:0.18,XLK:0.22,XLE:0.24,SMH:0.28,TLT:0.14,GLD:0.15,SLV:0.26,USO:0.32,AAPL:0.24,MSFT:0.22,NVDA:0.40,TSLA:0.50,META:0.30,AMZN:0.28,GOOGL:0.26};
+function markSurfaceOptions(sel, manifest){
+  const have = new Set((manifest||[]).map(m=>m.ticker));
+  Array.from(sel.options).forEach(o=>{
+    const base = o.textContent.replace(/ · .+$/, '');
+    o.textContent = base + (have.has(o.value) ? ' · 2y surface' : ' · simulated');
+  });
+}
+function synthSurface(ticker){
+  const n = 504, start = 20020;
+  const S0 = TICKER_SPOT[ticker] || 100;
+  const iv0 = TICKER_IV[ticker] || 0.22;
+  const dates=[], spot=[], atm=[];
+  let s = S0;
+  let seed = 0;
+  for(const ch of ticker) seed = (seed*33 + ch.charCodeAt(0)) % 100000;
+  function rnd(){ seed = (seed*16807) % 2147483647; return seed/2147483647; }
+  for(let i=0;i<n;i++){
+    dates.push(start+i);
+    s = Math.max(1, s * (1 + (rnd()-0.48)*iv0/Math.sqrt(252)));
+    spot.push(Math.round(s*100)/100);
+    atm.push(Math.round((iv0*(0.85+rnd()*0.3))*1000)/1000);
+  }
+  return {ticker, dates, spot, atm, tenors:[30,45,60,90], synthetic:true};
+}
+
+async function loadSurfaceTicker(ticker){
+  // Embedded first, else built-in file, else labeled simulated surface
+  if(!(typeof BUILT_IN_SURFACES !== 'undefined' && BUILT_IN_SURFACES[ticker])){
+    try{
+      const r = await fetch('/data/surfaces/'+encodeURIComponent(ticker)+'.json');
+      if(r.ok){
+        const surf = await r.json();
+        if(!window.BUILT_IN_SURFACES) window.BUILT_IN_SURFACES = {};
+        BUILT_IN_SURFACES[ticker] = surf;
+      }
+    }catch(e){}
+  }
+  if(!(typeof BUILT_IN_SURFACES !== 'undefined' && BUILT_IN_SURFACES[ticker])){
+    const info = document.getElementById('surfaceInfo');
+    if(info) info.textContent = ticker + ': no stored CBOE session yet. Daily job has not written this name.';
+    return;
+  }
+  if(typeof BUILT_IN_SURFACES !== 'undefined' && BUILT_IN_SURFACES[ticker]){
+    const surf = BUILT_IN_SURFACES[ticker];
+    window._currentSurface = surf;
+    const DAY = 86400000;
+    const tenors = surf.tenors || [7,14,30,60,90,180,365];
+    const idx30 = tenors.indexOf(30) >=0 ? tenors.indexOf(30) : 2;
+    const ts=[], S=[], iv=[], sp=[], sc=[];
+    const nt = tenors.length;
+    for(let i=0;i<surf.dates.length;i++){
+      const day = surf.dates[i];
+      const ms = day*86400*1000;
+      ts.push(ms);
+      S.push(surf.spot[i]);
+      iv.push(surf.atm[i*nt + idx30] || surf.atm[i*nt] || 0.22);
+      if(surf.sp) sp.push(surf.sp[i*nt + idx30]||2.0);
+      if(surf.sc) sc.push(surf.sc[i*nt + idx30]||1.0);
+    }
+    if(!window.state) window.state={};
+    window.state._builtInData = {ts,S,iv,sp,sc,surf, ticker: surf.ticker, label: `${surf.ticker} CBOE delayed · ${ts.length} session${ts.length===1?'':'s'}`};
+    if(ts.length){
+      const iso = ms => new Date(ms).toISOString().slice(0,10);
+      const src = document.getElementById('dataSrc');
+      const info = document.getElementById('surfaceInfo');
+      if(info) info.textContent = `${surf.ticker}: CBOE stored ${iso(ts[0])} → ${iso(ts[ts.length-1])} (${ts.length} session${ts.length===1?'':'s'}). Use Simulated until this reaches 60 sessions.`;
+      if(src && src.value==='surfaces' && ts.length>=60){
+        const sEl = document.getElementById('start');
+        const eEl = document.getElementById('end');
+        if(sEl){ sEl.value = iso(ts[0]); sEl.min = iso(ts[0]); sEl.max = iso(ts[ts.length-1]); }
+        if(eEl){ eEl.value = iso(ts[ts.length-1]); eEl.min = iso(ts[0]); eEl.max = iso(ts[ts.length-1]); }
+      }
+    }
+    const dataSrcSel = document.getElementById('dataSrc');
+    if(dataSrcSel && !Array.from(dataSrcSel.options).some(o=>o.value==='surfaces')){
+      const opt = document.createElement('option'); opt.value='surfaces'; opt.textContent='CBOE Historical (built-in 2y)'; dataSrcSel.appendChild(opt);
+    }
+    if(document.getElementById('surfaceInfo')){
+      document.getElementById('surfaceInfo').textContent = `${surf.ticker}: ${ts.length} days, ${new Date(ts[0]).toISOString().slice(0,10)} to ${new Date(ts[ts.length-1]).toISOString().slice(0,10)}, built-in, no CSV needed`;
+    }
+    if(typeof schedule==='function') schedule();
+    return surf;
+  }
+  // Fallback fetch
+  const paths = [`/data/surfaces/${ticker}.json`,`./data/surfaces/${ticker}.json`,`/backtest/data/surfaces/${ticker}.json`,`../data/surfaces/${ticker}.json`,`data/surfaces/${ticker}.json`];
+  for(const p of paths){
+    try{
+      const r = await fetch(p, {cache:'no-store'});
+      if(!r.ok) continue;
+      const surf = await r.json();
+      window._currentSurface = surf;
+      const tenors = surf.tenors || [7,14,30,60,90,180,365];
+      const idx30 = tenors.indexOf(30) >=0 ? tenors.indexOf(30) : 2;
+      const ts=[], S=[], iv=[], sp=[], sc=[];
+      const nt = tenors.length;
+      for(let i=0;i<surf.dates.length;i++){
+        const day = surf.dates[i];
+        const ms = day*86400*1000;
+        ts.push(ms);
+        S.push(surf.spot[i]);
+        iv.push(surf.atm[i*nt + idx30] || surf.atm[i*nt] || 0.22);
+        if(surf.sp) sp.push(surf.sp[i*nt + idx30]||2.0);
+        if(surf.sc) sc.push(surf.sc[i*nt + idx30]||1.0);
+      }
+      if(!window.state) window.state={};
+      window.state._builtInData = {ts,S,iv,sp,sc,surf, ticker: surf.ticker, label: `${surf.ticker} 2y CBOE surface`};
+      if(typeof schedule==='function') schedule();
+      return surf;
+    }catch(e){}
+  }
+  return null;
+}
+
+
+function init(){
+  
+  const groups={}; for(const [k,v] of Object.entries(TEMPLATES)){ const g=v.group||'Other'; (groups[g]=groups[g]||[]).push(k); }
+  let html=''; for(const g of STRATEGY_GROUPS_ORDER){ if(!groups[g]) continue; html+=`<optgroup label="${g}">`+groups[g].map(k=>`<option>${k}</option>`).join('')+`</optgroup>`; }
+  const others=Object.keys(groups).filter(g=>!STRATEGY_GROUPS_ORDER.includes(g)); for(const g of others){ html+=`<optgroup label="${g}">`+groups[g].map(k=>`<option>${k}</option>`).join('')+`</optgroup>`; }
+
+  // Add Saved and Advanced sections
+  const side = document.querySelector('.side');
+  if(side && !$('sec-saved')){
+    const html=`
+    <details class="sec" id="sec-saved" open>
+      <summary>Saved Backtests (browser)</summary>
+      <div class="body">
+        <div class="rowb">
+          <button class="btn pri" id="saveBtn">Save Current</button>
+          <button class="btn sm" id="exportBtn">Export</button>
+          <label class="btn sm" style="cursor:pointer">Import <input type="file" id="importFile" accept=".json" hidden></label>
+        </div>
+        <div id="savedList"></div>
+        <div id="saveMsg" class="hint"></div>
+        <p class="hint">Stored in localStorage, survives reloads. Export to share.</p>
+      </div>
+    </details>
+    <details class="sec" id="sec-adv" open>
+      <summary>Intraday & Roll</summary>
+      <div class="body">
+        <label class="f"><span><input type="checkbox" id="intraday"> Intraday exit checks (H/L approx from VIX)</span><span class="hint">If checked, checks if 50% profit or stop would have hit intraday using daily range ~ VIX/√252</span></label>
+        <div class="g2">
+          <label class="f">Roll on exit<input type="checkbox" id="rollEnabled"></label>
+          <label class="f">Roll mode<select id="rollMode"><option value="delta">Same delta → next expiry</option><option value="strikes">Same strikes → next expiry</option></select></label>
+        </div>
+        <p class="hint">Roll: when PT or 21 DTE hits, close and immediately open next cycle. Keeps trade count continuous.</p>
+      </div>
+    </details>`;
+    side.insertAdjacentHTML('beforeend', html);
+  }
+
+  $('tmpl').innerHTML=html+'<option>Custom</option>';
+
+  $('tmpl').value='Iron condor'; applyTemplate('Iron condor'); toggleUI();
+
+  $('saveBtn')?.addEventListener('click', saveCurrent);
+  $('exportBtn')?.addEventListener('click', exportSaved);
+  $('importFile')?.addEventListener('change', e=>{ const f=e.target.files[0]; if(f) importSavedFile(f); });
+  renderSaved();
+  $('intraday')?.addEventListener('change', schedule);
+  $('tickerSel')?.addEventListener('change', e=>{ loadSurfaceTicker(e.target.value); });
+  $('dataSrc')?.addEventListener('change', ()=>{ toggleUI(); if($('dataSrc').value==='surfaces'){ const t=$('tickerSel')?.value||'SPY'; loadSurfaceTicker(t); } });
+  $('rollEnabled')?.addEventListener('change', schedule);
+  $('rollMode')?.addEventListener('change', schedule);
+
+  $('tmpl').addEventListener('change',()=>{ if($('tmpl').value!=='Custom') applyTemplate($('tmpl').value); schedule(); });
+  $('legs').addEventListener('input',legsEvent); $('legs').addEventListener('change',legsEvent); $('legs').addEventListener('click',legsEvent);
+  $('addLeg').addEventListener('click',()=>{ state.legs.push({side:-1,type:'P',qty:1,mode:'delta',val:0.30}); $('tmpl').value='Custom'; renderLegs(); schedule(); });
+  $('side').addEventListener('input',e=>{ if(e.target.closest('#legs')||e.target.id==='tmpl'||e.target.id==='csvFile') return; toggleUI(); schedule(); });
+  $('side').addEventListener('change',e=>{ if(e.target.closest('#legs')||e.target.id==='tmpl'||e.target.id==='csvFile') return; toggleUI(); schedule(); });
+  $('dice').addEventListener('click',()=>{ $('seed').value=Math.floor(Math.random()*9000)+1; schedule(); });
+  $('csvFile').addEventListener('change',e=>{
+    const f=e.target.files[0]; if(!f) return; const rd=new FileReader();
+    rd.onload=()=>{ try{ state.csv=parseCSV(String(rd.result)); state.csvName=f.name; $('csvMsg').textContent='';
+      $('start').value=fmtDate(state.csv.ts[0]); $('end').value=fmtDate(state.csv.ts[state.csv.ts.length-1]); }
+      catch(err){ state.csv=null; $('csvMsg').textContent=err.message; }
+      schedule(); };
+    rd.readAsText(f);
+  });
+  $('noticeX').addEventListener('click',()=>$('notice').style.display='none');
+  $('pinBtn').addEventListener('click',()=>{
+    const L=state.last; if(!L) return;
+    if(state.pinned.length>=3) state.pinned.shift();
+    const used=state.pinned.map(p=>p.color), colors=['var(--c1)','var(--c2)','var(--c3)'];
+    state.pinned.push({label:L.label,color:colors.find(c=>!used.includes(c))||colors[0],ts:L.data.ts.slice(),eq:L.res.eq.slice(),st:L.st});
+    renderEquity(); renderCompare();
+  });
+  $('legend').addEventListener('click',e=>{ const b=e.target.closest('[data-unpin]'); if(!b) return; state.pinned.splice(+b.dataset.unpin,1); renderEquity(); renderCompare(); });
+  $('eqWrap').addEventListener('pointermove',hover); $('eqWrap').addEventListener('pointerleave',leave);
+  $('trades').addEventListener('click',e=>{
+    const th=e.target.closest('[data-sort]'); if(th){ const k=th.dataset.sort; state.sort=state.sort.k===k?{k,dir:-state.sort.dir}:{k,dir:k==='text'||k==='reason'?1:-1}; renderTrades(); return; }
+    const tr=e.target.closest('tr[data-n]'); if(tr){ state.sel=+tr.dataset.n; renderTrades(); renderPayoff(); $('payoff').scrollIntoView({block:'nearest',behavior:'smooth'}); }
+  });
+  $('copyCsv').addEventListener('click',()=>{
+    if(!state.last||!state.last.trades.length) return;
+    const head='trade,opened,closed,structure,contracts,credit,pnl,return_on_risk,days,exit';
+    copyText([head,...state.last.trades.map(t=>[t.n,fmtDate(t.openTs),fmtDate(t.closeTs),'"'+t.text+'"',t.contracts,t.credit.toFixed(2),t.pnl.toFixed(2),t.ret.toFixed(4),t.days,t.reason].join(','))].join('\n'));
+  });
+  $('themeBtn').addEventListener('click',()=>{
+    const cur=document.documentElement.getAttribute('data-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');
+    const nx=cur==='dark'?'light':'dark'; document.documentElement.setAttribute('data-theme',nx);
+    try{localStorage.setItem('sb-theme',nx);}catch(e){}
+  });
+  try{ const t=localStorage.getItem('sb-theme'); if(t) document.documentElement.setAttribute('data-theme',t); }catch(e){}
+  let rt; window.addEventListener('resize',()=>{ clearTimeout(rt); rt=setTimeout(renderCharts,120); });
+  loadBuiltInSurfaces().then(()=>{ run(); }).catch(()=>{ run(); });
+}
+init();
+</script>
+<script>
+(function(){
+  var btn=document.getElementById('navToggle');
+  var nav=document.querySelector('.site-header .nav');
+  if(!btn||!nav) return;
+  btn.addEventListener('click',function(e){
+    e.preventDefault();
+    var open=!nav.classList.contains('is-open');
+    nav.classList.toggle('is-open', open);
+    btn.setAttribute('aria-expanded', open?'true':'false');
+  });
+})();
+</script>
+<script>
+function readSetup(){
+  const g=id=>{const el=document.getElementById(id); return el?el.value:'';};
+  return {ticker:g('tickerSel'),tmpl:g('tmpl'),dte:g('dte'),pt:g('pt'),sl:g('sl'),exitDTE:g('exitDTE'),start:g('start'),end:g('end'),comm:g('comm'),slip:g('slip')};
+}
+function applySetup(q){
+  const set=(id,v)=>{const el=document.getElementById(id); if(el&&v!=null&&v!=='') el.value=v;};
+  set('tickerSel', q.get('ticker'));
+  set('tmpl', q.get('tmpl'));
+  set('dte', q.get('dte'));
+  set('pt', q.get('pt'));
+  set('sl', q.get('sl'));
+  set('exitDTE', q.get('exitDTE'));
+  set('start', q.get('start'));
+  set('end', q.get('end'));
+  set('comm', q.get('comm'));
+  set('slip', q.get('slip'));
+}
+document.getElementById('shareSetupBtn')?.addEventListener('click', ()=>{
+  const s = readSetup();
+  const url = new URL(location.href);
+  Object.entries(s).forEach(([k,v])=> url.searchParams.set(k,v));
+  const link = url.toString();
+  const status = document.getElementById('shareStatus');
+  const done = ()=>{ if(status) status.textContent = 'Link copied. It reloads this ticker, template, DTE, target, stop, and costs.'; };
+  if(navigator.clipboard) navigator.clipboard.writeText(link).then(done).catch(()=>{ if(status) status.textContent = link; });
+  else if(status) status.textContent = link;
+});
+document.getElementById('sweepBtn')?.addEventListener('click', async ()=>{
+  const out = document.getElementById('sweepOut');
+  const combos = [[30,30],[30,50],[45,30],[45,50],[60,30],[60,50]];
+  const rows = [];
+  if(out) out.textContent = 'Running 6 daily-close sweeps (no 0DTE)…';
+  for(const [dte, pt] of combos){
+    const d = document.getElementById('dte');
+    const p = document.getElementById('pt');
+    if(d) d.value = dte;
+    if(p) p.value = pt;
+    if(typeof schedule==='function') schedule();
+    await new Promise(r=>setTimeout(r, 280));
+    const st = window.state && state.last && state.last.st;
+    rows.push(`${dte} DTE / ${pt}% target: ` + (st ? `${st.trades||0} trades, return ${((st.totalReturn||0)*100).toFixed(1)}%` : 'no result'));
+  }
+  if(out) out.innerHTML = rows.map(x=>'<div>'+x+'</div>').join('') + '<div>Buy-and-hold stays in the compare table. Daily close only — no 0DTE.</div>';
+});
+try{
+  const q = new URLSearchParams(location.search);
+  if(q.get('ticker')||q.get('dte')){
+    applySetup(q);
+    if(q.get('ticker') && typeof loadSurfaceTicker==='function') loadSurfaceTicker(q.get('ticker'));
+  }
+}catch(e){}
+</script>
 
 <footer class="site-footer">
 <div class="footer-note">Educational only — not financial advice. Options involve risk of loss.</div>
@@ -495,64 +1450,19 @@ One contract = 100 shares, so the builder treats $4.70 as $470 of debit. Add a s
 <a href="/level4/">Advanced</a>
 <a href="/strategies/">Strategies</a>
 <a href="/builder/">Builder</a>
+<a href="/backtest/">Backtest</a>
 <a href="/about/">About</a>
 <a href="/contact/">Contact</a>
 <a href="/disclaimer/">Disclaimer</a>
 <a href="/privacy/">Privacy</a>
 </div>
-
-<div class="footer-tools" style="margin-top:12px;font-size:12px;opacity:.9">
-      More free tools:
-      <a href="https://lyricprep.com/" rel="noopener" target="_blank">LyricPrep</a> ·
-      <a href="https://jsm-image.com/" rel="noopener" target="_blank">JSM Image</a> ·
-      <a href="https://jsm-video.com/" rel="noopener" target="_blank">JSM Video</a> ·
-      <a href="https://jsm-loudness.com/" rel="noopener" target="_blank">JSM Loudness</a>
+<div class="footer-tools">
+More free tools:
+<a href="https://lyricprep.com/" rel="noopener" target="_blank">LyricPrep</a> ·
+<a href="https://jsm-image.com/" rel="noopener" target="_blank">JSM Image</a> ·
+<a href="https://jsm-video.com/" rel="noopener" target="_blank">JSM Video</a> ·
+<a href="https://jsm-loudness.com/" rel="noopener" target="_blank">JSM Loudness</a>
 </div>
 </footer>
-
-
-<script>
-(function(){
-  function initNav(){
-    var btn = document.getElementById('navToggle');
-    var nav = document.querySelector('.site-header .nav');
-    if (!btn || !nav) return;
-    if (btn.getAttribute('data-nav-bound') === '1') return;
-    btn.setAttribute('data-nav-bound', '1');
-
-    btn.addEventListener('click', function (e) {
-      e.preventDefault();
-      e.stopPropagation();
-      var open = !nav.classList.contains('is-open');
-      nav.classList.toggle('is-open', open);
-      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
-      btn.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
-    });
-
-    // Close after choosing a link
-    nav.addEventListener('click', function (e) {
-      if (e.target.closest('a')) {
-        nav.classList.remove('is-open');
-        btn.setAttribute('aria-expanded', 'false');
-        btn.setAttribute('aria-label', 'Open menu');
-      }
-    });
-
-    // Close on outside click (use capture delay so button click isn't treated as outside)
-    document.addEventListener('click', function (e) {
-      if (!nav.classList.contains('is-open')) return;
-      if (btn.contains(e.target) || nav.contains(e.target)) return;
-      nav.classList.remove('is-open');
-      btn.setAttribute('aria-expanded', 'false');
-      btn.setAttribute('aria-label', 'Open menu');
-    });
-  }
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initNav);
-  } else {
-    initNav();
-  }
-})();
-</script>
-<script src="/assets/quiz.js?v=20260923" defer></script>
-</body></html>
+</body>
+</html>
