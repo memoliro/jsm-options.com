@@ -1187,6 +1187,40 @@
 
   </div>
 
+  <div class="card" id="greeksCard">
+  <h2>Option Greeks <span style="font-size:0.72rem;color:var(--muted);font-weight:500;">(position total · contract multiplier)</span></h2>
+  <div class="greeks-grid">
+    <div class="greek-card">
+      <div class="g-name">Δ Delta</div>
+      <div class="g-val" id="gDelta">—</div>
+      <div class="g-impact" id="gDeltaImpact">Price sensitivity: how much P/L moves if Underlying moves $1.</div>
+    </div>
+    <div class="greek-card">
+      <div class="g-name">Γ Gamma</div>
+      <div class="g-val" id="gGamma">—</div>
+      <div class="g-impact" id="gGammaImpact">Convexity: how fast Delta changes when Underlying moves.</div>
+    </div>
+    <div class="greek-card">
+      <div class="g-name">Θ Theta</div>
+      <div class="g-val" id="gTheta">—</div>
+      <div class="g-impact" id="gThetaImpact">Time decay: expected P/L per day if nothing else changes.</div>
+    </div>
+    <div class="greek-card">
+      <div class="g-name">ν Vega</div>
+      <div class="g-val" id="gVega">—</div>
+      <div class="g-impact" id="gVegaImpact">Volatility sensitivity: P/L change if IV rises 1 point.</div>
+    </div>
+    <div class="greek-card">
+      <div class="g-name">ρ Rho</div>
+      <div class="g-val" id="gRho">—</div>
+      <div class="g-impact" id="gRhoImpact">Rate sensitivity: P/L change if rates rise 1 point.</div>
+    </div>
+  </div>
+  <div class="edu-tip" id="eduTip" style="margin-top:10px;">
+    A Long Call is loaded by default. Edit any field — the chart and Greeks update live. For a Covered Call pick the template, or add Stock (qty 100) + a Short Call (qty 1).
+  </div>
+</div>
+
     <!-- Round 2 Batch C: strategy discovery — optimizer lite + option finder.
          Placed with the roll/paper cards just before Support the site (after
          the Greeks card, which partition.py cuts from the builder page, so
