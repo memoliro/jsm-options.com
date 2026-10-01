@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -10,25 +10,23 @@
 <link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#E8EDF1; --panel:#FFFFFF; --panel-2:#F3F6F9; --ink:#14212E; --muted:#5B6A79; --line:#CDD6DE;
-  --gain:#0B6BCB; --loss:#D4501E; --accent:#4B36C9; --bench:#8492A0;
-  --c1:#0E9384; --c2:#C0267A; --c3:#B7791F; --focus:#4B36C9; --tip-bg:#14212E; --tip-ink:#F3F6F9;
-  color-scheme: light;
+  --bg:#0f1419; --panel:#1a2332; --panel-2:#0f172a; --ink:#e7ecf3; --muted:#8b9bb4; --line:#2d3a4f;
+  --gain:#22c55e; --loss:#ef4444; --accent:#3b82f6; --bench:#8b9bb4;
+  --c1:#34d399; --c2:#f472b6; --c3:#eab308; --focus:#3b82f6; --tip-bg:#e7ecf3; --tip-ink:#0f1419;
+  color-scheme: dark;
   box-sizing:border-box; padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
 }
-@media (prefers-color-scheme: dark){
-  :root:not([data-theme="light"]){
-    --bg:#0D1520; --panel:#142031; --panel-2:#1A2A3E; --ink:#E6EDF5; --muted:#93A4B6; --line:#27384D;
-    --gain:#5AAEFF; --loss:#FF8F60; --accent:#A093FF; --bench:#7C8DA0;
-    --c1:#3CC7B4; --c2:#F26BAE; --c3:#E5B04F; --focus:#A093FF; --tip-bg:#E6EDF5; --tip-ink:#0D1520;
-    color-scheme: dark;
-  }
+html[data-theme="light"]{
+  --bg:#f3f4f6; --panel:#ffffff; --panel-2:#f9fafb; --ink:#111827; --muted:#6b7280; --line:#e5e7eb;
+  --gain:#15803d; --loss:#dc2626; --accent:#0f766e; --bench:#6b7280;
+  --c1:#0f766e; --c2:#be185d; --c3:#ca8a04; --focus:#0f766e; --tip-bg:#111827; --tip-ink:#f9fafb;
+  color-scheme: light;
 }
-:root[data-theme="dark"]{
-  --bg:#0D1520; --panel:#142031; --panel-2:#1A2A3E; --ink:#E6EDF5; --muted:#93A4B6; --line:#27384D;
-  --gain:#5AAEFF; --loss:#FF8F60; --accent:#A093FF; --bench:#7C8DA0;
-  --c1:#3CC7B4; --c2:#F26BAE; --c3:#E5B04F; --focus:#A093FF; --tip-bg:#E6EDF5; --tip-ink:#0D1520;
-  color-scheme: dark;
+:root[data-theme="light"]{
+  --bg:#f3f4f6; --panel:#ffffff; --panel-2:#f9fafb; --ink:#111827; --muted:#6b7280; --line:#e5e7eb;
+  --gain:#15803d; --loss:#dc2626; --accent:#0f766e; --bench:#6b7280;
+  --c1:#0f766e; --c2:#be185d; --c3:#ca8a04; --focus:#0f766e; --tip-bg:#111827; --tip-ink:#f9fafb;
+  color-scheme: light;
 }
 *,*::before,*::after{box-sizing:border-box}
 html{height:100%;scroll-padding-top:env(safe-area-inset-top,0px)}
@@ -131,6 +129,15 @@ tbody tr.click:hover td{background:var(--panel-2)}
   .brand .sub{display:none}
 }
 @media (prefers-reduced-motion:no-preference){ .sec>summary::after{transition:transform .15s} }
+
+
+.site-support{max-width:1280px;margin:0 auto 8px;padding:20px 16px;text-align:center;border:1px solid var(--line);border-radius:12px;background:var(--panel)}
+.site-support h2{margin:0 0 8px;font-size:1.2rem;color:#93c5fd}
+.site-support p{margin:0 0 14px;color:#c8d0dc}
+.bmc-link{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:999px;background:#ffdd00;color:#0f1419!important;font-weight:700;font-size:13px;text-decoration:none!important;border:1px solid #e6c200}
+.bmc-link:hover{background:#ffe44d}
+html[data-theme="light"] .site-support h2{color:#111827}
+html[data-theme="light"] .site-support p{color:#374151}
 
 .site-footer{margin-top:28px;padding:22px 16px 28px;border-top:1px solid #2d3a4f;background:#0f1419;color:#9aa6b2;font-size:13px}
 .site-footer .footer-note{max-width:1280px;margin:0 auto 10px;color:#c5d0dc}
@@ -1440,6 +1447,13 @@ try{
   }
 }catch(e){}
 </script>
+
+
+<section class="site-support" aria-labelledby="support-title">
+  <h2 id="support-title">Support the site</h2>
+  <p>Lessons, the Builder, and the Backtest stay free. If they help, you can buy a coffee — no paywall, no account required.</p>
+  <a class="bmc-link" href="https://www.buymeacoffee.com/memoliro" target="_blank" rel="noopener">Buy me a coffee</a>
+</section>
 
 <footer class="site-footer">
 <div class="footer-note">Educational only — not financial advice. Options involve risk of loss.</div>
