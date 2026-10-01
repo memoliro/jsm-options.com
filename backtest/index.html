@@ -1045,8 +1045,10 @@ function readCfg(){
 }
 function getData(cfg){
   const ds = document.getElementById('dataSrc')?.value;
-  if(ds==='surfaces' && window.state && window.state._builtInData){
-    const b = window.state._builtInData;
+  if(ds==='surfaces'){
+    const want=String($('tickerSel')?.value||'').toUpperCase();
+    const b = state._builtInData;
+    if(!b || (want && b.ticker!==want)) throw new Error('Loading stored history for '+(want||'ticker')+'…');
     // Convert to format expected: ts, S, iv
     // Note: state._builtInData already has ts,S,iv but engine expects iv as atm, plus other fields
     // Build daily data with start/end filter
@@ -1446,7 +1448,6 @@ async function loadSurfaceTicker(ticker){
 
   // Every selection gets its own request id. If the user changes tickers
   // quickly, an older response is not allowed to overwrite the new one.
-  if(!window.state) window.state={};
   const requestId = (state._surfaceLoadId || 0) + 1;
   state._surfaceLoadId = requestId;
 
