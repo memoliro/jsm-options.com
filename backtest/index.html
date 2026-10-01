@@ -809,7 +809,9 @@ function applyTemplate(name){
   const T=TEMPLATES[name]; if(!T) return;
   state.legs=T.legs.map(l=>({...l}));
   $('dte').value=T.dte; $('pt').value=T.pt; $('sl').value=T.sl; $('exitDTE').value=T.exitDTE;
+  if($('freq')) $('freq').value = name==="Poor Man's Covered Call" ? 'daily' : 'weekly';
   renderLegs();
+  toggleUI();
 }
 
 // ---- config + data
