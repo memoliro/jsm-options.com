@@ -467,6 +467,8 @@
       .stat-tile { min-width: 132px; }
     }
 
+    .tpl-label-row{display:flex;justify-content:space-between;gap:8px;align-items:baseline;flex-wrap:wrap}
+    .tpl-label-row #lessonLink{font-size:12px;font-weight:700;white-space:nowrap}
     .edu-tip {
       background: #1e3a5f;
       border-left: 3px solid #3b82f6;
@@ -852,7 +854,8 @@
   <div class="card" style="margin-bottom:12px;">
     <div class="top-bar">
       <div class="field wide tpl-wrap">
-        <label>Strategy template <span style="font-weight:400;color:var(--muted)">(sample Premium — edit to the chain)</span></label>
+        <label class="tpl-label-row">Strategy template <span style="font-weight:400;color:var(--muted)">(sample Premium — edit to the chain)</span><a id="lessonLink" href="/level2/" hidden>Lesson</a></label>
+        <div class="edu-tip" id="eduTip">A long call is loaded. You pay a debit. Max loss is that debit. Break-even is strike plus premium. <a href="/level2/">Fundamentals lesson</a></div>
         <button type="button" class="tpl-trigger" id="tplTrigger" aria-haspopup="listbox" aria-expanded="false"><span class="tpl-trigger-label">— Pick a Strategy —</span><span class="tpl-caret">▼</span></button>
         <select id="strategyTemplate" onchange="applyTemplate()">
           <option value="">— Pick a Strategy —</option>
@@ -998,19 +1001,19 @@
       <div id="recentPanel" class="recent-panel" style="display:none"></div>
       <div class="stat-strip">
         <div class="stat-tile">
-          <div class="s-label">Net Debit/Credit</div>
+          <div class="s-label">Net Debit/Credit <span title="What you pay (debit) or receive (credit) to open, after commission." style="cursor:help">ⓘ</span></div>
           <div class="s-val" id="netPremium">$0</div>
         </div>
         <div class="stat-tile">
-          <div class="s-label">Max profit</div>
+          <div class="s-label">Max profit <span title="Best result at expiry. Unlimited means the chart has no cap." style="cursor:help">ⓘ</span></div>
           <div class="s-val" id="maxProfit">—</div>
         </div>
         <div class="stat-tile">
-          <div class="s-label">Max loss</div>
+          <div class="s-label">Max loss <span title="Worst result at expiry. On a defined-risk trade this is the capital you can lose." style="cursor:help">ⓘ</span></div>
           <div class="s-val" id="maxLoss">—</div>
         </div>
         <div class="stat-tile">
-          <div class="s-label">Chance of profit</div>
+          <div class="s-label">Chance of profit <span title="Model estimate that expiry P/L is above zero. Not a promise. Uses the position IV." style="cursor:help">ⓘ</span></div>
           <div class="s-val" id="chanceProfit">—</div>
         </div>
         <div class="stat-tile">
@@ -1215,9 +1218,6 @@
       <div class="g-val" id="gRho">—</div>
       <div class="g-impact" id="gRhoImpact">Rate sensitivity: P/L change if rates rise 1 point.</div>
     </div>
-  </div>
-  <div class="edu-tip" id="eduTip" style="margin-top:10px;">
-    A Long Call is loaded by default. Edit any field — the chart and Greeks update live. For a Covered Call pick the template, or add Stock (qty 100) + a Short Call (qty 1).
   </div>
 </div>
 
@@ -1459,7 +1459,7 @@ and custom structures. View payoff charts, Greeks, profit/loss, break-even, prob
     </div>
     <div class="guide-body" id="guideBody"></div>
   </aside>
-  <script src="/assets/jsm-options-engine.js?v=72ca9fe5"></script>
+  <script src="/assets/jsm-options-engine.js?v=20261001b"></script>
 <script>
 (function(){
   function initNav(){
