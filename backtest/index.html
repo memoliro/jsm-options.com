@@ -328,7 +328,7 @@ html[data-theme="light"] .site-header .nav a.active{background:#2563eb;color:#ff
         <label class="f">Open a trade
           <select id="freq">
             <option value="weekly">Once a week</option>
-            <option value="daily">Every trading day</option>
+            <option value="daily" selected>Every trading day</option>
             <option value="monthly">First trading day of month</option>
             <option value="reenter">When nothing is open</option>
           </select>
@@ -1350,7 +1350,7 @@ function init(){
 
   $('tmpl').innerHTML=html+'<option>Custom</option>';
 
-  $('tmpl').value='Iron condor'; applyTemplate('Iron condor'); toggleUI();
+  $('tmpl').value="Poor Man's Covered Call"; applyTemplate("Poor Man's Covered Call"); toggleUI();
 
   $('saveBtn')?.addEventListener('click', saveCurrent);
   $('exportBtn')?.addEventListener('click', exportSaved);
