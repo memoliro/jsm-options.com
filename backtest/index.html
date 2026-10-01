@@ -56,6 +56,25 @@ input,select,button{font:inherit;color:inherit}
 label.f{display:grid;gap:4px;font-size:12px;color:var(--muted)}
 input[type=number],input[type=text],input[type=date],select{width:100%;padding:7px 9px;border:1px solid var(--line);border-radius:6px;background:var(--panel-2);color:var(--ink);font-size:14px;min-width:0}
 select,input[type=date]{border:1px solid #7ecbff;box-shadow:0 0 0 1px rgba(126,203,255,.45)}
+.leg select, .leg select:focus {
+  border: 1px solid var(--line);
+  box-shadow: none;
+  outline: none;
+}
+label.chk {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--ink);
+}
+label.chk input[type=checkbox] {
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  flex: none;
+  accent-color: var(--accent);
+}
 select:focus,input[type=date]:focus{border-color:#93c5fd;outline:2px solid #93c5fd;outline-offset:1px}
 input[type=file]{font-size:12px;width:100%}
 .hint{font-size:12px;color:var(--muted);margin:0}
@@ -1314,11 +1333,13 @@ function init(){
     <details class="sec" id="sec-adv" open>
       <summary>Intraday & Roll</summary>
       <div class="body">
-        <label class="f"><span><input type="checkbox" id="intraday"> Intraday exit checks (H/L approx from VIX)</span><span class="hint">If checked, checks if 50% profit or stop would have hit intraday using daily range ~ VIX/√252</span></label>
-        <div class="g2">
-          <label class="f">Roll on exit<input type="checkbox" id="rollEnabled"></label>
-          <label class="f">Roll mode<select id="rollMode"><option value="delta">Same delta → next expiry</option><option value="strikes">Same strikes → next expiry</option></select></label>
-        </div>
+        <label class="f"><span><input type="checkbox" id="intraday"> 
+          <label class="chk"><input type="checkbox" id="intraday" checked> Intraday exit checks (H/L approx from VIX)</label>
+          <span class="hint">If checked, checks if 50% profit or stop would have hit intraday using daily range ~ VIX/√252</span>
+          <div class="g2">
+            <label class="chk"><input type="checkbox" id="rollEnabled" checked> Roll on exit</label>
+            <label class="f">Roll mode<select id="rollMode"><option value="delta">Same delta → next expiry</option><option value="strikes">Same strikes → next expiry</option></select></label>
+          </div>
         <p class="hint">Roll: when PT or 21 DTE hits, close and immediately open next cycle. Keeps trade count continuous.</p>
       </div>
     </details>`;
