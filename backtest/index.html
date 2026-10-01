@@ -1426,13 +1426,7 @@ async function loadSurfaceTicker(ticker){
   // This is important when the page lives at /backtest/ and the data
   // files are deployed under /backtest/data/surfaces/.
   if(!(typeof BUILT_IN_SURFACES !== 'undefined' && BUILT_IN_SURFACES[ticker])){
-    const paths = [
-      '/data/surfaces/'+encodeURIComponent(ticker)+'.json',
-      './data/surfaces/'+encodeURIComponent(ticker)+'.json',
-      '/backtest/data/surfaces/'+encodeURIComponent(ticker)+'.json',
-      '../data/surfaces/'+encodeURIComponent(ticker)+'.json',
-      'data/surfaces/'+encodeURIComponent(ticker)+'.json'
-    ];
+    const path = './data/surfaces/' + encodeURIComponent(ticker) + '.json';
     for(const p of paths){
       try{
         const r = await fetch(p, {cache:'no-store'});
