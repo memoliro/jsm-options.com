@@ -172,32 +172,32 @@ html[data-theme="light"] .site-support p{color:#374151}
 const BUILT_IN_MANIFEST = [
   {
     "ticker": "SPY",
-    "days": 606,
-    "updated": "2026-09-30",
-    "first": 19725,
-    "last": 20726,
+    "days": 490,
+    "updated": "2026-10-01",
+    "first": 19724,
+    "last": 20434,
     "q": 0.013,
-    "source": "dolthub volatility_history iv_current + yahoo close",
-    "start": "2024-01-03"
+    "source": "options-dataset-hist EOD chain, fit with cboe_to_surface",
+    "start": "2024-01-02"
   },
   {
     "ticker": "QQQ",
     "days": 491,
-    "updated": "2025-12-15",
+    "updated": "2026-10-01",
     "first": 19724,
     "last": 20437,
     "q": 0.006,
-    "source": "options-dataset-hist ATM call IV (delta 0.50) + yahoo close",
+    "source": "options-dataset-hist EOD chain, fit with cboe_to_surface",
     "start": "2024-01-02"
   },
   {
     "ticker": "IWM",
     "days": 490,
-    "updated": "2025-12-15",
+    "updated": "2026-10-01",
     "first": 19724,
     "last": 20437,
     "q": 0.012,
-    "source": "options-dataset-hist ATM call IV (delta 0.50) + yahoo close",
+    "source": "options-dataset-hist EOD chain, fit with cboe_to_surface",
     "start": "2024-01-02"
   },
   {
