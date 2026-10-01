@@ -1,0 +1,1749 @@
+<!doctype html>
+<html lang="tr" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Ücretsiz Options Backtester | Options Stratejilerini Çevrimiçi Simüle Et ve Test Et</title>
+<meta name="description" content="Iron Condor, Wheel ve Credit Spread gibi options stratejilerini hızlı geçmiş verilerle simüle ederek backtest yapın.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0f1419; --panel:#1a2332; --panel-2:#0f172a; --ink:#e7ecf3; --muted:#8b9bb4; --line:#2d3a4f;
+  --gain:#22c55e; --loss:#ef4444; --accent:#3b82f6; --bench:#8b9bb4;
+  --c1:#34d399; --c2:#f472b6; --c3:#eab308; --focus:#3b82f6; --tip-bg:#e7ecf3; --tip-ink:#0f1419;
+  color-scheme: dark;
+  box-sizing:border-box; padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+html[data-theme="light"]{
+  --bg:#f3f4f6; --panel:#ffffff; --panel-2:#f9fafb; --ink:#111827; --muted:#6b7280; --line:#e5e7eb;
+  --gain:#15803d; --loss:#dc2626; --accent:#0f766e; --bench:#6b7280;
+  --c1:#0f766e; --c2:#be185d; --c3:#ca8a04; --focus:#0f766e; --tip-bg:#111827; --tip-ink:#f9fafb;
+  color-scheme: light;
+}
+:root[data-theme="light"]{
+  --bg:#f3f4f6; --panel:#ffffff; --panel-2:#f9fafb; --ink:#111827; --muted:#6b7280; --line:#e5e7eb;
+  --gain:#15803d; --loss:#dc2626; --accent:#0f766e; --bench:#6b7280;
+  --c1:#0f766e; --c2:#be185d; --c3:#ca8a04; --focus:#0f766e; --tip-bg:#111827; --tip-ink:#f9fafb;
+  color-scheme: light;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{height:100%;scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;min-height:100%;background:var(--bg);color:var(--ink);
+  font:14px/1.45 "Schibsted Grotesk",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  -webkit-font-smoothing:antialiased}
+table{font-variant-numeric:tabular-nums}
+input,select,button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 20px;background:var(--panel);border-bottom:1px solid var(--line)}
+.brand{display:flex;align-items:center;gap:10px;min-width:0}
+.brand svg{flex:none}
+.brand .name{font-weight:700;font-size:19px;letter-spacing:-.02em}
+.brand .sub{color:var(--muted);font-size:13px}
+.hdr-right{display:flex;align-items:center;gap:10px}
+.badge{font-size:12px;padding:4px 10px;border:1px solid var(--line);border-radius:999px;background:var(--panel-2);color:var(--muted);white-space:nowrap;max-width:46vw;overflow:hidden;text-overflow:ellipsis}
+
+.app{display:grid;grid-template-columns:356px minmax(0,1fr);align-items:start}
+.side{position:sticky;top:0;max-height:100vh;overflow:auto;padding-bottom:28px;overscroll-behavior:contain;overflow-x:hidden;background:var(--panel);border-right:1px solid var(--line)}
+.sec{border-bottom:1px solid var(--line)}
+.sec>summary{cursor:pointer;list-style:none;padding:13px 16px;font-weight:600;display:flex;justify-content:space-between;align-items:center}
+.sec>summary::-webkit-details-marker{display:none}
+.sec>summary::after{content:"";width:7px;height:7px;border-right:2px solid var(--muted);border-bottom:2px solid var(--muted);transform:rotate(45deg);margin-right:3px}
+.sec[open]>summary::after{transform:rotate(-135deg)}
+.sec .body{padding:0 16px 16px;display:grid;gap:10px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+label.f{display:grid;gap:4px;font-size:12px;color:var(--muted)}
+input[type=number],input[type=text],input[type=date],select{width:100%;padding:7px 9px;border:1px solid var(--line);border-radius:6px;background:var(--panel-2);color:var(--ink);font-size:14px;min-width:0}
+select,input[type=date]{border:1px solid #7ecbff;box-shadow:0 0 0 1px rgba(126,203,255,.45)}
+.leg select, .leg select:focus {
+  border: 1px solid var(--line);
+  box-shadow: none;
+  outline: none;
+}
+label.chk {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--ink);
+}
+label.chk input[type=checkbox] {
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  flex: none;
+  accent-color: var(--accent);
+}
+select:focus,input[type=date]:focus{border-color:#93c5fd;outline:2px solid #93c5fd;outline-offset:1px}
+input[type=file]{font-size:12px;width:100%}
+.hint{font-size:12px;color:var(--muted);margin:0}
+.err{color:var(--loss);font-size:12px;margin:0}
+.btn{cursor:pointer;border:1px solid var(--line);background:var(--panel-2);border-radius:6px;padding:7px 12px;font-size:13px;font-weight:500}
+.btn:hover{border-color:var(--muted)}
+.btn.pri{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn.sm{padding:4px 9px;font-size:12px}
+.btn[disabled]{opacity:.5;cursor:not-allowed}
+.rowb{display:flex;gap:8px;align-items:end}
+.rowb>label{flex:1}
+
+.leg{border:1px solid var(--line);border-radius:8px;padding:8px;display:grid;gap:6px;background:var(--panel-2)}
+.leg-h{display:grid;grid-template-columns:auto 1fr 58px 1fr auto;gap:6px;align-items:center}
+.leg-b{display:grid;grid-template-columns:1.3fr 1fr 1fr;gap:6px}
+.leg-b.two{grid-template-columns:1.3fr 1fr}
+.lg-n{font-size:12px;color:var(--muted);font-weight:600}
+.leg .x{border:0;background:transparent;cursor:pointer;font-size:18px;line-height:1;color:var(--muted);padding:0 4px}
+.leg .x:hover{color:var(--loss)}
+
+.main{padding:18px 20px 44px;display:grid;gap:16px;min-width:0}
+.notice{display:flex;gap:12px;align-items:flex-start;justify-content:space-between;border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:8px;background:var(--panel);padding:10px 12px;font-size:13px;color:var(--muted)}
+.notice button{border:0;background:transparent;cursor:pointer;font-size:18px;line-height:1;color:var(--muted)}
+.banner-err{border:1px solid var(--loss);border-radius:8px;padding:10px 12px;background:var(--panel);color:var(--loss);font-size:13px}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px 16px;min-width:0}
+.ph{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+.ph h2{font-size:15px;margin:0;font-weight:600}
+.ph .sub{color:var(--muted);font-size:12px}
+.kpis{display:flex;flex-wrap:wrap;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.kpi{background:var(--panel);padding:12px 14px;flex:1 1 112px;min-width:0}
+.kpi .v{font-size:clamp(18px,1.7vw,23px);white-space:nowrap;font-weight:600;letter-spacing:-.02em;line-height:1.15}
+.kpi .l{font-size:12px;color:var(--muted);margin-top:2px}
+.kpi .s{font-size:11px;color:var(--muted);margin-top:1px}
+.sweep-t{width:100%;margin-top:8px;font-size:12px;border-collapse:collapse}.sweep-t th,.sweep-t td{padding:4px 3px;text-align:right}.sweep-t th:first-child,.sweep-t td:first-child{text-align:left}.sweep-t .btn{padding:2px 7px}
+.pos{color:var(--gain)} .neg{color:var(--loss)}
+.two{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+
+.legend{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.chip{display:inline-flex;gap:6px;align-items:center;font-size:12px;padding:3px 9px;border:1px solid var(--line);border-radius:999px;background:var(--panel-2)}
+.chip i{width:14px;height:3px;border-radius:2px;display:inline-block}
+.chip button{border:0;background:transparent;cursor:pointer;color:var(--muted);font-size:14px;line-height:1;padding:0}
+.wrap{position:relative;touch-action:pan-y}
+.tip{position:absolute;top:8px;pointer-events:none;background:var(--tip-bg);color:var(--tip-ink);padding:8px 10px;border-radius:6px;font-size:12px;line-height:1.5;white-space:nowrap;display:none;z-index:3}
+svg text{font-family:inherit}
+.ax text{fill:var(--muted);font-size:11px}
+.gl{stroke:var(--line);stroke-width:1}
+.empty{padding:28px 8px;text-align:center;color:var(--muted)}
+
+.tbl-wrap{overflow:auto;max-width:100%}
+table{border-collapse:collapse;width:100%;font-size:13px}
+th,td{padding:6px 9px;text-align:right;white-space:nowrap;border-bottom:1px solid var(--line)}
+th{font-weight:600;color:var(--muted);font-size:12px;position:sticky;top:0;background:var(--panel);cursor:default}
+th.s{cursor:pointer}
+th.s:hover{color:var(--ink)}
+th:first-child,td:first-child{text-align:left}
+td.l,th.l{text-align:left}
+tbody tr.sel td{background:var(--panel-2)}
+tbody tr.click{cursor:pointer}
+tbody tr.click:hover td{background:var(--panel-2)}
+.tr-max{max-height:420px}
+.hm td{text-align:center;padding:5px 4px;font-size:12px;border-bottom:0}
+.hm th{text-align:center;padding:4px}
+.hm td:first-child,.hm th:first-child{text-align:left;padding-left:2px}
+.hm td.tot{font-weight:600}
+.kv{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:12px;color:var(--muted);margin-top:8px}
+.kv b{color:var(--ink);font-weight:600}
+
+@media (max-width:1100px){.two{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:900px){
+  .app{grid-template-columns:minmax(0,1fr)}
+  .side{position:static;max-height:none;border-right:0;border-bottom:1px solid var(--line)}
+  .main{padding:14px 12px 36px}
+  .top{padding:10px 12px}
+  .brand .sub{display:none}
+}
+@media (prefers-reduced-motion:no-preference){ .sec>summary::after{transition:transform .15s} }
+
+
+.site-support{max-width:1280px;margin:0 auto 8px;padding:20px 16px;text-align:center;border:1px solid var(--line);border-radius:12px;background:var(--panel)}
+.site-support h2{margin:0 0 8px;font-size:1.2rem;color:#93c5fd}
+.site-support p{margin:0 0 14px;color:#c8d0dc}
+.bmc-link{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:999px;background:#ffdd00;color:#0f1419!important;font-weight:700;font-size:13px;text-decoration:none!important;border:1px solid #e6c200}
+.bmc-link:hover{background:#ffe44d}
+html[data-theme="light"] .site-support h2{color:#111827}
+html[data-theme="light"] .site-support p{color:#374151}
+
+.site-footer{margin-top:28px;padding:22px 16px 28px;border-top:1px solid #2d3a4f;background:#0f1419;color:#9aa6b2;font-size:13px}
+.site-footer .footer-note{max-width:1280px;margin:0 auto 10px;color:#c5d0dc}
+.site-footer .footer-links,.site-footer .footer-tools{max-width:1280px;margin:0 auto;display:flex;flex-wrap:wrap;gap:10px 14px}
+.site-footer a{color:#9ecbff;text-decoration:none}
+.site-footer a:hover{text-decoration:underline}
+</style>
+
+<script>
+// Embedded built-in surfaces for file:// testing - no server needed
+const BUILT_IN_MANIFEST = [
+  {
+    "ticker": "SPY",
+    "days": 490,
+    "updated": "2026-10-01",
+    "first": 19724,
+    "last": 20434,
+    "q": 0.013,
+    "source": "options-dataset-hist EOD chain, fit with cboe_to_surface",
+    "start": "2024-01-02"
+  },
+  {
+    "ticker": "QQQ",
+    "days": 491,
+    "updated": "2026-10-01",
+    "first": 19724,
+    "last": 20437,
+    "q": 0.006,
+    "source": "options-dataset-hist EOD chain, fit with cboe_to_surface",
+    "start": "2024-01-02"
+  },
+  {
+    "ticker": "IWM",
+    "days": 490,
+    "updated": "2026-10-01",
+    "first": 19724,
+    "last": 20437,
+    "q": 0.012,
+    "source": "options-dataset-hist EOD chain, fit with cboe_to_surface",
+    "start": "2024-01-02"
+  },
+  {
+    "ticker": "DIA",
+    "days": 606,
+    "updated": "2026-09-30",
+    "first": 19725,
+    "last": 20726,
+    "q": 0.017,
+    "source": "dolthub volatility_history iv_current + yahoo close",
+    "start": "2024-01-03"
+  },
+  {
+    "ticker": "SPX",
+    "days": 606,
+    "updated": "2026-09-30",
+    "first": 19725,
+    "last": 20726,
+    "q": 0.013,
+    "source": "yahoo ^GSPC close + SPY ATM IV proxy",
+    "start": "2024-01-03"
+  },
+  {
+    "ticker": "XLF",
+    "days": 606,
+    "updated": "2026-09-30",
+    "first": 19725,
+    "last": 20726,
+    "q": 0.016,
+    "source": "dolthub volatility_history iv_current + yahoo close",
+    "start": "2024-01-03"
+  },
+  {
+    "ticker": "XLK",
+    "days": 606,
+    "updated": "2026-09-30",
+    "first": 19725,
+    "last": 20726,
+    "q": 0.006,
+    "source": "dolthub volatility_history iv_current + yahoo close",
+    "start": "2024-01-03"
+  },
+  {
+    "ticker": "XLE",
+    "days": 606,
+    "updated": "2026-09-30",
+    "first": 19725,
+    "last": 20726,
+    "q": 0.032,
+    "source": "dolthub volatility_history iv_current + yahoo close",
+    "start": "2024-01-03"
+  },
+  {
+    "ticker": "SMH",
+    "days": 690,
+    "updated": "2026-10-01",
+    "first": 19724,
+    "last": 20727,
+    "q": 0.006,
+    "source": "yahoo close + 21-day realized vol (no free options IV for this symbol)",
+    "start": "2024-01-02"
+  },
+  {
+    "ticker": "TLT",
+    "days": 690,
+    "updated": "2026-10-01",
+    "first": 19724,
+    "last": 20727,
+    "q": 0.038,
+    "source": "yahoo close + 21-day realized vol (no free options IV for this symbol)",
+    "start": "2024-01-02"
+  },
+  {
+    "ticker": "GLD",
+    "days": 690,
+    "updated": "2026-10-01",
+    "first": 19724,
+    "last": 20727,
+    "q": 0.0,
+    "source": "yahoo close + 21-day realized vol (no free options IV for this symbol)",
+    "start": "2024-01-02"
+  },
+  {
+    "ticker": "SLV",
+    "days": 690,
+    "updated": "2026-10-01",
+    "first": 19724,
+    "last": 20727,
+    "q": 0.0,
+    "source": "yahoo close + 21-day realized vol (no free options IV for this symbol)",
+    "start": "2024-01-02"
+  },
+  {
+    "ticker": "USO",
+    "days": 690,
+    "updated": "2026-10-01",
+    "first": 19724,
+    "last": 20727,
+    "q": 0.0,
+    "source": "yahoo close + 21-day realized vol (no free options IV for this symbol)",
+    "start": "2024-01-02"
+  },
+  {
+    "ticker": "AAPL",
+    "days": 585,
+    "updated": "2026-09-30",
+    "first": 19725,
+    "last": 20726,
+    "q": 0.005,
+    "source": "dolthub volatility_history iv_current + yahoo close",
+    "start": "2024-01-03"
+  },
+  {
+    "ticker": "MSFT",
+    "days": 604,
+    "updated": "2026-09-30",
+    "first": 19725,
+    "last": 20726,
+    "q": 0.007,
+    "source": "dolthub volatility_history iv_current + yahoo close",
+    "start": "2024-01-03"
+  },
+  {
+    "ticker": "NVDA",
+    "days": 605,
+    "updated": "2026-09-30",
+    "first": 19725,
+    "last": 20726,
+    "q": 0.0003,
+    "source": "dolthub volatility_history iv_current + yahoo close",
+    "start": "2024-01-03"
+  },
+  {
+    "ticker": "TSLA",
+    "days": 606,
+    "updated": "2026-09-30",
+    "first": 19725,
+    "last": 20726,
+    "q": 0.0,
+    "source": "dolthub volatility_history iv_current + yahoo close",
+    "start": "2024-01-03"
+  },
+  {
+    "ticker": "META",
+    "days": 604,
+    "updated": "2026-09-30",
+    "first": 19725,
+    "last": 20726,
+    "q": 0.003,
+    "source": "dolthub volatility_history iv_current + yahoo close",
+    "start": "2024-01-03"
+  },
+  {
+    "ticker": "AMZN",
+    "days": 603,
+    "updated": "2026-09-30",
+    "first": 19725,
+    "last": 20726,
+    "q": 0.0,
+    "source": "dolthub volatility_history iv_current + yahoo close",
+    "start": "2024-01-03"
+  },
+  {
+    "ticker": "GOOGL",
+    "days": 606,
+    "updated": "2026-09-30",
+    "first": 19725,
+    "last": 20726,
+    "q": 0.003,
+    "source": "dolthub volatility_history iv_current + yahoo close",
+    "start": "2024-01-03"
+  }
+];
+const BUILT_IN_SURFACES = {};;
+</script>
+
+
+<style id="jsm-site-header">
+.site-header{position:sticky;top:0;z-index:40;background:rgba(15,20,25,.92);backdrop-filter:blur(12px);border-bottom:1px solid #2d3a4f;width:100%}
+.site-header-inner{max-width:1280px;margin:0 auto;padding:12px 16px;display:flex;justify-content:space-between;align-items:center;gap:12px}
+.site-header .logo{display:flex;align-items:center;gap:10px;text-decoration:none;color:#e7ecf3}
+.site-header .logo-icon{width:32px;height:32px;background:linear-gradient(135deg,#3b82f6,#34d399);color:#fff;border-radius:50%;display:grid;place-items:center;font-weight:800;font-size:12px}
+.site-header .brand-sub{font-size:12px;color:#8b9bb4}
+.header-right{display:flex;align-items:center;justify-content:flex-end;gap:8px;min-width:0}
+.site-header .nav{display:flex;gap:6px;flex-wrap:wrap;align-items:center;justify-content:flex-end}
+.site-header .nav a{padding:6px 11px;border-radius:9999px;border:1px solid #2d3a4f;background:#1a2332;font-size:12px;color:#8b9bb4;text-decoration:none}
+.site-header .nav a:hover{color:#e7ecf3;border-color:#3b82f6}
+.site-header .nav a.active{background:#3b82f6;color:#fff;border-color:#3b82f6}
+.theme-toggle{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border:1px solid #2d3a4f;border-radius:9999px;background:#1a2332;color:#8b9bb4;font:600 12px/1 system-ui,sans-serif;cursor:pointer}
+.data-badge{font-size:11px;padding:4px 8px;border-radius:999px;border:1px solid #2d3a4f;color:#8b9bb4}
+.nav-toggle{display:none;width:44px;height:44px;border:1px solid #2d3a4f;border-radius:10px;background:#1a2332;color:#e7ecf3;cursor:pointer;align-items:center;justify-content:center;flex-direction:column;gap:5px}
+.nav-toggle span{display:block;width:18px;height:2px;background:currentColor}
+html[data-theme="light"] .site-header{background:rgba(255,255,255,.94);border-bottom-color:#d8dee9}
+html[data-theme="light"] .site-header .logo{color:#0f172a}
+html[data-theme="light"] .site-header .nav a,html[data-theme="light"] .theme-toggle,html[data-theme="light"] .nav-toggle{background:#fff;color:#64748b;border-color:#d8dee9}
+html[data-theme="light"] .site-header .nav a.active{background:#2563eb;color:#fff}
+@media(max-width:900px){
+  .nav-toggle{display:inline-flex}
+  .site-header .nav{display:none;position:fixed;top:56px;left:0;right:0;flex-direction:column;align-items:stretch;padding:12px 16px 20px;background:#0f1419;z-index:99;border-bottom:1px solid #2d3a4f}
+  .site-header .nav.is-open{display:flex}
+  .site-header .nav a{width:100%;padding:14px;font-size:16px}
+}
+@media(max-width:600px){.site-header .brand-sub,.theme-label{display:none}}
+</style>
+
+</head>
+<body>
+<header class="site-header">
+  <div class="site-header-inner">
+    <a class="logo logo-link" href="/" aria-label="JSM Options Ana Sayfa">
+      <div class="logo-icon">JSM</div>
+      <div><div style="font-weight:700">JSM Options</div><div class="brand-sub">jsm-options.com · Eğitim amaçlı</div></div>
+    </a>
+    <div class="header-right">
+      <nav class="nav" aria-label="Birincil navigasyon">
+        <a href="/">Ana sayfa</a>
+        <a href="/level1/">Temeller</a>
+        <a href="/level2/">Temel bilgiler</a>
+        <a href="/level3/">Spread</a>
+        <a href="/level4/">İleri düzey</a>
+        <a href="/strategies/">Stratejiler</a>
+        <a href="/cheat-sheet/">Hızlı referans</a>
+        <a href="/builder/">Builder</a>
+        <a href="/backtest/" class="active">Backtest</a>
+      </nav>
+      <button type="button" class="nav-toggle" id="navToggle" aria-label="Menüyü aç" aria-expanded="false"><span></span><span></span><span></span></button>
+      
+      
+      
+      <button type="button" class="theme-toggle" id="themeBtn" aria-label="Renk temasını değiştir"><span id="themeIcon">☼</span><span class="theme-label" id="themeLabel">Tema</span></button>
+      <span class="data-badge" id="dataBadge">Depolanan geçmiş veriler: yükleniyor…</span>
+    </div>
+  </div>
+</header>
+
+
+<div class="app">
+<aside class="side" id="side" aria-label="Backtest ayarları">
+
+  <details class="sec" open>
+    <summary>Piyasa verileri</summary>
+    <div class="body">
+      <label class="f">Kaynak
+        <select id="dataSrc">
+        <option value="sim">Simüle edilmiş Underlying (geçmiş veri büyüyene kadar)</option>
+        <option value="surfaces" selected>Depolanan geçmiş veri (fiyat + ATM IV)</option>
+        <option value="csv">Kendi günlük fiyatlarım (CSV) - gelişmiş</option>
+      </select>
+      <div style="margin-top:8px;display:grid;gap:6px" id="tickerRow">
+        <label class="f">Sembol / Ticker (yerleşik)
+          <select id="tickerSel">
+            <option value="SPY">SPY – S&amp;P 500 ETF</option>
+            <option value="QQQ">QQQ – Nasdaq 100 ETF</option>
+            <option value="IWM">IWM – Russell 2000 ETF</option>
+            <option value="DIA">DIA – Dow 30 ETF</option>
+            <option value="SPX">SPX – S&amp;P 500 Endeksi</option>
+            <option value="XLF">XLF – Finans ETF</option>
+            <option value="XLK">XLK – Teknoloji ETF</option>
+            <option value="XLE">XLE – Enerji ETF</option>
+            <option value="SMH">SMH – Yarı iletkenler ETF</option>
+            <option value="TLT">TLT – 20Y Hazine ETF</option>
+            <option value="GLD">GLD – Altın ETF</option>
+            <option value="SLV">SLV – Gümüş ETF</option>
+            <option value="USO">USO – Petrol ETF</option>
+            <option value="AAPL">AAPL – Apple</option>
+            <option value="MSFT">MSFT – Microsoft</option>
+            <option value="NVDA">NVDA – Nvidia</option>
+            <option value="TSLA">TSLA – Tesla</option>
+            <option value="META">META – Meta</option>
+            <option value="AMZN">AMZN – Amazon</option>
+            <option value="GOOGL">GOOGL – Alphabet</option>
+          </select>
+        </label>
+        <div class="hint" id="surfaceInfo">Depolanan geçmiş veriler, ücretsiz bir kaynak bulunduğunda gerçek kapanış fiyatlarını ve ATM IV kullanır (2024'ten 2026 sonuna kadar). Simüle edilmiş seçenek, uydurma bir fiyat yolu isterseniz hâlâ kullanılabilir.</div>
+      </div>
+      </label>
+      <div class="simOnly" style="display:grid;gap:10px">
+        <div class="g2">
+          <label class="f">Piyasa rejimi
+            <select id="regime">
+              <option value="balanced">Dengeli</option>
+              <option value="bull">İstikrarlı yükseliş</option>
+              <option value="bear">Düşüş piyasası</option>
+              <option value="chop">Yatay dalgalı</option>
+              <option value="crash">Ortada çöküş</option>
+            </select>
+          </label>
+          <div class="rowb">
+            <label class="f">Tohum<input type="number" id="seed" value="7" step="1"></label>
+            <button class="btn" id="dice" type="button" title="Yeni rastgele yol">Karıştır</button>
+          </div>
+        </div>
+        <label class="f">Başlangıç fiyatı<input type="number" id="s0" value="400" min="5" step="any"></label>
+      </div>
+      <div class="csvOnly" style="display:none;gap:8px">
+        <input type="file" id="csvFile" accept=".csv,.txt,text/csv">
+        <p class="hint">Sütunlar: Date, Close. İsteğe bağlı bir IV veya VIX sütunu implied volatility olarak kullanılır; aksi halde IV, 20 günlük gerçekleşen volatiliteden tahmin edilir.</p>
+        <p class="err" id="csvMsg"></p>
+      </div>
+      <div class="g2">
+        <label class="f">Başlangıç tarihi<input type="date" id="start" value="2024-09-30"></label>
+        <label class="f">Bitiş tarihi<input type="date" id="end" value="2026-09-29"></label>
+      </div>
+      <div class="g2">
+        <label class="f">Gerçekleşen volatilite üzerinde IV Premium (%)<input type="number" id="vrp" value="12" step="1"></label>
+        <label class="f">Put skew eğimi<input type="number" id="skew" value="2" step="0.25" min="0"></label>
+      </div>
+      <div class="g2">
+        <label class="f">Risksiz faiz oranı (%)<input type="number" id="rate" value="4" step="0.25"></label>
+        <label class="f">Başlangıç sermayesi ($)<input type="number" id="capital" value="100000" min="1000" step="1000"></label>
+      </div>
+    </div>
+  </details>
+
+  <details class="sec" open>
+    <summary>Strateji</summary>
+    <div class="body">
+      <label class="f">Şablon<select id="tmpl"></select></label>
+      <div id="legs" style="display:grid;gap:8px"></div>
+      <button class="btn" id="addLeg" type="button">Bacak ekle</button>
+      <p class="hint">Strike değerleri, hedef bir delta'dan, spot fiyatından dolar uzaklığından veya daha önceki bir bacaktan dolar uzaklığından (kanatlar için) gelir.</p>
+    </div>
+  </details>
+
+  <details class="sec" open>
+    <summary>Giriş</summary>
+    <div class="body">
+      <div class="g2">
+        <label class="f">İşlem aç
+          <select id="freq">
+            <option value="weekly">Haftada bir</option>
+            <option value="daily" selected>Her işlem günü</option>
+            <option value="monthly">Ayın ilk işlem günü</option>
+            <option value="reenter">Açık pozisyon yokken</option>
+          </select>
+        </label>
+        <label class="f" id="dowWrap">Gün
+          <select id="dow"><option value="1">Pazartesi</option><option value="2">Salı</option><option value="3">Çarşamba</option><option value="4">Perşembe</option><option value="5">Cuma</option></select>
+        </label>
+      </div>
+      <div class="g2">
+        <label class="f">expiration'a kadar gün sayısı<input type="number" id="dte" value="45" min="1" step="1"></label>
+        <label class="f">Maksimum açık işlem<input type="number" id="maxOpen" value="4" min="1" step="1"></label>
+      </div>
+      <div class="g2">
+        <label class="f">Min IV rank (0 = kapalı)<input type="number" id="ivMin" value="0" min="0" max="100" step="5"></label>
+        <label class="f">Maks IV rank<input type="number" id="ivMax" value="100" min="0" max="100" step="5"></label>
+      </div>
+    </div>
+  </details>
+
+  <details class="sec" open>
+    <summary>Çıkış</summary>
+    <div class="body">
+      <div class="g2">
+        <label class="f">Kâr hedefi (Credit/Debit yüzdesi)<input type="number" id="pt" value="50" min="0" step="5"></label>
+        <label class="f">Zarar durdurma (Credit/Debit yüzdesi)<input type="number" id="sl" value="200" min="0" step="10"></label>
+      </div>
+      <label class="f">DTE'de kapat (0 = expiration'a kadar tut)<input type="number" id="exitDTE" value="21" min="0" step="1"></label>
+      <p class="hint">Çıkışlar her günlük kapanışta kontrol edilir. Kâr hedefi, zarar durdurma ve DTE'de kapatma, kaydedilen kurulumun parçasıdır. İşlem satırları pozisyonun neden kapandığını gösterir.</p>
+      <div class="g2" style="margin-top:8px">
+        <button class="btn sm" id="shareSetupBtn" type="button">Paylaşım linkini kopyala</button>
+        <button class="btn sm pri" id="sweepBtn" type="button">DTE / hedef tara</button>
+      </div>
+      <button class="btn sm" id="resetBtn" type="button" style="margin-top:8px;width:100%">Varsayılana sıfırla</button>
+      <p class="hint" id="shareStatus"></p>
+      <div id="sweepOut" class="hint"></div>
+    </div>
+  </details>
+
+  <details class="sec">
+    <summary>Boyutlandırma ve maliyetler</summary>
+    <div class="body">
+      <div class="g2">
+        <label class="f">Pozisyon boyutu
+          <select id="sizing"><option value="pct">Risk altındaki sermayenin %'i</option><option value="fixed">Sabit kontrat</option></select>
+        </label>
+        <label class="f" id="allocWrap">İşlem başına sermaye (%)<input type="number" id="alloc" value="5" min="0.1" step="0.5"></label>
+        <label class="f" id="contractsWrap" style="display:none">Kontrat<input type="number" id="contracts" value="1" min="1" step="1"></label>
+      </div>
+      <div class="g2">
+        <label class="f">Komisyon ($/kontrat/taraf)<input type="number" id="comm" value="0.65" min="0" step="0.05"></label>
+        <label class="f">Slippage ($/hisse, emir başına, taraf başına)<input type="number" id="slip" value="0.03" min="0" step="0.01"></label>
+      </div>
+      <label class="f">Strike aralığı ($)<input type="number" id="step" value="1" min="0.01" step="0.5"></label>
+    </div>
+  </details>
+</aside>
+
+<main class="main" id="main">
+  <div class="notice" id="notice">
+    <span>Fiyatlar ve implied volatility simüle edilmiştir ve her dolum, skew modeli ile bir Black-Scholes orta fiyatıdır. Sonuçlar, bir kural setinin nasıl davrandığını gösterir, ne kadar kazandıracağını değil. Gerçek Underlying fiyatlarıyla test yapmak için günlük fiyat CSV dosyası yükleyin.</span>
+    <button type="button" id="noticeX" aria-label="Kapat">×</button>
+  </div>
+  <div class="banner-err" id="errBox" style="display:none"></div>
+
+  <div class="kpis" id="kpis"></div>
+
+  <section class="panel">
+    <div class="ph">
+      <h2>Sermaye ve drawdown</h2>
+      <div class="legend" id="legend"></div>
+      <button class="btn sm pri" id="pinBtn" type="button">Karşılaştırmak için bu çalışmayı sabitle</button>
+    </div>
+    <div class="wrap" id="eqWrap">
+      <div id="eqChart"></div>
+      <div id="ddChart"></div>
+      <div class="tip" id="tip"></div>
+    </div>
+  </section>
+
+  <div class="two">
+    <section class="panel">
+      <div class="ph"><h2>Seçili işlemin Payoff</h2><span class="sub" id="payoffSub"></span></div>
+      <div id="payoff"></div>
+      <div class="kv" id="payoffKv"></div>
+    </section>
+    <section class="panel">
+      <div class="ph"><h2>İşlem K&amp;Z dağılımı</h2><span class="sub" id="histSub"></span></div>
+      <div id="hist"></div>
+    </section>
+  </div>
+
+  <section class="panel">
+    <div class="ph"><h2>Aylık getiri</h2><span class="sub">Hesap değerindeki değişim, ay bazında</span></div>
+    <div class="tbl-wrap" id="monthly"></div>
+  </section>
+
+  <div class="two">
+    <section class="panel">
+      <div class="ph"><h2>İşlemler nasıl sona erdi</h2></div>
+      <div class="tbl-wrap" id="exits"></div>
+    </section>
+    <section class="panel">
+      <div class="ph"><h2>İstatistikler</h2><span class="sub" id="cmpSub"></span></div>
+      <div class="tbl-wrap" id="compare"></div>
+    </section>
+  </div>
+
+  <section class="panel">
+    <div class="ph">
+      <h2>İşlem günlüğü</h2>
+      <div style="display:flex;gap:8px;align-items:center"><span class="sub" id="copyMsg"></span><button class="btn sm" id="copyCsv" type="button">İşlemleri CSV olarak kopyala</button></div>
+    </div>
+    <div class="tbl-wrap tr-max" id="trades"></div>
+  </section>
+</main>
+</div>
+
+<script>
+//<ENGINE>
+const DAY=86400000, Q=0.013;
+
+function ncdf(x){
+  const a1=0.319381530,a2=-0.356563782,a3=1.781477937,a4=-1.821255978,a5=1.330274429;
+  const k=1/(1+0.2316419*Math.abs(x));
+  const w=1-Math.exp(-x*x/2)/Math.sqrt(2*Math.PI)*(a1*k+a2*k*k+a3*k**3+a4*k**4+a5*k**5);
+  return x<0?1-w:w;
+}
+function bsPrice(type,S,K,T,sig,r){
+  if(T<=0||sig<=0) return type==='C'?Math.max(0,S-K):Math.max(0,K-S);
+  const sq=sig*Math.sqrt(T), d1=(Math.log(S/K)+(r-Q+0.5*sig*sig)*T)/sq, d2=d1-sq;
+  const eq=Math.exp(-Q*T), er=Math.exp(-r*T);
+  return type==='C'?S*eq*ncdf(d1)-K*er*ncdf(d2):K*er*ncdf(-d2)-S*eq*ncdf(-d1);
+}
+function bsDelta(type,S,K,T,sig,r){
+  if(T<=0||sig<=0) return type==='C'?(S>K?1:0):(S<K?-1:0);
+  const d1=(Math.log(S/K)+(r-Q+0.5*sig*sig)*T)/(sig*Math.sqrt(T)), eq=Math.exp(-Q*T);
+  return type==='C'?eq*ncdf(d1):eq*(ncdf(d1)-1);
+}
+function legIV(K,S,T,atm,skew,r){
+  const F=S*Math.exp((r-Q)*T);
+  const x=Math.log(K/F);
+  return Math.min(3,Math.max(0.05,atm*(1-skew*x*(x<0?1:0.5))));
+}
+function strikeByDelta(type,target,S,T,atm,skew,r){
+  let lo=S*0.3,hi=S*3;
+  for(let it=0;it<60;it++){
+    const mid=(lo+hi)/2, iv=legIV(mid,S,T,atm,skew,r), d=Math.abs(bsDelta(type,S,mid,T,iv,r));
+    if(type==='C'){ if(d>target) lo=mid; else hi=mid; } else { if(d>target) hi=mid; else lo=mid; }
+  }
+  return (lo+hi)/2;
+}
+
+function rng(seed){let a=seed>>>0;return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+function randn(r){let u=0;while(!u)u=r();const v=r();return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v)}
+
+const REGIMES={
+  balanced:{mu:.09,theta:.030,kappa:4,xi:.55,rho:-.7,revert:0},
+  bull:{mu:.16,theta:.020,kappa:5,xi:.45,rho:-.7,revert:0},
+  bear:{mu:-.12,theta:.075,kappa:3,xi:.70,rho:-.7,revert:0},
+  chop:{mu:0,theta:.036,kappa:6,xi:.60,rho:-.6,revert:1.2},
+  crash:{mu:.10,theta:.028,kappa:4,xi:.55,rho:-.7,revert:0,crash:true}
+};
+function genSim(o){
+  const R=REGIMES[o.regime]||REGIMES.balanced, rnd=rng(o.seed);
+  const ts=[];
+  for(let t=o.start;t<=o.end;t+=DAY){const d=new Date(t).getUTCDay(); if(d!==0&&d!==6) ts.push(t);}
+  const n=ts.length, S=new Array(n), iv=new Array(n), dt=1/252, anchor=Math.log(o.s0);
+  let v=R.theta, lnS=anchor;
+  const cA=Math.floor(n*0.45), cL=30;
+  for(let i=0;i<n;i++){
+    if(i>0){
+      const z1=randn(rnd), z2=R.rho*z1+Math.sqrt(1-R.rho*R.rho)*randn(rnd), vp=Math.max(v,0);
+      let ret=(R.mu-0.5*vp)*dt+Math.sqrt(vp*dt)*z1-R.revert*(lnS-anchor)*dt;
+      const inCrash=R.crash&&i>=cA&&i<cA+cL;
+      if(inCrash) ret-=0.010;
+      lnS+=ret;
+      v=v+R.kappa*(R.theta-vp)*dt+R.xi*Math.sqrt(vp*dt)*z2;
+      if(inCrash) v=Math.max(v,0.18);
+      v=Math.max(v,0.0025);
+    }
+    S[i]=Math.exp(lnS);
+    const eff=R.theta+(v-R.theta)*0.6;
+    iv[i]=Math.min(1.5,Math.max(0.08,Math.sqrt(Math.max(eff,0))*(1+o.vrp)));
+  }
+  return {ts,S,iv};
+}
+function withIV(ts,S,ivcol,vrp){
+  const iv=[];
+  for(let i=0;i<S.length;i++){
+    if(ivcol&&ivcol[i]>0){ iv.push(ivcol[i]>3?ivcol[i]/100:ivcol[i]); continue; }
+    const a=Math.max(1,i-19); const rs=[];
+    for(let j=a;j<=i;j++) rs.push(Math.log(S[j]/S[j-1]));
+    if(rs.length<5){ iv.push(0.16); continue; }
+    const m=rs.reduce((x,y)=>x+y,0)/rs.length;
+    const sd=Math.sqrt(rs.reduce((x,y)=>x+(y-m)*(y-m),0)/(rs.length-1));
+    iv.push(Math.min(1.5,Math.max(0.08,sd*Math.sqrt(252)*(1+vrp))));
+  }
+  return iv;
+}
+function parseCSV(text){
+  const lines=text.replace(/^\uFEFF/,'').split(/\r?\n/).filter(l=>l.trim());
+  if(lines.length<20) throw new Error('Dosyada en az 20 satır günlük fiyat olmalıdır.');
+  const delim=(lines[0].match(/;/g)||[]).length>(lines[0].match(/,/g)||[]).length?';':(lines[0].includes('\t')?'\t':',');
+  const split=l=>l.split(delim).map(c=>c.trim().replace(/^"|"$/g,''));
+  let head=split(lines[0]), hasHeader=isNaN(Date.parse(head[0])), dc=0,cc=1,ic=-1, start=0;
+  if(hasHeader){
+    const h=head.map(x=>x.toLowerCase()); start=1;
+    const find=(names)=>{for(const nm of names){const k=h.indexOf(nm); if(k>=0) return k;} return -1;};
+    dc=find(['date','timestamp','time','day']); if(dc<0) dc=0;
+    cc=find(['adj close','adj_close','adjclose','close','price','last','settle']);
+    if(cc<0) throw new Error('Close sütunu bulunamadı. Date,Close gibi bir başlık ekleyin.');
+    ic=find(['iv','vix','implied_vol','implied volatility','atm_iv']);
+  }
+  const rows=[];
+  for(let i=start;i<lines.length;i++){
+    const c=split(lines[i]); const ds=c[dc]; if(!ds) continue;
+    let t; if(/^\d{4}-\d{2}-\d{2}/.test(ds)) t=Date.parse(ds.slice(0,10)); else { const d=new Date(ds); t=Date.UTC(d.getFullYear(),d.getMonth(),d.getDate()); }
+    const px=parseFloat(String(c[cc]).replace(/[$,]/g,'')); if(!isFinite(t)||!isFinite(px)||px<=0) continue;
+    const iv=ic>=0?parseFloat(c[ic]):null;
+    rows.push({t,px,iv:isFinite(iv)?iv:null});
+  }
+  if(rows.length<20) throw new Error('Yeterli geçerli Date/Close satırı okunamadı.');
+  rows.sort((a,b)=>a.t-b.t);
+  const out=[]; for(const r of rows){ if(!out.length||r.t>out[out.length-1].t) out.push(r); }
+  return {ts:out.map(r=>r.t),S:out.map(r=>r.px),iv:out.some(r=>r.iv)?out.map(r=>r.iv):null};
+}
+
+function roundStrike(k,step){return Math.max(step,Math.round(k/step)*step);}
+function posValue(p,px,s,atm,cfg){
+  const T=Math.max(0,(p.expTs-s)/DAY/365); let v=0;
+  for(const l of p.legs){ const sig=T>0?legIV(l.K,px,T,atm,cfg.skew,cfg.rate):0; v+=l.side*l.qty*bsPrice(l.type,px,l.K,T,sig,cfg.rate); }
+  return v;
+}
+function estBPR(legs,S,V0){
+  let netP=0,netC=0;
+  for(const l of legs){ if(l.type==='P') netP+=l.side*l.qty; else netC+=l.side*l.qty; }
+  const pay=x=>{let a=0;for(const l of legs){a+=l.side*l.qty*(l.type==='C'?Math.max(0,x-l.K):Math.max(0,l.K-x));}return a-V0;};
+  if(netP>=0&&netC>=0){
+    let mn=0; for(const x of [0,S*10,...legs.map(l=>l.K)]) mn=Math.min(mn,pay(x));
+    return Math.max(1,-mn*100);
+  }
+  let best=0;
+  for(const type of ['P','C']){
+    const net=type==='P'?netP:netC; if(net>=0) continue;
+    const sh=legs.filter(l=>l.type===type&&l.side<0);
+    const K=type==='P'?Math.max(...sh.map(l=>l.K)):Math.min(...sh.map(l=>l.K));
+    const otm=type==='P'?Math.max(0,S-K):Math.max(0,K-S);
+    const per=Math.max(0.2*S-otm,0.1*S)+Math.max(0,-V0);
+    best=Math.max(best,per*100*(-net));
+  }
+  return Math.max(1,best);
+}
+function legsText(legs){return legs.map(l=>(l.side>0?'+':'−')+(l.qty>1?l.qty:'')+l.type+(Math.round(l.K*100)/100)).join(' ');}
+
+function runBacktest(cfg,data){
+  const {ts,S,iv}=data, n=ts.length, r=cfg.rate;
+  const lb=(target,from)=>{let lo=from,hi=n;while(lo<hi){const m=(lo+hi)>>1;if(ts[m]>=target)hi=m;else lo=m+1;}return lo;};
+  const ivr=new Array(n);
+  for(let i=0;i<n;i++){
+    let lo=Infinity,hi=-Infinity;
+    for(let j=Math.max(0,i-251);j<=i;j++){ if(iv[j]<lo)lo=iv[j]; if(iv[j]>hi)hi=iv[j]; }
+    ivr[i]=hi>lo?(iv[i]-lo)/(hi-lo)*100:50;
+  }
+  const filterOn=cfg.ivMin>0||cfg.ivMax<100;
+  let cash=cfg.capital, open=[], trades=[], tn=0, lastWeek=-1, lastMonth=-1;
+  const intra=cfg.intraday!=null?!!cfg.intraday:!!window._sbIntraday;
+  const roll=cfg.roll||window._sbRoll||{enabled:false,mode:'delta'};
+  const eq=new Array(n), rollQ=[];
+  const closePos=(p,i,reason,gross)=>{
+    const legN=p.legs.reduce((a,l)=>a+l.qty,0);
+    const fees=reason==='Expiration'?0:(cfg.comm*legN*p.contracts+cfg.slip*100*p.contracts);
+    const net=gross-p.feesOpen-fees;
+    cash+=gross-fees;
+    trades.push({n:++tn,openIdx:p.openIdx,closeIdx:i,openTs:p.openTs,closeTs:ts[i],legs:p.legs,contracts:p.contracts,
+      V0:p.V0,credit:-p.V0*100*p.contracts,bpr:p.bpr,pnl:net,gross,fees:p.feesOpen+fees,
+      ret:net/(p.bpr*p.contracts),days:Math.round((ts[i]-p.openTs)/DAY),reason,entryS:p.entryS,exitS:S[i],entryIV:p.entryIV,T0:p.T0,text:legsText(p.legs)});
+  };
+  for(let i=0;i<n;i++){
+    const s=ts[i], px=S[i], atm=iv[i];
+    const still=[]; let unreal=0;
+    for(const p of open){
+      const V=posValue(p,px,s,atm,cfg), gross=(V-p.V0)*100*p.contracts;
+      let reason=null, g=gross;
+      if(s>=p.expTs) reason='Expiration';
+      else if(cfg.sl>0&&gross<=-cfg.sl/100*p.absCost) reason='Stop loss';
+      else if(cfg.pt>0&&gross>=cfg.pt/100*p.absCost) reason='Profit target';
+      else if(intra&&i>p.openIdx){
+        const rg=Math.max(0.002,(atm||0.2)/Math.sqrt(252)*0.8);
+        const gH=(posValue(p,px*(1+rg),s,atm,cfg)-p.V0)*100*p.contracts, gL=(posValue(p,px*(1-rg),s,atm,cfg)-p.V0)*100*p.contracts;
+        const lo=Math.min(gH,gL), hi=Math.max(gH,gL);
+        if(cfg.sl>0&&lo<=-cfg.sl/100*p.absCost){ reason='Stop (intraday)'; g=-cfg.sl/100*p.absCost; }
+        else if(cfg.pt>0&&hi>=cfg.pt/100*p.absCost){ reason='Target (intraday)'; g=cfg.pt/100*p.absCost; }
+      }
+      if(!reason&&cfg.exitDTE>0&&(p.expTs-s)/DAY<=cfg.exitDTE) reason='DTE exit';
+      if(reason){ closePos(p,i,reason,g); if(roll.enabled&&/^(Profit target|Target|DTE exit)/.test(reason)) rollQ.push(p); }
+      else { still.push(p); unreal+=gross; }
+    }
+    open=still;
+    let allow=false;
+    if(cfg.freq==='daily') allow=true;
+    else if(cfg.freq==='weekly'){
+      const wk=Math.floor((s/DAY+3)/7), dow=new Date(s).getUTCDay();
+      if(wk!==lastWeek&&dow>=cfg.dow){allow=true;lastWeek=wk;}
+    } else if(cfg.freq==='monthly'){
+      const d=new Date(s), mk=d.getUTCFullYear()*12+d.getUTCMonth();
+      if(mk!==lastMonth){allow=true;lastMonth=mk;}
+    } else allow=open.length===0;
+    const tryOpen=(fixedKs)=>{
+    const equityNow=cash+unreal;
+    if(open.length<cfg.maxOpen&&equityNow>0&&s+cfg.dte*DAY<=ts[n-1]){
+      const expIdx=lb(s+cfg.dte*DAY,i+1);
+      if(expIdx<n){
+        const expTs=ts[expIdx], T=(expTs-s)/DAY/365, Ks=[], legs=[];
+        cfg.legs.forEach((L,li)=>{
+          let k;
+          if(fixedKs&&fixedKs[li]!=null) k=fixedKs[li]; else
+          if(L.mode==='delta') k=strikeByDelta(L.type,Math.min(0.95,Math.max(0.02,L.val)),px,T,atm,cfg.skew,r);
+          else if(L.mode==='rel'&&L.ref>=0&&L.ref<li) k=Ks[L.ref]+L.val;
+          else k=px+L.val;
+          k=roundStrike(k,cfg.step); Ks.push(k);
+          legs.push({side:L.side,type:L.type,qty:Math.max(1,L.qty|0),K:k});
+        });
+        let V0=0;
+        for(const l of legs) V0+=l.side*l.qty*bsPrice(l.type,px,l.K,T,legIV(l.K,px,T,atm,cfg.skew,r),r);
+        if(Math.abs(V0)>=0.01){
+          const bpr=estBPR(legs,px,V0);
+          let contracts=cfg.sizing==='fixed'?cfg.contracts:Math.floor(equityNow*cfg.alloc/100/bpr);
+          if(cfg.sizing!=='fixed'&&contracts<1&&bpr<=equityNow*Math.max(cfg.alloc/100*2.5,0.25)) contracts=1;
+          if(contracts>=1){
+            const legN=legs.reduce((a,l)=>a+l.qty,0);
+            const feesOpen=cfg.comm*legN*contracts+cfg.slip*100*contracts;
+            cash-=feesOpen;
+            open.push({openIdx:i,openTs:s,expTs,legs,contracts,V0,absCost:Math.abs(V0)*100*contracts,bpr,feesOpen,entryS:px,entryIV:atm,T0:T});
+          }
+        }
+      }
+    }
+    };
+    const rolls=rollQ.splice(0);
+    for(const p of rolls) tryOpen(roll.mode==='strikes'?p.legs.map(l=>l.K):null);
+    if(allow&&!(filterOn&&(i<60||ivr[i]<cfg.ivMin||ivr[i]>cfg.ivMax))) tryOpen(null);
+    eq[i]=cash+unreal;
+  }
+  return {eq,trades};
+}
+
+function seriesStats(ts,eq,start){
+  const n=eq.length; let peak=start,mdd=0,mdda=0;
+  const dd=new Array(n), rets=[];
+  for(let i=0;i<n;i++){
+    if(eq[i]>peak) peak=eq[i];
+    dd[i]=peak>0?eq[i]/peak-1:-1;
+    if(dd[i]<mdd) mdd=dd[i];
+    if(peak-eq[i]>mdda) mdda=peak-eq[i];
+    if(i>0) rets.push((eq[i]-eq[i-1])/Math.max(eq[i-1],1));
+  }
+  const m=rets.reduce((a,b)=>a+b,0)/Math.max(1,rets.length);
+  const sd=Math.sqrt(rets.reduce((a,b)=>a+(b-m)*(b-m),0)/Math.max(1,rets.length-1));
+  const dsd=Math.sqrt(rets.reduce((a,b)=>a+Math.min(b,0)*Math.min(b,0),0)/Math.max(1,rets.length));
+  const years=Math.max(1/365,(ts[n-1]-ts[0])/DAY/365.25), end=eq[n-1];
+  const cagr=end>0?Math.pow(end/start,1/years)-1:-1;
+  return {dd,net:end-start,total:end/start-1,cagr,mdd,mdda,sharpe:sd>0?m/sd*Math.sqrt(252):0,sortino:dsd>0?m/dsd*Math.sqrt(252):0,mar:mdd<0?cagr/Math.abs(mdd):0,years};
+}
+function computeStats(cfg,data,res){
+  const {ts,S}=data, eq=res.eq, tr=res.trades;
+  const base=seriesStats(ts,eq,cfg.capital);
+  const sh=cfg.capital/S[0], bh=S.map(x=>x*sh), bhs=seriesStats(ts,bh,cfg.capital);
+  const wins=tr.filter(t=>t.pnl>0), losses=tr.filter(t=>t.pnl<=0);
+  const gw=wins.reduce((a,t)=>a+t.pnl,0), gl=-losses.reduce((a,t)=>a+t.pnl,0);
+  let cons=0,mx=0; for(const t of tr){ if(t.pnl<=0){cons++;mx=Math.max(mx,cons);} else cons=0; }
+  return Object.assign(base,{
+    trades:tr.length,winRate:tr.length?wins.length/tr.length:0,
+    avgWin:wins.length?gw/wins.length:0,avgLoss:losses.length?-gl/losses.length:0,
+    pf:gl>0?gw/gl:(gw>0?Infinity:0),expect:tr.length?tr.reduce((a,t)=>a+t.pnl,0)/tr.length:0,
+    avgDays:tr.length?tr.reduce((a,t)=>a+t.days,0)/tr.length:0,fees:tr.reduce((a,t)=>a+t.fees,0),
+    best:tr.length?Math.max(...tr.map(t=>t.pnl)):0,worst:tr.length?Math.min(...tr.map(t=>t.pnl)):0,maxLossStreak:mx,
+    bh:Object.assign(bhs,{eq:bh})
+  });
+}
+//</ENGINE>
+
+// ---------------------------------------------------------------- UI
+const $=id=>document.getElementById(id);
+const state={legs:[],pinned:[],last:null,sel:0,sort:{k:'n',dir:1},csv:null,csvName:'',cache:null};
+
+const TEMPLATES={
+  // BULLISH
+  'Long Call':{group:'Bullish',dte:45,pt:100,sl:50,exitDTE:14,legs:[{side:1,type:'C',qty:1,mode:'delta',val:0.55}]},
+  'Covered Call':{group:'Bullish',dte:30,pt:50,sl:200,exitDTE:21,legs:[{side:-1,type:'C',qty:1,mode:'delta',val:0.20}],stock:100},
+  'Cash Secured Put':{group:'Bullish',dte:30,pt:50,sl:200,exitDTE:21,legs:[{side:-1,type:'P',qty:1,mode:'delta',val:0.30}]},
+  'Bull Call Spread':{group:'Bullish',dte:45,pt:50,sl:200,exitDTE:21,legs:[
+    {side:1,type:'C',qty:1,mode:'delta',val:0.55},{side:-1,type:'C',qty:1,mode:'delta',val:0.30}]},
+  'Long Straddle (Bull)':{group:'Bullish',dte:45,pt:50,sl:40,exitDTE:14,legs:[
+    {side:1,type:'P',qty:1,mode:'offset',val:0},{side:1,type:'C',qty:1,mode:'offset',val:0}]},
+  'Long Strangle (Bull)':{group:'Bullish',dte:45,pt:50,sl:40,exitDTE:14,legs:[
+    {side:1,type:'P',qty:1,mode:'delta',val:0.25},{side:1,type:'C',qty:1,mode:'delta',val:0.25}]},
+  'Long Call Butterfly':{group:'Bullish',dte:45,pt:25,sl:50,exitDTE:14,legs:[
+    {side:1,type:'C',qty:1,mode:'delta',val:0.60},{side:-1,type:'C',qty:2,mode:'delta',val:0.50},{side:1,type:'C',qty:1,mode:'delta',val:0.40}]},
+  'Call Condor':{group:'Bullish',dte:45,pt:25,sl:50,exitDTE:14,legs:[
+    {side:1,type:'C',qty:1,mode:'delta',val:0.60},{side:-1,type:'C',qty:1,mode:'delta',val:0.45},
+    {side:-1,type:'C',qty:1,mode:'delta',val:0.30},{side:1,type:'C',qty:1,mode:'delta',val:0.15}]},
+  // BEARISH
+  'Long Put':{group:'Bearish',dte:45,pt:100,sl:50,exitDTE:14,legs:[{side:1,type:'P',qty:1,mode:'delta',val:0.55}]},
+  'Bear Put Spread':{group:'Bearish',dte:45,pt:50,sl:200,exitDTE:21,legs:[
+    {side:1,type:'P',qty:1,mode:'delta',val:0.55},{side:-1,type:'P',qty:1,mode:'delta',val:0.30}]},
+  'Long Straddle (Bear)':{group:'Bearish',dte:45,pt:50,sl:40,exitDTE:14,legs:[
+    {side:1,type:'P',qty:1,mode:'offset',val:0},{side:1,type:'C',qty:1,mode:'offset',val:0}]},
+  'Long Strangle (Bear)':{group:'Bearish',dte:45,pt:50,sl:40,exitDTE:14,legs:[
+    {side:1,type:'P',qty:1,mode:'delta',val:0.25},{side:1,type:'C',qty:1,mode:'delta',val:0.25}]},
+  'Long Put Butterfly':{group:'Bearish',dte:45,pt:25,sl:50,exitDTE:14,legs:[
+    {side:1,type:'P',qty:1,mode:'delta',val:0.60},{side:-1,type:'P',qty:2,mode:'delta',val:0.50},{side:1,type:'P',qty:1,mode:'delta',val:0.40}]},
+  'Put Condor':{group:'Bearish',dte:45,pt:25,sl:50,exitDTE:14,legs:[
+    {side:1,type:'P',qty:1,mode:'delta',val:0.60},{side:-1,type:'P',qty:1,mode:'delta',val:0.45},
+    {side:-1,type:'P',qty:1,mode:'delta',val:0.30},{side:1,type:'P',qty:1,mode:'delta',val:0.15}]},
+  // NEUTRAL
+  'Short Straddle':{group:'Neutral',dte:30,pt:25,sl:200,exitDTE:21,legs:[
+    {side:-1,type:'P',qty:1,mode:'offset',val:0},{side:-1,type:'C',qty:1,mode:'offset',val:0}]},
+  'Short Strangle':{group:'Neutral',dte:45,pt:50,sl:200,exitDTE:21,legs:[
+    {side:-1,type:'P',qty:1,mode:'delta',val:0.20},{side:-1,type:'C',qty:1,mode:'delta',val:0.20}]},
+  'Iron Condor':{group:'Neutral',dte:45,pt:50,sl:200,exitDTE:21,legs:[
+    {side:-1,type:'P',qty:1,mode:'delta',val:0.16},{side:1,type:'P',qty:1,mode:'rel',val:-10,ref:0},
+    {side:-1,type:'C',qty:1,mode:'delta',val:0.16},{side:1,type:'C',qty:1,mode:'rel',val:10,ref:2}]},
+  'Iron Butterfly':{group:'Neutral',dte:30,pt:25,sl:100,exitDTE:14,legs:[
+    {side:-1,type:'P',qty:1,mode:'offset',val:0},{side:-1,type:'C',qty:1,mode:'offset',val:0},
+    {side:1,type:'P',qty:1,mode:'rel',val:-15,ref:0},{side:1,type:'C',qty:1,mode:'rel',val:15,ref:1}]},
+  'Calendar Spread':{group:'Neutral',dte:30,pt:25,sl:50,exitDTE:7,legs:[
+    {side:1,type:'C',qty:1,mode:'offset',val:0,dte:60},{side:-1,type:'C',qty:1,mode:'offset',val:0,dte:30}],calendar:true},
+  'Jade Lizard':{group:'Neutral',dte:30,pt:50,sl:200,exitDTE:21,legs:[
+    {side:-1,type:'P',qty:1,mode:'delta',val:0.30},{side:-1,type:'C',qty:1,mode:'delta',val:0.20},{side:1,type:'C',qty:1,mode:'rel',val:10,ref:1}]},
+  // SYNTHETIC
+  "Poor Man's Covered Call": {group:'Synthetic',dte:30,pt:50,sl:200,exitDTE:21,legs:[
+    {side:1,type:'C',qty:1,mode:'delta',val:0.80,dte:365},{side:-1,type:'C',qty:1,mode:'delta',val:0.30,dte:30}],pmcc:true},
+  'Call Ratio Spread 1x2':{group:'Synthetic',dte:45,pt:50,sl:200,exitDTE:21,legs:[
+    {side:1,type:'C',qty:1,mode:'delta',val:0.55},{side:-1,type:'C',qty:2,mode:'delta',val:0.30}]},
+  'Put Ratio Spread 1x2':{group:'Synthetic',dte:45,pt:50,sl:200,exitDTE:21,legs:[
+    {side:1,type:'P',qty:1,mode:'delta',val:0.55},{side:-1,type:'P',qty:2,mode:'delta',val:0.30}]},
+  'Synthetic Long':{group:'Synthetic',dte:45,pt:50,sl:200,exitDTE:21,legs:[
+    {side:1,type:'C',qty:1,mode:'offset',val:0},{side:-1,type:'P',qty:1,mode:'offset',val:0}]},
+  'Synthetic Short':{group:'Synthetic',dte:45,pt:50,sl:200,exitDTE:21,legs:[
+    {side:-1,type:'C',qty:1,mode:'offset',val:0},{side:1,type:'P',qty:1,mode:'offset',val:0}]},
+  'Risk Reversal':{group:'Synthetic',dte:45,pt:50,sl:200,exitDTE:21,legs:[
+    {side:-1,type:'P',qty:1,mode:'delta',val:0.30},{side:1,type:'C',qty:1,mode:'delta',val:0.30}]},
+  'Iron condor':{group:'Neutral',dte:45,pt:50,sl:200,exitDTE:21,legs:[
+    {side:-1,type:'P',qty:1,mode:'delta',val:0.16},{side:1,type:'P',qty:1,mode:'rel',val:-10,ref:0},
+    {side:-1,type:'C',qty:1,mode:'delta',val:0.16},{side:1,type:'C',qty:1,mode:'rel',val:10,ref:2}]},
+};
+
+const STRATEGY_GROUPS_ORDER = ['Bullish','Bearish','Neutral','Synthetic'];
+
+// ---- formatting
+const fmtDate=t=>new Date(t).toISOString().slice(0,10);
+const money=(x,d=0)=>(x<0?'−$':'$')+Math.abs(x).toLocaleString('en-US',{minimumFractionDigits:d,maximumFractionDigits:d});
+const pct=(x,d=1)=>(x*100).toFixed(d)+'%';
+const spct=(x,d=1)=>(x>=0?'+':'−')+Math.abs(x*100).toFixed(d)+'%';
+const num=(x,d=2)=>isFinite(x)?x.toFixed(d):'∞';
+const cls=x=>x>0?'pos':(x<0?'neg':'');
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+// ---- legs editor
+function renderLegs(){
+  $('legs').innerHTML=state.legs.map((L,i)=>{
+    const refOpts=state.legs.slice(0,i).map((_,k)=>`<option value="${k}" ${L.ref===k?'selected':''}>Bacak ${k+1}</option>`).join('');
+    const hasRef=L.mode==='rel'&&i>0;
+    return `<div class="leg" data-i="${i}">
+      <div class="leg-h"><span class="lg-n">Bacak ${i+1}</span>
+        <select data-k="side" aria-label="Al veya sat"><option value="1" ${L.side>0?'selected':''}>Al</option><option value="-1" ${L.side<0?'selected':''}>Sat</option></select>
+        <input type="number" data-k="qty" min="1" step="1" value="${L.qty}" aria-label="Miktar">
+        <select data-k="type" aria-label="Call veya Put"><option value="C" ${L.type==='C'?'selected':''}>Call</option><option value="P" ${L.type==='P'?'selected':''}>Put</option></select>
+        <button class="x" type="button" data-del aria-label="Bacak ${i+1}'i kaldır">×</button></div>
+      <div class="leg-b ${hasRef?'':'two'}">
+        <select data-k="mode" aria-label="Strike seçimi">
+          <option value="delta" ${L.mode==='delta'?'selected':''}>Hedef delta</option>
+          <option value="offset" ${L.mode==='offset'?'selected':''}>Spot'tan $ uzaklık</option>
+          ${i>0?`<option value="rel" ${L.mode==='rel'?'selected':''}>Bacaktan $ uzaklık</option>`:''}
+        </select>
+        <input type="number" data-k="val" step="${L.mode==='delta'?0.01:0.5}" value="${L.val}" aria-label="Strike değeri">
+        ${hasRef?`<select data-k="ref" aria-label="Referans bacak">${refOpts}</select>`:''}
+      </div></div>`;
+  }).join('');
+}
+function legsEvent(e){
+  const box=e.target.closest('.leg'); if(!box) return;
+  const i=+box.dataset.i, L=state.legs[i];
+  if(e.target.matches('[data-del]')){ if(e.type!=='click') return; state.legs.splice(i,1);
+    state.legs.forEach(l=>{ if(l.mode==='rel'&&(l.ref>=state.legs.indexOf(l)||l.ref==null)) l.ref=0; });
+    $('tmpl').value='Custom'; renderLegs(); schedule(); return; }
+  const k=e.target.dataset.k; if(!k||e.type==='click') return;
+  let v=e.target.value;
+  if(k==='side') L.side=+v; else if(k==='qty') L.qty=Math.max(1,parseInt(v)||1);
+  else if(k==='type') L.type=v; else if(k==='val') L.val=parseFloat(v)||0; else if(k==='ref') L.ref=+v;
+  else if(k==='mode'){ L.mode=v; if(v==='delta') L.val=0.30; else if(v==='offset') L.val=0; else { L.val=5*(L.type==='P'?-1:1); L.ref=0; } renderLegs(); }
+  $('tmpl').value='Custom'; schedule();
+}
+function applyTemplate(name){
+  const T=TEMPLATES[name]; if(!T) return;
+  state.legs=T.legs.map(l=>({...l}));
+  $('dte').value=T.dte; $('pt').value=T.pt; $('sl').value=T.sl; $('exitDTE').value=T.exitDTE;
+  if($('freq')) $('freq').value = name==="Poor Man's Covered Call" ? 'daily' : 'weekly';
+  renderLegs();
+  toggleUI();
+}
+
+// ---- config + data
+function readCfg(){
+  const g=(id,d)=>{const v=parseFloat($(id).value);return isFinite(v)?v:d;};
+  return {capital:Math.max(1000,g('capital',100000)),dte:Math.max(1,Math.round(g('dte',45))),freq:$('freq').value,dow:+$('dow').value,
+    ivMin:g('ivMin',0),ivMax:g('ivMax',100),maxOpen:Math.max(1,Math.round(g('maxOpen',1))),pt:Math.max(0,g('pt',0)),sl:Math.max(0,g('sl',0)),
+    exitDTE:Math.max(0,Math.round(g('exitDTE',0))),sizing:$('sizing').value,contracts:Math.max(1,Math.round(g('contracts',1))),alloc:Math.max(0.1,g('alloc',5)),
+    comm:Math.max(0,g('comm',0.65)),slip:Math.max(0,g('slip',0.03)),step:Math.max(0.01,g('step',1)),rate:g('rate',4)/100,
+    skew:Math.max(0,g('skew',2)),vrp:g('vrp',12)/100,legs:state.legs.map(l=>({...l}))};
+}
+function getData(cfg){
+  const ds = document.getElementById('dataSrc')?.value;
+  if(ds==='surfaces'){
+    const want=String($('tickerSel')?.value||'').toUpperCase();
+    const b = state._builtInData;
+    if(!b || (want && b.ticker!==want)) throw new Error((want||'ticker')+' için depolanan geçmiş veri yükleniyor…');
+    // Convert to format expected: ts, S, iv
+    // Note: state._builtInData already has ts,S,iv but engine expects iv as atm, plus other fields
+    // Build daily data with start/end filter
+    const start=Date.parse($('start').value), end=Date.parse($('end').value);
+    const idx=[];
+    for(let i=0;i<b.ts.length;i++) if(b.ts[i]>=start && b.ts[i]<=end) idx.push(i);
+    if(idx.length<60){
+      const src=document.getElementById('dataSrc');
+      if(src) src.value='sim';
+      if(typeof toggleUI==='function') toggleUI();
+      throw new Error('Depolanan geçmiş veride seçili aralıkta yalnızca '+idx.length+' gün var. Daha uzun bir aralık seçin veya Simüle edilmiş seçeneğine geçin.');
+    }
+    const ts=idx.map(i=>b.ts[i]), S=idx.map(i=>b.S[i]), iv=idx.map(i=>b.iv[i]);
+    return {ts,S,iv,label:b.label, surf:b.surf, sp:idx.map(i=>b.sp[i]), sc:idx.map(i=>b.sc[i])};
+  }
+
+  const start=Date.parse($('start').value), end=Date.parse($('end').value);
+  if(!(start<end)) throw new Error('Başlangıç tarihi bitiş tarihinden önce olmalıdır.');
+  if((end-start)/DAY>365.25*30) throw new Error('30 yıl veya daha kısa bir aralık seçin.');
+  if($('dataSrc').value==='csv'){
+    if(!state.csv) throw new Error('Date ve Close sütunları içeren bir CSV dosyası seçin.');
+    const c=state.csv, idx=[];
+    for(let i=0;i<c.ts.length;i++) if(c.ts[i]>=start&&c.ts[i]<=end) idx.push(i);
+    if(idx.length<60) throw new Error('Seçili tarihlerde 60 taneden az fiyat satırı var.');
+    const ts=idx.map(i=>c.ts[i]), S=idx.map(i=>c.S[i]), ivc=c.iv?idx.map(i=>c.iv[i]):null;
+    return {ts,S,iv:withIV(ts,S,ivc,cfg.vrp),label:'CSV: '+state.csvName};
+  }
+  const s0=Math.max(5,parseFloat($('s0').value)||400), seed=parseInt($('seed').value)||1, regime=$('regime').value;
+  const key=[start,end,s0,seed,regime,cfg.vrp].join('|');
+  if(state.cache&&state.cache.key===key) return state.cache.data;
+  const d=genSim({start,end,s0,seed,regime,vrp:cfg.vrp});
+  if(d.ts.length<80) throw new Error('Daha uzun bir tarih aralığı seçin.');
+  d.label='Simüle edilmiş · '+$('regime').selectedOptions[0].textContent+' · tohum '+seed;
+  state.cache={key,data:d}; return d;
+}
+function runLabel(cfg){
+  const t=$('tmpl').value==='Custom'?'Özel':$('tmpl').value;
+  return `${t} · ${cfg.dte}g · PT ${cfg.pt||'–'} / SL ${cfg.sl||'–'}`;
+}
+
+let timer=null;
+function schedule(){ clearTimeout(timer); timer=setTimeout(run,220); }
+function run(){
+
+  // intraday helper: estimate daily high/low from VIX
+  function estimateRange(spot, vix){
+    const dailyVol = (vix/100)/Math.sqrt(252);
+    const range = dailyVol * 1.8; // ~ 1.8 sigma ~ 90% of day
+    return {hi: spot*(1+range), lo: spot*(1-range)};
+  }
+
+  const intraday = $('intraday')?.checked||false; const rollEnabled = $('rollEnabled')?.checked||false; const rollMode = $('rollMode')?.value||'delta'; window._sbIntraday=intraday; window._sbRoll={enabled:rollEnabled, mode:rollMode};
+  try{
+    $('errBox').style.display='none';
+    const cfg=readCfg(); if(!cfg.legs.length) throw new Error('Stratejiye en az bir bacak ekleyin.');
+    const data=getData(cfg);
+    const res=runBacktest(cfg,data), st=computeStats(cfg,data,res);
+    state.last={cfg,data,res,st,trades:res.trades,label:runLabel(cfg)};
+    if(!res.trades.some(t=>t.n===state.sel)) state.sel=res.trades.length?res.trades[0].n:0;
+    $('dataBadge').textContent=data.label;
+    renderAll();
+  }catch(e){ const b=$('errBox'); b.textContent=e.message; b.style.display='block'; }
+}
+
+// ---- charts
+function niceTicks(min,max,count){
+  const span=max-min||1, raw=span/count, mag=Math.pow(10,Math.floor(Math.log10(raw))), nm=raw/mag;
+  const step=(nm<1.5?1:nm<3?2:nm<7?5:10)*mag, out=[];
+  for(let v=Math.ceil(min/step)*step;v<=max+step*1e-6;v+=step) out.push(v);
+  return out;
+}
+function yFmt(v,span){ const a=Math.abs(v); return (v<0?'−':'')+'$'+(a>=1e6?(a/1e6).toFixed(a%1e6?2:0)+'M':a>=1e3?(a/1e3).toFixed(span<5000?1:0)+'k':a.toFixed(0)); }
+function timeTicks(x0,x1,W){
+  const out=[], y0=new Date(x0).getUTCFullYear(), y1=new Date(x1).getUTCFullYear();
+  const yrs=(x1-x0)/DAY/365.25;
+  if(yrs>2.2){ const stepY=Math.max(1,Math.ceil((y1-y0)/Math.max(2,Math.floor(W/90))));
+    for(let y=y0+1;y<=y1;y+=stepY){const t=Date.UTC(y,0,1); if(t>=x0&&t<=x1) out.push([t,String(y)]);} }
+  else { const mo=['Oca','Şub','Mar','Nis','May','Haz','Tem','Ağu','Eyl','Eki','Kas','Ara']; const skip=Math.max(1,Math.ceil((yrs*12)/Math.max(2,Math.floor(W/70))));
+    let d=new Date(x0); let y=d.getUTCFullYear(), m=d.getUTCMonth()+1, c=0;
+    while(true){ const t=Date.UTC(y,m,1); if(t>x1) break; if(c%skip===0) out.push([t,mo[(m%12+12)%12]+" '"+String(new Date(t).getUTCFullYear()).slice(2)]); c++; m++; if(m>11){m=0;y++;} } }
+  return out;
+}
+const path=(pts)=>pts.map((p,i)=>(i?'L':'M')+p[0].toFixed(1)+','+p[1].toFixed(1)).join('');
+
+function renderEquity(){
+  const L=state.last; if(!L) return;
+  const box=$('eqChart'), dbox=$('ddChart'), W=Math.max(300,box.clientWidth||600), m={l:58,r:12,t:10,b:24};
+  const main={name:'Bu çalışma',color:'var(--accent)',ts:L.data.ts,eq:L.res.eq,w:2.2};
+  const bench={name:'Al ve tut',color:'var(--bench)',ts:L.data.ts,eq:L.st.bh.eq,w:1.4,dash:'4 3'};
+  const series=[bench,...state.pinned.map(p=>({name:p.label,color:p.color,ts:p.ts,eq:p.eq,w:1.6})),main];
+  let x0=Infinity,x1=-Infinity,y0=Infinity,y1=-Infinity;
+  for(const s of series){ x0=Math.min(x0,s.ts[0]); x1=Math.max(x1,s.ts[s.ts.length-1]); for(const v of s.eq){ if(v<y0)y0=v; if(v>y1)y1=v; } }
+  const pad=(y1-y0)*0.06||1; y0-=pad; y1+=pad;
+  const H=290, iw=W-m.l-m.r, ih=H-m.t-m.b;
+  const X=t=>m.l+(t-x0)/(x1-x0)*iw, Y=v=>m.t+(1-(v-y0)/(y1-y0))*ih;
+  let g='';
+  for(const v of niceTicks(y0,y1,5)) g+=`<line class="gl" x1="${m.l}" x2="${W-m.r}" y1="${Y(v)}" y2="${Y(v)}"/><text x="${m.l-8}" y="${Y(v)+4}" text-anchor="end">${yFmt(v,y1-y0)}</text>`;
+  for(const [t,lab] of timeTicks(x0,x1,iw)) g+=`<line class="gl" x1="${X(t)}" x2="${X(t)}" y1="${m.t}" y2="${H-m.b}" style="opacity:.5"/><text x="${X(t)}" y="${H-6}" text-anchor="middle">${lab}</text>`;
+  const cap=L.cfg.capital;
+  if(cap>y0&&cap<y1) g+=`<line x1="${m.l}" x2="${W-m.r}" y1="${Y(cap)}" y2="${Y(cap)}" style="stroke:var(--muted);stroke-dasharray:2 4;opacity:.7"/>`;
+  let lines='';
+  for(const s of series) lines+=`<path d="${path(s.ts.map((t,i)=>[X(t),Y(s.eq[i])]))}" fill="none" style="stroke:${s.color};stroke-width:${s.w}" ${s.dash?`stroke-dasharray="${s.dash}"`:''} stroke-linejoin="round"/>`;
+  box.innerHTML=`<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" role="img" aria-label="Sermaye eğrisi"><g class="ax">${g}</g>${lines}<line class="xh" y1="${m.t}" y2="${H-m.b}" style="stroke:var(--muted);display:none"/></svg>`;
+  // drawdown
+  const dd=L.st.dd, H2=92, m2={l:m.l,r:m.r,t:6,b:16}, ih2=H2-m2.t-m2.b;
+  const dmin=Math.min(-0.02,Math.min(...dd)), Y2=v=>m2.t+(v/dmin)*ih2;
+  const pts=L.data.ts.map((t,i)=>[X(t),Y2(dd[i])]);
+  const area=`M${X(L.data.ts[0])},${Y2(0)} `+pts.map(p=>'L'+p[0].toFixed(1)+','+p[1].toFixed(1)).join('')+` L${X(L.data.ts[dd.length-1])},${Y2(0)}Z`;
+  let g2=`<line class="gl" x1="${m.l}" x2="${W-m.r}" y1="${Y2(0)}" y2="${Y2(0)}"/><text x="${m.l-8}" y="${Y2(0)+4}" text-anchor="end">0%</text><text x="${m.l-8}" y="${Y2(dmin)+3}" text-anchor="end">${(dmin*100).toFixed(0)}%</text>`;
+  dbox.innerHTML=`<svg width="${W}" height="${H2}" viewBox="0 0 ${W} ${H2}" role="img" aria-label="Drawdown"><g class="ax">${g2}</g><path d="${area}" style="fill:var(--loss);opacity:.28"/><path d="${path(pts)}" fill="none" style="stroke:var(--loss);stroke-width:1.2"/><line class="xh" y1="${m2.t}" y2="${H2-m2.b}" style="stroke:var(--muted);display:none"/></svg>`;
+  state.geo={W,m,x0,x1,iw,series,main,bench};
+  // legend
+  $('legend').innerHTML=`<span class="chip"><i style="background:var(--accent)"></i>Bu çalışma</span><span class="chip"><i style="background:var(--bench)"></i>Al ve tut</span>`+
+    state.pinned.map((p,i)=>`<span class="chip"><i style="background:${p.color}"></i>${esc(p.label)}<button type="button" data-unpin="${i}" aria-label="${esc(p.label)} kaldır">×</button></span>`).join('');
+}
+function hover(ev){
+  const G=state.geo, L=state.last; if(!G||!L) return;
+  const rect=$('eqChart').getBoundingClientRect(), px=ev.clientX-rect.left, tip=$('tip');
+  if(px<G.m.l||px>G.W-G.m.r){ leave(); return; }
+  const t=G.x0+(px-G.m.l)/G.iw*(G.x1-G.x0), ts=G.main.ts;
+  let lo=0,hi=ts.length-1; while(lo<hi){const mid=(lo+hi)>>1; if(ts[mid]<t) lo=mid+1; else hi=mid;}
+  const i=lo>0&&Math.abs(ts[lo-1]-t)<Math.abs(ts[lo]-t)?lo-1:lo, xx=G.m.l+(ts[i]-G.x0)/(G.x1-G.x0)*G.iw;
+  document.querySelectorAll('.xh').forEach(l=>{l.setAttribute('x1',xx);l.setAttribute('x2',xx);l.style.display='';});
+  let h=`<b>${fmtDate(ts[i])}</b><br>Bu çalışma ${money(G.main.eq[i])} <span style="opacity:.75">(${pct(L.st.dd[i],1)} tepeden)</span><br>Al ve tut ${money(G.bench.eq[i])}`;
+  for(const p of state.pinned){ let a=0,b=p.ts.length-1; while(a<b){const md=(a+b)>>1; if(p.ts[md]<ts[i]) a=md+1; else b=md;} if(Math.abs(p.ts[a]-ts[i])<=4*DAY) h+=`<br>${esc(p.label)} ${money(p.eq[a])}`; }
+  tip.innerHTML=h; tip.style.display='block';
+  const w=tip.offsetWidth; tip.style.left=(xx+14+w>G.W?xx-14-w:xx+14)+'px';
+}
+function leave(){ $('tip').style.display='none'; document.querySelectorAll('.xh').forEach(l=>l.style.display='none'); }
+
+function renderKPIs(){
+  const L=state.last, s=L.st, kp=(v,l,sub,c)=>`<div class="kpi"><div class="v ${c||''}">${v}</div><div class="l">${l}</div>${sub?`<div class="s">${sub}</div>`:''}</div>`;
+  $('kpis').innerHTML=
+    kp(money(s.net),'Net kâr',`${money(s.fees)} komisyon sonra`,cls(s.net))+
+    kp(spct(s.total),'Toplam getiri',`Al ve tut ${spct(s.bh.total)}`,cls(s.total))+
+    kp(spct(s.cagr),'Yıllık getiri',`Al ve tut ${spct(s.bh.cagr)}`,cls(s.cagr))+
+    kp(pct(s.mdd),'Maks drawdown',`Al ve tut ${pct(s.bh.mdd)}`,s.mdd<-0.001?'neg':'')+
+    kp(num(s.sharpe),'Sharpe oranı',`Sortino ${num(s.sortino)}`)+
+    kp(s.trades?pct(s.winRate,0):'–','Kazanma oranı',`${s.trades} işlem`)+
+    kp(s.trades?num(s.pf):'–','Profit factor',`Ort ${s.trades?s.avgDays.toFixed(0):'–'} gün tutuldu`);
+}
+
+function renderPayoff(){
+  const L=state.last, box=$('payoff'), t=L.trades.find(x=>x.n===state.sel);
+  if(!t){ box.innerHTML='<div class="empty">İşlem açılmadı. IV rank filtresini gevşetin, daha düşük bir delta kullanın veya daha fazla açık işleme izin verin.</div>'; $('payoffKv').innerHTML=''; $('payoffSub').textContent=''; return; }
+  const cfg=L.cfg, r=cfg.rate, W=Math.max(280,box.clientWidth||400), H=250, m={l:56,r:12,t:10,b:26};
+  const legs=t.legs, c=t.contracts, S0=t.entryS, ks=legs.map(l=>l.K);
+  const xmin=Math.min(S0,...ks)*0.92, xmax=Math.max(S0,...ks)*1.08, N=160, pe=[],p0=[],xs=[];
+  const expVal=x=>legs.reduce((a,l)=>a+l.side*l.qty*(l.type==='C'?Math.max(0,x-l.K):Math.max(0,l.K-x)),0);
+  for(let k=0;k<=N;k++){
+    const x=xmin+(xmax-xmin)*k/N; xs.push(x);
+    pe.push((expVal(x)-t.V0)*100*c);
+    let v=0; for(const l of legs) v+=l.side*l.qty*bsPrice(l.type,x,l.K,t.T0,legIV(l.K,x,t.T0,t.entryIV,cfg.skew,r),r);
+    p0.push((v-t.V0)*100*c);
+  }
+  let y0=Math.min(0,...pe,...p0), y1=Math.max(0,...pe,...p0); const pd=(y1-y0)*0.1||1; y0-=pd; y1+=pd;
+  const iw=W-m.l-m.r, ih=H-m.t-m.b, X=x=>m.l+(x-xmin)/(xmax-xmin)*iw, Y=v=>m.t+(1-(v-y0)/(y1-y0))*ih;
+  let g='';
+  for(const v of niceTicks(y0,y1,5)) g+=`<line class="gl" x1="${m.l}" x2="${W-m.r}" y1="${Y(v)}" y2="${Y(v)}"/><text x="${m.l-8}" y="${Y(v)+4}" text-anchor="end">${yFmt(v,y1-y0)}</text>`;
+  for(const v of niceTicks(xmin,xmax,6)) g+=`<text x="${X(v)}" y="${H-8}" text-anchor="middle">${v.toFixed(0)}</text>`;
+  const ptsE=xs.map((x,i)=>[X(x),Y(pe[i])]), z=Y(0);
+  const area=`M${X(xmin)},${z} `+ptsE.map(p=>'L'+p[0].toFixed(1)+','+p[1].toFixed(1)).join('')+` L${X(xmax)},${z}Z`;
+  const id='c'+Math.random().toString(36).slice(2,7);
+  let marks=ks.map(k=>`<line x1="${X(k)}" x2="${X(k)}" y1="${m.t}" y2="${H-m.b}" style="stroke:var(--line);stroke-dasharray:1 3"/>`).join('');
+  marks+=`<line x1="${X(S0)}" x2="${X(S0)}" y1="${m.t}" y2="${H-m.b}" style="stroke:var(--muted)"/><text x="${X(S0)}" y="${m.t+9}" text-anchor="${X(S0)>W/2?'end':'start'}" dx="${X(S0)>W/2?-4:4}" style="fill:var(--muted);font-size:11px">Giriş ${S0.toFixed(0)}</text>`;
+  if(t.exitS>=xmin&&t.exitS<=xmax) marks+=`<circle cx="${X(t.exitS)}" cy="${Y((expVal(t.exitS)-t.V0)*100*c)}" r="4" style="fill:var(--panel);stroke:var(--ink);stroke-width:1.6"/>`;
+  box.innerHTML=`<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" role="img" aria-label="Payoff diyagramı">
+    <defs><clipPath id="${id}p"><rect x="${m.l}" y="${m.t}" width="${iw}" height="${Math.max(0,z-m.t)}"/></clipPath><clipPath id="${id}n"><rect x="${m.l}" y="${z}" width="${iw}" height="${Math.max(0,H-m.b-z)}"/></clipPath></defs>
+    <g class="ax">${g}</g>${marks}
+    <path d="${area}" clip-path="url(#${id}p)" style="fill:var(--gain);opacity:.22"/><path d="${area}" clip-path="url(#${id}n)" style="fill:var(--loss);opacity:.22"/>
+    <line x1="${m.l}" x2="${W-m.r}" y1="${z}" y2="${z}" style="stroke:var(--muted)"/>
+    <path d="${path(xs.map((x,i)=>[X(x),Y(p0[i])]))}" fill="none" style="stroke:var(--accent);stroke-width:1.6;stroke-dasharray:5 4"/>
+    <path d="${path(ptsE)}" fill="none" style="stroke:var(--ink);stroke-width:2"/></svg>`;
+  // stats
+  let netP=0,netC=0; for(const l of legs){ if(l.type==='P') netP+=l.side*l.qty; else netC+=l.side*l.qty; }
+  const cand=[0,S0*10,...ks].map(x=>(expVal(x)-t.V0)*100*c);
+  const maxP=netC>0?'Sınırsız':money(Math.max(...cand)), maxL=netC<0?'Sınırsız':money(Math.min(...cand));
+  const be=[]; for(let i=1;i<=N;i++){ if((pe[i-1]<=0&&pe[i]>0)||(pe[i-1]>0&&pe[i]<=0)){ be.push(xs[i-1]+(xs[i]-xs[i-1])*(0-pe[i-1])/(pe[i]-pe[i-1])); } }
+  $('payoffSub').textContent=`İşlem #${t.n} · ${fmtDate(t.openTs)} · ${c} kontrat${c>1?'':''}`;
+  $('payoffKv').innerHTML=`<span>Yapı <b>${esc(t.text)}</b></span><span>${t.credit<0?'Debit':'Credit'} <b>${money(Math.abs(t.credit))}</b></span><span>Maks kâr <b>${maxP}</b></span><span>Maks zarar <b>${maxL}</b></span><span>Break-even <b>${be.length?be.map(b=>b.toFixed(1)).join(' / '):'–'}</b></span><span style="width:100%">Kesintili çizgi: expiration'daki değer. Kesikli: giriş anındaki değer. Daire: Underlying'in işlem kapandığı zamanki fiyatı. Hepsi komisyon öncesi.</span>`;
+}
+
+function renderHist(){
+  const L=state.last, box=$('hist'), tr=L.trades;
+  if(!tr.length){ box.innerHTML='<div class="empty">Grafiklenecek işlem yok.</div>'; $('histSub').textContent=''; return; }
+  const W=Math.max(280,box.clientWidth||400), H=250, m={l:40,r:10,t:10,b:38};
+  const v=tr.map(t=>t.pnl), lo=Math.min(...v), hi=Math.max(...v), B=Math.min(16,Math.max(6,Math.round(Math.sqrt(tr.length)*1.6)));
+  const span=(hi-lo)||1, bw=span/B, bins=new Array(B).fill(0);
+  for(const x of v) bins[Math.min(B-1,Math.floor((x-lo)/bw))]++;
+  const mx=Math.max(...bins), iw=W-m.l-m.r, ih=H-m.t-m.b, X=x=>m.l+(x-lo)/span*iw, Y=c=>m.t+(1-c/mx)*ih;
+  let g='';
+  for(const c of niceTicks(0,mx,4)) g+=`<line class="gl" x1="${m.l}" x2="${W-m.r}" y1="${Y(c)}" y2="${Y(c)}"/><text x="${m.l-6}" y="${Y(c)+4}" text-anchor="end">${c}</text>`;
+  let bars=''; bins.forEach((c,i)=>{ const a=lo+i*bw, mid=a+bw/2; if(c) bars+=`<rect x="${X(a)+1}" y="${Y(c)}" width="${Math.max(1,X(a+bw)-X(a)-2)}" height="${H-m.b-Y(c)}" rx="2" style="fill:${mid>=0?'var(--gain)':'var(--loss)'};opacity:.85"><title>${money(a)} - ${money(a+bw)}: ${c} işlem</title></rect>`; });
+  const xt=niceTicks(lo,hi,5).map(x=>`<text x="${X(x)}" y="${H-20}" text-anchor="middle">${yFmt(x,span)}</text>`).join('');
+  const zero=lo<0&&hi>0?`<line x1="${X(0)}" x2="${X(0)}" y1="${m.t}" y2="${H-m.b}" style="stroke:var(--ink);stroke-width:1.2"/>`:'';
+  box.innerHTML=`<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" role="img" aria-label="İşlem kâr ve zarar dağılımı"><g class="ax">${g}${xt}<text x="${m.l+iw/2}" y="${H-4}" text-anchor="middle">İşlem başına kâr veya zarar</text></g>${bars}${zero}</svg>`;
+  $('histSub').textContent=`${tr.length} işlem · medyan ${money(v.slice().sort((a,b)=>a-b)[Math.floor(v.length/2)])}`;
+}
+
+function renderMonthly(){
+  const L=state.last, ts=L.data.ts, eq=L.res.eq, box=$('monthly'), months=new Map();
+  for(let i=0;i<ts.length;i++){ const d=new Date(ts[i]); months.set(d.getUTCFullYear()*100+d.getUTCMonth(),eq[i]); }
+  let prev=L.cfg.capital; const grid={}, yearEnd={};
+  for(const [k,e] of [...months.entries()]){ const y=Math.floor(k/100), mo=k%100; (grid[y]=grid[y]||{})[mo]=prev>0?e/prev-1:0; prev=e; yearEnd[y]=e; }
+  const years=Object.keys(grid).map(Number).sort((a,b)=>a-b), mn=['Oca','Şub','Mar','Nis','May','Haz','Tem','Ağu','Eyl','Eki','Kas','Ara'];
+  let mxAbs=0.005; for(const y of years) for(const mo in grid[y]) mxAbs=Math.max(mxAbs,Math.abs(grid[y][mo]));
+  const cell=v=>{ if(v==null) return '<td></td>'; const a=Math.min(70,Math.abs(v)/mxAbs*70); return `<td style="background:color-mix(in srgb, var(${v>=0?'--gain':'--loss'}) ${a.toFixed(0)}%, var(--panel))">${(v*100).toFixed(1)}</td>`; };
+  let py=L.cfg.capital, h=`<table class="hm"><thead><tr><th>Yıl</th>${mn.map(x=>`<th>${x}</th>`).join('')}<th>Yıl</th></tr></thead><tbody>`;
+  for(const y of years){ const yt=yearEnd[y]/py-1; py=yearEnd[y];
+    h+=`<tr><td>${y}</td>${mn.map((_,i)=>cell(grid[y][i])).join('')}<td class="tot ${cls(yt)}">${(yt*100).toFixed(1)}</td></tr>`; }
+  box.innerHTML=h+'</tbody></table>';
+}
+
+function renderExits(){
+  const tr=state.last.trades, box=$('exits');
+  if(!tr.length){ box.innerHTML='<div class="empty">Henüz işlem yok.</div>'; return; }
+  const by={}; for(const t of tr){ (by[t.reason]=by[t.reason]||[]).push(t); }
+  const order=['Profit target','Target (intraday)','Stop loss','Stop (intraday)','DTE exit','Expiration'];
+  let h='<table><thead><tr><th>Çıkış</th><th>İşlem</th><th>Pay</th><th>Kazanma oranı</th><th>Ort K&amp;Z</th><th>Toplam K&amp;Z</th></tr></thead><tbody>';
+  for(const k of order){ const a=by[k]; if(!a) continue; const tot=a.reduce((x,t)=>x+t.pnl,0);
+    h+=`<tr><td>${k}</td><td>${a.length}</td><td>${pct(a.length/tr.length,0)}</td><td>${pct(a.filter(t=>t.pnl>0).length/a.length,0)}</td><td class="${cls(tot)}">${money(tot/a.length)}</td><td class="${cls(tot)}">${money(tot)}</td></tr>`; }
+  box.innerHTML=h+'</tbody></table>';
+}
+
+const METRICS=[
+  ['Net kâr',s=>money(s.net),s=>s.net],['Toplam getiri',s=>spct(s.total),s=>s.total],['Yıllık getiri',s=>spct(s.cagr),s=>s.cagr],
+  ['Maks drawdown',s=>pct(s.mdd),s=>s.mdd],['Maks drawdown ($)',s=>money(-s.mdda),s=>-s.mdda],['Sharpe oranı',s=>num(s.sharpe),s=>s.sharpe],
+  ['Sortino oranı',s=>num(s.sortino),s=>s.sortino],['Getiri / drawdown',s=>num(s.mar),s=>s.mar],
+  ['İşlem',s=>s.trades,null],['Kazanma oranı',s=>pct(s.winRate,1),s=>s.winRate],['Ortalama kâr',s=>money(s.avgWin),null],['Ortalama zarar',s=>money(s.avgLoss),null],
+  ['Profit factor',s=>num(s.pf),s=>s.pf],['İşlem başına beklenti',s=>money(s.expect),s=>s.expect],['Ort tutma süresi (gün)',s=>s.avgDays.toFixed(1),null],
+  ['En iyi işlem',s=>money(s.best),null],['En kötü işlem',s=>money(s.worst),null],['En uzun kayıp serisi',s=>s.maxLossStreak,null],['Komisyon ve slippage',s=>money(-s.fees),null]
+];
+function renderCompare(){
+  const L=state.last, s=L.st, cols=[{name:'Bu çalışma',s},...state.pinned.map(p=>({name:p.label,s:p.st}))];
+  const bhKeys=new Set(['Net kâr','Toplam getiri','Yıllık getiri','Maks drawdown','Maks drawdown ($)','Sharpe oranı','Sortino oranı','Getiri / drawdown']);
+  let h=`<table><thead><tr><th>Metrik</th>${cols.map(c=>`<th title="${esc(c.name)}">${esc(c.name.length>22?c.name.slice(0,21)+'…':c.name)}</th>`).join('')}<th>Al ve tut</th></tr></thead><tbody>`;
+  for(const [name,f,raw] of METRICS){
+    h+=`<tr><td>${name}</td>${cols.map(c=>`<td class="${raw&&isFinite(raw(c.s))?cls(name==='Maks drawdown'||name==='Maks drawdown ($)'?0:raw(c.s)):''}">${c.s.trades===0&&['Kazanma oranı','Ortalama kâr','Ortalama zarar','Profit factor','İşlem başına beklenti','Ort tutma süresi (gün)','En iyi işlem','En kötü işlem'].includes(name)?'–':f(c.s)}</td>`).join('')}<td>${bhKeys.has(name)?f(s.bh):'–'}</td></tr>`;
+  }
+  $('compare').innerHTML=h+'</tbody></table>';
+  $('cmpSub').textContent=state.pinned.length?`${state.pinned.length} sabitlenmiş`:'Karşılaştırmak için çalışmaları sabitleyin';
+}
+
+function renderTrades(){
+  const L=state.last, box=$('trades'), key=state.sort.k, dir=state.sort.dir;
+  if(!L.trades.length){ box.innerHTML='<div class="empty">Bu ayarlarla hiç işlem açılmadı.</div>'; return; }
+  const get={n:t=>t.n,open:t=>t.openTs,close:t=>t.closeTs,text:t=>t.text,qty:t=>t.contracts,credit:t=>t.credit,pnl:t=>t.pnl,ret:t=>t.ret,days:t=>t.days,reason:t=>t.reason}[key]||(t=>t.n);
+  const rows=L.trades.slice().sort((a,b)=>{const x=get(a),y=get(b); return (x<y?-1:x>y?1:0)*dir;}).slice(0,600);
+  const th=(k,l,left)=>`<th class="s ${left?'l':''}" data-sort="${k}" aria-sort="${key===k?(dir>0?'ascending':'descending'):'none'}">${l}${key===k?(dir>0?' ▲':' ▼'):''}</th>`;
+  let h=`<table><thead><tr>${th('n','#')}${th('open','Açılış',1)}${th('close','Kapanış',1)}${th('text','Yapı',1)}${th('qty','Adet')}${th('credit','Credit / Debit')}${th('pnl','K&amp;Z')}${th('ret','Risk üzerine getiri')}${th('days','Gün')}${th('reason','Çıkış',1)}</tr></thead><tbody>`;
+  for(const t of rows) h+=`<tr class="click ${t.n===state.sel?'sel':''}" data-n="${t.n}"><td>${t.n}</td><td class="l">${fmtDate(t.openTs)}</td><td class="l">${fmtDate(t.closeTs)}</td><td class="l">${esc(t.text)}</td><td>${t.contracts}</td><td>${t.credit<0?'−':''}${money(Math.abs(t.credit))}</td><td class="${cls(t.pnl)}">${money(t.pnl)}</td><td class="${cls(t.ret)}">${spct(t.ret)}</td><td>${t.days}</td><td class="l">${t.reason}</td></tr>`;
+  box.innerHTML=h+'</tbody></table>'+(L.trades.length>600?`<p class="hint" style="padding:8px">${L.trades.length} işlemden 600 tanesi gösteriliyor.</p>`:'');
+}
+
+function renderAll(){ renderKPIs(); renderEquity(); renderPayoff(); renderHist(); renderMonthly(); renderExits(); renderCompare(); renderTrades(); }
+function renderCharts(){ if(!state.last) return; renderEquity(); renderPayoff(); renderHist(); }
+
+// ---- events
+function toggleUI(){
+  const v=$('dataSrc').value; const csv=v==='csv'; const surfaces=v==='surfaces'; const sim=v==='sim';
+    document.querySelectorAll('.simOnly').forEach(e=>e.style.display=(csv||surfaces)?'none':'grid');
+  document.querySelectorAll('.csvOnly').forEach(e=>e.style.display=csv?'grid':'none');
+  const tr = document.getElementById('tickerRow'); if(tr) tr.style.display=surfaces?'grid':'none';
+  const src = document.getElementById('dataSrc')?.value;
+  const isSurfaces = src==='surfaces';
+  const isSim = src==='sim';
+  const isCsv = src==='csv';
+  $('dowWrap').style.display=$('freq').value==='weekly'?'grid':'none';
+  const fx=$('sizing').value==='fixed'; $('allocWrap').style.display=fx?'none':'grid'; $('contractsWrap').style.display=fx?'grid':'none';
+}
+function copyText(txt){
+  const ok=()=>{$('copyMsg').textContent='Kopyalandı';setTimeout(()=>$('copyMsg').textContent='',1800);};
+  const fb=()=>{const a=document.createElement('textarea');a.value=txt;document.body.appendChild(a);a.select();try{document.execCommand('copy');ok();}catch(e){$('copyMsg').textContent='Kopyalama başarısız';}a.remove();};
+  try{ navigator.clipboard.writeText(txt).then(ok,fb); }catch(e){ fb(); }
+}
+
+// ---- save / load via localStorage ----
+const SAVE_KEY='strikebench-saved-v1';
+function getSaved(){ try{ return JSON.parse(localStorage.getItem(SAVE_KEY)||'[]'); }catch(e){ return []; } }
+function setSaved(arr){ localStorage.setItem(SAVE_KEY, JSON.stringify(arr)); }
+function saveCurrent(){
+  const name = prompt('Backtest olarak kaydet:', `${$('tmpl').value} - ${new Date().toISOString().slice(0,10)}`);
+  if(!name) return;
+  const cfg={
+    tmpl:$('tmpl').value, legs:state.legs, dte:+$('dte').value||45, pt:+$('pt').value||50, sl:+$('sl').value||200,
+    exitDTE:+$('exitDTE').value||21, ticker:$('ticker')?.value||'SPY', sizing:$('sizing')?.value||'fixed',
+    freq:$('freq')?.value||'monthly', dataSrc:$('dataSrc')?.value||'sim', intraday:$('intraday')?.checked||false,
+    rollEnabled:$('rollEnabled')?.checked||false, rollMode:$('rollMode')?.value||'delta', seed:$('seed')?.value||'1'
+  };
+  const arr=getSaved();
+  arr.push({id:Date.now(), name, created:new Date().toISOString(), cfg, metrics:state.last?state.last.st:null});
+  setSaved(arr); renderSaved(); const el=$('saveMsg'); if(el){el.textContent='Kaydedildi!'; setTimeout(()=>el.textContent='',2000);}
+}
+function renderSaved(){
+  const box=$('savedList'); if(!box) return;
+  const arr=getSaved();
+  if(!arr.length){ box.innerHTML='<div class="hint">Henüz kaydedilmiş backtest yok. Bir backtest çalıştırın, sonra Kaydet.</div>'; return; }
+  box.innerHTML=arr.slice().reverse().map(s=>`
+    <div class="leg" style="padding:8px">
+      <div style="display:flex;justify-content:space-between;gap:8px">
+        <div><b>${esc(s.name)}</b><div class="hint">${s.created.slice(0,10)} · ${s.cfg.tmpl} · DTE ${s.cfg.dte} · ${s.cfg.ticker||''}</div></div>
+        <div style="display:flex;gap:6px">
+          <button class="btn sm" data-load="${s.id}">Yükle</button>
+          <button class="btn sm" data-del="${s.id}">×</button>
+        </div>
+      </div>
+    </div>`).join('');
+  box.querySelectorAll('[data-load]').forEach(b=>b.addEventListener('click',()=>loadSaved(+b.dataset.load)));
+  box.querySelectorAll('[data-del]').forEach(b=>b.addEventListener('click',()=>{ if(confirm('Silinsin mi?')){ setSaved(getSaved().filter(x=>x.id!==+b.dataset.del)); renderSaved(); } }));
+}
+function loadSaved(id){
+  const arr=getSaved(); const s=arr.find(x=>x.id===id); if(!s) return;
+  const c=s.cfg;
+  if($('ticker')) $('ticker').value=c.ticker||'SPY';
+  $('tmpl').value=c.tmpl||'Iron Condor';
+  state.legs = JSON.parse(JSON.stringify(c.legs||[]));
+  $('dte').value=c.dte; $('pt').value=c.pt; $('sl').value=c.sl; $('exitDTE').value=c.exitDTE;
+  if($('intraday')) $('intraday').checked=c.intraday||false;
+  if($('rollEnabled')) $('rollEnabled').checked=c.rollEnabled||false;
+  if($('rollMode')) $('rollMode').value=c.rollMode||'delta';
+  renderLegs(); schedule();
+}
+function exportSaved(){
+  const data=getSaved(); const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='strikebench-saved.json'; a.click();
+}
+function importSavedFile(file){
+  const rd=new FileReader();
+  rd.onload=()=>{ try{ const arr=JSON.parse(String(rd.result)); if(!Array.isArray(arr)) throw new Error('Geçersiz'); const cur=getSaved(); setSaved(cur.concat(arr)); renderSaved(); alert(arr.length+' backtest içe aktarıldı'); }catch(e){ alert('İçe aktarma başarısız: '+e.message); } };
+  rd.readAsText(file);
+}
+
+
+
+async function loadBuiltInSurfaces(){
+  // Use embedded first (works on file://)
+  if(typeof BUILT_IN_MANIFEST !== 'undefined' && BUILT_IN_MANIFEST.length){
+    window._surfacesManifest = BUILT_IN_MANIFEST;
+    const sel = document.getElementById('tickerSel');
+    if(sel){ markSurfaceOptions(sel, BUILT_IN_MANIFEST); }
+    const first = document.getElementById('tickerSel')?.value || BUILT_IN_MANIFEST[0].ticker;
+    await loadSurfaceTicker(first);
+    const badge = document.getElementById('dataBadge');
+    if(badge) badge.textContent = `Depolanan geçmiş veri: ${BUILT_IN_MANIFEST.length} ticker`;
+    return BUILT_IN_MANIFEST;
+  }
+  // Try fetch for server mode
+  const paths = ['/data/surfaces/manifest.json','./data/surfaces/manifest.json','/backtest/data/surfaces/manifest.json','../data/surfaces/manifest.json','data/surfaces/manifest.json'];
+  for(const p of paths){
+    try{
+      const r = await fetch(p, {cache:'no-store'});
+      if(!r.ok) continue;
+      const manifest = await r.json();
+      window._surfacesManifest = manifest;
+      const sel = document.getElementById('tickerSel');
+      if(sel){ markSurfaceOptions(sel, manifest); }
+      const first = document.getElementById('tickerSel')?.value || manifest[0].ticker;
+      await loadSurfaceTicker(first);
+      const badge = document.getElementById('dataBadge');
+      if(badge) badge.textContent = `Yerleşik: ${manifest.length} ticker, 2y geçmiş veri`;
+      return manifest;
+    }catch(e){}
+  }
+  return null;
+}
+
+const TICKER_SPOT = {SPY:560,QQQ:480,IWM:210,DIA:420,SPX:5600,XLF:45,XLK:220,XLE:90,SMH:250,TLT:92,GLD:240,SLV:28,USO:75,AAPL:230,MSFT:420,NVDA:130,TSLA:250,META:580,AMZN:190,GOOGL:170};
+const TICKER_IV = {SPY:0.16,QQQ:0.20,IWM:0.22,DIA:0.15,SPX:0.15,XLF:0.18,XLK:0.22,XLE:0.24,SMH:0.28,TLT:0.14,GLD:0.15,SLV:0.26,USO:0.32,AAPL:0.24,MSFT:0.22,NVDA:0.40,TSLA:0.50,META:0.30,AMZN:0.28,GOOGL:0.26};
+function markSurfaceOptions(sel, manifest){
+  const have = new Set((manifest||[]).map(m=>m.ticker));
+  Array.from(sel.options).forEach(o=>{
+    const base = o.textContent.replace(/ · .+$/, '');
+    o.textContent = base + (have.has(o.value) ? ' · depolanan geçmiş veri' : ' · simüle edilmiş');
+  });
+}
+function synthSurface(ticker){
+  const n = 504, start = 20020;
+  const S0 = TICKER_SPOT[ticker] || 100;
+  const iv0 = TICKER_IV[ticker] || 0.22;
+  const dates=[], spot=[], atm=[];
+  let s = S0;
+  let seed = 0;
+  for(const ch of ticker) seed = (seed*33 + ch.charCodeAt(0)) % 100000;
+  function rnd(){ seed = (seed*16807) % 2147483647; return seed/2147483647; }
+  for(let i=0;i<n;i++){
+    dates.push(start+i);
+    s = Math.max(1, s * (1 + (rnd()-0.48)*iv0/Math.sqrt(252)));
+    spot.push(Math.round(s*100)/100);
+    atm.push(Math.round((iv0*(0.85+rnd()*0.3))*1000)/1000);
+  }
+  return {ticker, dates, spot, atm, tenors:[30,45,60,90], synthetic:true};
+}
+
+async function loadSurfaceTicker(ticker){
+  ticker = String(ticker || '').trim().toUpperCase();
+  if(!ticker) return null;
+
+  // Every selection gets its own request id. If the user changes tickers
+  // quickly, an older response is not allowed to overwrite the new one.
+  const requestId = (state._surfaceLoadId || 0) + 1;
+  state._surfaceLoadId = requestId;
+
+  const info = document.getElementById('surfaceInfo');
+  const badge = document.getElementById('dataBadge');
+  if(info) info.textContent = `${ticker}: depolanan geçmiş veri yükleniyor…`;
+
+  // IMPORTANT: do not leave the previous ticker's data active while the new
+  // file is loading. Otherwise a failed fetch silently re-runs the old ticker.
+  state._builtInData = null;
+  state._currentTicker = ticker;
+
+  // The page is /backtest/index.html and the files are /backtest/data/surfaces/*.json.
+  // Using a URL relative to the document is portable and avoids root-path mistakes.
+  const url = new URL('./data/surfaces/' + encodeURIComponent(ticker) + '.json', document.baseURI);
+  url.searchParams.set('_ts', Date.now().toString()); // avoid stale Cloudflare/browser cache
+
+  let surf = null;
+  try{
+    const r = await fetch(url.href, {cache:'no-store'});
+    if(!r.ok) throw new Error(`HTTP ${r.status}`);
+    surf = await r.json();
+  }catch(e){
+    if(state._surfaceLoadId !== requestId) return null;
+    if(info) info.textContent = `${ticker}: ${url.pathname} yüklenemedi (${e.message}).`;
+    if(badge) badge.textContent = 'Depolanan geçmiş veri: yükleme başarısız';
+    const err = document.getElementById('errBox');
+    if(err){ err.textContent = `${ticker} için depolanan geçmiş veri yüklenemedi. Beklenen: ${url.pathname}`; err.style.display='block'; }
+    return null;
+  }
+
+  if(state._surfaceLoadId !== requestId) return null;
+  if(!surf || !Array.isArray(surf.dates) || !Array.isArray(surf.spot) || !Array.isArray(surf.atm)){
+    if(info) info.textContent = `${ticker}: geçersiz surface JSON (dates, spot veya atm eksik).`;
+    return null;
+  }
+  if(surf.ticker && String(surf.ticker).toUpperCase() !== ticker){
+    if(info) info.textContent = `${ticker}: dosya ${surf.ticker} döndürdü; uyuşmayan veri kullanılmaz.`;
+    return null;
+  }
+
+  if(!window.BUILT_IN_SURFACES) window.BUILT_IN_SURFACES = {};
+  BUILT_IN_SURFACES[ticker] = surf;
+  window._currentSurface = surf;
+
+  const tenors = surf.tenors || [7,14,30,60,90,180,365];
+  const idx30 = tenors.indexOf(30) >= 0 ? tenors.indexOf(30) : 2;
+  const nt = tenors.length;
+  const ts=[], S=[], iv=[], sp=[], sc=[];
+  for(let i=0;i<surf.dates.length;i++){
+    ts.push(surf.dates[i] * 86400000);
+    S.push(surf.spot[i]);
+    iv.push(surf.atm[i*nt + idx30] ?? surf.atm[i*nt] ?? 0.22);
+    if(Array.isArray(surf.sp)) sp.push(surf.sp[i*nt + idx30] ?? 2.0);
+    if(Array.isArray(surf.sc)) sc.push(surf.sc[i*nt + idx30] ?? 1.0);
+  }
+
+  const loadedTicker = String(surf.ticker || ticker).toUpperCase();
+  state._builtInData = {
+    ts, S, iv, sp, sc, surf,
+    ticker: loadedTicker,
+    label: `${loadedTicker} depolanan geçmiş veri · ${ts.length} gün`
+  };
+
+  const iso = ms => new Date(ms).toISOString().slice(0,10);
+  if(info){
+    info.textContent = `${loadedTicker}: depolanan ${iso(ts[0])} → ${iso(ts[ts.length-1])} (${ts.length} gün). ${surf.meta && surf.meta.source ? surf.meta.source : ''}`;
+  }
+  if(badge) badge.textContent = state._builtInData.label;
+
+  // Keep the selected date range synchronized with the newly loaded ticker.
+  if(ts.length >= 60 && document.getElementById('dataSrc')?.value === 'surfaces'){
+    const sEl=document.getElementById('start'), eEl=document.getElementById('end');
+    if(sEl){ sEl.value=iso(ts[0]); sEl.min=iso(ts[0]); sEl.max=iso(ts[ts.length-1]); }
+    if(eEl){ eEl.value=iso(ts[ts.length-1]); eEl.min=iso(ts[0]); eEl.max=iso(ts[ts.length-1]); }
+  }
+
+  // Run immediately for this exact ticker; don't let a previous timer win.
+  clearTimeout(timer);
+  run();
+  return surf;
+}
+
+function init(){
+  
+  const groups={}; for(const [k,v] of Object.entries(TEMPLATES)){ const g=v.group||'Other'; (groups[g]=groups[g]||[]).push(k); }
+  let html=''; for(const g of STRATEGY_GROUPS_ORDER){ if(!groups[g]) continue; html+=`<optgroup label="${g}">`+groups[g].map(k=>`<option>${k}</option>`).join('')+`</optgroup>`; }
+  const others=Object.keys(groups).filter(g=>!STRATEGY_GROUPS_ORDER.includes(g)); for(const g of others){ html+=`<optgroup label="${g}">`+groups[g].map(k=>`<option>${k}</option>`).join('')+`</optgroup>`; }
+
+  // Add Saved and Advanced sections
+  const side = document.querySelector('.side');
+  if(side && !$('sec-saved')){
+    const html=`
+    <details class="sec" id="sec-saved" open>
+      <summary>Kaydedilen Backtest'ler (tarayıcı)</summary>
+      <div class="body">
+        <div class="rowb">
+          <button class="btn pri" id="saveBtn">Mevcut çalışmayı kaydet</button>
+          <button class="btn sm" id="exportBtn">Dışa aktar</button>
+          <label class="btn sm" style="cursor:pointer">İçe aktar <input type="file" id="importFile" accept=".json" hidden></label>
+        </div>
+        <div id="savedList"></div>
+        <div id="saveMsg" class="hint"></div>
+        <p class="hint">localStorage'da saklanır, yeniden yüklemelerde korunur. Paylaşmak için dışa aktarın.</p>
+      </div>
+    </details>
+    <details class="sec" id="sec-adv" open>
+      <summary>Intraday ve Roll</summary>
+      <div class="body">
+          <label class="chk"><input type="checkbox" id="intraday"> Intraday çıkış kontrolü (yüksek/düşük IV'den tahmin edilir)</label>
+          <p class="hint">Kâr hedefinin veya zarar durdurmanın gün içinde tetiklenip tetiklenmediğini de kontrol eder; IV/√252 ile tahmini günlük aralık kullanır. Hedef veya stop fiyatında dolur.</p>
+          <label class="chk" style="margin-top:6px"><input type="checkbox" id="rollEnabled"> Çıkışta Roll</label>
+          <label class="f">Roll modu<select id="rollMode"><option value="delta">Aynı delta, sonraki Expiry</option><option value="strikes">Aynı Strike, sonraki Expiry</option></select></label>
+        <p class="hint">Roll: kâr hedefi veya close-at-DTE çıkışı tetiklendiğinde pozisyon kapanır ve aynı gün sonraki döngüm açılır (komisyon uygulanır, maksimum açık işlem sınırına uyulur). Stop ve expiration'da Roll yapılmaz.</p>
+      </div>
+    </details>`;
+    side.insertAdjacentHTML('beforeend', html);
+  }
+
+  $('tmpl').innerHTML=html+'<option>Özel</option>';
+
+  $('tmpl').value="Poor Man's Covered Call"; applyTemplate("Poor Man's Covered Call"); toggleUI();
+
+  $('saveBtn')?.addEventListener('click', saveCurrent);
+  $('exportBtn')?.addEventListener('click', exportSaved);
+  $('importFile')?.addEventListener('change', e=>{ const f=e.target.files[0]; if(f) importSavedFile(f); });
+  renderSaved();
+  $('intraday')?.addEventListener('change', schedule);
+  $('tickerSel')?.addEventListener('change', async e=>{
+    if($('dataSrc').value==='surfaces') await loadSurfaceTicker(e.target.value);
+    else loadSurfaceTicker(e.target.value);
+  });
+  $('dataSrc')?.addEventListener('change', async ()=>{
+    toggleUI();
+    if($('dataSrc').value==='surfaces'){
+      const t=$('tickerSel')?.value||'SPY';
+      const surf=await loadSurfaceTicker(t);
+      if(surf) schedule();
+    }
+  });
+  $('rollEnabled')?.addEventListener('change', schedule);
+  $('rollMode')?.addEventListener('change', schedule);
+
+  $('tmpl').addEventListener('change',()=>{ if($('tmpl').value!=='Özel') applyTemplate($('tmpl').value); schedule(); });
+  $('legs').addEventListener('input',legsEvent); $('legs').addEventListener('change',legsEvent); $('legs').addEventListener('click',legsEvent);
+  $('addLeg').addEventListener('click',()=>{ state.legs.push({side:-1,type:'P',qty:1,mode:'delta',val:0.30}); $('tmpl').value='Özel'; renderLegs(); schedule(); });
+  $('side').addEventListener('input',e=>{ if(e.target.closest('#legs')||e.target.id==='tmpl'||e.target.id==='csvFile') return; toggleUI(); schedule(); });
+  $('side').addEventListener('change',e=>{ if(e.target.closest('#legs')||e.target.id==='tmpl'||e.target.id==='csvFile') return; toggleUI(); schedule(); });
+  $('dice').addEventListener('click',()=>{ $('seed').value=Math.floor(Math.random()*9000)+1; schedule(); });
+  $('csvFile').addEventListener('change',e=>{
+    const f=e.target.files[0]; if(!f) return; const rd=new FileReader();
+    rd.onload=()=>{ try{ state.csv=parseCSV(String(rd.result)); state.csvName=f.name; $('csvMsg').textContent='';
+      $('start').value=fmtDate(state.csv.ts[0]); $('end').value=fmtDate(state.csv.ts[state.csv.ts.length-1]); }
+      catch(err){ state.csv=null; $('csvMsg').textContent=err.message; }
+      schedule(); };
+    rd.readAsText(f);
+  });
+  $('noticeX').addEventListener('click',()=>$('notice').style.display='none');
+  $('pinBtn').addEventListener('click',()=>{
+    const L=state.last; if(!L) return;
+    if(state.pinned.length>=3) state.pinned.shift();
+    const used=state.pinned.map(p=>p.color), colors=['var(--c1)','var(--c2)','var(--c3)'];
+    state.pinned.push({label:L.label,color:colors.find(c=>!used.includes(c))||colors[0],ts:L.data.ts.slice(),eq:L.res.eq.slice(),st:L.st});
+    renderEquity(); renderCompare();
+  });
+  $('legend').addEventListener('click',e=>{ const b=e.target.closest('[data-unpin]'); if(!b) return; state.pinned.splice(+b.dataset.unpin,1); renderEquity(); renderCompare(); });
+  $('eqWrap').addEventListener('pointermove',hover); $('eqWrap').addEventListener('pointerleave',leave);
+  $('trades').addEventListener('click',e=>{
+    const th=e.target.closest('[data-sort]'); if(th){ const k=th.dataset.sort; state.sort=state.sort.k===k?{k,dir:-state.sort.dir}:{k,dir:k==='text'||k==='reason'?1:-1}; renderTrades(); return; }
+    const tr=e.target.closest('tr[data-n]'); if(tr){ state.sel=+tr.dataset.n; renderTrades(); renderPayoff(); $('payoff').scrollIntoView({block:'nearest',behavior:'smooth'}); }
+  });
+  $('copyCsv').addEventListener('click',()=>{
+    if(!state.last||!state.last.trades.length) return;
+    const head='trade,opened,closed,structure,contracts,credit,pnl,return_on_risk,days,exit';
+    copyText([head,...state.last.trades.map(t=>[t.n,fmtDate(t.openTs),fmtDate(t.closeTs),'"'+t.text+'"',t.contracts,t.credit.toFixed(2),t.pnl.toFixed(2),t.ret.toFixed(4),t.days,t.reason].join(','))].join('\n'));
+  });
+  $('themeBtn').addEventListener('click',()=>{
+    const cur=document.documentElement.getAttribute('data-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');
+    const nx=cur==='dark'?'light':'dark'; document.documentElement.setAttribute('data-theme',nx);
+    try{localStorage.setItem('sb-theme',nx);}catch(e){}
+  });
+  try{ const t=localStorage.getItem('sb-theme'); if(t) document.documentElement.setAttribute('data-theme',t); }catch(e){}
+  let rt; window.addEventListener('resize',()=>{ clearTimeout(rt); rt=setTimeout(renderCharts,120); });
+  loadBuiltInSurfaces().then(()=>{ run(); }).catch(()=>{ run(); });
+}
+init();
+</script>
+<script>
+(function(){
+  var btn=document.getElementById('navToggle');
+  var nav=document.querySelector('.site-header .nav');
+  if(!btn||!nav) return;
+  btn.addEventListener('click',function(e){
+    e.preventDefault();
+    var open=!nav.classList.contains('is-open');
+    nav.classList.toggle('is-open', open);
+    btn.setAttribute('aria-expanded', open?'true':'false');
+  });
+})();
+</script>
+<script>
+function readSetup(){
+  const g=id=>{const el=document.getElementById(id); return el?el.value:'';};
+  return {ticker:g('tickerSel'),tmpl:g('tmpl'),dte:g('dte'),pt:g('pt'),sl:g('sl'),exitDTE:g('exitDTE'),start:g('start'),end:g('end'),comm:g('comm'),slip:g('slip')};
+}
+function applySetup(q){
+  const set=(id,v)=>{const el=document.getElementById(id); if(el&&v!=null&&v!=='') el.value=v;};
+  set('tickerSel', q.get('ticker'));
+  set('tmpl', q.get('tmpl'));
+  set('dte', q.get('dte'));
+  set('pt', q.get('pt'));
+  set('sl', q.get('sl'));
+  set('exitDTE', q.get('exitDTE'));
+  set('start', q.get('start'));
+  set('end', q.get('end'));
+  set('comm', q.get('comm'));
+  set('slip', q.get('slip'));
+}
+document.getElementById('shareSetupBtn')?.addEventListener('click', ()=>{
+  const s = readSetup();
+  const url = new URL(location.href);
+  Object.entries(s).forEach(([k,v])=> url.searchParams.set(k,v));
+  const link = url.toString();
+  const status = document.getElementById('shareStatus');
+  const done = ()=>{ if(status) status.textContent = 'Link kopyalandı. Bu ticker, şablon, DTE, hedef, stop ve maliyetleri yeniden yükler.'; };
+  if(navigator.clipboard) navigator.clipboard.writeText(link).then(done).catch(()=>{ if(status) status.textContent = link; });
+  else if(status) status.textContent = link;
+});
+document.getElementById('sweepBtn')?.addEventListener('click', async ()=>{
+  const out=document.getElementById('sweepOut'), btn=document.getElementById('sweepBtn');
+  const dtes=[30,45,60], pts=[25,50,75];
+  btn.disabled=true; const lbl=btn.textContent; btn.textContent='Çalışıyor…';
+  if(out) out.textContent=(dtes.length*pts.length)+' backtest çalıştırılıyor…';
+  await new Promise(r=>setTimeout(r,30));
+  try{
+    const base=readCfg(); if(!base.legs.length) throw new Error('Önce en az bir bacak ekleyin.');
+    const data=getData(base), rows=[];
+    for(const d of dtes) for(const p of pts){
+      const cfg=Object.assign({},base,{dte:d,pt:p});
+      const res=runBacktest(cfg,data), st=computeStats(cfg,data,res);
+      rows.push({d,p,st}); await new Promise(r=>setTimeout(r,0));
+    }
+    const best=rows.reduce((a,r)=>r.st.total>a.st.total?r:a,rows[0]);
+    const pc=x=>(x>=0?'+':'')+(x*100).toFixed(1)+'%';
+    out.innerHTML='<table class="sweep-t"><thead><tr><th>DTE</th><th>Hedef</th><th>İşlem</th><th>Getiri</th><th>Maks DD</th><th></th></tr></thead><tbody>'+
+      rows.map(r=>'<tr><td>'+r.d+'</td><td>'+r.p+'%</td><td>'+r.st.trades+'</td><td class="'+(r.st.total>=0?'pos':'neg')+'">'+pc(r.st.total)+'</td><td>'+pc(r.st.mdd)+'</td><td><button class="btn sm" type="button" data-sw="'+r.d+','+r.p+'"'+(r===best?' title="En iyi getiri"':'')+'>'+(r===best?'Kullan ★':'Kullan')+'</button></td></tr>').join('')+
+      '</tbody></table><div style="margin-top:6px">Her satır için aynı veri ve maliyetler. En iyi geçmiş getiri bir tahmin değildir — drawdown'a da dikkat edin.</div>';
+  }catch(e){ if(out) out.textContent=e.message; }
+  btn.disabled=false; btn.textContent=lbl;
+});
+document.getElementById('sweepOut')?.addEventListener('click',e=>{
+  const b=e.target.closest('[data-sw]'); if(!b) return;
+  const [d,p]=b.dataset.sw.split(','); document.getElementById('dte').value=d; document.getElementById('pt').value=p; schedule();
+});
+document.getElementById('resetBtn')?.addEventListener('click',()=>{
+  const u=new URL(location.href); u.search=''; u.hash=''; location.href=u.toString();
+});
+try{
+  const q = new URLSearchParams(location.search);
+  if(q.get('ticker')||q.get('dte')){
+    applySetup(q);
+    if(q.get('ticker') && typeof loadSurfaceTicker==='function') loadSurfaceTicker(q.get('ticker'));
+  }
+}catch(e){}
+</script>
+
+
+<section class="site-support" aria-labelledby="support-title">
+  <h2 id="support-title">Siteyi destekleyin</h2>
+  <p>Dersler, Builder ve Backtest ücretsiz kalır. Yardımcı oluyorsa bir kahve alabilirsiniz — ödeme duvarı yok, hesap gerekmez.</p>
+  <a class="bmc-link" href="https://www.buymeacoffee.com/memoliro" target="_blank" rel="noopener">Bana bir kahve ısmarla</a>
+</section>
+
+<footer class="site-footer">
+<div class="footer-note">Yalnızca eğitim amaçlıdır — finansal tavsiye değildir. Options, zarar riski içerir.</div>
+<div class="footer-links">
+<a href="/">Ana sayfa</a>
+<a href="/level1/">Temeller</a>
+<a href="/level2/">Temel bilgiler</a>
+<a href="/level3/">Spread</a>
+<a href="/level4/">İleri düzey</a>
+<a href="/strategies/">Stratejiler</a>
+<a href="/builder/">Builder</a>
+<a href="/backtest/">Backtest</a>
+<a href="/about/">Hakkında</a>
+<a href="/contact/">İletişim</a>
+<a href="/disclaimer/">Sorumluluk reddi</a>
+<a href="/privacy/">Gizlilik</a>
+</div>
+<div class="footer-tools">
+Daha fazla ücretsiz araç:
+<a href="https://lyricprep.com/" rel="noopener" target="_blank">LyricPrep</a> ·
+<a href="https://jsm-image.com/" rel="noopener" target="_blank">JSM Image</a> ·
+<a href="https://jsm-video.com/" rel="noopener" target="_blank">JSM Video</a> ·
+<a href="https://jsm-loudness.com/" rel="noopener" target="_blank">JSM Loudness</a>
+</div>
+</footer>
+</body>
+</html>
