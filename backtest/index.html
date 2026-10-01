@@ -1422,21 +1422,33 @@ function synthSurface(ticker){
 }
 
 async function loadSurfaceTicker(ticker){
-  // Embedded first, else built-in file, else labeled simulated surface
+  // Embedded first, then try every deployment path before giving up.
+  // This is important when the page lives at /backtest/ and the data
+  // files are deployed under /backtest/data/surfaces/.
   if(!(typeof BUILT_IN_SURFACES !== 'undefined' && BUILT_IN_SURFACES[ticker])){
-    try{
-      const r = await fetch('/data/surfaces/'+encodeURIComponent(ticker)+'.json');
-      if(r.ok){
+    const paths = [
+      '/data/surfaces/'+encodeURIComponent(ticker)+'.json',
+      './data/surfaces/'+encodeURIComponent(ticker)+'.json',
+      '/backtest/data/surfaces/'+encodeURIComponent(ticker)+'.json',
+      '../data/surfaces/'+encodeURIComponent(ticker)+'.json',
+      'data/surfaces/'+encodeURIComponent(ticker)+'.json'
+    ];
+    for(const p of paths){
+      try{
+        const r = await fetch(p, {cache:'no-store'});
+        if(!r.ok) continue;
         const surf = await r.json();
+        if(!surf || !Array.isArray(surf.dates) || !Array.isArray(surf.spot)) continue;
         if(!window.BUILT_IN_SURFACES) window.BUILT_IN_SURFACES = {};
         BUILT_IN_SURFACES[ticker] = surf;
-      }
-    }catch(e){}
+        break;
+      }catch(e){}
+    }
   }
   if(!(typeof BUILT_IN_SURFACES !== 'undefined' && BUILT_IN_SURFACES[ticker])){
     const info = document.getElementById('surfaceInfo');
-    if(info) info.textContent = ticker + ': no stored history for this symbol yet.';
-    return;
+    if(info) info.textContent = ticker + ': stored history could not be loaded. Check the data/surfaces files.';
+    return null;
   }
   if(typeof BUILT_IN_SURFACES !== 'undefined' && BUILT_IN_SURFACES[ticker]){
     const surf = BUILT_IN_SURFACES[ticker];
@@ -1558,8 +1570,18 @@ function init(){
   $('importFile')?.addEventListener('change', e=>{ const f=e.target.files[0]; if(f) importSavedFile(f); });
   renderSaved();
   $('intraday')?.addEventListener('change', schedule);
-  $('tickerSel')?.addEventListener('change', e=>{ loadSurfaceTicker(e.target.value); });
-  $('dataSrc')?.addEventListener('change', ()=>{ toggleUI(); if($('dataSrc').value==='surfaces'){ const t=$('tickerSel')?.value||'SPY'; loadSurfaceTicker(t); } });
+  $('tickerSel')?.addEventListener('change', async e=>{
+    if($('dataSrc').value==='surfaces') await loadSurfaceTicker(e.target.value);
+    else loadSurfaceTicker(e.target.value);
+  });
+  $('dataSrc')?.addEventListener('change', async ()=>{
+    toggleUI();
+    if($('dataSrc').value==='surfaces'){
+      const t=$('tickerSel')?.value||'SPY';
+      const surf=await loadSurfaceTicker(t);
+      if(surf) schedule();
+    }
+  });
   $('rollEnabled')?.addEventListener('change', schedule);
   $('rollMode')?.addEventListener('change', schedule);
 
