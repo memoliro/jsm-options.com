@@ -430,7 +430,7 @@ html[data-theme="light"] .site-header .nav a.active{background:#2563eb;color:#ff
       
       
       <button type="button" class="theme-toggle" id="themeBtn" aria-label="Toggle color theme"><span id="themeIcon">☼</span><span class="theme-label" id="themeLabel">Theme</span></button>
-      <span class="data-badge" id="dataBadge">Simulated data</span>
+      <span class="data-badge" id="dataBadge">Stored history: loading…</span>
     </div>
   </div>
 </header>
@@ -444,8 +444,8 @@ html[data-theme="light"] .site-header .nav a.active{background:#2563eb;color:#ff
     <div class="body">
       <label class="f">Source
         <select id="dataSrc">
-        <option value="sim" selected>Simulated underlying (until history grows)</option>
-        <option value="surfaces">Stored history (price + ATM IV)</option>
+        <option value="sim">Simulated underlying (until history grows)</option>
+        <option value="surfaces" selected>Stored history (price + ATM IV)</option>
         <option value="csv">My daily prices (CSV) - advanced</option>
       </select>
       <div style="margin-top:8px;display:grid;gap:6px" id="tickerRow">
