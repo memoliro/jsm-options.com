@@ -32,7 +32,8 @@ html[data-theme="light"]{
 html{height:100%;scroll-padding-top:env(safe-area-inset-top,0px)}
 body{margin:0;min-height:100%;background:var(--bg);color:var(--ink);
   font:14px/1.45 "Schibsted Grotesk",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
-  font-variant-numeric:tabular-nums;-webkit-font-smoothing:antialiased}
+  -webkit-font-smoothing:antialiased}
+table{font-variant-numeric:tabular-nums}
 input,select,button{font:inherit;color:inherit}
 :focus-visible{outline:2px solid var(--focus);outline-offset:2px}
 
@@ -45,7 +46,7 @@ input,select,button{font:inherit;color:inherit}
 .badge{font-size:12px;padding:4px 10px;border:1px solid var(--line);border-radius:999px;background:var(--panel-2);color:var(--muted);white-space:nowrap;max-width:46vw;overflow:hidden;text-overflow:ellipsis}
 
 .app{display:grid;grid-template-columns:356px minmax(0,1fr);align-items:start}
-.side{position:sticky;top:0;max-height:100vh;overflow:auto;background:var(--panel);border-right:1px solid var(--line)}
+.side{position:sticky;top:0;max-height:100vh;overflow:auto;padding-bottom:28px;overscroll-behavior:contain;overflow-x:hidden;background:var(--panel);border-right:1px solid var(--line)}
 .sec{border-bottom:1px solid var(--line)}
 .sec>summary{cursor:pointer;list-style:none;padding:13px 16px;font-weight:600;display:flex;justify-content:space-between;align-items:center}
 .sec>summary::-webkit-details-marker{display:none}
@@ -103,11 +104,12 @@ input[type=file]{font-size:12px;width:100%}
 .ph{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px}
 .ph h2{font-size:15px;margin:0;font-weight:600}
 .ph .sub{color:var(--muted);font-size:12px}
-.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(132px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:10px;overflow:hidden}
-.kpi{background:var(--panel);padding:12px 14px}
-.kpi .v{font-size:23px;font-weight:600;letter-spacing:-.02em;line-height:1.15}
+.kpis{display:flex;flex-wrap:wrap;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.kpi{background:var(--panel);padding:12px 14px;flex:1 1 112px;min-width:0}
+.kpi .v{font-size:clamp(18px,1.7vw,23px);white-space:nowrap;font-weight:600;letter-spacing:-.02em;line-height:1.15}
 .kpi .l{font-size:12px;color:var(--muted);margin-top:2px}
 .kpi .s{font-size:11px;color:var(--muted);margin-top:1px}
+.sweep-t{width:100%;margin-top:8px;font-size:12px;border-collapse:collapse}.sweep-t th,.sweep-t td{padding:4px 3px;text-align:right}.sweep-t th:first-child,.sweep-t td:first-child{text-align:left}.sweep-t .btn{padding:2px 7px}
 .pos{color:var(--gain)} .neg{color:var(--loss)}
 .two{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
 
@@ -562,6 +564,7 @@ html[data-theme="light"] .site-header .nav a.active{background:#2563eb;color:#ff
         <button class="btn sm" id="shareSetupBtn" type="button">Copy share link</button>
         <button class="btn sm pri" id="sweepBtn" type="button">Sweep DTE / target</button>
       </div>
+      <button class="btn sm" id="resetBtn" type="button" style="margin-top:8px;width:100%">Reset to defaults</button>
       <p class="hint" id="shareStatus"></p>
       <div id="sweepOut" class="hint"></div>
     </div>
@@ -794,7 +797,9 @@ function runBacktest(cfg,data){
   }
   const filterOn=cfg.ivMin>0||cfg.ivMax<100;
   let cash=cfg.capital, open=[], trades=[], tn=0, lastWeek=-1, lastMonth=-1;
-  const eq=new Array(n);
+  const intra=cfg.intraday!=null?!!cfg.intraday:!!window._sbIntraday;
+  const roll=cfg.roll||window._sbRoll||{enabled:false,mode:'delta'};
+  const eq=new Array(n), rollQ=[];
   const closePos=(p,i,reason,gross)=>{
     const legN=p.legs.reduce((a,l)=>a+l.qty,0);
     const fees=reason==='Expiration'?0:(cfg.comm*legN*p.contracts+cfg.slip*100*p.contracts);
@@ -809,12 +814,20 @@ function runBacktest(cfg,data){
     const still=[]; let unreal=0;
     for(const p of open){
       const V=posValue(p,px,s,atm,cfg), gross=(V-p.V0)*100*p.contracts;
-      let reason=null;
+      let reason=null, g=gross;
       if(s>=p.expTs) reason='Expiration';
       else if(cfg.sl>0&&gross<=-cfg.sl/100*p.absCost) reason='Stop loss';
       else if(cfg.pt>0&&gross>=cfg.pt/100*p.absCost) reason='Profit target';
-      else if(cfg.exitDTE>0&&(p.expTs-s)/DAY<=cfg.exitDTE) reason='DTE exit';
-      if(reason) closePos(p,i,reason,gross); else { still.push(p); unreal+=gross; }
+      else if(intra&&i>p.openIdx){
+        const rg=Math.max(0.002,(atm||0.2)/Math.sqrt(252)*0.8);
+        const gH=(posValue(p,px*(1+rg),s,atm,cfg)-p.V0)*100*p.contracts, gL=(posValue(p,px*(1-rg),s,atm,cfg)-p.V0)*100*p.contracts;
+        const lo=Math.min(gH,gL), hi=Math.max(gH,gL);
+        if(cfg.sl>0&&lo<=-cfg.sl/100*p.absCost){ reason='Stop (intraday)'; g=-cfg.sl/100*p.absCost; }
+        else if(cfg.pt>0&&hi>=cfg.pt/100*p.absCost){ reason='Target (intraday)'; g=cfg.pt/100*p.absCost; }
+      }
+      if(!reason&&cfg.exitDTE>0&&(p.expTs-s)/DAY<=cfg.exitDTE) reason='DTE exit';
+      if(reason){ closePos(p,i,reason,g); if(roll.enabled&&/^(Profit target|Target|DTE exit)/.test(reason)) rollQ.push(p); }
+      else { still.push(p); unreal+=gross; }
     }
     open=still;
     let allow=false;
@@ -826,13 +839,15 @@ function runBacktest(cfg,data){
       const d=new Date(s), mk=d.getUTCFullYear()*12+d.getUTCMonth();
       if(mk!==lastMonth){allow=true;lastMonth=mk;}
     } else allow=open.length===0;
+    const tryOpen=(fixedKs)=>{
     const equityNow=cash+unreal;
-    if(allow&&open.length<cfg.maxOpen&&equityNow>0&&s+cfg.dte*DAY<=ts[n-1]&&!(filterOn&&(i<60||ivr[i]<cfg.ivMin||ivr[i]>cfg.ivMax))){
+    if(open.length<cfg.maxOpen&&equityNow>0&&s+cfg.dte*DAY<=ts[n-1]){
       const expIdx=lb(s+cfg.dte*DAY,i+1);
       if(expIdx<n){
         const expTs=ts[expIdx], T=(expTs-s)/DAY/365, Ks=[], legs=[];
         cfg.legs.forEach((L,li)=>{
           let k;
+          if(fixedKs&&fixedKs[li]!=null) k=fixedKs[li]; else
           if(L.mode==='delta') k=strikeByDelta(L.type,Math.min(0.95,Math.max(0.02,L.val)),px,T,atm,cfg.skew,r);
           else if(L.mode==='rel'&&L.ref>=0&&L.ref<li) k=Ks[L.ref]+L.val;
           else k=px+L.val;
@@ -854,6 +869,10 @@ function runBacktest(cfg,data){
         }
       }
     }
+    };
+    const rolls=rollQ.splice(0);
+    for(const p of rolls) tryOpen(roll.mode==='strikes'?p.legs.map(l=>l.K):null);
+    if(allow&&!(filterOn&&(i<60||ivr[i]<cfg.ivMin||ivr[i]>cfg.ivMax))) tryOpen(null);
     eq[i]=cash+unreal;
   }
   return {eq,trades};
@@ -1245,7 +1264,7 @@ function renderExits(){
   const tr=state.last.trades, box=$('exits');
   if(!tr.length){ box.innerHTML='<div class="empty">No trades yet.</div>'; return; }
   const by={}; for(const t of tr){ (by[t.reason]=by[t.reason]||[]).push(t); }
-  const order=['Profit target','Stop loss','DTE exit','Expiration'];
+  const order=['Profit target','Target (intraday)','Stop loss','Stop (intraday)','DTE exit','Expiration'];
   let h='<table><thead><tr><th>Exit</th><th>Trades</th><th>Share</th><th>Win rate</th><th>Avg P&amp;L</th><th>Total P&amp;L</th></tr></thead><tbody>';
   for(const k of order){ const a=by[k]; if(!a) continue; const tot=a.reduce((x,t)=>x+t.pnl,0);
     h+=`<tr><td>${k}</td><td>${a.length}</td><td>${pct(a.length/tr.length,0)}</td><td>${pct(a.filter(t=>t.pnl>0).length/a.length,0)}</td><td class="${cls(tot)}">${money(tot/a.length)}</td><td class="${cls(tot)}">${money(tot)}</td></tr>`; }
@@ -1537,14 +1556,11 @@ function init(){
     <details class="sec" id="sec-adv" open>
       <summary>Intraday & Roll</summary>
       <div class="body">
-        <label class="f"><span><input type="checkbox" id="intraday"> 
-          <label class="chk"><input type="checkbox" id="intraday" checked> Intraday exit checks (H/L approx from VIX)</label>
-          <span class="hint">If checked, checks if 50% profit or stop would have hit intraday using daily range ~ VIX/√252</span>
-          <div class="g2">
-            <label class="chk"><input type="checkbox" id="rollEnabled" checked> Roll on exit</label>
-            <label class="f">Roll mode<select id="rollMode"><option value="delta">Same delta → next expiry</option><option value="strikes">Same strikes → next expiry</option></select></label>
-          </div>
-        <p class="hint">Roll: when PT or 21 DTE hits, close and immediately open next cycle. Keeps trade count continuous.</p>
+          <label class="chk"><input type="checkbox" id="intraday"> Intraday exit checks (high/low estimated from IV)</label>
+          <p class="hint">Also checks whether the profit target or stop would have been touched during the day, using an estimated daily range of about IV/&radic;252. Fills at the target or stop price.</p>
+          <label class="chk" style="margin-top:6px"><input type="checkbox" id="rollEnabled"> Roll on exit</label>
+          <label class="f">Roll mode<select id="rollMode"><option value="delta">Same deltas, next expiry</option><option value="strikes">Same strikes, next expiry</option></select></label>
+        <p class="hint">Roll: when the profit target or close-at-DTE exit hits, the position is closed and the next cycle opens the same day (fees apply, max open trades still respected). Stops and expirations do not roll.</p>
       </div>
     </details>`;
     side.insertAdjacentHTML('beforeend', html);
@@ -1660,21 +1676,33 @@ document.getElementById('shareSetupBtn')?.addEventListener('click', ()=>{
   else if(status) status.textContent = link;
 });
 document.getElementById('sweepBtn')?.addEventListener('click', async ()=>{
-  const out = document.getElementById('sweepOut');
-  const combos = [[30,30],[30,50],[45,30],[45,50],[60,30],[60,50]];
-  const rows = [];
-  if(out) out.textContent = 'Running 6 daily-close sweeps (no 0DTE)…';
-  for(const [dte, pt] of combos){
-    const d = document.getElementById('dte');
-    const p = document.getElementById('pt');
-    if(d) d.value = dte;
-    if(p) p.value = pt;
-    if(typeof schedule==='function') schedule();
-    await new Promise(r=>setTimeout(r, 280));
-    const st = window.state && state.last && state.last.st;
-    rows.push(`${dte} DTE / ${pt}% target: ` + (st ? `${st.trades||0} trades, return ${((st.totalReturn||0)*100).toFixed(1)}%` : 'no result'));
-  }
-  if(out) out.innerHTML = rows.map(x=>'<div>'+x+'</div>').join('') + '<div>Buy-and-hold stays in the compare table. Daily close only — no 0DTE.</div>';
+  const out=document.getElementById('sweepOut'), btn=document.getElementById('sweepBtn');
+  const dtes=[30,45,60], pts=[25,50,75];
+  btn.disabled=true; const lbl=btn.textContent; btn.textContent='Running…';
+  if(out) out.textContent='Running '+(dtes.length*pts.length)+' backtests…';
+  await new Promise(r=>setTimeout(r,30));
+  try{
+    const base=readCfg(); if(!base.legs.length) throw new Error('Add at least one leg first.');
+    const data=getData(base), rows=[];
+    for(const d of dtes) for(const p of pts){
+      const cfg=Object.assign({},base,{dte:d,pt:p});
+      const res=runBacktest(cfg,data), st=computeStats(cfg,data,res);
+      rows.push({d,p,st}); await new Promise(r=>setTimeout(r,0));
+    }
+    const best=rows.reduce((a,r)=>r.st.total>a.st.total?r:a,rows[0]);
+    const pc=x=>(x>=0?'+':'')+(x*100).toFixed(1)+'%';
+    out.innerHTML='<table class="sweep-t"><thead><tr><th>DTE</th><th>Target</th><th>Trades</th><th>Return</th><th>Max DD</th><th></th></tr></thead><tbody>'+
+      rows.map(r=>'<tr><td>'+r.d+'</td><td>'+r.p+'%</td><td>'+r.st.trades+'</td><td class="'+(r.st.total>=0?'pos':'neg')+'">'+pc(r.st.total)+'</td><td>'+pc(r.st.mdd)+'</td><td><button class="btn sm" type="button" data-sw="'+r.d+','+r.p+'"'+(r===best?' title="Best return"':'')+'>'+(r===best?'Use ★':'Use')+'</button></td></tr>').join('')+
+      '</tbody></table><div style="margin-top:6px">Same data and costs for every row. Best past return is not a forecast — watch drawdown too.</div>';
+  }catch(e){ if(out) out.textContent=e.message; }
+  btn.disabled=false; btn.textContent=lbl;
+});
+document.getElementById('sweepOut')?.addEventListener('click',e=>{
+  const b=e.target.closest('[data-sw]'); if(!b) return;
+  const [d,p]=b.dataset.sw.split(','); document.getElementById('dte').value=d; document.getElementById('pt').value=p; schedule();
+});
+document.getElementById('resetBtn')?.addEventListener('click',()=>{
+  const u=new URL(location.href); u.search=''; u.hash=''; location.href=u.toString();
 });
 try{
   const q = new URLSearchParams(location.search);
