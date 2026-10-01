@@ -58,6 +58,7 @@
 </style>
 
 <script src="/assets/site.js?v=20260928e" defer></script>
+<script src="/assets/section-spy.js?v=20260928f" defer></script>
 
 <style id="about-fullscreen">
 body{margin:0}
@@ -284,6 +285,25 @@ body{margin:0}
     initNav();
   }
 })();
+</script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  function update() {
+    var links = document.querySelectorAll('aside.page-toc a[href^="#"]');
+    if (!links.length) return;
+    var line = window.innerHeight * 0.35;
+    var cur = null;
+    links.forEach(function (a) {
+      var el = document.getElementById(a.getAttribute('href').slice(1));
+      if (!el || el.tagName === 'H1') return;
+      if (el.getBoundingClientRect().top <= line) cur = a;
+    });
+    links.forEach(function (a) { a.classList.toggle('is-active', a === cur); });
+  }
+  window.addEventListener('scroll', update, { passive: true });
+  window.addEventListener('resize', update);
+  update();
+});
 </script>
 </body>
 </html>
