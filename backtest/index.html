@@ -169,7 +169,208 @@ html[data-theme="light"] .site-support p{color:#374151}
 
 <script>
 // Embedded built-in surfaces for file:// testing - no server needed
-const BUILT_IN_MANIFEST = [{"ticker": "SPY", "days": 504, "updated": "2026-09-29", "first": 20020, "last": 20725, "q": 0.013}, {"ticker": "QQQ", "days": 504, "updated": "2026-09-29", "first": 20020, "last": 20725, "q": 0.006}, {"ticker": "IWM", "days": 504, "updated": "2026-09-29", "first": 20020, "last": 20725, "q": 0.012}, {"ticker": "AAPL", "days": 504, "updated": "2026-09-29", "first": 20020, "last": 20725, "q": 0.005}, {"ticker": "TSLA", "days": 504, "updated": "2026-09-29", "first": 20020, "last": 20725, "q": 0.013}, {"ticker": "SPX", "days": 504, "updated": "2026-09-29", "first": 20020, "last": 20725, "q": 0.013}];
+const BUILT_IN_MANIFEST = [
+  {
+    "ticker": "SPY",
+    "days": 606,
+    "updated": "2026-09-30",
+    "first": 19725,
+    "last": 20726,
+    "q": 0.013,
+    "source": "dolthub volatility_history iv_current + yahoo close",
+    "start": "2024-01-03"
+  },
+  {
+    "ticker": "QQQ",
+    "days": 491,
+    "updated": "2025-12-15",
+    "first": 19724,
+    "last": 20437,
+    "q": 0.006,
+    "source": "options-dataset-hist ATM call IV (delta 0.50) + yahoo close",
+    "start": "2024-01-02"
+  },
+  {
+    "ticker": "IWM",
+    "days": 490,
+    "updated": "2025-12-15",
+    "first": 19724,
+    "last": 20437,
+    "q": 0.012,
+    "source": "options-dataset-hist ATM call IV (delta 0.50) + yahoo close",
+    "start": "2024-01-02"
+  },
+  {
+    "ticker": "DIA",
+    "days": 606,
+    "updated": "2026-09-30",
+    "first": 19725,
+    "last": 20726,
+    "q": 0.017,
+    "source": "dolthub volatility_history iv_current + yahoo close",
+    "start": "2024-01-03"
+  },
+  {
+    "ticker": "SPX",
+    "days": 606,
+    "updated": "2026-09-30",
+    "first": 19725,
+    "last": 20726,
+    "q": 0.013,
+    "source": "yahoo ^GSPC close + SPY ATM IV proxy",
+    "start": "2024-01-03"
+  },
+  {
+    "ticker": "XLF",
+    "days": 606,
+    "updated": "2026-09-30",
+    "first": 19725,
+    "last": 20726,
+    "q": 0.016,
+    "source": "dolthub volatility_history iv_current + yahoo close",
+    "start": "2024-01-03"
+  },
+  {
+    "ticker": "XLK",
+    "days": 606,
+    "updated": "2026-09-30",
+    "first": 19725,
+    "last": 20726,
+    "q": 0.006,
+    "source": "dolthub volatility_history iv_current + yahoo close",
+    "start": "2024-01-03"
+  },
+  {
+    "ticker": "XLE",
+    "days": 606,
+    "updated": "2026-09-30",
+    "first": 19725,
+    "last": 20726,
+    "q": 0.032,
+    "source": "dolthub volatility_history iv_current + yahoo close",
+    "start": "2024-01-03"
+  },
+  {
+    "ticker": "SMH",
+    "days": 690,
+    "updated": "2026-10-01",
+    "first": 19724,
+    "last": 20727,
+    "q": 0.006,
+    "source": "yahoo close + 21-day realized vol (no free options IV for this symbol)",
+    "start": "2024-01-02"
+  },
+  {
+    "ticker": "TLT",
+    "days": 690,
+    "updated": "2026-10-01",
+    "first": 19724,
+    "last": 20727,
+    "q": 0.038,
+    "source": "yahoo close + 21-day realized vol (no free options IV for this symbol)",
+    "start": "2024-01-02"
+  },
+  {
+    "ticker": "GLD",
+    "days": 690,
+    "updated": "2026-10-01",
+    "first": 19724,
+    "last": 20727,
+    "q": 0.0,
+    "source": "yahoo close + 21-day realized vol (no free options IV for this symbol)",
+    "start": "2024-01-02"
+  },
+  {
+    "ticker": "SLV",
+    "days": 690,
+    "updated": "2026-10-01",
+    "first": 19724,
+    "last": 20727,
+    "q": 0.0,
+    "source": "yahoo close + 21-day realized vol (no free options IV for this symbol)",
+    "start": "2024-01-02"
+  },
+  {
+    "ticker": "USO",
+    "days": 690,
+    "updated": "2026-10-01",
+    "first": 19724,
+    "last": 20727,
+    "q": 0.0,
+    "source": "yahoo close + 21-day realized vol (no free options IV for this symbol)",
+    "start": "2024-01-02"
+  },
+  {
+    "ticker": "AAPL",
+    "days": 585,
+    "updated": "2026-09-30",
+    "first": 19725,
+    "last": 20726,
+    "q": 0.005,
+    "source": "dolthub volatility_history iv_current + yahoo close",
+    "start": "2024-01-03"
+  },
+  {
+    "ticker": "MSFT",
+    "days": 604,
+    "updated": "2026-09-30",
+    "first": 19725,
+    "last": 20726,
+    "q": 0.007,
+    "source": "dolthub volatility_history iv_current + yahoo close",
+    "start": "2024-01-03"
+  },
+  {
+    "ticker": "NVDA",
+    "days": 605,
+    "updated": "2026-09-30",
+    "first": 19725,
+    "last": 20726,
+    "q": 0.0003,
+    "source": "dolthub volatility_history iv_current + yahoo close",
+    "start": "2024-01-03"
+  },
+  {
+    "ticker": "TSLA",
+    "days": 606,
+    "updated": "2026-09-30",
+    "first": 19725,
+    "last": 20726,
+    "q": 0.0,
+    "source": "dolthub volatility_history iv_current + yahoo close",
+    "start": "2024-01-03"
+  },
+  {
+    "ticker": "META",
+    "days": 604,
+    "updated": "2026-09-30",
+    "first": 19725,
+    "last": 20726,
+    "q": 0.003,
+    "source": "dolthub volatility_history iv_current + yahoo close",
+    "start": "2024-01-03"
+  },
+  {
+    "ticker": "AMZN",
+    "days": 603,
+    "updated": "2026-09-30",
+    "first": 19725,
+    "last": 20726,
+    "q": 0.0,
+    "source": "dolthub volatility_history iv_current + yahoo close",
+    "start": "2024-01-03"
+  },
+  {
+    "ticker": "GOOGL",
+    "days": 606,
+    "updated": "2026-09-30",
+    "first": 19725,
+    "last": 20726,
+    "q": 0.003,
+    "source": "dolthub volatility_history iv_current + yahoo close",
+    "start": "2024-01-03"
+  }
+];
 const BUILT_IN_SURFACES = {};;
 </script>
 
@@ -242,7 +443,7 @@ html[data-theme="light"] .site-header .nav a.active{background:#2563eb;color:#ff
       <label class="f">Source
         <select id="dataSrc">
         <option value="sim" selected>Simulated underlying (until history grows)</option>
-        <option value="surfaces">CBOE stored sessions (daily snapshots)</option>
+        <option value="surfaces">Stored history (price + ATM IV)</option>
         <option value="csv">My daily prices (CSV) - advanced</option>
       </select>
       <div style="margin-top:8px;display:grid;gap:6px" id="tickerRow">
@@ -270,7 +471,7 @@ html[data-theme="light"] .site-header .nav a.active{background:#2563eb;color:#ff
             <option value="GOOGL">GOOGL – Alphabet</option>
           </select>
         </label>
-        <div class="hint" id="surfaceInfo">Default is a simulated price path so you can backtest now. CBOE stored sessions start 2026-09-30 and grow each weekday. Switch source to CBOE when that series is long enough (60+ sessions).</div>
+        <div class="hint" id="surfaceInfo">Stored history uses real closes and ATM IV where a free source exists (2024 through late 2026). Simulated is still available if you want a made-up path.</div>
       </div>
       </label>
       <div class="simOnly" style="display:grid;gap:10px">
@@ -837,7 +1038,7 @@ function getData(cfg){
       const src=document.getElementById('dataSrc');
       if(src) src.value='sim';
       if(typeof toggleUI==='function') toggleUI();
-      throw new Error('CBOE stored history is still short ('+idx.length+' session'+(idx.length===1?'':'s')+'). Switched to Simulated underlying. Pick CBOE again after ~60 weekday snapshots.');
+      throw new Error('Stored history has only '+idx.length+' days in the selected range. Choose a longer range, or switch to Simulated.');
     }
     const ts=idx.map(i=>b.ts[i]), S=idx.map(i=>b.S[i]), iv=idx.map(i=>b.iv[i]);
     return {ts,S,iv,label:b.label, surf:b.surf, sp:idx.map(i=>b.sp[i]), sc:idx.map(i=>b.sc[i])};
@@ -1170,7 +1371,7 @@ async function loadBuiltInSurfaces(){
     const first = document.getElementById('tickerSel')?.value || BUILT_IN_MANIFEST[0].ticker;
     await loadSurfaceTicker(first);
     const badge = document.getElementById('dataBadge');
-    if(badge) badge.textContent = `CBOE daily: ${BUILT_IN_MANIFEST.length} tickersory (no CSV)`;
+    if(badge) badge.textContent = `Stored history: ${BUILT_IN_MANIFEST.length} tickers`;
     return BUILT_IN_MANIFEST;
   }
   // Try fetch for server mode
@@ -1199,7 +1400,7 @@ function markSurfaceOptions(sel, manifest){
   const have = new Set((manifest||[]).map(m=>m.ticker));
   Array.from(sel.options).forEach(o=>{
     const base = o.textContent.replace(/ · .+$/, '');
-    o.textContent = base + (have.has(o.value) ? ' · 2y surface' : ' · simulated');
+    o.textContent = base + (have.has(o.value) ? ' · stored history' : ' · simulated');
   });
 }
 function synthSurface(ticker){
@@ -1234,7 +1435,7 @@ async function loadSurfaceTicker(ticker){
   }
   if(!(typeof BUILT_IN_SURFACES !== 'undefined' && BUILT_IN_SURFACES[ticker])){
     const info = document.getElementById('surfaceInfo');
-    if(info) info.textContent = ticker + ': no stored CBOE session yet. Daily job has not written this name.';
+    if(info) info.textContent = ticker + ': no stored history for this symbol yet.';
     return;
   }
   if(typeof BUILT_IN_SURFACES !== 'undefined' && BUILT_IN_SURFACES[ticker]){
@@ -1255,12 +1456,12 @@ async function loadSurfaceTicker(ticker){
       if(surf.sc) sc.push(surf.sc[i*nt + idx30]||1.0);
     }
     if(!window.state) window.state={};
-    window.state._builtInData = {ts,S,iv,sp,sc,surf, ticker: surf.ticker, label: `${surf.ticker} CBOE delayed · ${ts.length} session${ts.length===1?'':'s'}`};
+    window.state._builtInData = {ts,S,iv,sp,sc,surf, ticker: surf.ticker, label: `${surf.ticker} stored history · ${ts.length} days`};
     if(ts.length){
       const iso = ms => new Date(ms).toISOString().slice(0,10);
       const src = document.getElementById('dataSrc');
       const info = document.getElementById('surfaceInfo');
-      if(info) info.textContent = `${surf.ticker}: CBOE stored ${iso(ts[0])} → ${iso(ts[ts.length-1])} (${ts.length} session${ts.length===1?'':'s'}). Use Simulated until this reaches 60 sessions.`;
+      if(info) info.textContent = `${surf.ticker}: stored ${iso(ts[0])} → ${iso(ts[ts.length-1])} (${ts.length} days). ${surf.meta && surf.meta.source ? surf.meta.source : ''}`;
       if(src && src.value==='surfaces' && ts.length>=60){
         const sEl = document.getElementById('start');
         const eEl = document.getElementById('end');
@@ -1273,7 +1474,7 @@ async function loadSurfaceTicker(ticker){
       const opt = document.createElement('option'); opt.value='surfaces'; opt.textContent='CBOE Historical (built-in 2y)'; dataSrcSel.appendChild(opt);
     }
     if(document.getElementById('surfaceInfo')){
-      document.getElementById('surfaceInfo').textContent = `${surf.ticker}: ${ts.length} days, ${new Date(ts[0]).toISOString().slice(0,10)} to ${new Date(ts[ts.length-1]).toISOString().slice(0,10)}, built-in, no CSV needed`;
+      document.getElementById('surfaceInfo').textContent = `${surf.ticker}: ${ts.length} days, ${new Date(ts[0]).toISOString().slice(0,10)} to ${new Date(ts[ts.length-1]).toISOString().slice(0,10)}. ${surf.meta && surf.meta.source ? surf.meta.source : 'stored history'}`;
     }
     if(typeof schedule==='function') schedule();
     return surf;
@@ -1300,7 +1501,7 @@ async function loadSurfaceTicker(ticker){
         if(surf.sc) sc.push(surf.sc[i*nt + idx30]||1.0);
       }
       if(!window.state) window.state={};
-      window.state._builtInData = {ts,S,iv,sp,sc,surf, ticker: surf.ticker, label: `${surf.ticker} 2y CBOE surface`};
+      window.state._builtInData = {ts,S,iv,sp,sc,surf, ticker: surf.ticker, label: `${surf.ticker} stored history`};
       if(typeof schedule==='function') schedule();
       return surf;
     }catch(e){}
