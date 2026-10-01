@@ -1422,99 +1422,94 @@ function synthSurface(ticker){
 }
 
 async function loadSurfaceTicker(ticker){
-  // Embedded first, then try every deployment path before giving up.
-  // This is important when the page lives at /backtest/ and the data
-  // files are deployed under /backtest/data/surfaces/.
-  if(!(typeof BUILT_IN_SURFACES !== 'undefined' && BUILT_IN_SURFACES[ticker])){
-    const path = './data/surfaces/' + encodeURIComponent(ticker) + '.json';
-    for(const p of paths){
-      try{
-        const r = await fetch(p, {cache:'no-store'});
-        if(!r.ok) continue;
-        const surf = await r.json();
-        if(!surf || !Array.isArray(surf.dates) || !Array.isArray(surf.spot)) continue;
-        if(!window.BUILT_IN_SURFACES) window.BUILT_IN_SURFACES = {};
-        BUILT_IN_SURFACES[ticker] = surf;
-        break;
-      }catch(e){}
-    }
-  }
-  if(!(typeof BUILT_IN_SURFACES !== 'undefined' && BUILT_IN_SURFACES[ticker])){
-    const info = document.getElementById('surfaceInfo');
-    if(info) info.textContent = ticker + ': stored history could not be loaded. Check the data/surfaces files.';
+  ticker = String(ticker || '').trim().toUpperCase();
+  if(!ticker) return null;
+
+  // Every selection gets its own request id. If the user changes tickers
+  // quickly, an older response is not allowed to overwrite the new one.
+  if(!window.state) window.state={};
+  const requestId = (state._surfaceLoadId || 0) + 1;
+  state._surfaceLoadId = requestId;
+
+  const info = document.getElementById('surfaceInfo');
+  const badge = document.getElementById('dataBadge');
+  if(info) info.textContent = `${ticker}: loading stored history…`;
+
+  // IMPORTANT: do not leave the previous ticker's data active while the new
+  // file is loading. Otherwise a failed fetch silently re-runs the old ticker.
+  state._builtInData = null;
+  state._currentTicker = ticker;
+
+  // The page is /backtest/index.html and the files are /backtest/data/surfaces/*.json.
+  // Using a URL relative to the document is portable and avoids root-path mistakes.
+  const url = new URL('./data/surfaces/' + encodeURIComponent(ticker) + '.json', document.baseURI);
+  url.searchParams.set('_ts', Date.now().toString()); // avoid stale Cloudflare/browser cache
+
+  let surf = null;
+  try{
+    const r = await fetch(url.href, {cache:'no-store'});
+    if(!r.ok) throw new Error(`HTTP ${r.status}`);
+    surf = await r.json();
+  }catch(e){
+    if(state._surfaceLoadId !== requestId) return null;
+    if(info) info.textContent = `${ticker}: could not load ${url.pathname} (${e.message}).`;
+    if(badge) badge.textContent = 'Stored history: load failed';
+    const err = document.getElementById('errBox');
+    if(err){ err.textContent = `Could not load stored history for ${ticker}. Expected: ${url.pathname}`; err.style.display='block'; }
     return null;
   }
-  if(typeof BUILT_IN_SURFACES !== 'undefined' && BUILT_IN_SURFACES[ticker]){
-    const surf = BUILT_IN_SURFACES[ticker];
-    window._currentSurface = surf;
-    const DAY = 86400000;
-    const tenors = surf.tenors || [7,14,30,60,90,180,365];
-    const idx30 = tenors.indexOf(30) >=0 ? tenors.indexOf(30) : 2;
-    const ts=[], S=[], iv=[], sp=[], sc=[];
-    const nt = tenors.length;
-    for(let i=0;i<surf.dates.length;i++){
-      const day = surf.dates[i];
-      const ms = day*86400*1000;
-      ts.push(ms);
-      S.push(surf.spot[i]);
-      iv.push(surf.atm[i*nt + idx30] || surf.atm[i*nt] || 0.22);
-      if(surf.sp) sp.push(surf.sp[i*nt + idx30]||2.0);
-      if(surf.sc) sc.push(surf.sc[i*nt + idx30]||1.0);
-    }
-    if(!window.state) window.state={};
-    window.state._builtInData = {ts,S,iv,sp,sc,surf, ticker: surf.ticker, label: `${surf.ticker} stored history · ${ts.length} days`};
-    if(ts.length){
-      const iso = ms => new Date(ms).toISOString().slice(0,10);
-      const src = document.getElementById('dataSrc');
-      const info = document.getElementById('surfaceInfo');
-      if(info) info.textContent = `${surf.ticker}: stored ${iso(ts[0])} → ${iso(ts[ts.length-1])} (${ts.length} days). ${surf.meta && surf.meta.source ? surf.meta.source : ''}`;
-      if(src && src.value==='surfaces' && ts.length>=60){
-        const sEl = document.getElementById('start');
-        const eEl = document.getElementById('end');
-        if(sEl){ sEl.value = iso(ts[0]); sEl.min = iso(ts[0]); sEl.max = iso(ts[ts.length-1]); }
-        if(eEl){ eEl.value = iso(ts[ts.length-1]); eEl.min = iso(ts[0]); eEl.max = iso(ts[ts.length-1]); }
-      }
-    }
-    const dataSrcSel = document.getElementById('dataSrc');
-    if(dataSrcSel && !Array.from(dataSrcSel.options).some(o=>o.value==='surfaces')){
-      const opt = document.createElement('option'); opt.value='surfaces'; opt.textContent='CBOE Historical (built-in 2y)'; dataSrcSel.appendChild(opt);
-    }
-    if(document.getElementById('surfaceInfo')){
-      document.getElementById('surfaceInfo').textContent = `${surf.ticker}: ${ts.length} days, ${new Date(ts[0]).toISOString().slice(0,10)} to ${new Date(ts[ts.length-1]).toISOString().slice(0,10)}. ${surf.meta && surf.meta.source ? surf.meta.source : 'stored history'}`;
-    }
-    if(typeof schedule==='function') schedule();
-    return surf;
-  }
-  // Fallback fetch
-  const paths = [`/data/surfaces/${ticker}.json`,`./data/surfaces/${ticker}.json`,`/backtest/data/surfaces/${ticker}.json`,`../data/surfaces/${ticker}.json`,`data/surfaces/${ticker}.json`];
-  for(const p of paths){
-    try{
-      const r = await fetch(p, {cache:'no-store'});
-      if(!r.ok) continue;
-      const surf = await r.json();
-      window._currentSurface = surf;
-      const tenors = surf.tenors || [7,14,30,60,90,180,365];
-      const idx30 = tenors.indexOf(30) >=0 ? tenors.indexOf(30) : 2;
-      const ts=[], S=[], iv=[], sp=[], sc=[];
-      const nt = tenors.length;
-      for(let i=0;i<surf.dates.length;i++){
-        const day = surf.dates[i];
-        const ms = day*86400*1000;
-        ts.push(ms);
-        S.push(surf.spot[i]);
-        iv.push(surf.atm[i*nt + idx30] || surf.atm[i*nt] || 0.22);
-        if(surf.sp) sp.push(surf.sp[i*nt + idx30]||2.0);
-        if(surf.sc) sc.push(surf.sc[i*nt + idx30]||1.0);
-      }
-      if(!window.state) window.state={};
-      window.state._builtInData = {ts,S,iv,sp,sc,surf, ticker: surf.ticker, label: `${surf.ticker} stored history`};
-      if(typeof schedule==='function') schedule();
-      return surf;
-    }catch(e){}
-  }
-  return null;
-}
 
+  if(state._surfaceLoadId !== requestId) return null;
+  if(!surf || !Array.isArray(surf.dates) || !Array.isArray(surf.spot) || !Array.isArray(surf.atm)){
+    if(info) info.textContent = `${ticker}: invalid surface JSON (missing dates, spot, or atm).`;
+    return null;
+  }
+  if(surf.ticker && String(surf.ticker).toUpperCase() !== ticker){
+    if(info) info.textContent = `${ticker}: file returned ${surf.ticker}; refusing to use mismatched data.`;
+    return null;
+  }
+
+  if(!window.BUILT_IN_SURFACES) window.BUILT_IN_SURFACES = {};
+  BUILT_IN_SURFACES[ticker] = surf;
+  window._currentSurface = surf;
+
+  const tenors = surf.tenors || [7,14,30,60,90,180,365];
+  const idx30 = tenors.indexOf(30) >= 0 ? tenors.indexOf(30) : 2;
+  const nt = tenors.length;
+  const ts=[], S=[], iv=[], sp=[], sc=[];
+  for(let i=0;i<surf.dates.length;i++){
+    ts.push(surf.dates[i] * 86400000);
+    S.push(surf.spot[i]);
+    iv.push(surf.atm[i*nt + idx30] ?? surf.atm[i*nt] ?? 0.22);
+    if(Array.isArray(surf.sp)) sp.push(surf.sp[i*nt + idx30] ?? 2.0);
+    if(Array.isArray(surf.sc)) sc.push(surf.sc[i*nt + idx30] ?? 1.0);
+  }
+
+  const loadedTicker = String(surf.ticker || ticker).toUpperCase();
+  state._builtInData = {
+    ts, S, iv, sp, sc, surf,
+    ticker: loadedTicker,
+    label: `${loadedTicker} stored history · ${ts.length} days`
+  };
+
+  const iso = ms => new Date(ms).toISOString().slice(0,10);
+  if(info){
+    info.textContent = `${loadedTicker}: stored ${iso(ts[0])} → ${iso(ts[ts.length-1])} (${ts.length} days). ${surf.meta && surf.meta.source ? surf.meta.source : ''}`;
+  }
+  if(badge) badge.textContent = state._builtInData.label;
+
+  // Keep the selected date range synchronized with the newly loaded ticker.
+  if(ts.length >= 60 && document.getElementById('dataSrc')?.value === 'surfaces'){
+    const sEl=document.getElementById('start'), eEl=document.getElementById('end');
+    if(sEl){ sEl.value=iso(ts[0]); sEl.min=iso(ts[0]); sEl.max=iso(ts[ts.length-1]); }
+    if(eEl){ eEl.value=iso(ts[ts.length-1]); eEl.min=iso(ts[0]); eEl.max=iso(ts[ts.length-1]); }
+  }
+
+  // Run immediately for this exact ticker; don't let a previous timer win.
+  clearTimeout(timer);
+  run();
+  return surf;
+}
 
 function init(){
   
