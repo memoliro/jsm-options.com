@@ -1060,7 +1060,8 @@ function getData(cfg){
   if(ds==='surfaces'){
     const want=String($('tickerSel')?.value||'').toUpperCase();
     const b = state._builtInData;
-    if(!b || (want && b.ticker!==want)) throw new Error('Loading kayıtlı geçmiş for '+(want||'ticker')+'…');
+    if(!b && state._surfaceLoadError) throw new Error(state._surfaceLoadError);
+    if(!b || (want && b.ticker!==want)) throw new Error((want||'sembol')+' için kayıtlı geçmiş yükleniyor…');
     // Convert to format expected: ts, S, iv
     // Note: state._builtInData already has ts,S,iv but engine expects iv as atm, plus other fields
     // Build daily data with start/end filter
@@ -1081,7 +1082,7 @@ function getData(cfg){
   }
 
   const start=Date.parse($('start').value), end=Date.parse($('end').value);
-  if(!(start<end)) throw new Error('Başlangıç tarihi must be before end date.');
+  if(!(start<end)) throw new Error('Başlangıç tarihi bitiş tarihinden önce olmalı.');
   if((end-start)/DAY>365.25*30) throw new Error('Aralık 30 yıldan kısa olmalı.');
   if($('dataSrc').value==='csv'){
     if(!state.csv) throw new Error('Date ve Close sütunlu bir CSV seçin.');
@@ -1407,7 +1408,7 @@ async function loadBuiltInSurfaces(){
     const first = document.getElementById('tickerSel')?.value || BUILT_IN_MANIFEST[0].ticker;
     await loadSurfaceTicker(first);
     const badge = document.getElementById('dataBadge');
-    if(badge) badge.textContent = `Stored history: ${BUILT_IN_MANIFEST.length} tickers`;
+    if(badge) badge.textContent = `Kayıtlı geçmiş: ${BUILT_IN_MANIFEST.length} sembol`;
     return BUILT_IN_MANIFEST;
   }
   // Try fetch for server mode
@@ -1468,39 +1469,52 @@ async function loadSurfaceTicker(ticker){
 
   const info = document.getElementById('surfaceInfo');
   const badge = document.getElementById('dataBadge');
-  if(info) info.textContent = `${ticker}: loading kayıtlı geçmiş…`;
+  if(info) info.textContent = `${ticker}: kayıtlı geçmiş yükleniyor…`;
 
   // IMPORTANT: do not leave the previous ticker's data active while the new
   // file is loading. Otherwise a failed fetch silently re-runs the old ticker.
   state._builtInData = null;
+  state._surfaceLoadError = null;
   state._currentTicker = ticker;
 
-  // The page is /backtest/index.html and the files are /backtest/data/surfaces/*.json.
-  // Using a URL relative to the document is portable and avoids root-path mistakes.
-  const url = new URL('./data/surfaces/' + encodeURIComponent(ticker) + '.json', document.baseURI);
-  url.searchParams.set('_ts', Date.now().toString()); // avoid stale Cloudflare/browser cache
-
-  let surf = null;
-  try{
-    const r = await fetch(url.href, {cache:'no-store'});
-    if(!r.ok) throw new Error(`HTTP ${r.status}`);
-    surf = await r.json();
-  }catch(e){
+  // Data lives at /backtest/data/surfaces/*.json. This page is also served from /tr/backtest/,
+  // so a document-relative URL would resolve to /tr/backtest/data/... (404). Try the absolute
+  // path first, then the relative one and /data/surfaces/. If several answer, keep the file
+  // with the most days, so a short daily snapshot never shadows the full history.
+  const file = encodeURIComponent(ticker) + '.json';
+  const candidates = ['/backtest/data/surfaces/' + file,
+                      new URL('./data/surfaces/' + file, document.baseURI).pathname,
+                      '/data/surfaces/' + file];
+  let surf = null, lastErr = null;
+  for(const p of [...new Set(candidates)]){
+    try{
+      const u = new URL(p, document.baseURI);
+      u.searchParams.set('_ts', Date.now().toString()); // avoid stale Cloudflare/browser cache
+      const r = await fetch(u.href, {cache:'no-store'});
+      if(!r.ok) throw new Error(`HTTP ${r.status}`);
+      const s = await r.json();
+      if(!s || !Array.isArray(s.dates) || !s.dates.length) throw new Error('boş veri');
+      if(!surf || s.dates.length > surf.dates.length) surf = s;
+    }catch(e){ lastErr = e; }
+  }
+  if(!surf){
     if(state._surfaceLoadId !== requestId) return null;
-    if(info) info.textContent = `${ticker}: could not load ${url.pathname} (${e.message}).`;
-    if(badge) badge.textContent = 'Stored history: load failed';
+    const msg = `${ticker} için kayıtlı geçmiş yüklenemedi (${lastErr ? lastErr.message : 'bilinmeyen hata'}). Beklenen konum: /backtest/data/surfaces/${file}. Source olarak Simulated seçebilirsiniz.`;
+    state._surfaceLoadError = msg;
+    if(info) info.textContent = `${ticker}: kayıtlı geçmiş yüklenemedi.`;
+    if(badge) badge.textContent = 'Kayıtlı geçmiş: yükleme başarısız';
     const err = document.getElementById('errBox');
-    if(err){ err.textContent = `Could not load kayıtlı geçmiş for ${ticker}. Expected: ${url.pathname}`; err.style.display='block'; }
+    if(err){ err.textContent = msg; err.style.display='block'; }
     return null;
   }
 
   if(state._surfaceLoadId !== requestId) return null;
   if(!surf || !Array.isArray(surf.dates) || !Array.isArray(surf.spot) || !Array.isArray(surf.atm)){
-    if(info) info.textContent = `${ticker}: invalid surface JSON (missing dates, spot, or atm).`;
+    if(info) info.textContent = `${ticker}: geçersiz surface JSON (dates, spot veya atm eksik).`;
     return null;
   }
   if(surf.ticker && String(surf.ticker).toUpperCase() !== ticker){
-    if(info) info.textContent = `${ticker}: file returned ${surf.ticker}; refusing to use mismatched data.`;
+    if(info) info.textContent = `${ticker}: dosya ${surf.ticker} döndürdü; uyumsuz veri kullanılmıyor.`;
     return null;
   }
 
@@ -1524,12 +1538,12 @@ async function loadSurfaceTicker(ticker){
   state._builtInData = {
     ts, S, iv, sp, sc, surf,
     ticker: loadedTicker,
-    label: `${loadedTicker} kayıtlı geçmiş · ${ts.length} days`
+    label: `${loadedTicker} kayıtlı geçmiş · ${ts.length} gün`
   };
 
   const iso = ms => new Date(ms).toISOString().slice(0,10);
   if(info){
-    info.textContent = `${loadedTicker}: stored ${iso(ts[0])} → ${iso(ts[ts.length-1])} (${ts.length} days). ${surf.meta && surf.meta.source ? surf.meta.source : ''}`;
+    info.textContent = `${loadedTicker}: kayıtlı ${iso(ts[0])} → ${iso(ts[ts.length-1])} (${ts.length} gün). ${surf.meta && surf.meta.source ? surf.meta.source : ''}`;
   }
   if(badge) badge.textContent = state._builtInData.label;
 
