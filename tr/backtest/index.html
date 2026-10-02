@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Ücretsiz Opsiyon Backtest | Stratejileri geçmiş fiyatla dene</title>
+<title>Eğitim İçin Backtester | JSM Options</title>
   <link rel="alternate" hreflang="en" href="https://jsm-options.com/backtest/">
   <link rel="alternate" hreflang="tr" href="https://jsm-options.com/tr/backtest/">
   <link rel="alternate" hreflang="x-default" href="https://jsm-options.com/backtest/">
@@ -100,6 +100,7 @@ input[type=file]{font-size:12px;width:100%}
 .leg .x:hover{color:var(--loss)}
 
 .main{padding:18px 20px 44px;display:grid;gap:16px;min-width:0}
+.page-title{font-size:24px;font-weight:700;letter-spacing:-.02em;margin:2px 0 0}
 .notice{display:flex;gap:12px;align-items:flex-start;justify-content:space-between;border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:8px;background:var(--panel);padding:10px 12px;font-size:13px;color:var(--muted)}
 .notice button{border:0;background:transparent;cursor:pointer;font-size:18px;line-height:1;color:var(--muted)}
 .banner-err{border:1px solid var(--loss);border-radius:8px;padding:10px 12px;background:var(--panel);color:var(--loss);font-size:13px}
@@ -627,6 +628,7 @@ html[data-theme="light"] .site-header .nav a.active{background:#2563eb;color:#ff
 </aside>
 
 <main class="main" id="main">
+  <h1 class="page-title">Eğitim İçin Backtester</h1>
   <div class="notice" id="notice">
     <span>Fiyatlar ve implied volatility simüle edilir; her dolum eğimli bir Black-Scholes orta fiyatıdır. Sonuçlar bir kuralın nasıl davrandığını gösterir, ne kazanılacağını değil. Gerçek underlying fiyatıyla denemek için günlük CSV yükleyin.</span>
     <button type="button" id="noticeX" aria-label="Kapat">×</button>
@@ -1042,9 +1044,6 @@ const TEMPLATES={
     {side:-1,type:'C',qty:1,mode:'offset',val:0},{side:1,type:'P',qty:1,mode:'offset',val:0}]},
   'Risk Reversal':{group:'Synthetic',dte:45,pt:50,sl:200,exitDTE:21,legs:[
     {side:-1,type:'P',qty:1,mode:'delta',val:0.30},{side:1,type:'C',qty:1,mode:'delta',val:0.30}]},
-  'Iron condor':{group:'Neutral',dte:45,pt:50,sl:200,exitDTE:21,legs:[
-    {side:-1,type:'P',qty:1,mode:'delta',val:0.16},{side:1,type:'P',qty:1,mode:'rel',val:-10,ref:0},
-    {side:-1,type:'C',qty:1,mode:'delta',val:0.16},{side:1,type:'C',qty:1,mode:'rel',val:10,ref:2}]},
 };
 
 const STRATEGY_GROUPS_ORDER = ['Bullish','Bearish','Neutral','Synthetic'];
@@ -1075,7 +1074,7 @@ function renderLegs(){
           <option value="offset" ${L.mode==='offset'?'selected':''}>Spot fiyattan $</option>
           ${i>0?`<option value="rel" ${L.mode==='rel'?'selected':''}>Bacaktan $</option>`:''}
         </select>
-        <input type="number" data-k="val" step="${L.mode==='delta'?0.01:0.5}" value="${L.val}" aria-label="Strike value">
+        <input type="number" data-k="val" step="${L.mode==='delta'?0.01:0.5}" value="${L.mode==='delta'?+L.val.toFixed(2):L.val}" aria-label="Strike value">
         ${hasRef?`<select data-k="ref" aria-label="Reference leg">${refOpts}</select>`:''}
       </div></div>`;
   }).join('');
@@ -1261,7 +1260,7 @@ function renderKPIs(){
     kp(pct(s.mdd),'Azami düşüş',`Al ve tut ${pct(s.bh.mdd)}`,s.mdd<-0.001?'neg':'')+
     kp(num(s.sharpe),'Sharpe oranı',`Sortino ${num(s.sortino)}`)+
     kp(s.trades?pct(s.winRate,0):'–','Kazanma oranı',`${s.trades} işlem`)+
-    kp(s.trades?num(s.pf):'–','Kâr çarpanı',`Ort. ${s.trades?s.avgDays.toFixed(0):'–'} gün tutuldu`);
+    kp(s.trades?num(s.pf):'–','Kâr çarpanı',`Ort. ${s.trades?s.avgDays.toFixed(1):'–'} gün tutuldu`);
 }
 
 function renderRiskNote(){
