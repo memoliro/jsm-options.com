@@ -630,7 +630,7 @@ html[data-theme="light"] .site-header .nav a.active{background:#2563eb;color:#ff
       <div class="kv" id="payoffKv"></div>
     </section>
     <section class="panel">
-      <div class="ph"><h2>Trade P&amp;L distribution</h2><span class="sub" id="histSub"></span></div>
+      <div class="ph"><h2>İşlem kâr/zarar dağılımı</h2><span class="sub" id="histSub"></span></div>
       <div id="hist"></div>
     </section>
   </div>
@@ -1282,7 +1282,7 @@ function renderExits(){
   if(!tr.length){ box.innerHTML='<div class="empty">Henüz işlem yok.</div>'; return; }
   const by={}; for(const t of tr){ (by[t.reason]=by[t.reason]||[]).push(t); }
   const order=['Profit target','Target (intraday)','Stop loss','Stop (intraday)','DTE exit','Expiration'];
-  let h='<table><thead><tr><th>Exit</th><th>Trades</th><th>Share</th><th>Win rate</th><th>Avg P&amp;L</th><th>Total P&amp;L</th></tr></thead><tbody>';
+  let h='<table><thead><tr><th>Çıkış</th><th>İşlem</th><th>Pay</th><th>Kazanma oranı</th><th>Ort. kâr/zarar</th><th>Toplam kâr/zarar</th></tr></thead><tbody>';
   for(const k of order){ const a=by[k]; if(!a) continue; const tot=a.reduce((x,t)=>x+t.pnl,0);
     h+=`<tr><td>${k}</td><td>${a.length}</td><td>${pct(a.length/tr.length,0)}</td><td>${pct(a.filter(t=>t.pnl>0).length/a.length,0)}</td><td class="${cls(tot)}">${money(tot/a.length)}</td><td class="${cls(tot)}">${money(tot)}</td></tr>`; }
   box.innerHTML=h+'</tbody></table>';
