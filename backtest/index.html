@@ -101,6 +101,14 @@ input[type=file]{font-size:12px;width:100%}
 
 .main{padding:18px 20px 44px;display:grid;gap:16px;min-width:0}
 .page-title{font-size:24px;font-weight:700;letter-spacing:-.02em;margin:2px 0 0}
+.ii{display:inline-flex;align-items:center;justify-content:center;width:15px;height:15px;border-radius:50%;border:1px solid var(--line);color:var(--muted);font-size:10px;font-style:normal;font-weight:700;cursor:help;margin-left:6px;vertical-align:2px;flex:none;line-height:1}
+.ii:hover,.ii:focus-visible{color:var(--accent);border-color:var(--accent)}
+.qtip{position:fixed;z-index:999;max-width:270px;background:var(--tip-bg);color:var(--tip-ink);font-size:13px;line-height:1.5;padding:10px 12px;border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.35);opacity:0;transition:opacity .12s;pointer-events:none}
+.qtip.on{opacity:1}
+.assump{border:1px solid var(--line);border-radius:8px;background:var(--panel);padding:0 12px;font-size:13px;color:var(--muted)}
+.assump>summary{cursor:pointer;padding:10px 0;font-weight:600;color:var(--ink);list-style:none}
+.assump>summary::-webkit-details-marker{display:none}
+.assump ul{margin:0 0 12px;padding-left:18px;display:grid;gap:6px}
 .notice{display:flex;gap:12px;align-items:flex-start;justify-content:space-between;border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:8px;background:var(--panel);padding:10px 12px;font-size:13px;color:var(--muted)}
 .notice button{border:0;background:transparent;cursor:pointer;font-size:18px;line-height:1;color:var(--muted)}
 .banner-err{border:1px solid var(--loss);border-radius:8px;padding:10px 12px;background:var(--panel);color:var(--loss);font-size:13px}
@@ -456,7 +464,7 @@ html[data-theme="light"] .site-header .nav a.active{background:#2563eb;color:#ff
 <aside class="side" id="side" aria-label="Backtest settings">
 
   <details class="sec" open>
-    <summary>Market data</summary>
+    <summary><span>Market data <span class="ii" data-tip="sec_market" tabindex="0" aria-label="More info">i</span></span></summary>
     <div class="body">
       <label class="f">Source
         <select id="dataSrc">
@@ -521,8 +529,8 @@ html[data-theme="light"] .site-header .nav a.active{background:#2563eb;color:#ff
         <label class="f">End date<input type="date" id="end" value="2026-09-29"></label>
       </div>
       <div class="g2">
-        <label class="f">IV premium over realized (%)<input type="number" id="vrp" value="12" step="1"></label>
-        <label class="f">Put skew slope<input type="number" id="skew" value="2" step="0.25" min="0"></label>
+        <label class="f"><span>IV premium over realized (%) <span class="ii" data-tip="vrp" tabindex="0" aria-label="More info">i</span></span><input type="number" id="vrp" value="12" step="1"></label>
+        <label class="f"><span>Put skew slope <span class="ii" data-tip="skew" tabindex="0" aria-label="More info">i</span></span><input type="number" id="skew" value="2" step="0.25" min="0"></label>
       </div>
       <div class="g2">
         <label class="f">Risk-free rate (%)<input type="number" id="rate" value="4" step="0.25"></label>
@@ -532,7 +540,7 @@ html[data-theme="light"] .site-header .nav a.active{background:#2563eb;color:#ff
   </details>
 
   <details class="sec" open>
-    <summary>Strategy</summary>
+    <summary><span>Strategy <span class="ii" data-tip="sec_strategy" tabindex="0" aria-label="More info">i</span></span></summary>
     <div class="body">
       <label class="f">Template<select id="tmpl"></select></label>
       <div id="legs" style="display:grid;gap:8px"></div>
@@ -542,7 +550,7 @@ html[data-theme="light"] .site-header .nav a.active{background:#2563eb;color:#ff
   </details>
 
   <details class="sec" open>
-    <summary>Entry</summary>
+    <summary><span>Entry <span class="ii" data-tip="sec_entry" tabindex="0" aria-label="More info">i</span></span></summary>
     <div class="body">
       <div class="g2">
         <label class="f">Open a trade
@@ -569,7 +577,7 @@ html[data-theme="light"] .site-header .nav a.active{background:#2563eb;color:#ff
   </details>
 
   <details class="sec" open>
-    <summary>Exit</summary>
+    <summary><span>Exit <span class="ii" data-tip="sec_exit" tabindex="0" aria-label="More info">i</span></span></summary>
     <div class="body">
       <div class="g2">
         <label class="f">Profit target (% of credit/debit)<input type="number" id="pt" value="50" min="0" step="5"></label>
@@ -588,7 +596,7 @@ html[data-theme="light"] .site-header .nav a.active{background:#2563eb;color:#ff
   </details>
 
   <details class="sec">
-    <summary>Sizing and costs</summary>
+    <summary><span>Sizing and costs <span class="ii" data-tip="sec_sizing" tabindex="0" aria-label="More info">i</span></span></summary>
     <div class="body">
       <div class="g2">
         <label class="f">Position size
@@ -599,13 +607,13 @@ html[data-theme="light"] .site-header .nav a.active{background:#2563eb;color:#ff
       </div>
       <div class="g2">
         <label class="f">Commission ($/contract/side)<input type="number" id="comm" value="0.65" min="0" step="0.05"></label>
-        <label class="f">Slippage ($/share per order, per side)<input type="number" id="slip" value="0.03" min="0" step="0.01"></label>
+        <label class="f"><span>Slippage ($/share per order, per side) <span class="ii" data-tip="slip" tabindex="0" aria-label="More info">i</span></span><input type="number" id="slip" value="0.03" min="0" step="0.01"></label>
       </div>
       <label class="f">Strike increment ($)<input type="number" id="step" value="1" min="0.01" step="0.5"></label>
     </div>
   </details>
   <details class="sec" id="sec-risk">
-    <summary>Risk limits</summary>
+    <summary><span>Risk limits <span class="ii" data-tip="sec_risk" tabindex="0" aria-label="More info">i</span></span></summary>
     <div class="body">
       <label class="f">Risk profile
         <select id="riskProfile"><option value="off">Off (current behavior)</option><option value="aware">Risk-aware</option><option value="conservative">Conservative</option><option value="very">Very conservative</option><option value="custom">Custom</option></select>
@@ -631,6 +639,15 @@ html[data-theme="light"] .site-header .nav a.active{background:#2563eb;color:#ff
     <span>Prices and implied volatility are simulated, and every fill is a Black-Scholes mid price with a skew model. Results show how a rule set behaves, not what it would have earned. Upload a daily price CSV to test on real underlying prices.</span>
     <button type="button" id="noticeX" aria-label="Dismiss">×</button>
   </div>
+  <details class="assump">
+    <summary>How to read these results</summary>
+    <ul>
+      <li>Fills happen at the Black-Scholes mid-price &mdash; real markets charge you the spread.</li>
+      <li>No early assignment; American-style exercise is approximated.</li>
+      <li>One volatility snapshot per day &mdash; intraday swings aren&rsquo;t modeled (unless Intraday exit checks is on).</li>
+      <li>About two years of history is roughly one market regime. Simulated past results predict nothing.</li>
+    </ul>
+  </details>
   <div class="banner-err" id="errBox" style="display:none"></div>
   <div class="notice" id="riskNote" style="display:none"><span></span></div>
 
@@ -638,7 +655,7 @@ html[data-theme="light"] .site-header .nav a.active{background:#2563eb;color:#ff
 
   <section class="panel">
     <div class="ph">
-      <h2>Equity and drawdown</h2>
+      <h2>Equity and drawdown <span class="ii" data-tip="r_equity" tabindex="0" aria-label="More info">i</span></h2>
       <div class="legend" id="legend"></div>
       <button class="btn sm pri" id="pinBtn" type="button">Pin this run to compare</button>
     </div>
@@ -651,35 +668,35 @@ html[data-theme="light"] .site-header .nav a.active{background:#2563eb;color:#ff
 
   <div class="two">
     <section class="panel">
-      <div class="ph"><h2>Payoff of selected trade</h2><span class="sub" id="payoffSub"></span></div>
+      <div class="ph"><h2>Payoff of selected trade <span class="ii" data-tip="r_payoff" tabindex="0" aria-label="More info">i</span></h2><span class="sub" id="payoffSub"></span></div>
       <div id="payoff"></div>
       <div class="kv" id="payoffKv"></div>
     </section>
     <section class="panel">
-      <div class="ph"><h2>Trade P&amp;L distribution</h2><span class="sub" id="histSub"></span></div>
+      <div class="ph"><h2>Trade P&L distribution <span class="ii" data-tip="r_hist" tabindex="0" aria-label="More info">i</span></h2><span class="sub" id="histSub"></span></div>
       <div id="hist"></div>
     </section>
   </div>
 
   <section class="panel">
-    <div class="ph"><h2>Monthly returns</h2><span class="sub">Change in account value, per month</span></div>
+    <div class="ph"><h2>Monthly returns <span class="ii" data-tip="r_monthly" tabindex="0" aria-label="More info">i</span></h2><span class="sub">Change in account value, per month</span></div>
     <div class="tbl-wrap" id="monthly"></div>
   </section>
 
   <div class="two">
     <section class="panel">
-      <div class="ph"><h2>How trades ended</h2></div>
+      <div class="ph"><h2>How trades ended <span class="ii" data-tip="r_exits" tabindex="0" aria-label="More info">i</span></h2></div>
       <div class="tbl-wrap" id="exits"></div>
     </section>
     <section class="panel">
-      <div class="ph"><h2>Statistics</h2><span class="sub" id="cmpSub"></span></div>
+      <div class="ph"><h2>Statistics <span class="ii" data-tip="r_stats" tabindex="0" aria-label="More info">i</span></h2><span class="sub" id="cmpSub"></span></div>
       <div class="tbl-wrap" id="compare"></div>
     </section>
   </div>
 
   <section class="panel">
     <div class="ph">
-      <h2>Trade log</h2>
+      <h2>Trade log <span class="ii" data-tip="r_trades" tabindex="0" aria-label="More info">i</span></h2>
       <div style="display:flex;gap:8px;align-items:center"><span class="sub" id="copyMsg"></span><button class="btn sm" id="copyCsv" type="button">Copy trades as CSV</button></div>
     </div>
     <div class="tbl-wrap tr-max" id="trades"></div>
@@ -1943,5 +1960,53 @@ More free tools:
 <a href="https://jsm-loudness.com/" rel="noopener" target="_blank">JSM Loudness</a>
 </div>
 </footer>
+<script>
+/* info tooltips (hover / focus / tap) */
+const TIPS={
+ "sec_market": "Where prices come from — real stored history, daily-recorded surfaces, your own CSV, or a simulated path for stress-testing an idea.",
+ "sec_strategy": "Starter recipes by market view. Each leg sets Buy/Sell, Call/Put, size and strike; ‘Target delta’ 0.30 picks the strike with about a 30% chance of expiring in-the-money. Every tweak re-runs instantly.",
+ "sec_entry": "When new trades may open, and with how many days to expiration. Shorter DTE decays faster but forgives less.",
+ "sec_exit": "How trades close: take profit at a percent of premium, cut losses at a percent, or always exit a set number of days before expiration to avoid final-week gamma risk.",
+ "sec_sizing": "How big each trade is — plus the quiet return-eaters: commission and slippage.",
+ "sec_risk": "Guardrails: skip trades that risk too much of the account, cap size, or pause new entries while in a drawdown.",
+ "vrp": "Options usually price above recent realized volatility. This ~12% premium mimics that markup.",
+ "skew": "Extra implied volatility the model gives downside puts over upside calls — the market’s fear premium.",
+ "slip": "Real fills never happen at the mid-price. This models the bid/ask spread cost on every order.",
+ "r_equity": "Your account versus simply buying and holding the underlying. If the strategy can’t beat buy-and-hold, ask what the complexity is buying.",
+ "r_payoff": "Expiration P/L of the selected trade across underlying prices. Click any trade-log row to inspect that trade.",
+ "r_hist": "The shape of per-trade P/L — many small wins with a few big losses, or the reverse — tells you what you’re signing up for.",
+ "r_monthly": "Month-by-month account change. A great total built on two lucky months is fragile; look for consistency.",
+ "r_exits": "Why each trade closed. If ‘DTE exit’ dominates, the profit target may be too ambitious; if stops dominate, entries may be mistimed.",
+ "r_stats": "Sharpe is return per unit of wobble, Sortino counts only downside wobble, profit factor is gross wins divided by gross losses.",
+ "r_trades": "Every simulated trade, sortable. Click a row to see its payoff diagram."
+};
+let _tipEl=null,_tipFor=null;
+function _showTip(el){
+  const t=TIPS[el.dataset.tip]; if(!t) return;
+  _hideTip();
+  _tipEl=document.createElement('div'); _tipEl.className='qtip'; _tipEl.textContent=t;
+  _tipEl._t=Date.now();
+  document.body.appendChild(_tipEl);
+  const r=el.getBoundingClientRect(), tw=_tipEl.offsetWidth, th=_tipEl.offsetHeight;
+  let x=Math.min(Math.max(8, r.left + r.width/2 - tw/2), window.innerWidth - tw - 8);
+  let y=r.bottom + 8; if(y + th > window.innerHeight - 8) y = r.top - th - 8;
+  _tipEl.style.left=x+'px'; _tipEl.style.top=Math.max(8,y)+'px';
+  requestAnimationFrame(()=>{ if(_tipEl) _tipEl.classList.add('on'); });
+  _tipFor=el;
+}
+function _hideTip(){ if(_tipEl){ _tipEl.remove(); _tipEl=null; _tipFor=null; } }
+document.addEventListener('mouseover',e=>{ const t=e.target.closest('.ii'); if(t) _showTip(t); });
+document.addEventListener('mouseout',e=>{ const t=e.target.closest('.ii'); if(t && !t.contains(e.relatedTarget)) _hideTip(); });
+document.addEventListener('focusin',e=>{ const t=e.target.closest('.ii'); if(t) _showTip(t); });
+document.addEventListener('focusout',()=>_hideTip());
+document.addEventListener('click',e=>{
+  const t=e.target.closest('.ii');
+  if(t){ if(_tipFor===t && _tipEl && Date.now()-_tipEl._t>400) _hideTip(); else _showTip(t); }
+  else _hideTip();
+});
+document.addEventListener('keydown',e=>{ if(e.key==='Escape') _hideTip(); });
+window.addEventListener('scroll',()=>_hideTip(),{passive:true,capture:true});
+window.addEventListener('resize',()=>_hideTip());
+</script>
 </body>
 </html>

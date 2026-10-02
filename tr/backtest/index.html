@@ -101,6 +101,14 @@ input[type=file]{font-size:12px;width:100%}
 
 .main{padding:18px 20px 44px;display:grid;gap:16px;min-width:0}
 .page-title{font-size:24px;font-weight:700;letter-spacing:-.02em;margin:2px 0 0}
+.ii{display:inline-flex;align-items:center;justify-content:center;width:15px;height:15px;border-radius:50%;border:1px solid var(--line);color:var(--muted);font-size:10px;font-style:normal;font-weight:700;cursor:help;margin-left:6px;vertical-align:2px;flex:none;line-height:1}
+.ii:hover,.ii:focus-visible{color:var(--accent);border-color:var(--accent)}
+.qtip{position:fixed;z-index:999;max-width:270px;background:var(--tip-bg);color:var(--tip-ink);font-size:13px;line-height:1.5;padding:10px 12px;border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.35);opacity:0;transition:opacity .12s;pointer-events:none}
+.qtip.on{opacity:1}
+.assump{border:1px solid var(--line);border-radius:8px;background:var(--panel);padding:0 12px;font-size:13px;color:var(--muted)}
+.assump>summary{cursor:pointer;padding:10px 0;font-weight:600;color:var(--ink);list-style:none}
+.assump>summary::-webkit-details-marker{display:none}
+.assump ul{margin:0 0 12px;padding-left:18px;display:grid;gap:6px}
 .notice{display:flex;gap:12px;align-items:flex-start;justify-content:space-between;border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:8px;background:var(--panel);padding:10px 12px;font-size:13px;color:var(--muted)}
 .notice button{border:0;background:transparent;cursor:pointer;font-size:18px;line-height:1;color:var(--muted)}
 .banner-err{border:1px solid var(--loss);border-radius:8px;padding:10px 12px;background:var(--panel);color:var(--loss);font-size:13px}
@@ -459,7 +467,7 @@ html[data-theme="light"] .site-header .nav a.active{background:#2563eb;color:#ff
 <aside class="side" id="side" aria-label="Backtest ayarları">
 
   <details class="sec" open>
-    <summary>Piyasa verisi</summary>
+    <summary><span>Piyasa verisi <span class="ii" data-tip="sec_market" tabindex="0" aria-label="Daha fazla bilgi">i</span></span></summary>
     <div class="body">
       <label class="f">Kaynak
         <select id="dataSrc">
@@ -524,8 +532,8 @@ html[data-theme="light"] .site-header .nav a.active{background:#2563eb;color:#ff
         <label class="f">Bitiş tarihi<input type="date" id="end" value="2026-09-29"></label>
       </div>
       <div class="g2">
-        <label class="f">IV primi, gerçekleşen oynaklığa göre (%)<input type="number" id="vrp" value="12" step="1"></label>
-        <label class="f">Put eğim katsayısı<input type="number" id="skew" value="2" step="0.25" min="0"></label>
+        <label class="f"><span>IV primi, gerçekleşen oynaklığa göre (%) <span class="ii" data-tip="vrp" tabindex="0" aria-label="Daha fazla bilgi">i</span></span><input type="number" id="vrp" value="12" step="1"></label>
+        <label class="f"><span>Put eğim katsayısı <span class="ii" data-tip="skew" tabindex="0" aria-label="Daha fazla bilgi">i</span></span><input type="number" id="skew" value="2" step="0.25" min="0"></label>
       </div>
       <div class="g2">
         <label class="f">Risksiz faiz (%)<input type="number" id="rate" value="4" step="0.25"></label>
@@ -535,7 +543,7 @@ html[data-theme="light"] .site-header .nav a.active{background:#2563eb;color:#ff
   </details>
 
   <details class="sec" open>
-    <summary>Strateji</summary>
+    <summary><span>Strateji <span class="ii" data-tip="sec_strategy" tabindex="0" aria-label="Daha fazla bilgi">i</span></span></summary>
     <div class="body">
       <label class="f">Şablon<select id="tmpl"></select></label>
       <div id="legs" style="display:grid;gap:8px"></div>
@@ -545,7 +553,7 @@ html[data-theme="light"] .site-header .nav a.active{background:#2563eb;color:#ff
   </details>
 
   <details class="sec" open>
-    <summary>Giriş</summary>
+    <summary><span>Giriş <span class="ii" data-tip="sec_entry" tabindex="0" aria-label="Daha fazla bilgi">i</span></span></summary>
     <div class="body">
       <div class="g2">
         <label class="f">İşlem aç
@@ -572,7 +580,7 @@ html[data-theme="light"] .site-header .nav a.active{background:#2563eb;color:#ff
   </details>
 
   <details class="sec" open>
-    <summary>Çıkış</summary>
+    <summary><span>Çıkış <span class="ii" data-tip="sec_exit" tabindex="0" aria-label="Daha fazla bilgi">i</span></span></summary>
     <div class="body">
       <div class="g2">
         <label class="f">Kâr hedefi (credit/debit %)<input type="number" id="pt" value="50" min="0" step="5"></label>
@@ -591,7 +599,7 @@ html[data-theme="light"] .site-header .nav a.active{background:#2563eb;color:#ff
   </details>
 
   <details class="sec">
-    <summary>Boyut ve maliyet</summary>
+    <summary><span>Boyut ve maliyet <span class="ii" data-tip="sec_sizing" tabindex="0" aria-label="Daha fazla bilgi">i</span></span></summary>
     <div class="body">
       <div class="g2">
         <label class="f">Pozisyon boyutu
@@ -602,13 +610,13 @@ html[data-theme="light"] .site-header .nav a.active{background:#2563eb;color:#ff
       </div>
       <div class="g2">
         <label class="f">Komisyon ($/kontrat/taraf)<input type="number" id="comm" value="0.65" min="0" step="0.05"></label>
-        <label class="f">Kayma ($/hisse, emir ve taraf başına)<input type="number" id="slip" value="0.03" min="0" step="0.01"></label>
+        <label class="f"><span>Kayma ($/hisse, emir ve taraf başına) <span class="ii" data-tip="slip" tabindex="0" aria-label="Daha fazla bilgi">i</span></span><input type="number" id="slip" value="0.03" min="0" step="0.01"></label>
       </div>
       <label class="f">Strike adımı ($)<input type="number" id="step" value="1" min="0.01" step="0.5"></label>
     </div>
   </details>
   <details class="sec" id="sec-risk">
-    <summary>Risk limitleri</summary>
+    <summary><span>Risk limitleri <span class="ii" data-tip="sec_risk" tabindex="0" aria-label="Daha fazla bilgi">i</span></span></summary>
     <div class="body">
       <label class="f">Risk profili
         <select id="riskProfile"><option value="off">Kapalı (mevcut davranış)</option><option value="aware">Risk bilinçli</option><option value="conservative">Muhafazakâr</option><option value="very">Çok muhafazakâr</option><option value="custom">Özel</option></select>
@@ -634,6 +642,15 @@ html[data-theme="light"] .site-header .nav a.active{background:#2563eb;color:#ff
     <span>Fiyatlar ve implied volatility simüle edilir; her dolum eğimli bir Black-Scholes orta fiyatıdır. Sonuçlar bir kuralın nasıl davrandığını gösterir, ne kazanılacağını değil. Gerçek underlying fiyatıyla denemek için günlük CSV yükleyin.</span>
     <button type="button" id="noticeX" aria-label="Kapat">×</button>
   </div>
+  <details class="assump">
+    <summary>Bu sonu&ccedil;ları nasıl okumalı</summary>
+    <ul>
+      <li>İşlemler Black-Scholes orta fiyatından gerçekleşir &mdash; gerçek piyasalar size spread&rsquo;i ödetir.</li>
+      <li>Erken kullanım yok; Amerikan tipi kullanım yaklaşık hesaplanır.</li>
+      <li>Günde bir oynaklık anlık görüntüsü &mdash; gün içi dalgalanmalar modellenmez (Gün içi çıkış kontrolü açık değilse).</li>
+      <li>Yaklaşık iki yıllık geçmiş kabaca tek bir piyasa rejimidir. Simüle edilmiş geçmiş sonuçlar hiçbir şeyi öngörmez.</li>
+    </ul>
+  </details>
   <div class="banner-err" id="errBox" style="display:none"></div>
   <div class="notice" id="riskNote" style="display:none"><span></span></div>
 
@@ -641,7 +658,7 @@ html[data-theme="light"] .site-header .nav a.active{background:#2563eb;color:#ff
 
   <section class="panel">
     <div class="ph">
-      <h2>Varlık ve düşüş</h2>
+      <h2>Varlık ve düşüş <span class="ii" data-tip="r_equity" tabindex="0" aria-label="Daha fazla bilgi">i</span></h2>
       <div class="legend" id="legend"></div>
       <button class="btn sm pri" id="pinBtn" type="button">Bu koşuyu karşılaştırmak için sabitle</button>
     </div>
@@ -654,35 +671,35 @@ html[data-theme="light"] .site-header .nav a.active{background:#2563eb;color:#ff
 
   <div class="two">
     <section class="panel">
-      <div class="ph"><h2>Seçili işlemin Payoff grafiği</h2><span class="sub" id="payoffSub"></span></div>
+      <div class="ph"><h2>Seçili işlemin Payoff grafiği <span class="ii" data-tip="r_payoff" tabindex="0" aria-label="Daha fazla bilgi">i</span></h2><span class="sub" id="payoffSub"></span></div>
       <div id="payoff"></div>
       <div class="kv" id="payoffKv"></div>
     </section>
     <section class="panel">
-      <div class="ph"><h2>İşlem kâr/zarar dağılımı</h2><span class="sub" id="histSub"></span></div>
+      <div class="ph"><h2>İşlem kâr/zarar dağılımı <span class="ii" data-tip="r_hist" tabindex="0" aria-label="Daha fazla bilgi">i</span></h2><span class="sub" id="histSub"></span></div>
       <div id="hist"></div>
     </section>
   </div>
 
   <section class="panel">
-    <div class="ph"><h2>Aylık getiriler</h2><span class="sub">Hesap değerindeki aylık değişim</span></div>
+    <div class="ph"><h2>Aylık getiriler <span class="ii" data-tip="r_monthly" tabindex="0" aria-label="Daha fazla bilgi">i</span></h2><span class="sub">Hesap değerindeki aylık değişim</span></div>
     <div class="tbl-wrap" id="monthly"></div>
   </section>
 
   <div class="two">
     <section class="panel">
-      <div class="ph"><h2>İşlemler nasıl kapandı</h2></div>
+      <div class="ph"><h2>İşlemler nasıl kapandı <span class="ii" data-tip="r_exits" tabindex="0" aria-label="Daha fazla bilgi">i</span></h2></div>
       <div class="tbl-wrap" id="exits"></div>
     </section>
     <section class="panel">
-      <div class="ph"><h2>İstatistikler</h2><span class="sub" id="cmpSub"></span></div>
+      <div class="ph"><h2>İstatistikler <span class="ii" data-tip="r_stats" tabindex="0" aria-label="Daha fazla bilgi">i</span></h2><span class="sub" id="cmpSub"></span></div>
       <div class="tbl-wrap" id="compare"></div>
     </section>
   </div>
 
   <section class="panel">
     <div class="ph">
-      <h2>İşlem kaydı</h2>
+      <h2>İşlem kaydı <span class="ii" data-tip="r_trades" tabindex="0" aria-label="Daha fazla bilgi">i</span></h2>
       <div style="display:flex;gap:8px;align-items:center"><span class="sub" id="copyMsg"></span><button class="btn sm" id="copyCsv" type="button">İşlemleri CSV olarak kopyala</button></div>
     </div>
     <div class="tbl-wrap tr-max" id="trades"></div>
@@ -1960,5 +1977,53 @@ Diğer ücretsiz araçlar:
 <a href="https://jsm-loudness.com/" rel="noopener" target="_blank">JSM Loudness</a>
 </div>
 </footer>
+<script>
+/* info tooltips (hover / focus / tap) */
+const TIPS={
+ "sec_market": "Fiyatlar nereden geliyor — gerçek kayıtlı geçmiş, günlük kaydedilen yüzeyler, kendi CSV’niz veya bir fikri stres testinden geçirmek için simüle edilmiş yol.",
+ "sec_strategy": "Piyasa görüşüne göre hazır tarifler. Her bacak Al/Sat, Call/Put, miktar ve kullanım fiyatı belirler; ‘Hedef delta’ 0,30 vade sonunda kârda bitme olasılığı ~%30 olan fiyatı seçer. Her değişiklik anında yeniden hesaplanır.",
+ "sec_entry": "Yeni işlemlerin ne zaman açılacağı ve vadeye kaç gün kala girileceği. Kısa DTE daha hızlı erir ama daha az affeder.",
+ "sec_exit": "İşlemler nasıl kapanır: primin yüzdesinde kâr al, yüzdede zararı kes veya son hafta gama riskinden kaçmak için vadeden belirli gün önce her zaman çık.",
+ "sec_sizing": "Her işlemin büyüklüğü — ve getiriyi sessizce yiyenler: komisyon ve kayma.",
+ "sec_risk": "Korkuluklar: hesabın çok büyük kısmını riske atan işlemleri atla, boyutu sınırla veya düşüşte yeni girişleri duraklat.",
+ "vrp": "Opsiyonlar genellikle son gerçekleşen oynaklığın üzerinde fiyatlanır. Bu ~%12 prim bu farkı taklit eder.",
+ "skew": "Modelin düşüş yönlü put’lara, yükseliş yönlü call’lara göre verdiği ekstra ima edilen oynaklık — piyasanın korku primi.",
+ "slip": "Gerçek işlemler hiçbir zaman orta fiyattan gerçekleşmez. Bu, her emirdeki alış/satış farkı maliyetini modeller.",
+ "r_equity": "Hesabınız ile dayanak varlığı alıp tutmaya karşı. Strateji al-tut’u yenemiyorsa, karmaşıklığın ne kazandırdığını sorun.",
+ "r_payoff": "Seçili işlemin vade sonundaki kâr/zararı. Herhangi bir işlem satırına tıklayarak o işlemi inceleyin.",
+ "r_hist": "İşlem başına kâr/zarar şekli — çok sayıda küçük kazanç + az sayıda büyük kayıp veya tersi — neye kaydolduğunuzu gösterir.",
+ "r_monthly": "Aylık hesap değişimi. İki şanslı aya dayanan harika bir toplam kırılgandır; tutarlılığa bakın.",
+ "r_exits": "Her işlem neden kapandı. ‘DTE çıkışı’ baskınsa kâr hedefi fazla iddialı; stoplar baskınsa girişler zamansız olabilir.",
+ "r_stats": "Sharpe dalgalanma başına getiri, Sortino yalnızca aşağı dalgalanmayı sayar, kâr çarpanı brüt kazançların brüt kayıplara oranıdır.",
+ "r_trades": "Tüm simüle işlemler, sıralanabilir. Ödeme grafiği için satıra tıklayın."
+};
+let _tipEl=null,_tipFor=null;
+function _showTip(el){
+  const t=TIPS[el.dataset.tip]; if(!t) return;
+  _hideTip();
+  _tipEl=document.createElement('div'); _tipEl.className='qtip'; _tipEl.textContent=t;
+  _tipEl._t=Date.now();
+  document.body.appendChild(_tipEl);
+  const r=el.getBoundingClientRect(), tw=_tipEl.offsetWidth, th=_tipEl.offsetHeight;
+  let x=Math.min(Math.max(8, r.left + r.width/2 - tw/2), window.innerWidth - tw - 8);
+  let y=r.bottom + 8; if(y + th > window.innerHeight - 8) y = r.top - th - 8;
+  _tipEl.style.left=x+'px'; _tipEl.style.top=Math.max(8,y)+'px';
+  requestAnimationFrame(()=>{ if(_tipEl) _tipEl.classList.add('on'); });
+  _tipFor=el;
+}
+function _hideTip(){ if(_tipEl){ _tipEl.remove(); _tipEl=null; _tipFor=null; } }
+document.addEventListener('mouseover',e=>{ const t=e.target.closest('.ii'); if(t) _showTip(t); });
+document.addEventListener('mouseout',e=>{ const t=e.target.closest('.ii'); if(t && !t.contains(e.relatedTarget)) _hideTip(); });
+document.addEventListener('focusin',e=>{ const t=e.target.closest('.ii'); if(t) _showTip(t); });
+document.addEventListener('focusout',()=>_hideTip());
+document.addEventListener('click',e=>{
+  const t=e.target.closest('.ii');
+  if(t){ if(_tipFor===t && _tipEl && Date.now()-_tipEl._t>400) _hideTip(); else _showTip(t); }
+  else _hideTip();
+});
+document.addEventListener('keydown',e=>{ if(e.key==='Escape') _hideTip(); });
+window.addEventListener('scroll',()=>_hideTip(),{passive:true,capture:true});
+window.addEventListener('resize',()=>_hideTip());
+</script>
 </body>
 </html>
