@@ -7,22 +7,22 @@
   <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48.png">
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
 
-  <title>CSP, Wheel, Calendar ve LEAPS | İleri Seviye</title>
-  <meta name="description" content="Cash-secured put, Wheel, Covered Call, calendar, LEAPS, Iron Condor. Türkçe İleri — eğitim amaçlıdır.">
+  <title>Wheel Stratejisi, Cash-Secured Put, Calendar Spread ve LEAPS: İleri Seviye Opsiyon</title>
+  <meta name="description" content="Wheel stratejisi, nakit teminatlı put (CSP), calendar spread ve LEAPS: ileri seviye opsiyon stratejilerini yeni başlayanlara uygun örneklerle öğrenin.">
   <link rel="canonical" href="https://jsm-options.com/tr/level4/">
 <link rel="alternate" hreflang="tr" href="https://jsm-options.com/tr/level4/">
 <link rel="alternate" hreflang="en" href="https://jsm-options.com/level4/">
   <meta property="og:type" content="article">
   <meta property="og:site_name" content="JSM Options">
-  <meta property="og:title" content="Calendar Spreads, LEAPS &amp; Cash-Secured Puts Explained">
-  <meta property="og:description" content="Calendar spreads, credit spreads, cash-secured puts, covered calls, and LEAPS. Why 45+ DTE matters. Free advanced options lessons.">
+  <meta property="og:title" content="Wheel Stratejisi, Cash-Secured Put, Calendar Spread ve LEAPS: İleri Seviye Opsiyon">
+  <meta property="og:description" content="Wheel stratejisi, nakit teminatlı put, calendar spread ve LEAPS: ileri seviye opsiyon stratejileri, yeni başlayanlara uygun örneklerle.">
   <meta property="og:url" content="https://jsm-options.com/tr/level4/">
   <meta property="og:image" content="https://jsm-options.com/images/og-default.png">
   <meta name="twitter:image" content="https://jsm-options.com/images/og-default.png">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Calendar Spreads, LEAPS &amp; Cash-Secured Puts Explained">
-  <meta name="twitter:description" content="Calendar spreads, credit spreads, cash-secured puts, covered calls, and LEAPS explained for intermediate learners.">
-  <link rel="stylesheet" href="/assets/style.css?v=20261001a">
+  <meta name="twitter:title" content="Wheel Stratejisi, Cash-Secured Put, Calendar Spread ve LEAPS: İleri Seviye Opsiyon">
+  <meta name="twitter:description" content="Wheel, nakit teminatlı put, calendar spread ve LEAPS: orta seviyeye uygun ileri opsiyon dersleri.">
+  <link rel="stylesheet" href="/assets/style.css?v=20260928d">
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-BDL003RCN6"></script>
   <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-BDL003RCN6');</script>
   <style>
@@ -87,7 +87,7 @@
 }
 </style>
 
-<script src="/assets/site.js?v=20261001a" defer></script>
+<script src="/assets/site.js?v=20260928e" defer></script>
 <script src="/assets/section-spy.js?v=20260928f" defer></script>
 <style id="otp-playbook-css">
 #otp-playbook{
@@ -273,10 +273,15 @@ html[data-theme="light"] #otp-playbook .otp-ico.vi{color:#6d28d9}
 
 </head>
 <body>
-<header class="site-header"><div class="site-header-inner"><a class="logo logo-link" href="/tr/" aria-label="JSM Options Home"><div class="logo-icon">JSM</div><div><div style="font-weight:700">JSM Options</div><div class="brand-sub">jsm-options.com · Educational</div></div></a><div class="header-right"><nav class="nav" aria-label="Ana menü"><a href="/tr/">Ana Sayfa</a><a href="/tr/level1/">Giriş</a><a href="/tr/level2/">Temeller</a><a href="/tr/level3/">Spreadler</a><a href="/tr/level4/" class="active">İleri Seviye</a><a href="/tr/strategies/">Stratejiler</a><a href="/tr/cheat-sheet/">Özet</a><a href="/tr/builder/">Builder</a><a href="/tr/backtest/">Backtest</a></nav><button type="button" class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button><button type="button" class="theme-toggle" id="themeToggle" aria-label="Toggle color theme"><span id="themeIcon" class="theme-icon">☼</span><span id="themeLabel" class="theme-label">Dark</span></button></div></div></header>
+<header class="site-header"><div class="site-header-inner"><a class="logo logo-link" href="/tr/" aria-label="JSM Options Home"><div class="logo-icon">JSM</div><div><div style="font-weight:700">JSM Options</div><div class="brand-sub">jsm-options.com · Educational</div></div></a><div class="header-right"><nav class="nav" aria-label="Ana menü"><a href="/tr/">Ana Sayfa</a><a href="/tr/level1/">Giriş</a><a href="/tr/level2/">Temeller</a><a href="/tr/level3/">Spreadler</a><a href="/tr/level4/" class="active">İleri Seviye</a><a href="/tr/strategies/">Stratejiler</a><a href="/tr/cheat-sheet/">Özet</a><a href="/tr/builder/">Builder</a></nav><button type="button" class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button><button type="button" class="theme-toggle" id="themeToggle" aria-label="Toggle color theme"><span id="themeIcon" class="theme-icon">☼</span><span id="themeLabel" class="theme-label">Dark</span></button></div></div></header>
 
 <div class="wrap">
 <nav class="breadcrumbs" aria-label="Breadcrumb"><a href="/tr/">Ana Sayfa</a><span aria-hidden="true">/</span><span aria-current="page">İleri Seviye</span></nav>
+  <div class="hero">
+    <span class="badge">İleri Seviye · Gelir ve sermaye verimliliği</span>
+    <h1>İleri seviye opsiyon stratejileri: Wheel, Jade Lizard, PMCC ve sentetikler</h1>
+    <p>Theta erozyonu, nakit teminatlı put’lar, Wheel döngüsü, Jade Lizard, poor man’s covered call, rasyo spreadleri ve sentetik hisse — getiri grafikleri ve Builder bağlantılarıyla sermaye verimli yapılar. Yalnızca eğitim amaçlıdır.</p>
+  </div>
 <div class="card term-banner">
   <p style="margin:0"><b>Temel terimler</b> — call, put, strike, premium, expiry ve strateji adları bilinçli olarak İngilizce bırakıldı. Uluslararası borsalarda işlem yapmak için bu terimlere alışmalısınız. Türkçe karşılıkları sayfa sonunda vardır.</p>
 </div>
