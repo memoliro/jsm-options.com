@@ -1476,6 +1476,10 @@ async function loadBuiltInSurfaces(){
   // Use embedded first (works on file://)
   if(typeof BUILT_IN_MANIFEST !== 'undefined' && BUILT_IN_MANIFEST.length){
     window._surfacesManifest = BUILT_IN_MANIFEST;
+    try{
+      const rr = await fetch('./data/recorded/manifest.json', {cache:'no-store'});
+      if(rr.ok){ window._recordedManifest = await rr.json(); }
+    }catch(e){}
     const sel = document.getElementById('tickerSel');
     if(sel){ markSurfaceOptions(sel, BUILT_IN_MANIFEST, window._recordedManifest); }
     const first = document.getElementById('tickerSel')?.value || BUILT_IN_MANIFEST[0].ticker;
@@ -1544,7 +1548,7 @@ async function loadSurfaceTicker(ticker){
   // quickly, an older response is not allowed to overwrite the new one.
   const requestId = (state._surfaceLoadId || 0) + 1;
   state._surfaceLoadId = requestId;
-
+  clearTimeout(timer);
   const info = document.getElementById('surfaceInfo');
   const badge = document.getElementById('dataBadge');
   if(info) info.textContent = `${ticker}: kayıtlı geçmiş yükleniyor…`;
@@ -1643,6 +1647,7 @@ async function loadRecordedTicker(ticker){
   if(!ticker) return null;
   const requestId = (state._surfaceLoadId || 0) + 1;
   state._surfaceLoadId = requestId;
+  clearTimeout(timer);
   const info = document.getElementById('surfaceInfo');
   const badge = document.getElementById('dataBadge');
   if(info) info.textContent = `${ticker}: kaydedilen veri yükleniyor…`;
