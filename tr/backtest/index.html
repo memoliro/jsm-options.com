@@ -1,9 +1,9 @@
 <!doctype html>
-<html lang="en" data-theme="dark">
+<html lang="tr" data-theme="dark">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Free Options Backtester | Simulate & Test Options Strategies Online</title>
+<title>Ücretsiz Opsiyon Backtest | Stratejileri geçmiş fiyatla dene</title>
   <link rel="alternate" hreflang="en" href="https://jsm-options.com/backtest/">
   <link rel="alternate" hreflang="tr" href="https://jsm-options.com/tr/backtest/">
   <link rel="alternate" hreflang="x-default" href="https://jsm-options.com/backtest/">
@@ -417,48 +417,51 @@ html[data-theme="light"] .site-header .nav a.active{background:#2563eb;color:#ff
 <body>
 <header class="site-header">
   <div class="site-header-inner">
-    <a class="logo logo-link" href="/" aria-label="JSM Options Home">
+    <a class="logo logo-link" href="/tr/" aria-label="JSM Options ana sayfa">
       <div class="logo-icon">JSM</div>
-      <div><div style="font-weight:700">JSM Options</div><div class="brand-sub">jsm-options.com · Educational</div></div>
+      <div><div style="font-weight:700">JSM Options</div><div class="brand-sub">jsm-options.com · Eğitim</div></div>
     </a>
     <div class="header-right">
-      <nav class="nav" aria-label="Primary navigation">
-        <a href="/">Home</a>
-        <a href="/level1/">Basics</a>
-        <a href="/level2/">Fundamentals</a>
-        <a href="/level3/">Spreads</a>
-        <a href="/level4/">Advanced</a>
-        <a href="/strategies/">Strategies</a>
-        <a href="/cheat-sheet/">Cheat sheet</a>
-        <a href="/builder/">Builder</a>
-        <a href="/backtest/" class="active">Backtest</a>
+      <nav class="nav" aria-label="Ana menü">
+        <a href="/tr/">Ana Sayfa</a>
+        <a href="/tr/level1/">Giriş</a>
+        <a href="/tr/level2/">Temeller</a>
+        <a href="/tr/level3/">Spreadler</a>
+        <a href="/tr/level4/">İleri Seviye</a>
+        <a href="/tr/strategies/">Stratejiler</a>
+        <a href="/tr/cheat-sheet/">Özet</a>
+        <a href="/tr/builder/">Builder</a>
+        <a href="/tr/backtest/" class="active">Backtest</a>
       </nav>
       <button type="button" class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
       
       
       
-      <a id="langSwitch" class="lang-switch" href="/tr/backtest/" aria-label="Türkçe">TR</a>
+      <a id="langSwitch" class="lang-switch" href="/backtest/" aria-label="English">EN</a>
       <button type="button" class="theme-toggle" id="themeToggle" aria-label="Switch to light theme"><span class="theme-icon" id="themeIcon">🌙</span><span class="theme-label" id="themeLabel">Dark</span></button>
-      <span class="data-badge" id="dataBadge">Stored history: loading…</span>
+      <span class="data-badge" id="dataBadge">Kayıtlı geçmiş: yükleniyor…</span>
     </div>
   </div>
 </header>
 
 
+<div class="card term-banner" style="margin:0 0 12px;padding:12px 14px;border:1px solid var(--line);border-radius:10px;background:var(--panel)">
+<p style="margin:0"><b>Temel terimler</b> — Call, Put, Strike, Premium, Expiry, DTE, IV, Delta ve strateji adları bilinçli olarak İngilizce bırakıldı.</p>
+</div>
 <div class="app">
-<aside class="side" id="side" aria-label="Backtest settings">
+<aside class="side" id="side" aria-label="Backtest ayarları">
 
   <details class="sec" open>
-    <summary>Market data</summary>
+    <summary>Piyasa verisi</summary>
     <div class="body">
-      <label class="f">Source
+      <label class="f">Kaynak
         <select id="dataSrc">
-        <option value="sim">Simulated underlying (until history grows)</option>
-        <option value="surfaces" selected>Stored history (price + ATM IV)</option>
-        <option value="csv">My daily prices (CSV) - advanced</option>
+        <option value="sim">Simulated underlying (geçmiş uzayana kadar)</option>
+        <option value="surfaces" selected>Kayıtlı geçmiş (fiyat + ATM IV)</option>
+        <option value="csv">Kendi günlük fiyatlarım (CSV) — ileri</option>
       </select>
       <div style="margin-top:8px;display:grid;gap:6px" id="tickerRow">
-        <label class="f">Symbol / Ticker (built-in)
+        <label class="f">Sembol / Ticker (yerleşik)
           <select id="tickerSel">
             <option value="SPY">SPY – S&amp;P 500 ETF</option>
             <option value="QQQ">QQQ – Nasdaq 100 ETF</option>
@@ -482,126 +485,126 @@ html[data-theme="light"] .site-header .nav a.active{background:#2563eb;color:#ff
             <option value="GOOGL">GOOGL – Alphabet</option>
           </select>
         </label>
-        <div class="hint" id="surfaceInfo">Stored history uses real closes and ATM IV where a free source exists (2024 through late 2026). Simulated is still available if you want a made-up path.</div>
+        <div class="hint" id="surfaceInfo">Kayıtlı geçmiş, ücretsiz kaynak bulunan yerde gerçek kapanış ve ATM IV kullanır (2024 – 2026 sonu). Uydurma bir yol için Simulated duruyor.</div>
       </div>
       </label>
       <div class="simOnly" style="display:grid;gap:10px">
         <div class="g2">
-          <label class="f">Market regime
+          <label class="f">Piyasa rejimi
             <select id="regime">
-              <option value="balanced">Balanced</option>
-              <option value="bull">Steady bull</option>
-              <option value="bear">Bear market</option>
-              <option value="chop">Sideways chop</option>
-              <option value="crash">Crash mid-way</option>
+              <option value="balanced">Dengeli</option>
+              <option value="bull">İstikrarlı yükseliş</option>
+              <option value="bear">Ayı piyasası</option>
+              <option value="chop">Yatay dalgalı</option>
+              <option value="crash">Ortada çöküş</option>
             </select>
           </label>
           <div class="rowb">
-            <label class="f">Seed<input type="number" id="seed" value="7" step="1"></label>
-            <button class="btn" id="dice" type="button" title="New random path">Shuffle</button>
+            <label class="f">Tohum<input type="number" id="seed" value="7" step="1"></label>
+            <button class="btn" id="dice" type="button" title="New random path">Karıştır</button>
           </div>
         </div>
-        <label class="f">Start price<input type="number" id="s0" value="400" min="5" step="any"></label>
+        <label class="f">Başlangıç fiyatı<input type="number" id="s0" value="400" min="5" step="any"></label>
       </div>
       <div class="csvOnly" style="display:none;gap:8px">
         <input type="file" id="csvFile" accept=".csv,.txt,text/csv">
-        <p class="hint">Columns: Date, Close. An optional IV or VIX column is used as implied volatility; otherwise IV is estimated from 20-day realized volatility.</p>
+        <p class="hint">Sütunlar: Date, Close. İsteğe bağlı IV veya VIX sütunu implied volatility olarak kullanılır; yoksa IV, 20 günlük gerçekleşen oynaklıktan tahmin edilir.</p>
         <p class="err" id="csvMsg"></p>
       </div>
       <div class="g2">
-        <label class="f">Start date<input type="date" id="start" value="2024-09-30"></label>
-        <label class="f">End date<input type="date" id="end" value="2026-09-29"></label>
+        <label class="f">Başlangıç tarihi<input type="date" id="start" value="2024-09-30"></label>
+        <label class="f">Bitiş tarihi<input type="date" id="end" value="2026-09-29"></label>
       </div>
       <div class="g2">
-        <label class="f">IV premium over realized (%)<input type="number" id="vrp" value="12" step="1"></label>
-        <label class="f">Put skew slope<input type="number" id="skew" value="2" step="0.25" min="0"></label>
+        <label class="f">IV primi, gerçekleşen oynaklığa göre (%)<input type="number" id="vrp" value="12" step="1"></label>
+        <label class="f">Put eğim katsayısı<input type="number" id="skew" value="2" step="0.25" min="0"></label>
       </div>
       <div class="g2">
-        <label class="f">Risk-free rate (%)<input type="number" id="rate" value="4" step="0.25"></label>
-        <label class="f">Starting capital ($)<input type="number" id="capital" value="100000" min="1000" step="1000"></label>
+        <label class="f">Risksiz faiz (%)<input type="number" id="rate" value="4" step="0.25"></label>
+        <label class="f">Başlangıç sermayesi ($)<input type="number" id="capital" value="100000" min="1000" step="1000"></label>
       </div>
     </div>
   </details>
 
   <details class="sec" open>
-    <summary>Strategy</summary>
+    <summary>Strateji</summary>
     <div class="body">
-      <label class="f">Template<select id="tmpl"></select></label>
+      <label class="f">Şablon<select id="tmpl"></select></label>
       <div id="legs" style="display:grid;gap:8px"></div>
-      <button class="btn" id="addLeg" type="button">Add leg</button>
-      <p class="hint">Strikes come from a target delta, a dollar offset from the spot price, or a dollar offset from an earlier leg (for wings).</p>
+      <button class="btn" id="addLeg" type="button">Bacak ekle</button>
+      <p class="hint">Strike değerleri hedef Delta, spot fiyattan dolar farkı veya bir önceki bacaktan dolar farkı ile gelir (kanatlar için).</p>
     </div>
   </details>
 
   <details class="sec" open>
-    <summary>Entry</summary>
+    <summary>Giriş</summary>
     <div class="body">
       <div class="g2">
-        <label class="f">Open a trade
+        <label class="f">İşlem aç
           <select id="freq">
-            <option value="weekly">Once a week</option>
-            <option value="daily" selected>Every trading day</option>
-            <option value="monthly">First trading day of month</option>
-            <option value="reenter">When nothing is open</option>
+            <option value="weekly">Haftada bir</option>
+            <option value="daily" selected>Her işlem günü</option>
+            <option value="monthly">Ayın ilk işlem günü</option>
+            <option value="reenter">Açık işlem yokken</option>
           </select>
         </label>
-        <label class="f" id="dowWrap">Day of week
-          <select id="dow"><option value="1">Monday</option><option value="2">Tuesday</option><option value="3">Wednesday</option><option value="4">Thursday</option><option value="5">Friday</option></select>
+        <label class="f" id="dowWrap">Haftanın günü
+          <select id="dow"><option value="1">Pazartesi</option><option value="2">Salı</option><option value="3">Çarşamba</option><option value="4">Perşembe</option><option value="5">Cuma</option></select>
         </label>
       </div>
       <div class="g2">
-        <label class="f">Days to expiration<input type="number" id="dte" value="45" min="1" step="1"></label>
-        <label class="f">Max open trades<input type="number" id="maxOpen" value="4" min="1" step="1"></label>
+        <label class="f">expiration'a kalan gün<input type="number" id="dte" value="45" min="1" step="1"></label>
+        <label class="f">Azami açık işlem<input type="number" id="maxOpen" value="4" min="1" step="1"></label>
       </div>
       <div class="g2">
-        <label class="f">Min IV rank (0 = off)<input type="number" id="ivMin" value="0" min="0" max="100" step="5"></label>
-        <label class="f">Max IV rank<input type="number" id="ivMax" value="100" min="0" max="100" step="5"></label>
+        <label class="f">Asgari IV rank (0 = kapalı)<input type="number" id="ivMin" value="0" min="0" max="100" step="5"></label>
+        <label class="f">Azami IV rank<input type="number" id="ivMax" value="100" min="0" max="100" step="5"></label>
       </div>
     </div>
   </details>
 
   <details class="sec" open>
-    <summary>Exit</summary>
+    <summary>Çıkış</summary>
     <div class="body">
       <div class="g2">
-        <label class="f">Profit target (% of credit/debit)<input type="number" id="pt" value="50" min="0" step="5"></label>
-        <label class="f">Stop loss (% of credit/debit)<input type="number" id="sl" value="200" min="0" step="10"></label>
+        <label class="f">Kâr hedefi (credit/debit %)<input type="number" id="pt" value="50" min="0" step="5"></label>
+        <label class="f">Zarar kes (credit/debit %)<input type="number" id="sl" value="200" min="0" step="10"></label>
       </div>
-      <label class="f">Close at DTE (0 = hold to expiration)<input type="number" id="exitDTE" value="21" min="0" step="1"></label>
-      <p class="hint">Exits are checked at each daily close. Profit target, stop, and close-at-DTE are part of the saved setup. Trade rows show why the position closed.</p>
+      <label class="f">DTE'de kapat (0 = expiration'a kadar tut)<input type="number" id="exitDTE" value="21" min="0" step="1"></label>
+      <p class="hint">Çıkışlar her gün kapanışta kontrol edilir. Kâr hedefi, zarar kes ve DTE'de kapat kayıtlı düzene dahildir. İşlem satırı pozisyonun neden kapandığını gösterir.</p>
       <div class="g2" style="margin-top:8px">
-        <button class="btn sm" id="shareSetupBtn" type="button">Copy share link</button>
-        <button class="btn sm pri" id="sweepBtn" type="button">Sweep DTE / target</button>
+        <button class="btn sm" id="shareSetupBtn" type="button">Paylaşım linkini kopyala</button>
+        <button class="btn sm pri" id="sweepBtn" type="button">DTE / hedef tara</button>
       </div>
-      <button class="btn sm" id="resetBtn" type="button" style="margin-top:8px;width:100%">Reset to defaults</button>
+      <button class="btn sm" id="resetBtn" type="button" style="margin-top:8px;width:100%">Varsayılana dön</button>
       <p class="hint" id="shareStatus"></p>
       <div id="sweepOut" class="hint"></div>
     </div>
   </details>
 
   <details class="sec">
-    <summary>Sizing and costs</summary>
+    <summary>Boyut ve maliyet</summary>
     <div class="body">
       <div class="g2">
-        <label class="f">Position size
-          <select id="sizing"><option value="pct">% of capital at risk</option><option value="fixed">Fixed contracts</option></select>
+        <label class="f">Pozisyon boyutu
+          <select id="sizing"><option value="pct">Sermayenin riskteki yüzdesi</option><option value="fixed">Sabit kontrat</option></select>
         </label>
-        <label class="f" id="allocWrap">Capital per trade (%)<input type="number" id="alloc" value="5" min="0.1" step="0.5"></label>
-        <label class="f" id="contractsWrap" style="display:none">Contracts<input type="number" id="contracts" value="1" min="1" step="1"></label>
+        <label class="f" id="allocWrap">İşlem başına sermaye (%)<input type="number" id="alloc" value="5" min="0.1" step="0.5"></label>
+        <label class="f" id="contractsWrap" style="display:none">Kontrat<input type="number" id="contracts" value="1" min="1" step="1"></label>
       </div>
       <div class="g2">
-        <label class="f">Commission ($/contract/side)<input type="number" id="comm" value="0.65" min="0" step="0.05"></label>
-        <label class="f">Slippage ($/share per order, per side)<input type="number" id="slip" value="0.03" min="0" step="0.01"></label>
+        <label class="f">Komisyon ($/kontrat/taraf)<input type="number" id="comm" value="0.65" min="0" step="0.05"></label>
+        <label class="f">Kayma ($/hisse, emir ve taraf başına)<input type="number" id="slip" value="0.03" min="0" step="0.01"></label>
       </div>
-      <label class="f">Strike increment ($)<input type="number" id="step" value="1" min="0.01" step="0.5"></label>
+      <label class="f">Strike adımı ($)<input type="number" id="step" value="1" min="0.01" step="0.5"></label>
     </div>
   </details>
 </aside>
 
 <main class="main" id="main">
   <div class="notice" id="notice">
-    <span>Prices and implied volatility are simulated, and every fill is a Black-Scholes mid price with a skew model. Results show how a rule set behaves, not what it would have earned. Upload a daily price CSV to test on real underlying prices.</span>
-    <button type="button" id="noticeX" aria-label="Dismiss">×</button>
+    <span>Fiyatlar ve implied volatility simüle edilir; her dolum eğimli bir Black-Scholes orta fiyatıdır. Sonuçlar bir kuralın nasıl davrandığını gösterir, ne kazanılacağını değil. Gerçek underlying fiyatıyla denemek için günlük CSV yükleyin.</span>
+    <button type="button" id="noticeX" aria-label="Kapat">×</button>
   </div>
   <div class="banner-err" id="errBox" style="display:none"></div>
 
@@ -609,9 +612,9 @@ html[data-theme="light"] .site-header .nav a.active{background:#2563eb;color:#ff
 
   <section class="panel">
     <div class="ph">
-      <h2>Equity and drawdown</h2>
+      <h2>Varlık ve düşüş</h2>
       <div class="legend" id="legend"></div>
-      <button class="btn sm pri" id="pinBtn" type="button">Pin this run to compare</button>
+      <button class="btn sm pri" id="pinBtn" type="button">Bu koşuyu karşılaştırmak için sabitle</button>
     </div>
     <div class="wrap" id="eqWrap">
       <div id="eqChart"></div>
@@ -622,7 +625,7 @@ html[data-theme="light"] .site-header .nav a.active{background:#2563eb;color:#ff
 
   <div class="two">
     <section class="panel">
-      <div class="ph"><h2>Payoff of selected trade</h2><span class="sub" id="payoffSub"></span></div>
+      <div class="ph"><h2>Seçili işlemin Payoff grafiği</h2><span class="sub" id="payoffSub"></span></div>
       <div id="payoff"></div>
       <div class="kv" id="payoffKv"></div>
     </section>
@@ -633,25 +636,25 @@ html[data-theme="light"] .site-header .nav a.active{background:#2563eb;color:#ff
   </div>
 
   <section class="panel">
-    <div class="ph"><h2>Monthly returns</h2><span class="sub">Change in account value, per month</span></div>
+    <div class="ph"><h2>Aylık getiriler</h2><span class="sub">Hesap değerindeki aylık değişim</span></div>
     <div class="tbl-wrap" id="monthly"></div>
   </section>
 
   <div class="two">
     <section class="panel">
-      <div class="ph"><h2>How trades ended</h2></div>
+      <div class="ph"><h2>İşlemler nasıl kapandı</h2></div>
       <div class="tbl-wrap" id="exits"></div>
     </section>
     <section class="panel">
-      <div class="ph"><h2>Statistics</h2><span class="sub" id="cmpSub"></span></div>
+      <div class="ph"><h2>İstatistikler</h2><span class="sub" id="cmpSub"></span></div>
       <div class="tbl-wrap" id="compare"></div>
     </section>
   </div>
 
   <section class="panel">
     <div class="ph">
-      <h2>Trade log</h2>
-      <div style="display:flex;gap:8px;align-items:center"><span class="sub" id="copyMsg"></span><button class="btn sm" id="copyCsv" type="button">Copy trades as CSV</button></div>
+      <h2>İşlem kaydı</h2>
+      <div style="display:flex;gap:8px;align-items:center"><span class="sub" id="copyMsg"></span><button class="btn sm" id="copyCsv" type="button">İşlemleri CSV olarak kopyala</button></div>
     </div>
     <div class="tbl-wrap tr-max" id="trades"></div>
   </section>
@@ -742,7 +745,7 @@ function withIV(ts,S,ivcol,vrp){
 }
 function parseCSV(text){
   const lines=text.replace(/^\uFEFF/,'').split(/\r?\n/).filter(l=>l.trim());
-  if(lines.length<20) throw new Error('The file needs at least 20 rows of daily prices.');
+  if(lines.length<20) throw new Error('Dosyada en az 20 satır günlük fiyat olmalı.');
   const delim=(lines[0].match(/;/g)||[]).length>(lines[0].match(/,/g)||[]).length?';':(lines[0].includes('\t')?'\t':',');
   const split=l=>l.split(delim).map(c=>c.trim().replace(/^"|"$/g,''));
   let head=split(lines[0]), hasHeader=isNaN(Date.parse(head[0])), dc=0,cc=1,ic=-1, start=0;
@@ -751,7 +754,7 @@ function parseCSV(text){
     const find=(names)=>{for(const nm of names){const k=h.indexOf(nm); if(k>=0) return k;} return -1;};
     dc=find(['date','timestamp','time','day']); if(dc<0) dc=0;
     cc=find(['adj close','adj_close','adjclose','close','price','last','settle']);
-    if(cc<0) throw new Error('No Close column found. Add a header such as Date,Close.');
+    if(cc<0) throw new Error('Close sütunu yok. Date,Close başlığı ekleyin.');
     ic=find(['iv','vix','implied_vol','implied volatility','atm_iv']);
   }
   const rows=[];
@@ -762,7 +765,7 @@ function parseCSV(text){
     const iv=ic>=0?parseFloat(c[ic]):null;
     rows.push({t,px,iv:isFinite(iv)?iv:null});
   }
-  if(rows.length<20) throw new Error('Could not read enough valid Date/Close rows.');
+  if(rows.length<20) throw new Error('Yeterli geçerli Date/Close satırı okunamadı.');
   rows.sort((a,b)=>a.t-b.t);
   const out=[]; for(const r of rows){ if(!out.length||r.t>out[out.length-1].t) out.push(r); }
   return {ts:out.map(r=>r.t),S:out.map(r=>r.px),iv:out.some(r=>r.iv)?out.map(r=>r.iv):null};
@@ -1006,15 +1009,15 @@ function renderLegs(){
     const hasRef=L.mode==='rel'&&i>0;
     return `<div class="leg" data-i="${i}">
       <div class="leg-h"><span class="lg-n">Leg ${i+1}</span>
-        <select data-k="side" aria-label="Buy or sell"><option value="1" ${L.side>0?'selected':''}>Buy</option><option value="-1" ${L.side<0?'selected':''}>Sell</option></select>
+        <select data-k="side" aria-label="Buy or sell"><option value="1" ${L.side>0?'selected':''}>Al</option><option value="-1" ${L.side<0?'selected':''}>Sat</option></select>
         <input type="number" data-k="qty" min="1" step="1" value="${L.qty}" aria-label="Quantity">
         <select data-k="type" aria-label="Call or put"><option value="C" ${L.type==='C'?'selected':''}>Call</option><option value="P" ${L.type==='P'?'selected':''}>Put</option></select>
         <button class="x" type="button" data-del aria-label="Remove leg ${i+1}">×</button></div>
       <div class="leg-b ${hasRef?'':'two'}">
         <select data-k="mode" aria-label="Strike selection">
-          <option value="delta" ${L.mode==='delta'?'selected':''}>Target delta</option>
-          <option value="offset" ${L.mode==='offset'?'selected':''}>$ from spot</option>
-          ${i>0?`<option value="rel" ${L.mode==='rel'?'selected':''}>$ from leg</option>`:''}
+          <option value="delta" ${L.mode==='delta'?'selected':''}>Hedef Delta</option>
+          <option value="offset" ${L.mode==='offset'?'selected':''}>Spot fiyattan $</option>
+          ${i>0?`<option value="rel" ${L.mode==='rel'?'selected':''}>Bacaktan $</option>`:''}
         </select>
         <input type="number" data-k="val" step="${L.mode==='delta'?0.01:0.5}" value="${L.val}" aria-label="Strike value">
         ${hasRef?`<select data-k="ref" aria-label="Reference leg">${refOpts}</select>`:''}
@@ -1057,7 +1060,7 @@ function getData(cfg){
   if(ds==='surfaces'){
     const want=String($('tickerSel')?.value||'').toUpperCase();
     const b = state._builtInData;
-    if(!b || (want && b.ticker!==want)) throw new Error('Loading stored history for '+(want||'ticker')+'…');
+    if(!b || (want && b.ticker!==want)) throw new Error('Loading kayıtlı geçmiş for '+(want||'ticker')+'…');
     // Convert to format expected: ts, S, iv
     // Note: state._builtInData already has ts,S,iv but engine expects iv as atm, plus other fields
     // Build daily data with start/end filter
@@ -1071,20 +1074,20 @@ function getData(cfg){
         sEl.value=iso(b.ts[0]); eEl.value=iso(b.ts[b.ts.length-1]);
         return getData(cfg);
       }
-      throw new Error('Stored history has only '+idx.length+' days in the selected range. Widen the dates to the stored span.');
+      throw new Error('Kayıtlı geçmişte seçilen aralıkta yalnızca '+idx.length+' gün var. Tarihleri kayıtlı aralığa genişletin.');
     }
     const ts=idx.map(i=>b.ts[i]), S=idx.map(i=>b.S[i]), iv=idx.map(i=>b.iv[i]);
     return {ts,S,iv,label:b.label, surf:b.surf, sp:idx.map(i=>b.sp[i]), sc:idx.map(i=>b.sc[i])};
   }
 
   const start=Date.parse($('start').value), end=Date.parse($('end').value);
-  if(!(start<end)) throw new Error('Start date must be before end date.');
-  if((end-start)/DAY>365.25*30) throw new Error('Choose a range of 30 years or less.');
+  if(!(start<end)) throw new Error('Başlangıç tarihi must be before end date.');
+  if((end-start)/DAY>365.25*30) throw new Error('Aralık 30 yıldan kısa olmalı.');
   if($('dataSrc').value==='csv'){
-    if(!state.csv) throw new Error('Choose a CSV file with Date and Close columns.');
+    if(!state.csv) throw new Error('Date ve Close sütunlu bir CSV seçin.');
     const c=state.csv, idx=[];
     for(let i=0;i<c.ts.length;i++) if(c.ts[i]>=start&&c.ts[i]<=end) idx.push(i);
-    if(idx.length<60) throw new Error('Fewer than 60 price rows fall inside the chosen dates.');
+    if(idx.length<60) throw new Error('Seçilen tarihlerde 60 satırdan az fiyat var.');
     const ts=idx.map(i=>c.ts[i]), S=idx.map(i=>c.S[i]), ivc=c.iv?idx.map(i=>c.iv[i]):null;
     return {ts,S,iv:withIV(ts,S,ivc,cfg.vrp),label:'CSV: '+state.csvName};
   }
@@ -1092,7 +1095,7 @@ function getData(cfg){
   const key=[start,end,s0,seed,regime,cfg.vrp].join('|');
   if(state.cache&&state.cache.key===key) return state.cache.data;
   const d=genSim({start,end,s0,seed,regime,vrp:cfg.vrp});
-  if(d.ts.length<80) throw new Error('Choose a longer date range.');
+  if(d.ts.length<80) throw new Error('Daha uzun bir tarih aralığı seçin.');
   d.label='Simulated · '+$('regime').selectedOptions[0].textContent+' · seed '+seed;
   state.cache={key,data:d}; return d;
 }
@@ -1115,7 +1118,7 @@ function run(){
   const intraday = $('intraday')?.checked||false; const rollEnabled = $('rollEnabled')?.checked||false; const rollMode = $('rollMode')?.value||'delta'; window._sbIntraday=intraday; window._sbRoll={enabled:rollEnabled, mode:rollMode};
   try{
     $('errBox').style.display='none';
-    const cfg=readCfg(); if(!cfg.legs.length) throw new Error('Add at least one leg to the strategy.');
+    const cfg=readCfg(); if(!cfg.legs.length) throw new Error('Stratejiye en az bir bacak ekleyin.');
     const data=getData(cfg);
     const res=runBacktest(cfg,data), st=computeStats(cfg,data,res);
     state.last={cfg,data,res,st,trades:res.trades,label:runLabel(cfg)};
@@ -1148,8 +1151,8 @@ const path=(pts)=>pts.map((p,i)=>(i?'L':'M')+p[0].toFixed(1)+','+p[1].toFixed(1)
 function renderEquity(){
   const L=state.last; if(!L) return;
   const box=$('eqChart'), dbox=$('ddChart'), W=Math.max(300,box.clientWidth||600), m={l:58,r:12,t:10,b:24};
-  const main={name:'This run',color:'var(--accent)',ts:L.data.ts,eq:L.res.eq,w:2.2};
-  const bench={name:'Buy and hold',color:'var(--bench)',ts:L.data.ts,eq:L.st.bh.eq,w:1.4,dash:'4 3'};
+  const main={name:'Bu koşu',color:'var(--accent)',ts:L.data.ts,eq:L.res.eq,w:2.2};
+  const bench={name:'Al ve tut',color:'var(--bench)',ts:L.data.ts,eq:L.st.bh.eq,w:1.4,dash:'4 3'};
   const series=[bench,...state.pinned.map(p=>({name:p.label,color:p.color,ts:p.ts,eq:p.eq,w:1.6})),main];
   let x0=Infinity,x1=-Infinity,y0=Infinity,y1=-Infinity;
   for(const s of series){ x0=Math.min(x0,s.ts[0]); x1=Math.max(x1,s.ts[s.ts.length-1]); for(const v of s.eq){ if(v<y0)y0=v; if(v>y1)y1=v; } }
@@ -1163,17 +1166,17 @@ function renderEquity(){
   if(cap>y0&&cap<y1) g+=`<line x1="${m.l}" x2="${W-m.r}" y1="${Y(cap)}" y2="${Y(cap)}" style="stroke:var(--muted);stroke-dasharray:2 4;opacity:.7"/>`;
   let lines='';
   for(const s of series) lines+=`<path d="${path(s.ts.map((t,i)=>[X(t),Y(s.eq[i])]))}" fill="none" style="stroke:${s.color};stroke-width:${s.w}" ${s.dash?`stroke-dasharray="${s.dash}"`:''} stroke-linejoin="round"/>`;
-  box.innerHTML=`<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" role="img" aria-label="Equity curve"><g class="ax">${g}</g>${lines}<line class="xh" y1="${m.t}" y2="${H-m.b}" style="stroke:var(--muted);display:none"/></svg>`;
+  box.innerHTML=`<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" role="img" aria-label="Varlık eğrisi"><g class="ax">${g}</g>${lines}<line class="xh" y1="${m.t}" y2="${H-m.b}" style="stroke:var(--muted);display:none"/></svg>`;
   // drawdown
   const dd=L.st.dd, H2=92, m2={l:m.l,r:m.r,t:6,b:16}, ih2=H2-m2.t-m2.b;
   const dmin=Math.min(-0.02,Math.min(...dd)), Y2=v=>m2.t+(v/dmin)*ih2;
   const pts=L.data.ts.map((t,i)=>[X(t),Y2(dd[i])]);
   const area=`M${X(L.data.ts[0])},${Y2(0)} `+pts.map(p=>'L'+p[0].toFixed(1)+','+p[1].toFixed(1)).join('')+` L${X(L.data.ts[dd.length-1])},${Y2(0)}Z`;
   let g2=`<line class="gl" x1="${m.l}" x2="${W-m.r}" y1="${Y2(0)}" y2="${Y2(0)}"/><text x="${m.l-8}" y="${Y2(0)+4}" text-anchor="end">0%</text><text x="${m.l-8}" y="${Y2(dmin)+3}" text-anchor="end">${(dmin*100).toFixed(0)}%</text>`;
-  dbox.innerHTML=`<svg width="${W}" height="${H2}" viewBox="0 0 ${W} ${H2}" role="img" aria-label="Drawdown"><g class="ax">${g2}</g><path d="${area}" style="fill:var(--loss);opacity:.28"/><path d="${path(pts)}" fill="none" style="stroke:var(--loss);stroke-width:1.2"/><line class="xh" y1="${m2.t}" y2="${H2-m2.b}" style="stroke:var(--muted);display:none"/></svg>`;
+  dbox.innerHTML=`<svg width="${W}" height="${H2}" viewBox="0 0 ${W} ${H2}" role="img" aria-label="Düşüş"><g class="ax">${g2}</g><path d="${area}" style="fill:var(--loss);opacity:.28"/><path d="${path(pts)}" fill="none" style="stroke:var(--loss);stroke-width:1.2"/><line class="xh" y1="${m2.t}" y2="${H2-m2.b}" style="stroke:var(--muted);display:none"/></svg>`;
   state.geo={W,m,x0,x1,iw,series,main,bench};
   // legend
-  $('legend').innerHTML=`<span class="chip"><i style="background:var(--accent)"></i>This run</span><span class="chip"><i style="background:var(--bench)"></i>Buy and hold</span>`+
+  $('legend').innerHTML=`<span class="chip"><i style="background:var(--accent)"></i>Bu koşu</span><span class="chip"><i style="background:var(--bench)"></i>Al ve tut</span>`+
     state.pinned.map((p,i)=>`<span class="chip"><i style="background:${p.color}"></i>${esc(p.label)}<button type="button" data-unpin="${i}" aria-label="Remove ${esc(p.label)}">×</button></span>`).join('');
 }
 function hover(ev){
@@ -1184,7 +1187,7 @@ function hover(ev){
   let lo=0,hi=ts.length-1; while(lo<hi){const mid=(lo+hi)>>1; if(ts[mid]<t) lo=mid+1; else hi=mid;}
   const i=lo>0&&Math.abs(ts[lo-1]-t)<Math.abs(ts[lo]-t)?lo-1:lo, xx=G.m.l+(ts[i]-G.x0)/(G.x1-G.x0)*G.iw;
   document.querySelectorAll('.xh').forEach(l=>{l.setAttribute('x1',xx);l.setAttribute('x2',xx);l.style.display='';});
-  let h=`<b>${fmtDate(ts[i])}</b><br>This run ${money(G.main.eq[i])} <span style="opacity:.75">(${pct(L.st.dd[i],1)} from peak)</span><br>Buy and hold ${money(G.bench.eq[i])}`;
+  let h=`<b>${fmtDate(ts[i])}</b><br>Bu koşu ${money(G.main.eq[i])} <span style="opacity:.75">(${pct(L.st.dd[i],1)} from peak)</span><br>Al ve tut ${money(G.bench.eq[i])}`;
   for(const p of state.pinned){ let a=0,b=p.ts.length-1; while(a<b){const md=(a+b)>>1; if(p.ts[md]<ts[i]) a=md+1; else b=md;} if(Math.abs(p.ts[a]-ts[i])<=4*DAY) h+=`<br>${esc(p.label)} ${money(p.eq[a])}`; }
   tip.innerHTML=h; tip.style.display='block';
   const w=tip.offsetWidth; tip.style.left=(xx+14+w>G.W?xx-14-w:xx+14)+'px';
@@ -1194,18 +1197,18 @@ function leave(){ $('tip').style.display='none'; document.querySelectorAll('.xh'
 function renderKPIs(){
   const L=state.last, s=L.st, kp=(v,l,sub,c)=>`<div class="kpi"><div class="v ${c||''}">${v}</div><div class="l">${l}</div>${sub?`<div class="s">${sub}</div>`:''}</div>`;
   $('kpis').innerHTML=
-    kp(money(s.net),'Net profit',`after ${money(s.fees)} fees`,cls(s.net))+
-    kp(spct(s.total),'Total return',`Buy and hold ${spct(s.bh.total)}`,cls(s.total))+
-    kp(spct(s.cagr),'Annualized return',`Buy and hold ${spct(s.bh.cagr)}`,cls(s.cagr))+
-    kp(pct(s.mdd),'Max drawdown',`Buy and hold ${pct(s.bh.mdd)}`,s.mdd<-0.001?'neg':'')+
-    kp(num(s.sharpe),'Sharpe ratio',`Sortino ${num(s.sortino)}`)+
-    kp(s.trades?pct(s.winRate,0):'–','Win rate',`${s.trades} trades`)+
-    kp(s.trades?num(s.pf):'–','Profit factor',`Avg ${s.trades?s.avgDays.toFixed(0):'–'} days held`);
+    kp(money(s.net),'Net kâr',`ücret sonrası ${money(s.fees)}`,cls(s.net))+
+    kp(spct(s.total),'Toplam getiri',`Al ve tut ${spct(s.bh.total)}`,cls(s.total))+
+    kp(spct(s.cagr),'Yıllıklandırılmış getiri',`Al ve tut ${spct(s.bh.cagr)}`,cls(s.cagr))+
+    kp(pct(s.mdd),'Azami düşüş',`Al ve tut ${pct(s.bh.mdd)}`,s.mdd<-0.001?'neg':'')+
+    kp(num(s.sharpe),'Sharpe oranı',`Sortino ${num(s.sortino)}`)+
+    kp(s.trades?pct(s.winRate,0):'–','Kazanma oranı',`${s.trades} işlem`)+
+    kp(s.trades?num(s.pf):'–','Kâr çarpanı',`Ort. ${s.trades?s.avgDays.toFixed(0):'–'} gün tutuldu`);
 }
 
 function renderPayoff(){
   const L=state.last, box=$('payoff'), t=L.trades.find(x=>x.n===state.sel);
-  if(!t){ box.innerHTML='<div class="empty">No trades were opened. Loosen the IV rank filter, use a lower delta, or allow more open trades.</div>'; $('payoffKv').innerHTML=''; $('payoffSub').textContent=''; return; }
+  if(!t){ box.innerHTML='<div class="empty">İşlem açılmadı. IV rank filtresini gevşetin, daha düşük bir Delta kullanın veya daha çok açık işleme izin verin.</div>'; $('payoffKv').innerHTML=''; $('payoffSub').textContent=''; return; }
   const cfg=L.cfg, r=cfg.rate, W=Math.max(280,box.clientWidth||400), H=250, m={l:56,r:12,t:10,b:26};
   const legs=t.legs, c=t.contracts, S0=t.entryS, ks=legs.map(l=>l.K);
   const xmin=Math.min(S0,...ks)*0.92, xmax=Math.max(S0,...ks)*1.08, N=160, pe=[],p0=[],xs=[];
@@ -1227,7 +1230,7 @@ function renderPayoff(){
   let marks=ks.map(k=>`<line x1="${X(k)}" x2="${X(k)}" y1="${m.t}" y2="${H-m.b}" style="stroke:var(--line);stroke-dasharray:1 3"/>`).join('');
   marks+=`<line x1="${X(S0)}" x2="${X(S0)}" y1="${m.t}" y2="${H-m.b}" style="stroke:var(--muted)"/><text x="${X(S0)}" y="${m.t+9}" text-anchor="${X(S0)>W/2?'end':'start'}" dx="${X(S0)>W/2?-4:4}" style="fill:var(--muted);font-size:11px">Entry ${S0.toFixed(0)}</text>`;
   if(t.exitS>=xmin&&t.exitS<=xmax) marks+=`<circle cx="${X(t.exitS)}" cy="${Y((expVal(t.exitS)-t.V0)*100*c)}" r="4" style="fill:var(--panel);stroke:var(--ink);stroke-width:1.6"/>`;
-  box.innerHTML=`<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" role="img" aria-label="Payoff diagram">
+  box.innerHTML=`<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" role="img" aria-label="Payoff grafiği">
     <defs><clipPath id="${id}p"><rect x="${m.l}" y="${m.t}" width="${iw}" height="${Math.max(0,z-m.t)}"/></clipPath><clipPath id="${id}n"><rect x="${m.l}" y="${z}" width="${iw}" height="${Math.max(0,H-m.b-z)}"/></clipPath></defs>
     <g class="ax">${g}</g>${marks}
     <path d="${area}" clip-path="url(#${id}p)" style="fill:var(--gain);opacity:.22"/><path d="${area}" clip-path="url(#${id}n)" style="fill:var(--loss);opacity:.22"/>
@@ -1276,7 +1279,7 @@ function renderMonthly(){
 
 function renderExits(){
   const tr=state.last.trades, box=$('exits');
-  if(!tr.length){ box.innerHTML='<div class="empty">No trades yet.</div>'; return; }
+  if(!tr.length){ box.innerHTML='<div class="empty">Henüz işlem yok.</div>'; return; }
   const by={}; for(const t of tr){ (by[t.reason]=by[t.reason]||[]).push(t); }
   const order=['Profit target','Target (intraday)','Stop loss','Stop (intraday)','DTE exit','Expiration'];
   let h='<table><thead><tr><th>Exit</th><th>Trades</th><th>Share</th><th>Win rate</th><th>Avg P&amp;L</th><th>Total P&amp;L</th></tr></thead><tbody>';
@@ -1286,33 +1289,33 @@ function renderExits(){
 }
 
 const METRICS=[
-  ['Net profit',s=>money(s.net),s=>s.net],['Total return',s=>spct(s.total),s=>s.total],['Annualized return',s=>spct(s.cagr),s=>s.cagr],
-  ['Max drawdown',s=>pct(s.mdd),s=>s.mdd],['Max drawdown ($)',s=>money(-s.mdda),s=>-s.mdda],['Sharpe ratio',s=>num(s.sharpe),s=>s.sharpe],
-  ['Sortino ratio',s=>num(s.sortino),s=>s.sortino],['Return / drawdown',s=>num(s.mar),s=>s.mar],
-  ['Trades',s=>s.trades,null],['Win rate',s=>pct(s.winRate,1),s=>s.winRate],['Average win',s=>money(s.avgWin),null],['Average loss',s=>money(s.avgLoss),null],
-  ['Profit factor',s=>num(s.pf),s=>s.pf],['Expectancy per trade',s=>money(s.expect),s=>s.expect],['Average days held',s=>s.avgDays.toFixed(1),null],
-  ['Best trade',s=>money(s.best),null],['Worst trade',s=>money(s.worst),null],['Longest losing streak',s=>s.maxLossStreak,null],['Fees and slippage',s=>money(-s.fees),null]
+  ['Net kâr',s=>money(s.net),s=>s.net],['Toplam getiri',s=>spct(s.total),s=>s.total],['Yıllıklandırılmış getiri',s=>spct(s.cagr),s=>s.cagr],
+  ['Azami düşüş',s=>pct(s.mdd),s=>s.mdd],['Azami düşüş ($)',s=>money(-s.mdda),s=>-s.mdda],['Sharpe oranı',s=>num(s.sharpe),s=>s.sharpe],
+  ['Sortino oranı',s=>num(s.sortino),s=>s.sortino],['Getiri / düşüş',s=>num(s.mar),s=>s.mar],
+  ['İşlem sayısı',s=>s.trades,null],['Kazanma oranı',s=>pct(s.winRate,1),s=>s.winRate],['Ortalama kazanç',s=>money(s.avgWin),null],['Ortalama kayıp',s=>money(s.avgLoss),null],
+  ['Kâr çarpanı',s=>num(s.pf),s=>s.pf],['İşlem başına beklenti',s=>money(s.expect),s=>s.expect],['Ortalama tutma günü',s=>s.avgDays.toFixed(1),null],
+  ['En iyi işlem',s=>money(s.best),null],['En kötü işlem',s=>money(s.worst),null],['En uzun kayıp serisi',s=>s.maxLossStreak,null],['Ücret ve kayma',s=>money(-s.fees),null]
 ];
 function renderCompare(){
-  const L=state.last, s=L.st, cols=[{name:'This run',s},...state.pinned.map(p=>({name:p.label,s:p.st}))];
-  const bhKeys=new Set(['Net profit','Total return','Annualized return','Max drawdown','Max drawdown ($)','Sharpe ratio','Sortino ratio','Return / drawdown']);
-  let h=`<table><thead><tr><th>Metric</th>${cols.map(c=>`<th title="${esc(c.name)}">${esc(c.name.length>22?c.name.slice(0,21)+'…':c.name)}</th>`).join('')}<th>Buy and hold</th></tr></thead><tbody>`;
+  const L=state.last, s=L.st, cols=[{name:'Bu koşu',s},...state.pinned.map(p=>({name:p.label,s:p.st}))];
+  const bhKeys=new Set(['Net kâr','Toplam getiri','Yıllıklandırılmış getiri','Azami düşüş','Azami düşüş ($)','Sharpe oranı','Sortino oranı','Getiri / düşüş']);
+  let h=`<table><thead><tr><th>Ölçüt</th>${cols.map(c=>`<th title="${esc(c.name)}">${esc(c.name.length>22?c.name.slice(0,21)+'…':c.name)}</th>`).join('')}<th>Al ve tut</th></tr></thead><tbody>`;
   for(const [name,f,raw] of METRICS){
-    h+=`<tr><td>${name}</td>${cols.map(c=>`<td class="${raw&&isFinite(raw(c.s))?cls(name==='Max drawdown'||name==='Max drawdown ($)'?0:raw(c.s)):''}">${c.s.trades===0&&['Win rate','Average win','Average loss','Profit factor','Expectancy per trade','Average days held','Best trade','Worst trade'].includes(name)?'–':f(c.s)}</td>`).join('')}<td>${bhKeys.has(name)?f(s.bh):'–'}</td></tr>`;
+    h+=`<tr><td>${name}</td>${cols.map(c=>`<td class="${raw&&isFinite(raw(c.s))?cls(name==='Azami düşüş'||name==='Azami düşüş ($)'?0:raw(c.s)):''}">${c.s.trades===0&&['Kazanma oranı','Average win','Average loss','Kâr çarpanı','Expectancy per trade','Average days held','Best trade','Worst trade'].includes(name)?'–':f(c.s)}</td>`).join('')}<td>${bhKeys.has(name)?f(s.bh):'–'}</td></tr>`;
   }
   $('compare').innerHTML=h+'</tbody></table>';
-  $('cmpSub').textContent=state.pinned.length?`${state.pinned.length} pinned`:'Pin runs to compare side by side';
+  $('cmpSub').textContent=state.pinned.length?`${state.pinned.length} sabitlendi`:'Karşılaştırmak için koşuları sabitleyin';
 }
 
 function renderTrades(){
   const L=state.last, box=$('trades'), key=state.sort.k, dir=state.sort.dir;
-  if(!L.trades.length){ box.innerHTML='<div class="empty">No trades were opened with these settings.</div>'; return; }
+  if(!L.trades.length){ box.innerHTML='<div class="empty">Bu ayarlarla işlem açılmadı.</div>'; return; }
   const get={n:t=>t.n,open:t=>t.openTs,close:t=>t.closeTs,text:t=>t.text,qty:t=>t.contracts,credit:t=>t.credit,pnl:t=>t.pnl,ret:t=>t.ret,days:t=>t.days,reason:t=>t.reason}[key]||(t=>t.n);
   const rows=L.trades.slice().sort((a,b)=>{const x=get(a),y=get(b); return (x<y?-1:x>y?1:0)*dir;}).slice(0,600);
   const th=(k,l,left)=>`<th class="s ${left?'l':''}" data-sort="${k}" aria-sort="${key===k?(dir>0?'ascending':'descending'):'none'}">${l}${key===k?(dir>0?' ▲':' ▼'):''}</th>`;
-  let h=`<table><thead><tr>${th('n','#')}${th('open','Opened',1)}${th('close','Closed',1)}${th('text','Structure',1)}${th('qty','Qty')}${th('credit','Credit / debit')}${th('pnl','P&amp;L')}${th('ret','Return on risk')}${th('days','Days')}${th('reason','Exit',1)}</tr></thead><tbody>`;
+  let h=`<table><thead><tr>${th('n','#')}${th('open','Açıldı',1)}${th('close','Kapandı',1)}${th('text','Yapı',1)}${th('qty','Adet')}${th('credit','Credit / debit')}${th('pnl','P&amp;L')}${th('ret','Riske göre getiri')}${th('days','Gün')}${th('reason','Çıkış',1)}</tr></thead><tbody>`;
   for(const t of rows) h+=`<tr class="click ${t.n===state.sel?'sel':''}" data-n="${t.n}"><td>${t.n}</td><td class="l">${fmtDate(t.openTs)}</td><td class="l">${fmtDate(t.closeTs)}</td><td class="l">${esc(t.text)}</td><td>${t.contracts}</td><td>${t.credit<0?'−':''}${money(Math.abs(t.credit))}</td><td class="${cls(t.pnl)}">${money(t.pnl)}</td><td class="${cls(t.ret)}">${spct(t.ret)}</td><td>${t.days}</td><td class="l">${t.reason}</td></tr>`;
-  box.innerHTML=h+'</tbody></table>'+(L.trades.length>600?`<p class="hint" style="padding:8px">Showing 600 of ${L.trades.length} trades.</p>`:'');
+  box.innerHTML=h+'</tbody></table>'+(L.trades.length>600?`<p class="hint" style="padding:8px">600 işlem gösteriliyor, toplam ${L.trades.length}.</p>`:'');
 }
 
 function renderAll(){ renderKPIs(); renderEquity(); renderPayoff(); renderHist(); renderMonthly(); renderExits(); renderCompare(); renderTrades(); }
@@ -1332,8 +1335,8 @@ function toggleUI(){
   const fx=$('sizing').value==='fixed'; $('allocWrap').style.display=fx?'none':'grid'; $('contractsWrap').style.display=fx?'grid':'none';
 }
 function copyText(txt){
-  const ok=()=>{$('copyMsg').textContent='Copied';setTimeout(()=>$('copyMsg').textContent='',1800);};
-  const fb=()=>{const a=document.createElement('textarea');a.value=txt;document.body.appendChild(a);a.select();try{document.execCommand('copy');ok();}catch(e){$('copyMsg').textContent='Copy failed';}a.remove();};
+  const ok=()=>{$('copyMsg').textContent='Kopyalandı';setTimeout(()=>$('copyMsg').textContent='',1800);};
+  const fb=()=>{const a=document.createElement('textarea');a.value=txt;document.body.appendChild(a);a.select();try{document.execCommand('copy');ok();}catch(e){$('copyMsg').textContent='Kopyalanamadı';}a.remove();};
   try{ navigator.clipboard.writeText(txt).then(ok,fb); }catch(e){ fb(); }
 }
 
@@ -1433,7 +1436,7 @@ function markSurfaceOptions(sel, manifest){
   const have = new Set((manifest||[]).map(m=>m.ticker));
   Array.from(sel.options).forEach(o=>{
     const base = o.textContent.replace(/ · .+$/, '');
-    o.textContent = base + (have.has(o.value) ? ' · stored history' : ' · simulated');
+    o.textContent = base + (have.has(o.value) ? ' · kayıtlı geçmiş' : ' · simulated');
   });
 }
 function synthSurface(ticker){
@@ -1465,7 +1468,7 @@ async function loadSurfaceTicker(ticker){
 
   const info = document.getElementById('surfaceInfo');
   const badge = document.getElementById('dataBadge');
-  if(info) info.textContent = `${ticker}: loading stored history…`;
+  if(info) info.textContent = `${ticker}: loading kayıtlı geçmiş…`;
 
   // IMPORTANT: do not leave the previous ticker's data active while the new
   // file is loading. Otherwise a failed fetch silently re-runs the old ticker.
@@ -1487,7 +1490,7 @@ async function loadSurfaceTicker(ticker){
     if(info) info.textContent = `${ticker}: could not load ${url.pathname} (${e.message}).`;
     if(badge) badge.textContent = 'Stored history: load failed';
     const err = document.getElementById('errBox');
-    if(err){ err.textContent = `Could not load stored history for ${ticker}. Expected: ${url.pathname}`; err.style.display='block'; }
+    if(err){ err.textContent = `Could not load kayıtlı geçmiş for ${ticker}. Expected: ${url.pathname}`; err.style.display='block'; }
     return null;
   }
 
@@ -1521,7 +1524,7 @@ async function loadSurfaceTicker(ticker){
   state._builtInData = {
     ts, S, iv, sp, sc, surf,
     ticker: loadedTicker,
-    label: `${loadedTicker} stored history · ${ts.length} days`
+    label: `${loadedTicker} kayıtlı geçmiş · ${ts.length} days`
   };
 
   const iso = ms => new Date(ms).toISOString().slice(0,10);
@@ -1572,14 +1575,14 @@ function init(){
           <label class="chk"><input type="checkbox" id="intraday"> Intraday exit checks (high/low estimated from IV)</label>
           <p class="hint">Also checks whether the profit target or stop would have been touched during the day, using an estimated daily range of about IV/&radic;252. Fills at the target or stop price.</p>
           <label class="chk" style="margin-top:6px"><input type="checkbox" id="rollEnabled"> Roll on exit</label>
-          <label class="f">Roll mode<select id="rollMode"><option value="delta">Same deltas, next expiry</option><option value="strikes">Same strikes, next expiry</option></select></label>
+          <label class="f">Roll mode<select id="rollMode"><option value="delta">Aynı Delta, sonraki expiry</option><option value="strikes">Aynı Strike, sonraki expiry</option></select></label>
         <p class="hint">Roll: when the profit target or close-at-DTE exit hits, the position is closed and the next cycle opens the same day (fees apply, max open trades still respected). Stops and expirations do not roll.</p>
       </div>
     </details>`;
     side.insertAdjacentHTML('beforeend', html);
   }
 
-  $('tmpl').innerHTML=html+'<option>Custom</option>';
+  $('tmpl').innerHTML=html+'<option>Özel</option>';
 
   $('tmpl').value="Poor Man's Covered Call"; applyTemplate("Poor Man's Covered Call"); toggleUI();
 
@@ -1702,7 +1705,7 @@ document.getElementById('sweepBtn')?.addEventListener('click', async ()=>{
   if(out) out.textContent='Running '+(dtes.length*pts.length)+' backtests…';
   await new Promise(r=>setTimeout(r,30));
   try{
-    const base=readCfg(); if(!base.legs.length) throw new Error('Add at least one leg first.');
+    const base=readCfg(); if(!base.legs.length) throw new Error('Önce en az bir bacak ekleyin.');
     const data=getData(base), rows=[];
     for(const d of dtes) for(const p of pts){
       const cfg=Object.assign({},base,{dte:d,pt:p});
@@ -1735,29 +1738,29 @@ try{
 
 
 <section class="site-support" aria-labelledby="support-title">
-  <h2 id="support-title">Support the site</h2>
-  <p>Lessons, the Builder, and the Backtest stay free. If they help, you can buy a coffee — no paywall, no account required.</p>
-  <a class="bmc-link" href="https://www.buymeacoffee.com/memoliro" target="_blank" rel="noopener">Buy me a coffee</a>
+  <h2 id="support-title">Siteye destek ol</h2>
+  <p>Dersler, Builder ve Backtest ücretsiz kalır. İşe yaradıysa bir kahve ısmarlayabilirsiniz — ödeme duvarı yok, hesap gerekmez.</p>
+  <a class="bmc-link" href="https://www.buymeacoffee.com/memoliro" target="_blank" rel="noopener">Bana bir kahve ısmarla</a>
 </section>
 
 <footer class="site-footer">
-<div class="footer-note">Educational only — not financial advice. Options involve risk of loss.</div>
+<div class="footer-note">Yalnızca eğitim amaçlıdır — yatırım tavsiyesi değildir. Opsiyon işlemleri zarar riski içerir.</div>
 <div class="footer-links">
-<a href="/">Home</a>
-<a href="/level1/">Basics</a>
-<a href="/level2/">Fundamentals</a>
-<a href="/level3/">Spreads</a>
-<a href="/level4/">Advanced</a>
-<a href="/strategies/">Strategies</a>
-<a href="/builder/">Builder</a>
-<a href="/backtest/">Backtest</a>
-<a href="/about/">About</a>
-<a href="/contact/">Contact</a>
-<a href="/disclaimer/">Disclaimer</a>
-<a href="/privacy/">Privacy</a>
+<a href="/tr/">Ana Sayfa</a>
+<a href="/tr/level1/">Giriş</a>
+<a href="/tr/level2/">Temeller</a>
+<a href="/tr/level3/">Spreadler</a>
+<a href="/tr/level4/">İleri Seviye</a>
+<a href="/tr/strategies/">Stratejiler</a>
+<a href="/tr/builder/">Builder</a>
+<a href="/tr/backtest/">Backtest</a>
+<a href="/tr/about/">Hakkında</a>
+<a href="/tr/contact/">İletişim</a>
+<a href="/tr/disclaimer/">Sorumluluk</a>
+<a href="/tr/privacy/">Gizlilik</a>
 </div>
 <div class="footer-tools">
-More free tools:
+Diğer ücretsiz araçlar:
 <a href="https://lyricprep.com/" rel="noopener" target="_blank">LyricPrep</a> ·
 <a href="https://jsm-image.com/" rel="noopener" target="_blank">JSM Image</a> ·
 <a href="https://jsm-video.com/" rel="noopener" target="_blank">JSM Video</a> ·
