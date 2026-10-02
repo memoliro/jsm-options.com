@@ -144,12 +144,14 @@ tbody tr.click:hover td{background:var(--panel-2)}
 .kv b{color:var(--ink);font-weight:600}
 
 @media (max-width:1100px){.two{grid-template-columns:minmax(0,1fr)}}
-@media (max-width:900px){
+@media (max-width:1100px), (hover:none) and (pointer:coarse){
+  html,body{height:auto;overflow-x:hidden;overflow-y:auto;-webkit-overflow-scrolling:touch}
   .app{grid-template-columns:minmax(0,1fr)}
-  .side{position:static;max-height:none;border-right:0;border-bottom:1px solid var(--line)}
-  .main{padding:14px 12px 36px}
+  .side{position:static;top:auto;max-height:none;overflow:visible;overscroll-behavior:auto;border-right:0;border-bottom:1px solid var(--line)}
+  .main{padding:14px 12px 48px}
   .top{padding:10px 12px}
   .brand .sub{display:none}
+  svg,canvas{touch-action:pan-y}
 }
 @media (prefers-reduced-motion:no-preference){ .sec>summary::after{transition:transform .15s} }
 
@@ -1056,10 +1058,13 @@ function getData(cfg){
     const idx=[];
     for(let i=0;i<b.ts.length;i++) if(b.ts[i]>=start && b.ts[i]<=end) idx.push(i);
     if(idx.length<60){
-      const src=document.getElementById('dataSrc');
-      if(src) src.value='sim';
-      if(typeof toggleUI==='function') toggleUI();
-      throw new Error('Stored history has only '+idx.length+' days in the selected range. Choose a longer range, or switch to Simulated.');
+      const sEl=document.getElementById('start'), eEl=document.getElementById('end');
+      if(b.ts && b.ts.length>=60 && sEl && eEl){
+        const iso=ms=>new Date(ms).toISOString().slice(0,10);
+        sEl.value=iso(b.ts[0]); eEl.value=iso(b.ts[b.ts.length-1]);
+        return getData(cfg);
+      }
+      throw new Error('Stored history has only '+idx.length+' days in the selected range. Widen the dates to the stored span.');
     }
     const ts=idx.map(i=>b.ts[i]), S=idx.map(i=>b.S[i]), iv=idx.map(i=>b.iv[i]);
     return {ts,S,iv,label:b.label, surf:b.surf, sp:idx.map(i=>b.sp[i]), sc:idx.map(i=>b.sc[i])};
