@@ -465,6 +465,7 @@ html[data-theme="light"] .site-header .nav a.active{background:#2563eb;color:#ff
         <select id="dataSrc">
         <option value="sim">Simulated underlying (geçmiş uzayana kadar)</option>
         <option value="surfaces" selected>Kayıtlı geçmiş (fiyat + ATM IV)</option>
+        <option value="recorded">Kaydedilen veri (7 vadeli yüzey)</option>
         <option value="csv">Kendi günlük fiyatlarım (CSV) — ileri</option>
       </select>
       <div style="margin-top:8px;display:grid;gap:6px" id="tickerRow">
@@ -1113,7 +1114,7 @@ function readCfg(){
 }
 function getData(cfg){
   const ds = document.getElementById('dataSrc')?.value;
-  if(ds==='surfaces'){
+  if(ds==='surfaces'||ds==='recorded'){
     const want=String($('tickerSel')?.value||'').toUpperCase();
     const b = state._builtInData;
     if(!b && state._surfaceLoadError) throw new Error(state._surfaceLoadError);
@@ -1131,7 +1132,8 @@ function getData(cfg){
         sEl.value=iso(b.ts[0]); eEl.value=iso(b.ts[b.ts.length-1]);
         return getData(cfg);
       }
-      throw new Error('Kayıtlı geçmişte seçilen aralıkta yalnızca '+idx.length+' gün var. Tarihleri kayıtlı aralığa genişletin.');
+      const dlbl = ds==='recorded' ? 'Kaydedilen veride' : 'Kayıtlı geçmişte';
+      throw new Error(dlbl+' seçilen aralıkta yalnızca '+idx.length+' gün var. Tarihleri kayıtlı aralığa genişletin.');
     }
     const ts=idx.map(i=>b.ts[i]), S=idx.map(i=>b.S[i]), iv=idx.map(i=>b.iv[i]);
     return {ts,S,iv,label:b.label, surf:b.surf, sp:idx.map(i=>b.sp[i]), sc:idx.map(i=>b.sc[i])};
@@ -1392,10 +1394,10 @@ function renderCharts(){ if(!state.last) return; renderEquity(); renderPayoff();
 
 // ---- events
 function toggleUI(){
-  const v=$('dataSrc').value; const csv=v==='csv'; const surfaces=v==='surfaces'; const sim=v==='sim';
-    document.querySelectorAll('.simOnly').forEach(e=>e.style.display=(csv||surfaces)?'none':'grid');
+  const v=$('dataSrc').value; const csv=v==='csv'; const surfaces=v==='surfaces'; const recorded=v==='recorded'; const sim=v==='sim';
+    document.querySelectorAll('.simOnly').forEach(e=>e.style.display=(csv||surfaces||recorded)?'none':'grid');
   document.querySelectorAll('.csvOnly').forEach(e=>e.style.display=csv?'grid':'none');
-  const tr = document.getElementById('tickerRow'); if(tr) tr.style.display=surfaces?'grid':'none';
+  const tr = document.getElementById('tickerRow'); if(tr) tr.style.display=(surfaces||recorded)?'grid':'none';
   const src = document.getElementById('dataSrc')?.value;
   const isSurfaces = src==='surfaces';
   const isSim = src==='sim';
@@ -1475,7 +1477,7 @@ async function loadBuiltInSurfaces(){
   if(typeof BUILT_IN_MANIFEST !== 'undefined' && BUILT_IN_MANIFEST.length){
     window._surfacesManifest = BUILT_IN_MANIFEST;
     const sel = document.getElementById('tickerSel');
-    if(sel){ markSurfaceOptions(sel, BUILT_IN_MANIFEST); }
+    if(sel){ markSurfaceOptions(sel, BUILT_IN_MANIFEST, window._recordedManifest); }
     const first = document.getElementById('tickerSel')?.value || BUILT_IN_MANIFEST[0].ticker;
     await loadSurfaceTicker(first);
     const badge = document.getElementById('dataBadge');
@@ -1490,8 +1492,12 @@ async function loadBuiltInSurfaces(){
       if(!r.ok) continue;
       const manifest = await r.json();
       window._surfacesManifest = manifest;
+      try{
+        const rr = await fetch(p.replace('/surfaces/manifest.json','/recorded/manifest.json'), {cache:'no-store'});
+        if(rr.ok){ window._recordedManifest = await rr.json(); }
+      }catch(e){}
       const sel = document.getElementById('tickerSel');
-      if(sel){ markSurfaceOptions(sel, manifest); }
+      if(sel){ markSurfaceOptions(sel, manifest, window._recordedManifest); }
       const first = document.getElementById('tickerSel')?.value || manifest[0].ticker;
       await loadSurfaceTicker(first);
       const badge = document.getElementById('dataBadge');
@@ -1504,11 +1510,12 @@ async function loadBuiltInSurfaces(){
 
 const TICKER_SPOT = {SPY:560,QQQ:480,IWM:210,DIA:420,SPX:5600,XLF:45,XLK:220,XLE:90,SMH:250,TLT:92,GLD:240,SLV:28,USO:75,AAPL:230,MSFT:420,NVDA:130,TSLA:250,META:580,AMZN:190,GOOGL:170};
 const TICKER_IV = {SPY:0.16,QQQ:0.20,IWM:0.22,DIA:0.15,SPX:0.15,XLF:0.18,XLK:0.22,XLE:0.24,SMH:0.28,TLT:0.14,GLD:0.15,SLV:0.26,USO:0.32,AAPL:0.24,MSFT:0.22,NVDA:0.40,TSLA:0.50,META:0.30,AMZN:0.28,GOOGL:0.26};
-function markSurfaceOptions(sel, manifest){
+function markSurfaceOptions(sel, manifest, recordedManifest){
   const have = new Set((manifest||[]).map(m=>m.ticker));
+  const rec = new Set((recordedManifest||[]).map(m=>m.ticker));
   Array.from(sel.options).forEach(o=>{
     const base = o.textContent.replace(/ · .+$/, '');
-    o.textContent = base + (have.has(o.value) ? ' · kayıtlı geçmiş' : ' · simulated');
+    o.textContent = base + (rec.has(o.value) ? ' · kaydedilen' : have.has(o.value) ? ' · kayıtlı geçmiş' : ' · simulated');
   });
 }
 function synthSurface(ticker){
@@ -1619,7 +1626,7 @@ async function loadSurfaceTicker(ticker){
   if(badge) badge.textContent = state._builtInData.label;
 
   // Keep the selected date range synchronized with the newly loaded ticker.
-  if(ts.length >= 60 && document.getElementById('dataSrc')?.value === 'surfaces'){
+  if(ts.length >= 60 && ['surfaces','recorded'].includes(document.getElementById('dataSrc')?.value)){
     const sEl=document.getElementById('start'), eEl=document.getElementById('end');
     if(sEl){ sEl.value=iso(ts[0]); sEl.min=iso(ts[0]); sEl.max=iso(ts[ts.length-1]); }
     if(eEl){ eEl.value=iso(ts[ts.length-1]); eEl.min=iso(ts[0]); eEl.max=iso(ts[ts.length-1]); }
@@ -1629,6 +1636,77 @@ async function loadSurfaceTicker(ticker){
   clearTimeout(timer);
   run();
   return surf;
+}
+
+async function loadRecordedTicker(ticker){
+  ticker = String(ticker || '').trim().toUpperCase();
+  if(!ticker) return null;
+  const requestId = (state._surfaceLoadId || 0) + 1;
+  state._surfaceLoadId = requestId;
+  const info = document.getElementById('surfaceInfo');
+  const badge = document.getElementById('dataBadge');
+  if(info) info.textContent = `${ticker}: kaydedilen veri yükleniyor…`;
+  state._builtInData = null;
+  state._currentTicker = ticker;
+  const url = new URL('./data/recorded/' + encodeURIComponent(ticker) + '.json', document.baseURI);
+  url.searchParams.set('_ts', Date.now().toString());
+  let rec = null;
+  try{
+    const r = await fetch(url.href, {cache:'no-store'});
+    if(!r.ok) throw new Error(`HTTP ${r.status}`);
+    rec = await r.json();
+  }catch(e){
+    if(state._surfaceLoadId !== requestId) return null;
+    if(info) info.textContent = `${ticker}: henüz kaydedilen veri yok (${url.pathname}). Kaydedici bunları her gün kaydeder; bu arada Kayıtlı geçmiş veya Simulated seçin.`;
+    if(badge) badge.textContent = 'Kaydedilen veri: yok';
+    const err = document.getElementById('errBox');
+    if(err){ err.textContent = `${ticker} için henüz kaydedilen veri yok. Beklenen: ${url.pathname}`; err.style.display='block'; }
+    return null;
+  }
+  if(state._surfaceLoadId !== requestId) return null;
+  const tenors = rec.tenors || [7,14,30,60,90,180,365];
+  const nt = tenors.length, np = 3;
+  const okShape = rec && Array.isArray(rec.dates) && Array.isArray(rec.spot) && Array.isArray(rec.iv)
+    && rec.iv.length === rec.dates.length * nt * np;
+  if(!okShape){
+    if(info) info.textContent = `${ticker}: kaydedilen veri biçimi hatalı (günlük ${nt} vade × 3 nokta bekleniyor).`;
+    return null;
+  }
+  if(rec.ticker && String(rec.ticker).toUpperCase() !== ticker){
+    if(info) info.textContent = `${ticker}: dosya ${rec.ticker} döndürdü; eşleşmeyen veri kullanılmadı.`;
+    return null;
+  }
+  const idx30 = tenors.indexOf(30) >= 0 ? tenors.indexOf(30) : 2;
+  const ts=[], S=[], iv=[], p25=[], atm=[], c25=[];
+  const adj = Array.isArray(rec.spotAdj) && rec.spotAdj.length === rec.dates.length ? rec.spotAdj : rec.spot;
+  for(let i=0;i<rec.dates.length;i++){
+    ts.push(rec.dates[i] * 86400000);
+    S.push(adj[i]);
+    const b = (i*nt + idx30) * np;
+    p25.push(rec.iv[b]); atm.push(rec.iv[b+1]); c25.push(rec.iv[b+2]);
+    iv.push(rec.iv[b+1]);
+  }
+  const loadedTicker = String(rec.ticker || ticker).toUpperCase();
+  state._builtInData = {
+    ts, S, iv, sp: [], sc: [],
+    grid: {tenors, p25, atm, c25},
+    surf: rec, ticker: loadedTicker,
+    label: `${loadedTicker} kaydedilen veri · ${ts.length} gün`
+  };
+  const iso = ms => new Date(ms).toISOString().slice(0,10);
+  if(info){
+    const src = rec.meta && rec.meta.source ? ' · ' + rec.meta.source : '';
+    info.textContent = `${loadedTicker}: kaydedilen ${iso(ts[0])} → ${iso(ts[ts.length-1])} (${ts.length} gün, 30g ATM ± 25Δ kanatlar)${src}`;
+  }
+  if(badge) badge.textContent = state._builtInData.label;
+  if(ts.length >= 60){
+    const sEl=document.getElementById('start'), eEl=document.getElementById('end');
+    if(sEl){ sEl.value=iso(ts[0]); sEl.min=iso(ts[0]); sEl.max=iso(ts[ts.length-1]); }
+    if(eEl){ eEl.value=iso(ts[ts.length-1]); eEl.min=iso(ts[0]); eEl.max=iso(ts[ts.length-1]); }
+  }
+  clearTimeout(timer);
+  run();
+  return rec;
 }
 
 function init(){
@@ -1677,8 +1755,8 @@ function init(){
   renderSaved();
   $('intraday')?.addEventListener('change', schedule);
   $('tickerSel')?.addEventListener('change', async e=>{
-    if($('dataSrc').value==='surfaces') await loadSurfaceTicker(e.target.value);
-    else loadSurfaceTicker(e.target.value);
+    if($('dataSrc').value==='recorded') await loadRecordedTicker(e.target.value);
+    else await loadSurfaceTicker(e.target.value);
   });
   $('dataSrc')?.addEventListener('change', async ()=>{
     toggleUI();
@@ -1686,6 +1764,10 @@ function init(){
       const t=$('tickerSel')?.value||'SPY';
       const surf=await loadSurfaceTicker(t);
       if(surf) schedule();
+    }else if($('dataSrc').value==='recorded'){
+      const t=$('tickerSel')?.value||'SPY';
+      const rec=await loadRecordedTicker(t);
+      if(rec) schedule();
     }
   });
   $('rollEnabled')?.addEventListener('change', schedule);

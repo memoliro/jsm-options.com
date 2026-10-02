@@ -1,0 +1,9 @@
+[
+  {
+    "ticker": "SPY",
+    "days": 490,
+    "asof": "2026-10-02",
+    "sample": true,
+    "source": "SAMPLE \u2014 synthetic placeholder"
+  }
+]
