@@ -164,6 +164,12 @@ tbody tr.click:hover td{background:var(--panel-2)}
 .site-support p{margin:0 0 14px;color:#c8d0dc}
 .bmc-link{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:999px;background:#ffdd00;color:#0f1419!important;font-weight:700;font-size:13px;text-decoration:none!important;border:1px solid #e6c200}
 .bmc-link:hover{background:#ffe44d}
+/* keep the support card centred under the main column, not under the sidebar */
+@media (min-width:1101px) and (hover:hover), (min-width:1101px) and (pointer:fine){
+  .site-support{margin:0 16px 8px calc(356px + max(16px,(100% - 356px - 1280px)/2))}
+}
+#riskNote{margin-bottom:10px}
+#riskNote.warn{border-left-color:var(--loss);color:var(--ink)}
 html[data-theme="light"] .site-support h2{color:#111827}
 html[data-theme="light"] .site-support p{color:#374151}
 
@@ -596,6 +602,25 @@ html[data-theme="light"] .site-header .nav a.active{background:#2563eb;color:#ff
       <label class="f">Strike increment ($)<input type="number" id="step" value="1" min="0.01" step="0.5"></label>
     </div>
   </details>
+  <details class="sec" id="sec-risk">
+    <summary>Risk limits</summary>
+    <div class="body">
+      <label class="f">Risk profile
+        <select id="riskProfile"><option value="off">Off (current behavior)</option><option value="aware">Risk-aware</option><option value="conservative">Conservative</option><option value="very">Very conservative</option><option value="custom">Custom</option></select>
+      </label>
+      <div class="g2">
+        <label class="f">Max loss per trade (% of capital)<input type="number" id="riskPct" value="0" min="0" step="0.25"></label>
+        <label class="f">Max contracts per trade (0 = no limit)<input type="number" id="maxQty" value="0" min="0" step="1"></label>
+      </div>
+      <div class="g2">
+        <label class="f">Max total open risk (% of capital)<input type="number" id="openRiskPct" value="0" min="0" step="0.5"></label>
+        <label class="f">Pause new entries at drawdown (%)<input type="number" id="ddPause" value="0" min="0" step="1"></label>
+      </div>
+      <label class="f">Pause length (days)<input type="number" id="pauseDays" value="20" min="1" step="1"></label>
+      <p class="hint" id="riskLive"></p>
+      <p class="hint">Risk = the most a trade can lose (Debit paid, or width minus Credit; uncovered upside is stressed at +50%). A trade that does not fit a limit is skipped, never forced to 1 contract. 0 turns a limit off. When a pause ends, the drawdown peak resets to current capital.</p>
+    </div>
+  </details>
 </aside>
 
 <main class="main" id="main">
@@ -604,6 +629,7 @@ html[data-theme="light"] .site-header .nav a.active{background:#2563eb;color:#ff
     <button type="button" id="noticeX" aria-label="Dismiss">×</button>
   </div>
   <div class="banner-err" id="errBox" style="display:none"></div>
+  <div class="notice" id="riskNote" style="display:none"><span></span></div>
 
   <div class="kpis" id="kpis"></div>
 
@@ -793,6 +819,13 @@ function estBPR(legs,S,V0){
   }
   return Math.max(1,best);
 }
+// Most a 1-contract position can lose at expiry, per contract in $. Uncovered upside is stressed at +50%.
+function estMaxLoss(legs,S,V0){
+  const pay=x=>{let a=0;for(const l of legs)a+=l.side*l.qty*(l.type==='C'?Math.max(0,x-l.K):Math.max(0,l.K-x));return a-V0;};
+  const ks=legs.map(l=>l.K), hi=Math.max(S*1.5,Math.max(...ks)*1.25);
+  let mn=0; for(const x of [0,hi,...ks]) mn=Math.min(mn,pay(x));
+  return Math.max(1,-mn*100);
+}
 function legsText(legs){return legs.map(l=>(l.side>0?'+':'−')+(l.qty>1?l.qty:'')+l.type+(Math.round(l.K*100)/100)).join(' ');}
 
 function runBacktest(cfg,data){
@@ -809,6 +842,9 @@ function runBacktest(cfg,data){
   const intra=cfg.intraday!=null?!!cfg.intraday:!!window._sbIntraday;
   const roll=cfg.roll||window._sbRoll||{enabled:false,mode:'delta'};
   const eq=new Array(n), rollQ=[];
+  const RS={skipCap:0,skipOpen:0,skipPause:0,trimmed:0,pauseEvents:0,pausedDays:0,ml:[]};
+  const riskOn=cfg.riskPct>0||cfg.maxQty>0||cfg.openRiskPct>0||cfg.ddPause>0;
+  let peakEq=cfg.capital, paused=false, pausedUntil=0;
   const closePos=(p,i,reason,gross)=>{
     const legN=p.legs.reduce((a,l)=>a+l.qty,0);
     const fees=reason==='Expiration'?0:(cfg.comm*legN*p.contracts+cfg.slip*100*p.contracts);
@@ -850,6 +886,7 @@ function runBacktest(cfg,data){
     } else allow=open.length===0;
     const tryOpen=(fixedKs)=>{
     const equityNow=cash+unreal;
+    if(paused){ RS.skipPause++; return; }
     if(open.length<cfg.maxOpen&&equityNow>0&&s+cfg.dte*DAY<=ts[n-1]){
       const expIdx=lb(s+cfg.dte*DAY,i+1);
       if(expIdx<n){
@@ -869,11 +906,23 @@ function runBacktest(cfg,data){
           const bpr=estBPR(legs,px,V0);
           let contracts=cfg.sizing==='fixed'?cfg.contracts:Math.floor(equityNow*cfg.alloc/100/bpr);
           if(cfg.sizing!=='fixed'&&contracts<1&&bpr<=equityNow*Math.max(cfg.alloc/100*2.5,0.25)) contracts=1;
+          const mlpc=estMaxLoss(legs,px,V0); RS.ml.push(mlpc);
+          if(riskOn){
+            const c0=contracts;
+            if(cfg.riskPct>0){ const cap=Math.floor(equityNow*cfg.riskPct/100/mlpc); if(cap<contracts){ contracts=cap; if(cap<1) RS.skipCap++; } }
+            if(cfg.maxQty>0&&contracts>cfg.maxQty) contracts=cfg.maxQty;
+            if(cfg.openRiskPct>0&&contracts>=1){
+              let used=0; for(const q of open) used+=q.maxLoss||0;
+              const room=Math.floor((equityNow*cfg.openRiskPct/100-used)/mlpc);
+              if(room<contracts){ contracts=Math.max(0,room); if(room<1) RS.skipOpen++; }
+            }
+            if(contracts>=1&&contracts<c0) RS.trimmed++;
+          }
           if(contracts>=1){
             const legN=legs.reduce((a,l)=>a+l.qty,0);
             const feesOpen=cfg.comm*legN*contracts+cfg.slip*100*contracts;
             cash-=feesOpen;
-            open.push({openIdx:i,openTs:s,expTs,legs,contracts,V0,absCost:Math.abs(V0)*100*contracts,bpr,feesOpen,entryS:px,entryIV:atm,T0:T});
+            open.push({openIdx:i,openTs:s,expTs,legs,contracts,V0,absCost:Math.abs(V0)*100*contracts,bpr,maxLoss:mlpc*contracts,feesOpen,entryS:px,entryIV:atm,T0:T});
           }
         }
       }
@@ -883,8 +932,15 @@ function runBacktest(cfg,data){
     for(const p of rolls) tryOpen(roll.mode==='strikes'?p.legs.map(l=>l.K):null);
     if(allow&&!(filterOn&&(i<60||ivr[i]<cfg.ivMin||ivr[i]>cfg.ivMax))) tryOpen(null);
     eq[i]=cash+unreal;
+    if(cfg.ddPause>0){
+      const e=eq[i];
+      if(paused&&ts[i]>=pausedUntil){ paused=false; peakEq=e; }
+      if(e>peakEq) peakEq=e;
+      if(!paused&&peakEq>0&&e/peakEq-1<=-cfg.ddPause/100){ paused=true; pausedUntil=ts[i]+cfg.pauseDays*DAY; RS.pauseEvents++; }
+      if(paused) RS.pausedDays++;
+    }
   }
-  return {eq,trades};
+  return {eq,trades,risk:RS};
 }
 
 function seriesStats(ts,eq,start){
@@ -1050,7 +1106,8 @@ function readCfg(){
     ivMin:g('ivMin',0),ivMax:g('ivMax',100),maxOpen:Math.max(1,Math.round(g('maxOpen',1))),pt:Math.max(0,g('pt',0)),sl:Math.max(0,g('sl',0)),
     exitDTE:Math.max(0,Math.round(g('exitDTE',0))),sizing:$('sizing').value,contracts:Math.max(1,Math.round(g('contracts',1))),alloc:Math.max(0.1,g('alloc',5)),
     comm:Math.max(0,g('comm',0.65)),slip:Math.max(0,g('slip',0.03)),step:Math.max(0.01,g('step',1)),rate:g('rate',4)/100,
-    skew:Math.max(0,g('skew',2)),vrp:g('vrp',12)/100,legs:state.legs.map(l=>({...l}))};
+    skew:Math.max(0,g('skew',2)),riskPct:Math.max(0,g('riskPct',0)),maxQty:Math.max(0,Math.round(g('maxQty',0))),
+    openRiskPct:Math.max(0,g('openRiskPct',0)),ddPause:Math.max(0,g('ddPause',0)),pauseDays:Math.max(1,Math.round(g('pauseDays',20))),vrp:g('vrp',12)/100,legs:state.legs.map(l=>({...l}))};
 }
 function getData(cfg){
   const ds = document.getElementById('dataSrc')?.value;
@@ -1098,7 +1155,7 @@ function getData(cfg){
 }
 function runLabel(cfg){
   const t=$('tmpl').value==='Custom'?'Custom':$('tmpl').value;
-  return `${t} · ${cfg.dte}d · PT ${cfg.pt||'–'} / SL ${cfg.sl||'–'}`;
+  return `${t} · ${cfg.dte}d · PT ${cfg.pt||'–'} / SL ${cfg.sl||'–'}`+((cfg.riskPct>0||cfg.maxQty>0||cfg.openRiskPct>0||cfg.ddPause>0)?` · risk ${cfg.riskPct||'–'}%/${cfg.maxQty||'–'}`:'');
 }
 
 let timer=null;
@@ -1114,14 +1171,14 @@ function run(){
 
   const intraday = $('intraday')?.checked||false; const rollEnabled = $('rollEnabled')?.checked||false; const rollMode = $('rollMode')?.value||'delta'; window._sbIntraday=intraday; window._sbRoll={enabled:rollEnabled, mode:rollMode};
   try{
-    $('errBox').style.display='none';
+    $('errBox').style.display='none'; if($('riskNote')) $('riskNote').style.display='none';
     const cfg=readCfg(); if(!cfg.legs.length) throw new Error('Add at least one leg to the strategy.');
     const data=getData(cfg);
     const res=runBacktest(cfg,data), st=computeStats(cfg,data,res);
     state.last={cfg,data,res,st,trades:res.trades,label:runLabel(cfg)};
     if(!res.trades.some(t=>t.n===state.sel)) state.sel=res.trades.length?res.trades[0].n:0;
     $('dataBadge').textContent=data.label;
-    renderAll();
+    renderAll(); renderRiskNote();
   }catch(e){ const b=$('errBox'); b.textContent=e.message; b.style.display='block'; }
 }
 
@@ -1203,6 +1260,18 @@ function renderKPIs(){
     kp(s.trades?num(s.pf):'–','Profit factor',`Avg ${s.trades?s.avgDays.toFixed(0):'–'} days held`);
 }
 
+function renderRiskNote(){
+  const L=state.last, note=$('riskNote'), live=$('riskLive'); if(!L||!note) return;
+  const cfg=L.cfg, RS=L.res.risk; if(!RS) return;
+  const cap=cfg.capital, ml=RS.ml.length?RS.ml.slice().sort((a,b)=>a-b)[RS.ml.length>>1]:0;
+  if(live) live.textContent=ml?'Max loss of 1 contract (median): '+money(ml)+' · '+(ml/cap*100).toFixed(1)+'% of capital':'';
+  const on=cfg.riskPct>0||cfg.maxQty>0||cfg.openRiskPct>0||cfg.ddPause>0;
+  const sk=RS.skipCap+RS.skipOpen+RS.skipPause, capUsd=cap*cfg.riskPct/100;
+  const none=!L.trades.length&&(RS.skipCap+RS.skipOpen)>0;
+  note.style.display=(on&&(sk>0||RS.trimmed>0))?'flex':'none';
+  note.classList.toggle('warn',none);
+  note.firstElementChild.textContent=none?'No trade fits the limits: one contract can lose about '+money(ml)+' but the cap is '+money(capUsd)+'. Raise the cap, or pick a smaller or defined-risk structure.':'Risk limits: '+sk+' entries skipped ('+RS.skipCap+' loss cap · '+RS.skipOpen+' open-risk cap · '+RS.skipPause+' drawdown pause) · '+RS.trimmed+' trimmed to fit.';
+}
 function renderPayoff(){
   const L=state.last, box=$('payoff'), t=L.trades.find(x=>x.n===state.sel);
   if(!t){ box.innerHTML='<div class="empty">No trades were opened. Loosen the IV rank filter, use a lower delta, or allow more open trades.</div>'; $('payoffKv').innerHTML=''; $('payoffSub').textContent=''; return; }
@@ -1348,7 +1417,8 @@ function saveCurrent(){
     tmpl:$('tmpl').value, legs:state.legs, dte:+$('dte').value||45, pt:+$('pt').value||50, sl:+$('sl').value||200,
     exitDTE:+$('exitDTE').value||21, ticker:$('ticker')?.value||'SPY', sizing:$('sizing')?.value||'fixed',
     freq:$('freq')?.value||'monthly', dataSrc:$('dataSrc')?.value||'sim', intraday:$('intraday')?.checked||false,
-    rollEnabled:$('rollEnabled')?.checked||false, rollMode:$('rollMode')?.value||'delta', seed:$('seed')?.value||'1'
+    rollEnabled:$('rollEnabled')?.checked||false, rollMode:$('rollMode')?.value||'delta', seed:$('seed')?.value||'1',
+    riskPct:$('riskPct')?.value||'0', maxQty:$('maxQty')?.value||'0', openRiskPct:$('openRiskPct')?.value||'0', ddPause:$('ddPause')?.value||'0', pauseDays:$('pauseDays')?.value||'20'
   };
   const arr=getSaved();
   arr.push({id:Date.now(), name, created:new Date().toISOString(), cfg, metrics:state.last?state.last.st:null});
@@ -1381,6 +1451,8 @@ function loadSaved(id){
   if($('intraday')) $('intraday').checked=c.intraday||false;
   if($('rollEnabled')) $('rollEnabled').checked=c.rollEnabled||false;
   if($('rollMode')) $('rollMode').value=c.rollMode||'delta';
+  ['riskPct','maxQty','openRiskPct','ddPause','pauseDays'].forEach(k=>{ if($(k)&&c[k]!=null) $(k).value=c[k]; });
+  if(window.syncRiskProfile) window.syncRiskProfile();
   renderLegs(); schedule();
 }
 function exportSaved(){
@@ -1670,7 +1742,7 @@ init();
 <script>
 function readSetup(){
   const g=id=>{const el=document.getElementById(id); return el?el.value:'';};
-  return {ticker:g('tickerSel'),tmpl:g('tmpl'),dte:g('dte'),pt:g('pt'),sl:g('sl'),exitDTE:g('exitDTE'),start:g('start'),end:g('end'),comm:g('comm'),slip:g('slip')};
+  return {ticker:g('tickerSel'),tmpl:g('tmpl'),dte:g('dte'),pt:g('pt'),sl:g('sl'),exitDTE:g('exitDTE'),start:g('start'),end:g('end'),comm:g('comm'),slip:g('slip'),riskPct:g('riskPct'),maxQty:g('maxQty'),openRiskPct:g('openRiskPct'),ddPause:g('ddPause'),pauseDays:g('pauseDays')};
 }
 function applySetup(q){
   const set=(id,v)=>{const el=document.getElementById(id); if(el&&v!=null&&v!=='') el.value=v;};
@@ -1684,6 +1756,8 @@ function applySetup(q){
   set('end', q.get('end'));
   set('comm', q.get('comm'));
   set('slip', q.get('slip'));
+  ['riskPct','maxQty','openRiskPct','ddPause','pauseDays'].forEach(k=>set(k,q.get(k)));
+  if(window.syncRiskProfile) window.syncRiskProfile();
 }
 document.getElementById('shareSetupBtn')?.addEventListener('click', ()=>{
   const s = readSetup();
@@ -1691,7 +1765,7 @@ document.getElementById('shareSetupBtn')?.addEventListener('click', ()=>{
   Object.entries(s).forEach(([k,v])=> url.searchParams.set(k,v));
   const link = url.toString();
   const status = document.getElementById('shareStatus');
-  const done = ()=>{ if(status) status.textContent = 'Link copied. It reloads this ticker, template, DTE, target, stop, and costs.'; };
+  const done = ()=>{ if(status) status.textContent = 'Link copied. It reloads this ticker, template, DTE, target, stop, costs, and risk limits.'; };
   if(navigator.clipboard) navigator.clipboard.writeText(link).then(done).catch(()=>{ if(status) status.textContent = link; });
   else if(status) status.textContent = link;
 });
@@ -1733,6 +1807,18 @@ try{
 }catch(e){}
 </script>
 
+<script id="risk-ui">
+(function(){
+  var P={"off": [0, 0, 0, 0, 20], "aware": [2, 3, 6, 15, 20], "conservative": [1.5, 2, 3, 10, 30], "very": [1, 1, 1, 7, 30]}, ids=['riskPct','maxQty','openRiskPct','ddPause','pauseDays'];
+  var g=function(i){return document.getElementById(i);};
+  function match(){ var v=ids.map(function(i){return +g(i).value||0;}); for(var k in P){ if(P[k].every(function(x,j){return x===v[j];})) return k; } return 'custom'; }
+  g('riskProfile').addEventListener('change',function(){
+    var k=g('riskProfile').value; if(P[k]) ids.forEach(function(id,j){ g(id).value=P[k][j]; }); schedule();
+  });
+  ids.forEach(function(id){ g(id).addEventListener('input',function(){ g('riskProfile').value=match(); }); });
+  window.syncRiskProfile=function(){ g('riskProfile').value=match(); };
+})();
+</script>
 
 <section class="site-support" aria-labelledby="support-title">
   <h2 id="support-title">Support the site</h2>
