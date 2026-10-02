@@ -1472,14 +1472,24 @@ function importSavedFile(file){
 
 
 
+async function refreshRecordedManifest(){
+  try{
+    const url = new URL('./data/recorded/manifest.json', document.baseURI);
+    url.searchParams.set('_ts', Date.now().toString());
+    const rr = await fetch(url.href, {cache:'no-store'});
+    if(rr.ok){
+      window._recordedManifest = await rr.json();
+      const sel = document.getElementById('tickerSel');
+      if(sel && window._surfacesManifest) markSurfaceOptions(sel, window._surfacesManifest, window._recordedManifest);
+    }
+  }catch(e){}
+}
+
 async function loadBuiltInSurfaces(){
   // Use embedded first (works on file://)
   if(typeof BUILT_IN_MANIFEST !== 'undefined' && BUILT_IN_MANIFEST.length){
     window._surfacesManifest = BUILT_IN_MANIFEST;
-    try{
-      const rr = await fetch('./data/recorded/manifest.json', {cache:'no-store'});
-      if(rr.ok){ window._recordedManifest = await rr.json(); }
-    }catch(e){}
+    await refreshRecordedManifest();
     const sel = document.getElementById('tickerSel');
     if(sel){ markSurfaceOptions(sel, BUILT_IN_MANIFEST, window._recordedManifest); }
     const first = document.getElementById('tickerSel')?.value || BUILT_IN_MANIFEST[0].ticker;
@@ -1496,10 +1506,7 @@ async function loadBuiltInSurfaces(){
       if(!r.ok) continue;
       const manifest = await r.json();
       window._surfacesManifest = manifest;
-      try{
-        const rr = await fetch(p.replace('/surfaces/manifest.json','/recorded/manifest.json'), {cache:'no-store'});
-        if(rr.ok){ window._recordedManifest = await rr.json(); }
-      }catch(e){}
+      await refreshRecordedManifest();
       const sel = document.getElementById('tickerSel');
       if(sel){ markSurfaceOptions(sel, manifest, window._recordedManifest); }
       const first = document.getElementById('tickerSel')?.value || manifest[0].ticker;
