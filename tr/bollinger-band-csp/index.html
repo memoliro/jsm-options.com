@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="tr" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/png" sizes="32x32" href="https://jsm-options.com/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="48x48" href="https://jsm-options.com/favicon-48.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="https://jsm-options.com/apple-touch-icon.png">
+  <title>Bollinger Bandı + Nakit Teminatlı Put (BB + CSP): Kurallı Bir Giriş</title>
+  <meta name="description" content="Put satışlarını Bollinger Bandı ile zamanlayın: günlük alt banda temasında 45+ gün vadeli, spotun ~%10 altında put satın. Giriş kuralları, %50 / 21 gün / üst bant çıkışları ve Builder uygulaması. Yalnızca eğitim amaçlıdır.">
+  <link rel="canonical" href="https://jsm-options.com/tr/bollinger-band-csp/">
+  <link rel="alternate" hreflang="en" href="https://jsm-options.com/bollinger-band-csp/">
+  <link rel="alternate" hreflang="tr" href="https://jsm-options.com/tr/bollinger-band-csp/">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="JSM Options">
+  <meta property="og:title" content="Bollinger Bandı + Nakit Teminatlı Put (BB + CSP): Kurallı Bir Giriş">
+  <meta property="og:description" content="Put satışlarını Bollinger Bandı ile zamanlayın: günlük alt banda temasında 45+ gün vadeli, spotun ~%10 altında put satın. Giriş kuralları, %50 / 21 gün / üst bant çıkışları ve Builder uygulaması. Yalnızca eğitim amaçlıdır.">
+  <meta property="og:url" content="https://jsm-options.com/tr/bollinger-band-csp/">
+  <meta property="og:image" content="https://jsm-options.com/images/og-default.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Bollinger Bandı + Nakit Teminatlı Put (BB + CSP): Kurallı Bir Giriş">
+  <meta name="twitter:description" content="Put satışlarını Bollinger Bandı ile zamanlayın: günlük alt banda temasında 45+ gün vadeli, spotun ~%10 altında put satın. Giriş kuralları, %50 / 21 gün / üst bant çıkışları ve Builder uygulaması. Yalnızca eğitim amaçlıdır.">
+  <meta name="twitter:image" content="https://jsm-options.com/images/og-default.png">
+  <link rel="stylesheet" href="https://jsm-options.com/assets/style.css?v=20260928d">
+  <script src="https://jsm-options.com/assets/site.js?v=20260928e" defer></script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Neden 30 yerine 45 gün vade?", "acceptedAnswer": {"@type": "Answer", "text": "45 gün vade daha fazla prim taşır ve ortalamaya dönüş hareketine alan tanır. 30 gün vade daha hızlı çürür ama daha az öder ve toparlanma yavaşsa daha az affeder."}}, {"@type": "Question", "name": "Sattıktan sonra hisse düşmeye devam ederse ne olur?", "acceptedAnswer": {"@type": "Answer", "text": "O zaman atama gerçekleşir: hisseyi strike fiyatından alırsınız. Bu yüzden rejim filtresi ve 'sahip olmaktan memnun olma' kuralı tartışılmazdır."}}, {"@type": "Question", "name": "Bollinger Bandı CSP her hissede kullanılır mı?", "acceptedAnswer": {"@type": "Answer", "text": "Dar alış-satış makaslı, likit hisselerde en iyi sonucu verir. Çok oynak hisselerde spotun %10 altı bile paraya yakın olabilir — sabit %10 yerine yaklaşık 10 delta kullanın."}}, {"@type": "Question", "name": "Üst bant çıkışı parayı masada bırakır mı?", "acceptedAnswer": {"@type": "Answer", "text": "Bazen, momentum temas sonrası devam ederse. Kural, son kuruşları tutarlılık karşılığında bilinçli olarak bırakır."}}]}</script>
+  <style id="jsm-mobile-nav">
+.nav-toggle{display:none;box-sizing:border-box;width:44px;height:44px;min-width:44px;min-height:44px;padding:0;border:1px solid var(--border,#2d3a4f);border-radius:10px;background:var(--card,#1a2332);color:var(--text,#e7ecf3);cursor:pointer;align-items:center;justify-content:center;flex-direction:column;gap:5px;-webkit-tap-highlight-color:transparent;touch-action:manipulation;position:relative;z-index:40}
+.nav-toggle span{display:block;width:18px;height:2px;border-radius:1px;background:currentColor;pointer-events:none}
+.nav-toggle[aria-expanded="true"] span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.nav-toggle[aria-expanded="true"] span:nth-child(2){opacity:0}
+.nav-toggle[aria-expanded="true"] span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+@media (max-width:900px){
+  .nav-toggle{display:inline-flex!important}
+  .site-header{z-index:100!important;position:sticky;top:0}
+  .site-header .nav{
+    display:none!important;position:fixed!important;top:56px!important;left:0!important;right:0!important;width:100%!important;
+    max-height:calc(100vh - 56px)!important;overflow-y:auto!important;-webkit-overflow-scrolling:touch;
+    flex-direction:column!important;align-items:stretch!important;gap:6px!important;padding:12px 16px 20px!important;margin:0!important;
+    background:#0f1419!important;border-bottom:1px solid #2d3a4f!important;box-shadow:0 12px 28px rgba(0,0,0,.45)!important;z-index:9999!important;
+  }
+  html[data-theme="light"] .site-header .nav{background:#ffffff!important;border-bottom-color:#e2e8f0!important}
+  .site-header .nav.is-open{display:flex!important}
+  .site-header .nav a{width:100%!important;text-align:left!important;padding:14px!important;font-size:16px!important;min-height:48px!important;display:flex!important;align-items:center!important;border-radius:10px!important;box-sizing:border-box!important}
+}
+  </style>
+</head>
+<body>
+<header class="site-header">
+  <div class="site-header-inner">
+    <a class="logo logo-link" href="https://jsm-options.com/tr/" aria-label="JSM Options Ana Sayfa">
+      <div class="logo-icon">JSM</div>
+      <div>
+        <div style="font-weight:700">JSM Options</div>
+        <div class="brand-sub">jsm-options.com · Educational</div>
+      </div>
+    </a>
+    <div class="header-right">
+      <nav class="nav" aria-label="Ana menü">
+        <a href="https://jsm-options.com/tr/">Ana Sayfa</a>
+        <a href="https://jsm-options.com/tr/level1/">Giriş</a>
+        <a href="https://jsm-options.com/tr/level2/">Temeller</a>
+        <a href="https://jsm-options.com/tr/level3/">Spreadler</a>
+        <a href="https://jsm-options.com/tr/level4/">İleri Seviye</a>
+        <a href="https://jsm-options.com/tr/strategies/">Stratejiler</a>
+        <a href="https://jsm-options.com/tr/cheat-sheet/">Özet</a>
+        <a href="https://jsm-options.com/tr/builder/">Builder</a>
+      </nav>
+      <button type="button" class="nav-toggle" id="navToggle" aria-label="Menüyü aç" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+      <a id="langSwitch" class="lang-switch" href="https://jsm-options.com/bollinger-band-csp/" aria-label="English">EN</a>
+      <button type="button" class="theme-toggle" id="themeToggle" aria-label="Açık temaya geç">
+        <span id="themeIcon" class="theme-icon">🌙</span>
+        <span id="themeLabel" class="theme-label">Dark</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<div class="page-rails">
+  <aside class="page-toc">
+    <div class="toc-kicker">BU SAYFADA</div>
+    <nav>
+      <a href="#sec-0">Bollinger Bandı + nakit teminatlı put</a>
+      <a href="#sec-1">Bollinger Bantları 30 saniyede</a>
+      <a href="#sec-2">Kurallar</a>
+      <a href="#sec-3">Bu sayılar neden işe yarıyor</a>
+      <a href="#sec-4">Avantaj gerçekten nereden geliyor</a>
+      <a href="#sec-5">Builder'da dene</a>
+      <a href="#guide-faq">Yeni başlayan SSS</a>
+    </nav>
+  </aside>
+  <div class="page-main">
+    <div class="wrap">
+      <nav class="breadcrumbs" aria-label="Sayfa yolu">
+        <a href="https://jsm-options.com/tr/">Ana Sayfa</a>
+        <span aria-hidden="true">/</span>
+        <span aria-current="page">Bollinger Bandı + CSP</span>
+      </nav>
+
+      <div class="card">
+<h1 id="sec-0">Bollinger Bandı + nakit teminatlı put (BB + CSP)</h1>
+
+        <p class="kw-targets"><b>Arama odaklı:</b> bollinger bandı cash secured put · bollinger bandı put satışı · alt bant put satışı · CSP giriş zamanlaması stratejisi</p>
+
+        <p>Bir <b>nakit teminatlı put</b> (cash-secured put), 100 hisseyi <b>strike</b> fiyatından almayı kabul etmeniz karşılığında size <b>prim</b> (premium) öder — ama <i>ne zaman</i> sattığınız önemlidir. Bu ders kurallı bir zamanlayıcı ekliyor: günlük fiyat <b>alt Bollinger Bandına</b> temas ettiğinde CSP satın.</p>
+        <p>Mantık basit. Alt banda temas, fiyatın <b>20 günlük ortalamasının yaklaşık iki standart sapma altında</b> olduğu anlamına gelir — istatistiksel olarak gerilmiş. Böyle düşüşler genelde <b>yükselmiş ima edilen volatilite (IV)</b> ile birlikte gelir ve yüksek IV, daha zengin put primleri demektir. Dipten sonra pahalı sigorta satarsınız, strike'ı epey aşağıda tutarsınız ve zaman çürümesinin (theta) işi yapmasına izin verirsiniz.</p>
+
+        <p style="font-size:.9rem;color:var(--muted)">Uluslararası borsalarda işlem yapmak için call, put, strike, premium, expiry ve assignment gibi terimler bilinçli olarak İngilizce bırakılmıştır. Türkçe karşılıkları sayfa sonunda vardır.</p>
+
+        <h2 id="sec-1">Bollinger Bantları 30 saniyede</h2>
+        <ul>
+          <li><b>Orta çizgi:</b> fiyatın 20 günlük basit hareketli ortalaması</li>
+          <li><b>Üst / alt bant:</b> orta ± 2 standart sapma</li>
+          <li><b>Alt banda temas:</b> fiyat ortalamanın ~2σ altında — kendi geçmişine göre kısa vadede aşırı satılmış</li>
+        </ul>
+        <p>Önce dürüst çerçeve: bantlar fiyatın <i>nereye gideceğini</i> değil, <i>nerede bulunduğunu</i> gösterir. Temas, <b>disiplinli bir giriş tetikleyicisidir</b>, tahmin değil. Bu stratejideki avantaj CSP mekaniğinden gelir — yükselmiş IV, paradan uzak strike'lar, günlük theta çürümesi — bantlar ise zamanlamanızı duygusal değil tutarlı tutar.</p>
+
+        <div class="payoff-box" style="background:var(--input);border:1px solid var(--border);border-radius:12px;padding:12px;margin:14px 0">
+          <svg viewBox="0 0 520 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Fiyatın alt Bollinger Bandına temas edip sonra orta banda doğru toparlanması" width="100%" height="auto">
+            <line x1="40" y1="150" x2="500" y2="150" stroke="#8b9bb4" stroke-width="1.5" stroke-dasharray="6 4" opacity=".6"/>
+            <line x1="40" y1="70" x2="500" y2="70" stroke="#8b9bb4" stroke-width="1" stroke-dasharray="6 4" opacity=".45"/>
+            <line x1="40" y1="230" x2="500" y2="230" stroke="#8b9bb4" stroke-width="1" stroke-dasharray="6 4" opacity=".45"/>
+            <path d="M40 120 C120 110, 170 140, 230 185 C260 208, 290 232, 310 228 C340 222, 380 170, 440 150 C470 142, 490 140, 500 138" fill="none" stroke="#e7ecf3" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
+            <circle cx="310" cy="228" r="6" fill="#facc15"/>
+            <text x="14" y="36" fill="#8b9bb4" font-size="11" font-family="system-ui,sans-serif">Fiyat</text>
+            <text x="452" y="62" fill="#8b9bb4" font-size="11" font-family="system-ui,sans-serif">Üst bant</text>
+            <text x="452" y="142" fill="#8b9bb4" font-size="11" font-family="system-ui,sans-serif">20 günlük ort.</text>
+            <text x="452" y="222" fill="#8b9bb4" font-size="11" font-family="system-ui,sans-serif">Alt bant</text>
+            <text x="322" y="248" fill="#facc15" font-size="12" font-family="system-ui,sans-serif">Alt bant teması → CSP girişi</text>
+          </svg>
+          <p style="text-align:center;font-size:.8rem;color:var(--muted);margin:8px 0 0">Fiyat alt banda iner (giriş tetikleyici), sonra ortalamaya döner — put satıcısının beklemesi için para aldığı hareket</p>
+        </div>
+
+        <h2 id="sec-2">Kurallar</h2>
+        <h3>1. Piyasa rejimi: yalnızca nötr veya yükselen piyasa</h3>
+        <p>Bu strateji düşüş trendleriyle savaşmaz. Haftalık veya günlük trend açıkça aşağıdayken işlemi atlayın — fiyat düşen 50 günlük ortalamanın altındaysa veya alçalan tepeler ve dipler yapıyorsa. Gerçek bir düşüş trendinde fiyat <b>haftalarca alt bantta gezinebilir</b>: her temas düşen bıçaktır, kelepir değil.</p>
+        <h3>2. Giriş: alt banda günlük temas</h3>
+        <p>Günlük mum <b>alt Bollinger Bandına (20, 2) temas ettiğinde veya altında kapattığında</b>, CSP değerlendirme sinyaliniz gelmiş demektir — daha önce değil. Temas yoksa işlem de yok.</p>
+        <h3>3. Put: 45+ gün vade, spotun ~%10 altı</h3>
+        <ul>
+          <li><b>Vade (expiry):</b> 45 gün veya daha fazla — theta çürümesinin tatlı noktası: anlamlı prim için yeterli büyüklük, fiyatın dengelenmesi için yeterli süre</li>
+          <li><b>Strike:</b> spot fiyatın kabaca <b>%10 altı</b> — veya yaklaşık <b>10 delta</b>, hisseye hangisi uyuyorsa. Çok oynak hisselerde %10 bile paraya yakın olabilir, o yüzden kararsız kalırsanız delta'yı ölçü alın.</li>
+          <li>Sadece <b>strike'tan sahip olmaktan memnun olacağınız</b> hisselerde satın — CSP'nin altın kuralı burada iki kat geçerlidir.</li>
+        </ul>
+        <h3>4. Çıkışlar — hangisi önce gelirse</h3>
+        <ul>
+          <li><b>Maksimum kârın %50'si:</b> primin yarısını tuttuğunuzda kapatın. Bu, kazancın çoğunu kilitler ve nakdinizi bir sonraki kurulum için serbest bırakır.</li>
+          <li><b>Vadeye 21 gün (21 DTE):</b> ne olursa olsun üç hafta kala kapatın. Gamma riski ~21 günün içinde hızlanır — bu kural vade haftası dramasını atlar.</li>
+          <li><b>Üst banda temas:</b> fiyat üst Bollinger Bandına yükselirse, beklemesi için para aldığınız ortalamaya dönüş gerçekleşmiş demektir — kazancı alın.</li>
+        </ul>
+
+        <div class="analogy">
+          <b>Örnek:</b> XYZ 100$'da; günlük kapanış alt banda 98$'da temas ediyor. 45 günlük <b>90$ put</b>'u <b>1,50$</b>'a satıyorsunuz (150$ prim, spotun %10 altı). Ayrılan nakit ≈ 9.000$.<br>
+          XYZ üç haftada 104$'a toparlanıyor ve put 0,70$'a çürüyor → <b>%50 kâra yakın kapatın</b>.<br>
+          Veya XYZ üst banda değiyor → kapatın.<br>
+          Veya vadeye 21 gün kalıyor → kalan değeri kapatın.<br>
+          XYZ 90$'ın altına düşmeye devam eder ve atanırsanız: 90$'dan 100 hisseye sahip olursunuz, etkin maliyet ≈ <b>88,50$</b>. Girişte kabul ettiğiniz risk buydu.
+        </div>
+
+        <h2 id="sec-3">Bu sayılar neden işe yarıyor</h2>
+        <ul>
+          <li><b>45 gün vade:</b> theta çürümesi güçlüdür, ama toparlanma için de süre vardır</li>
+          <li><b>21 gün:</b> gamma — vadeye yakın sert fiyat hareketleri riski — keskin şekilde artar, kural ondan önce çıkar</li>
+          <li><b>%50:</b> çoğu CSP vadesinden çok önce yarı kâra ulaşır; son doları beklemek sermayeyi bağlar</li>
+          <li><b>Üst bant:</b> simetrik bir çıkış — zayıflıkta girdiniz, güçlülükte çıkıyorsunuz</li>
+        </ul>
+
+        <h2 id="sec-4">Avantaj gerçekten nereden geliyor</h2>
+        <p>Dürüst olalım: Bollinger teması tek başına neredeyse hiçbir şeyi öngörmez — bant temaslarının bağımsız tahmin gücü zayıftır. Buradaki getiri üç yapısal gerçekten gelir: <b>(1)</b> IV yükselmişken satıyorsunuz, <b>(2)</b> paradan uzak putlar çoğu zaman değersiz sona eriyor, <b>(3)</b> geçen her gün put'un zaman değerini lehinize eritiyor. Bantlar <b>disiplin katmanıdır</b> — sizi rastgele duygusal anlarda put satmaktan alıkoyan, tekrarlanabilir bir tetikleyici.</p>
+
+        <h2 id="sec-5">Builder'da dene</h2>
+        <p>
+          <a class="btn" href="https://jsm-options.com/tr/builder/?template=cash_secured_put">Cash-Secured Put'u Builder'da aç →</a>
+          <a class="btn btn-secondary" href="https://jsm-options.com/tr/cash-secured-put/">CSP temelleri</a>
+          <a class="btn btn-secondary" href="https://jsm-options.com/tr/level4/">İleri dersler</a>
+        </p>
+        <p>Modelleyin: short put, yaklaşık 45 gün vade, strike spotun ~%10 altı. <b>Maksimum kâr</b>, <b>başabaş</b> ve <b>kâr olasılığına</b> bakın — sonra strike'ı yaklaştırıp sayıların nasıl değiştiğini izleyin.</p>
+
+        <h2 id="guide-faq">Yeni başlayan SSS</h2>
+        <p><strong>Neden 30 yerine 45 gün vade?</strong><br>45 gün vade daha fazla prim taşır ve ortalamaya dönüş hareketine alan tanır. 30 gün vade daha hızlı çürür ama daha az öder ve toparlanma yavaşsa daha az affeder.</p>
+        <p><strong>Sattıktan sonra hisse düşmeye devam ederse ne olur?</strong><br>O zaman atama gerçekleşir: hisseyi strike fiyatından alırsınız. Bu yüzden rejim filtresi ve "sahip olmaktan memnun olma" kuralı tartışılmazdır.</p>
+        <p><strong>Her hissede kullanabilir miyim?</strong><br>Dar alış-satış makaslı, likit hisselerde en iyi sonucu verir. Çok oynak hisselerde spotun %10 altı bile paraya yakın olabilir — sabit %10 yerine yaklaşık 10 delta kullanın.</p>
+        <p><strong>Üst bant çıkışı parayı masada bırakır mı?</strong><br>Bazen, momentum temas sonrası devam ederse. Kural, son kuruşları tutarlılık karşılığında bilinçli olarak bırakır.</p>
+
+
+        <p class="practice-prompt"><b>Sonraki adım:</b> Sade <a href="https://jsm-options.com/tr/cash-secured-put/">nakit teminatlı put</a> ile karşılaştırın, sonra ikisini de <a href="https://jsm-options.com/tr/builder/">Builder</a>'da test edin.</p>
+
+        <div class="warn"><strong>Yalnızca eğitim amaçlıdır:</strong> Yatırım tavsiyesi değildir. Put satmak, piyasa fiyatına göre zararda hisse sahibi olmanıza yol açabilir. Bollinger Bantları gelecekteki fiyatları öngörmez. Aracı kurum değiliz; hiçbir kurumla bağlı değiliz.</div>
+      </div>
+    </div>
+  </div>
+
+<div class="card quiz-card" id="page-quiz">
+    <span class="badge">Hızlı kontrol</span>
+    <h2>Bollinger + CSP testi</h2>
+    <p>Bant temasıyla put satışını zamanlamak — ve ne zaman atlayacağını bilmek.</p>
+<form id="quizForm" class="quiz-form" data-lang="tr" novalidate>
+<div class="quiz-q" data-name="q1">
+<p class="quiz-q-title">1. Bu stratejide alt bant teması nedir?</p>
+<label class="quiz-opt"><input type="radio" name="q1" value="a"> Garantili bir alım sinyali</label>
+<label class="quiz-opt"><input type="radio" name="q1" value="b"> Disiplinli bir giriş tetikleyicisi — dipten sonra genelde yüksek IV ile birlikte</label>
+<label class="quiz-opt"><input type="radio" name="q1" value="c"> Hisseyi doğrudan almak için bir neden</label>
+<label class="quiz-opt"><input type="radio" name="q1" value="d"> Yalnızca haftalık grafiklerde geçerli</label>
+<p class="quiz-explain" hidden></p>
+</div>
+<div class="quiz-q" data-name="q2">
+<p class="quiz-q-title">2. Neden ne olursa olsun 21 gün kala kapatıyoruz?</p>
+<label class="quiz-opt"><input type="radio" name="q2" value="a"> Theta çürümesi durur</label>
+<label class="quiz-opt"><input type="radio" name="q2" value="b"> Vadeye yakın hızlanan gamma riskinden kaçınmak için</label>
+<label class="quiz-opt"><input type="radio" name="q2" value="c"> Komisyonlar iki katına çıkar</label>
+<label class="quiz-opt"><input type="radio" name="q2" value="d"> Bantlar her ay sıfırlanır</label>
+<p class="quiz-explain" hidden></p>
+</div>
+<div class="quiz-q" data-name="q3">
+<p class="quiz-q-title">3. Bu strateji ne zaman atlanmalı?</p>
+<label class="quiz-opt"><input type="radio" name="q3" value="a"> Açık bir haftalık veya günlük düşüş trendinde</label>
+<label class="quiz-opt"><input type="radio" name="q3" value="b"> IV yükselmişken</label>
+<label class="quiz-opt"><input type="radio" name="q3" value="c"> 45 günlük bir put'ta</label>
+<label class="quiz-opt"><input type="radio" name="q3" value="d"> Maksimum kârın %50'sine ulaşınca</label>
+<p class="quiz-explain" hidden></p>
+</div>
+<button type="submit" class="btn quiz-submit">Cevapları kontrol et</button>
+</form>
+<div class="quiz-result" id="quizResult" hidden>
+<div class="quiz-score" id="quizScore"></div>
+<p id="quizScoreMsg" data-quiz-msg></p>
+<button type="button" class="btn btn-secondary" id="quizRetry" data-quiz-retry">Tekrar dene</button>
+</div>
+<script type="application/json" id="quizAnswers">{"q1": {"correct": "b", "explain": "Temas bir zamanlama tetikleyicisidir, tahmin değil. Değeri disiplin + genelde yükselmiş IV."}, "q2": {"correct": "b", "explain": "Gamma riski ~21 günün içinde hızlanır. Kural, vade haftası hareketlerinden önce çıkar."}, "q3": {"correct": "a", "explain": "Düşüş trendlerinde fiyat haftalarca alt bantta gezer. Bu, nötr-yükselen piyasa stratejisidir."}}</script>
+<script>window.JSM_QUIZ_MSGS = {"perfect": "Tam puan — bu sayfayı kaptınız.", "good": "İyi iş. Yukarıdaki notları okuyup devam edin.", "retry": "Sorun değil. Açıklamalara göz atıp tekrar deneyin."};</script>
+</div>
+
+</div>
+<footer class="site-footer">
+  <div class="footer-note">Yalnızca eğitim amaçlıdır — yatırım tavsiyesi değildir. Opsiyon işlemleri zarar riski içerir.</div>
+  <div class="footer-links">
+    <a href="https://jsm-options.com/tr/">Ana Sayfa</a>
+    <a href="https://jsm-options.com/tr/level1/">Giriş</a>
+    <a href="https://jsm-options.com/tr/level2/">Temeller</a>
+    <a href="https://jsm-options.com/tr/level3/">Spreadler</a>
+    <a href="https://jsm-options.com/tr/level4/">İleri</a>
+    <a href="https://jsm-options.com/tr/strategies/">Stratejiler</a>
+    <a href="https://jsm-options.com/tr/cheat-sheet/">Özet</a>
+    <a href="https://jsm-options.com/tr/builder/">Builder</a>
+    <a href="https://jsm-options.com/tr/about/">Hakkında</a>
+    <a href="https://jsm-options.com/tr/contact/">İletişim</a>
+    <a href="https://jsm-options.com/tr/disclaimer/">Sorumluluk</a>
+    <a href="https://jsm-options.com/tr/privacy/">Gizlilik</a>
+  </div>
+  <div class="footer-tools" style="margin-top:12px;font-size:12px;opacity:.9">
+    More free tools:
+    <a href="https://lyricprep.com/" target="_blank" rel="noopener">LyricPrep</a> ·
+    <a href="https://jsm-image.com/" target="_blank" rel="noopener">JSM Image</a> ·
+    <a href="https://jsm-video.com/" target="_blank" rel="noopener">JSM Video</a> ·
+    <a href="https://jsm-loudness.com/" target="_blank" rel="noopener">JSM Loudness</a>
+  </div>
+</footer>
+
+<script>
+(function(){
+  function initNav(){
+    var btn = document.getElementById('navToggle');
+    var nav = document.querySelector('.site-header .nav');
+    if (!btn || !nav) return;
+    if (btn.getAttribute('data-nav-bound') === '1') return;
+    btn.setAttribute('data-nav-bound', '1');
+    btn.addEventListener('click', function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      var open = !nav.classList.contains('is-open');
+      nav.classList.toggle('is-open', open);
+      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      btn.setAttribute('aria-label', open ? 'Menüyü kapat' : 'Menüyü aç');
+    });
+    nav.addEventListener('click', function (e) {
+      if (e.target.closest('a')) {
+        nav.classList.remove('is-open');
+        btn.setAttribute('aria-expanded', 'false');
+        btn.setAttribute('aria-label', 'Menüyü aç');
+      }
+    });
+    document.addEventListener('click', function (e) {
+      if (!nav.classList.contains('is-open')) return;
+      if (btn.contains(e.target) || nav.contains(e.target)) return;
+      nav.classList.remove('is-open');
+      btn.setAttribute('aria-expanded', 'false');
+      btn.setAttribute('aria-label', 'Menüyü aç');
+    });
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initNav);
+  } else {
+    initNav();
+  }
+})();
+</script>
+<script src="/assets/quiz.js?v=20260923" defer></script>
+</body>
+</html>
