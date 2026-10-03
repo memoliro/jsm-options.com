@@ -85,9 +85,11 @@
       <a href="#sec-0">Bollinger Bandı + nakit teminatlı put</a>
       <a href="#sec-1">Bollinger Bantları 30 saniyede</a>
       <a href="#sec-2">Kurallar</a>
-      <a href="#sec-3">Bu sayılar neden işe yarıyor</a>
-      <a href="#sec-4">Avantaj gerçekten nereden geliyor</a>
-      <a href="#sec-5">Builder'da dene</a>
+      <a href="#sec-3">Gerçek grafikte nasıl görünüyor</a>
+      <a href="#sec-4">Bu sayılar neden işe yarıyor</a>
+      <a href="#sec-5">Avantaj gerçekten nereden geliyor</a>
+      <a href="#sec-6">Wheel ile birlikte kullanım</a>
+      <a href="#sec-7">Builder'da dene</a>
       <a href="#guide-faq">Yeni başlayan SSS</a>
     </nav>
   </aside>
@@ -159,7 +161,18 @@
           XYZ 90$'ın altına düşmeye devam eder ve atanırsanız: 90$'dan 100 hisseye sahip olursunuz, etkin maliyet ≈ <b>88,50$</b>. Girişte kabul ettiğiniz risk buydu.
         </div>
 
-        <h2 id="sec-3">Bu sayılar neden işe yarıyor</h2>
+<h2 id="sec-3">Gerçek grafikte nasıl görünüyor</h2>
+        <p>Aşağıdaki grafikler kurulumun şeklini gösterir — geçmiş grafikler geleceği öngörmez, yalnızca deseni anlatır.</p>
+        <figure style="margin:14px 0">
+          <img src="/images/bollinger-csp-spy-wide.png" alt="Bollinger Bantlı SPY günlük grafik: 2026 başı düşüşü alt bantta, Nisan dibi ve toparlanma" style="width:100%;height:auto;border:1px solid var(--border);border-radius:12px" loading="lazy">
+          <figcaption style="font-size:.8rem;color:var(--muted);margin-top:8px">Bollinger Bantları (20, 2) ile SPY günlük grafik. Şub–Mar 2026'da fiyat alt bant boyunca aşağı kaydı — rejim filtresinin sizi uzak tuttuğu türden bir düşüş trendi. Nisan'daki son silkelenme, sert toparlanmadan önce fiyatı son kez alt banda itti: bu stratejinin girişi için ders kitabı şekli.</figcaption>
+        </figure>
+        <figure style="margin:14px 0">
+          <img src="/images/bollinger-csp-spy-close.png" alt="Nisan 2026 SPY dibinin yakından görünümü: alt banda temas ve üst banda ralli" style="width:100%;height:auto;border:1px solid var(--border);border-radius:12px" loading="lazy">
+          <figcaption style="font-size:.8rem;color:var(--muted);margin-top:8px">Nisan 2026 dibinin yakından görünümü: alt bant teması, ardından üst banda doğru ralli — %50, 21 gün ve üst bant çıkış kurallarının üzerine kurulduğu ortalamaya dönüş hareketi.</figcaption>
+        </figure>
+
+        <h2 id="sec-4">Bu sayılar neden işe yarıyor</h2>
         <ul>
           <li><b>45 gün vade:</b> theta çürümesi güçlüdür, ama toparlanma için de süre vardır</li>
           <li><b>21 gün:</b> gamma — vadeye yakın sert fiyat hareketleri riski — keskin şekilde artar, kural ondan önce çıkar</li>
@@ -167,10 +180,13 @@
           <li><b>Üst bant:</b> simetrik bir çıkış — zayıflıkta girdiniz, güçlülükte çıkıyorsunuz</li>
         </ul>
 
-        <h2 id="sec-4">Avantaj gerçekten nereden geliyor</h2>
+        <h2 id="sec-5">Avantaj gerçekten nereden geliyor</h2>
         <p>Dürüst olalım: Bollinger teması tek başına neredeyse hiçbir şeyi öngörmez — bant temaslarının bağımsız tahmin gücü zayıftır. Buradaki getiri üç yapısal gerçekten gelir: <b>(1)</b> IV yükselmişken satıyorsunuz, <b>(2)</b> paradan uzak putlar çoğu zaman değersiz sona eriyor, <b>(3)</b> geçen her gün put'un zaman değerini lehinize eritiyor. Bantlar <b>disiplin katmanıdır</b> — sizi rastgele duygusal anlarda put satmaktan alıkoyan, tekrarlanabilir bir tetikleyici.</p>
 
-        <h2 id="sec-5">Builder'da dene</h2>
+<h2 id="sec-6">Wheel ile birlikte kullanım</h2>
+        <p>Atama bu stratejinin başarısızlığı değildir — <a href="https://jsm-options.com/tr/wheel/">Wheel</a>'in ilk adımıdır. Put atanırsa, tuttuğunuz prim düşüldükten sonra strike'tan 100 hisseye sahip olursunuz. Wheel buradan devam eder: hisseler çağrılana kadar <a href="https://jsm-options.com/tr/covered-call/">covered call</a> satın, sonra yeni bir Bollinger zamanlı CSP ile döngüyü yeniden başlatın.</p>
+
+        <h2 id="sec-7">Builder'da dene</h2>
         <p>
           <a class="btn" href="https://jsm-options.com/tr/builder/?template=cash_secured_put">Cash-Secured Put'u Builder'da aç →</a>
           <a class="btn btn-secondary" href="https://jsm-options.com/tr/cash-secured-put/">CSP temelleri</a>

@@ -123,6 +123,17 @@
       If XYZ keeps falling through $90 and you are assigned: you own 100 shares at $90, effective cost ≈ <b>$88.50</b>. That was the risk you accepted on entry.
     </div>
 
+<h2>What it looks like on a real chart</h2>
+    <p>The charts below show the setup's shape on SPY — they illustrate the pattern, they don't predict future results.</p>
+    <figure style="margin:14px 0">
+      <img src="/images/bollinger-csp-spy-wide.png" alt="SPY daily chart with Bollinger Bands: early-2026 decline riding the lower band, April washout touch, then recovery" style="width:100%;height:auto;border:1px solid var(--border);border-radius:12px" loading="lazy">
+      <figcaption style="font-size:.8rem;color:var(--muted);margin-top:8px">SPY daily with Bollinger Bands (20, 2). Through Feb–Mar 2026 price rode the lower band downward — the kind of downtrend the regime filter keeps you out of. The April washout pushed price to the lower band one final time before the sharp recovery: the textbook shape for this strategy's entry.</figcaption>
+    </figure>
+    <figure style="margin:14px 0">
+      <img src="/images/bollinger-csp-spy-close.png" alt="Close-up of the April 2026 SPY low touching the lower Bollinger Band, then rallying toward the upper band" style="width:100%;height:auto;border:1px solid var(--border);border-radius:12px" loading="lazy">
+      <figcaption style="font-size:.8rem;color:var(--muted);margin-top:8px">Closer view of the April 2026 low: the lower-band touch, then the rally back toward the upper band — the mean-reversion move the 50%, 21-DTE, and upper-band exit rules are designed around.</figcaption>
+    </figure>
+
     <h2>Why these numbers work</h2>
     <ul>
       <li><b>45 DTE:</b> theta decay is strong, yet there is time for the snap-back</li>
@@ -133,6 +144,9 @@
 
     <h2>Where the edge really comes from</h2>
     <p>Be clear-eyed: the Bollinger touch itself predicts nothing — band touches have weak standalone forecasting power. The returns here come from three structural facts: <b>(1)</b> you sell when IV is elevated, <b>(2)</b> far out-of-the-money puts expire worthless most of the time, <b>(3)</b> every passing day melts the put's time value in your favor. The bands are the <b>discipline layer</b> — a repeatable trigger that stops you from selling puts at random emotional moments.</p>
+
+<h2>Pairs with the Wheel</h2>
+    <p>Assignment isn't a failure of this strategy — it's the <a href="/wheel/">Wheel</a>'s first step. If the put is assigned, you own 100 shares at the strike (minus the premium you kept). The Wheel continues from there: sell <a href="/covered-call/">covered calls</a> against the shares until they are called away, then restart the cycle with a fresh Bollinger-timed CSP.</p>
 
     <h2>Try it in the Builder</h2>
     <p><a class="btn" href="/builder/?template=cash_secured_put">Open Cash-Secured Put in Builder →</a>
