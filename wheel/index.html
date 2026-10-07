@@ -19,7 +19,7 @@
   <meta name="twitter:title" content="Wheel Strategy Options: CSP + Covered Call Cycle">
   <meta name="twitter:description" content="Options wheel strategy: sell cash-secured puts until assigned, sell covered calls until shares are called away, then repeat. Risks, cycle diagram, Builder links.">
   <meta name="twitter:image" content="https://jsm-options.com/images/og-default.png">
-  <link rel="stylesheet" href="/assets/style.css?v=20261001a">
+  <link rel="stylesheet" href="/assets/style.css?v=20260928d">
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-BDL003RCN6"></script>
   <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-BDL003RCN6');</script>
 <style id="jsm-mobile-nav">
@@ -59,11 +59,11 @@
   }
 }
 </style>
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "What is the options wheel strategy?", "acceptedAnswer": {"@type": "Answer", "text": "The Wheel cycles a cash-secured put and a covered call: collect premium while waiting to buy shares you accept, then collect premium while holding them, then restart after shares are sold."}}, {"@type": "Question", "name": "Does the Wheel remove stock risk?", "acceptedAnswer": {"@type": "Answer", "text": "No. Premium does not cancel a falling stock. Assignment means you own shares that can keep dropping."}}, {"@type": "Question", "name": "Who is the Wheel for?", "acceptedAnswer": {"@type": "Answer", "text": "People willing to own 100-share lots of a name they already like, with cash or shares to support the cycle. It is not passive income."}}]}</script>
-<script src="/assets/site.js?v=20261001a" defer></script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "What is the options wheel strategy?", "acceptedAnswer": {"@type": "Answer", "text": "The Wheel cycles a cash-secured put and a covered call: collect premium while waiting to buy shares you accept, then collect premium while holding them, then restart after shares are sold."}}, {"@type": "Question", "name": "Does the Wheel remove stock risk?", "acceptedAnswer": {"@type": "Answer", "text": "No. Premium does not cancel a falling stock. Assignment means you own shares that can keep dropping."}}, {"@type": "Question", "name": "Who is the Wheel for?", "acceptedAnswer": {"@type": "Answer", "text": "People willing to own 100-share lots of a name they already like, with cash or shares to support the cycle. It is not passive income."}}, {"@type": "Question", "name": "What happens if my cash-secured put expires worthless?", "acceptedAnswer": {"@type": "Answer", "text": "That is the best case of the first phase: you keep the full premium, no shares are bought, and you can sell a new put for the next cycle."}}, {"@type": "Question", "name": "Should I sell a covered call below what I paid for the shares?", "acceptedAnswer": {"@type": "Answer", "text": "Usually not: if the shares are called away, that locks in the loss. Many traders roll the call up and out for a credit, or wait for a bounce, rather than accept a below-cost strike."}}, {"@type": "Question", "name": "Can I run the wheel on several stocks at once?", "acceptedAnswer": {"@type": "Answer", "text": "Yes, if you have the cash or shares for every cycle. Size each position so a single assignment cannot break the account, and keep enough reserve to keep rolling."}}]}</script>
+<script src="/assets/site.js?v=20260928e" defer></script>
 </head>
 <body>
-<header class="site-header"><div class="site-header-inner"><a class="logo logo-link" href="/" aria-label="JSM Options Home"><div class="logo-icon">JSM</div><div><div style="font-weight:700">JSM Options</div><div class="brand-sub">jsm-options.com · Educational</div></div></a><div class="header-right"><nav class="nav" aria-label="Primary navigation"><a href="/">Home</a><a href="/level1/">Basics</a><a href="/level2/">Fundamentals</a><a href="/level3/">Spreads</a><a href="/level4/">Advanced</a><a href="/strategies/">Strategies</a><a href="/cheat-sheet/">Cheat sheet</a><a href="/builder/">Builder</a><a href="/backtest/">Backtest</a></nav><button type="button" class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button><button type="button" class="theme-toggle" id="themeToggle" aria-label="Toggle color theme"><span id="themeIcon" class="theme-icon">☼</span><span id="themeLabel" class="theme-label">Dark</span></button></div></div></header>
+<header class="site-header"><div class="site-header-inner"><a class="logo logo-link" href="/" aria-label="JSM Options Home"><div class="logo-icon">JSM</div><div><div style="font-weight:700">JSM Options</div><div class="brand-sub">jsm-options.com · Educational</div></div></a><div class="header-right"><nav class="nav" aria-label="Primary navigation"><a href="/">Home</a><a href="/level1/">Basics</a><a href="/level2/">Fundamentals</a><a href="/level3/">Spreads</a><a href="/level4/">Advanced</a><a href="/strategies/">Strategies</a><a href="/cheat-sheet/">Cheat sheet</a><a href="/builder/">Builder</a></nav><button type="button" class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button><button type="button" class="theme-toggle" id="themeToggle" aria-label="Toggle color theme"><span id="themeIcon" class="theme-icon">☼</span><span id="themeLabel" class="theme-label">Dark</span></button></div></div></header>
 <div class="wrap">
 <nav class="breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span aria-hidden="true">/</span><span aria-current="page">Wheel Strategy</span></nav>
   <div class="card">
@@ -120,6 +120,32 @@
       <li>Not a passive “set and forget” income machine</li>
     </ul>
 
+    <h2>How the wheel cycle plays out, step by step</h2>
+    <ol style="padding-left:20px">
+      <li style="margin:6px 0"><b>Pick the stock first, not the premium.</b> The wheel only fits a name you would be glad to own at the put strike for years — liquid options, moderate <b>IV</b>, a business you understand.</li>
+      <li style="margin:6px 0"><b>Sell a cash-secured put</b> (often OTM, delta ~0.20–0.30, 30–45 days out) with cash reserved for 100 shares. Expires worthless? Keep the premium and sell another. Challenged near expiry? <b>Roll</b> down or out for a credit instead of taking assignment.</li>
+      <li style="margin:6px 0"><b>Treat assignment as a plan, not a surprise.</b> You buy 100 shares at the put strike; cost basis ≈ strike minus all premium collected. Then sell <b>covered calls</b> at or above cost basis. When the shares are called away, the cash returns and you restart with puts.</li>
+    </ol>
+
+    <h2>Worked example: a full wheel loop</h2>
+    <p><b>XYZ</b> at $100; you would own it at $95. Sell the 30-day <b>$95 put for $2.00</b> → $200 premium. Stays above $95: keep $200. Assigned: buy 100 shares at $95, effective cost ≈ <b>$93/share</b> ($9,300). Then sell the <b>$95 call for $1.50</b> → $150. Shares called away at $95: you collect $9,500 — $200 on the shares plus $350 of premium, <b>≈ $550 total</b> before fees. If XYZ had fallen to $70 instead, the share loss would have dwarfed the premium.</p>
+
+    <h2>Managing the wheel: rolling and adjustments</h2>
+    <ul>
+      <li><b>Rolling the put:</b> if the stock nears your short put, close it and reopen at a lower strike or later date for a net credit — buys time and can avoid assignment (only if you still want the stock).</li>
+      <li><b>Call strike vs cost basis:</b> a call below your effective cost locks in a loss if assigned. Roll up and out for a credit, or wait for a bounce.</li>
+      <li><b>Take profits on the options:</b> closing the short option near ~50% of max profit is common; the last dollars carry late-expiry risk.</li>
+      <li><b>Sizing and events:</b> assignment can tie up your full cash reserve in one stock — size so one bad assignment cannot force other sales. Many traders sit out earnings, when IV spikes and gaps cut both ways.</li>
+    </ul>
+
+    <h2>Common wheel mistakes</h2>
+    <ul>
+      <li>Selling puts on a stock you would never hold, chasing high premium on a name in trouble.</li>
+      <li>Selling a covered call below share cost basis and locking in the loss on assignment.</li>
+      <li>Treating premium as income rather than payment for taking stock risk.</li>
+      <li>Running too many wheels against the same cash — one assignment can trigger a margin call.</li>
+    </ul>
+
     <div class="analogy">
       <b>Mindset:</b> Only wheel names you are comfortable holding. If you would hate owning the stock, do not sell the put just for premium.
     </div>
@@ -133,6 +159,9 @@
     <p><strong>What is the options wheel strategy?</strong><br>The Wheel cycles a cash-secured put and a covered call: collect premium while waiting to buy shares you accept, then collect premium while holding them, then restart after shares are sold.</p>
 <p><strong>Does the Wheel remove stock risk?</strong><br>No. Premium does not cancel a falling stock. Assignment means you own shares that can keep dropping.</p>
 <p><strong>Who is the Wheel for?</strong><br>People willing to own 100-share lots of a name they already like, with cash or shares to support the cycle. It is not passive income.</p>
+<p><strong>What happens if my cash-secured put expires worthless?</strong><br>That is the best case of the first phase: you keep the full premium, no shares are bought, and you can sell a new put for the next cycle.</p>
+<p><strong>Should I sell a covered call below what I paid for the shares?</strong><br>Usually not: if the shares are called away, that locks in the loss. Many traders roll the call up and out for a credit, or wait for a bounce, rather than accept a below-cost strike.</p>
+<p><strong>Can I run the wheel on several stocks at once?</strong><br>Yes, if you have the cash or shares for every cycle. Size each position so a single assignment cannot break the account, and keep enough reserve to keep rolling.</p>
     <p class="practice-prompt"><b>Next:</b> Print the <a href="/cheat-sheet/">options cheat sheet</a> or open this setup in the Builder.</p>
 
     <div class="warn"><strong>Educational only:</strong> Not financial advice. The Wheel can still lose money in drawdowns. JSM Options is not a broker and is not affiliated with any brokerage.</div>

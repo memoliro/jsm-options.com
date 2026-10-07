@@ -52,6 +52,30 @@
           "@type": "Answer",
           "text": "CSP, Wheel stratejisinin ilk ayağıdır. Wheel, hisse atandıktan sonra covered call satarak devam eder."
         }
+      },
+      {
+        "@type": "Question",
+        "name": "CSP için ne kadar nakit ayırmalıyım?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Kabaca kontrat başına Strike x 100 — atamada hisseleri alacak kadar. Aracı kurum gereksinimleri değişir; işlem öncesi alım gücündeki kesin azalmayı doğrulayın."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "“Aşağı ve dışarı Roll” ne demek?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Short Put'u geri alıp daha düşük Strike'tan, daha ileri vadeden Put satmak — idealde net credit ile. Etkin yükümlülük fiyatınızı düşürür, hisse Strike'a yaklaşırken zaman kazandırır."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Bilanço öncesi Put satmalı mıyım?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "IV yüksek olduğu için Premium caziptir; ama aşağı gap, sizi Strike'ın çok altında hisse sahibi bırakabilir. Birçok yeni başlayan, birkaç atama yönetene kadar ikili olaylar üstünde Short Put tutmaz."
+        }
       }
     ]
   }
@@ -196,10 +220,49 @@
           <a class="btn btn-secondary" href="https://jsm-options.com/tr/level1/#options-chain">Opsiyon zinciri nasıl okunur</a>
         </p>
 
+        <h2 id="sec-6">Sayısal örnek: farklı fiyatlarda sonuçlar</h2>
+        <p>Hisse <b>100 $</b>'da. <b>95 $ Put'u 2,00 $'dan</b> satıyorsunuz → 200 $ credit; ≈ 9.500 $ nakit ayırıyorsunuz. Hisse başına sonuçlar (kontrat için ×100):</p>
+        <ul>
+          <li><b>Hisse 105 $ veya 96 $:</b> Put değersiz biter → <b>200 $</b> sizde kalır, hisse yok.</li>
+          <li><b>Hisse 93 $ (Break-Even):</b> 95 $'dan atama; etkin maliyet 95 − 2 = 93 $, piyasa fiyatı → <b>≈ 0 $</b>.</li>
+          <li><b>Hisse 80 $:</b> piyasa 80 $ iken 95 $'dan atama → <b>hisse başına −13 $ (−1.300 $)</b>; düşebilecek hisseler artık sizde.</li>
+        </ul>
+        <p>Formüller: <b>maksimum kâr = 2,00 × 100 = 200 $</b>; <b>Break-Even = 95 − 2 = 93 $</b>; hisse sıfıra giderse <b>maksimum zarar ≈ 9.300 $</b>.</p>
+
+        <h2 id="sec-7">Put seçimi: Strike, Delta ve vade</h2>
+        <ul>
+          <li><b>Strike ve Delta:</b> birçok satıcı ~20–30 Delta Put hedefler — atamayı uzak tutacak kadar uzakta, gerçek Premium ödeyecek kadar yakında. Strike, gerçekten ödemeye razı olduğunuz fiyat olmalı.</li>
+          <li><b>Vade:</b> 30–45 gün yaygın dengedir — Theta lehinize çalışır, aylık değerlendirirsiniz. Haftalıklar az öder ama hızlı ayarlatır.</li>
+          <li><b>IV ve olaylar:</b> IV yüksekken Put'lar çok öder — klasik kurulum yükselmiş IV'ye satmaktır. Bilanço öncesi satılan Put şişkin Premium toplar ama gap sonrası Strike'ın çok altında atama getirebilir; birçok yeni başlayan bunları pas geçer.</li>
+        </ul>
+
+        <h2 id="sec-8">Put yönetimi: Roll ve assignment'dan kaçınma</h2>
+        <ul>
+          <li><b>Aşağı ve dışarı Roll:</b> hisse Strike'a yaklaşırsa Put'u geri alıp daha düşük Strike'tan, ileri vadeden — idealde net credit ile — yeniden satın. Etkin yükümlülük fiyatınız düşer, zaman kazanırsınız.</li>
+          <li><b>Kârla kapatma:</b> Put toplanan Premium'in ~%50'sine eridiğinde geri almak kazancın çoğunu kilitler, kuyruk riskini kaldırır.</li>
+          <li><b>Hisseleri istiyor musunuz?</b> Atamayı kabul etmek en basit yönetimdir — CSP bunun için tasarlandı. <b>Fikriniz değiştiyse</b> ataleten atama almak yerine kapatın veya Roll edin.</li>
+          <li><b>Assignment mekaniği:</b> genelde vade sonrası gece olur (Amerikan tipinde her zaman olabilir). Hisseler Strike'tan görünür, ayrılan nakit kullanılır — aracı kurum kesinti saatlerini bilin.</li>
+        </ul>
+
+        <h2 id="sec-9">Yaygın Cash-Secured Put hataları</h2>
+        <ul>
+          <li>Nakitsiz Put satmak (naked Put) — atama margin sorunu olur.</li>
+          <li>Düşen hissede en yüksek Premium'i kovalamak; çok öder çünkü atama olasılığı yüksektir.</li>
+          <li>Atamada panikleyip ilk kırmızı günde satmak — plan zaten “belki hisseleri almak”tı.</li>
+          <li>Aşırı büyüklük: bir kontrat Strike × 100 nakit kilitler; iki-üç kontrat hesabı kilitleyebilir.</li>
+        </ul>
+
         <h2 id="guide-faq">Yeni başlayan SSS</h2>
         <p><strong>Nakit teminatlı put nedir?</strong><br>Bir put satarsınız ve atama olursa strike’dan 100 hisse almak için yeterli nakiti ayırırsınız. Put değersiz sona ererse primi tutarsınız.</p>
         <p><strong>Nakit teminatlı put atamaya uğrarsa ne olur?</strong><br>Put strike fiyatından 100 hisse alırsınız. Etkin maliyet yaklaşık strike eksi toplanan primdir.</p>
         <p><strong>Nakit teminatlı put Wheel ile aynı şey midir?</strong><br>CSP, Wheel’in ilk ayağıdır. Wheel, hisse atandıktan sonra covered call satarak devam eder.</p>
+
+
+        <p><strong>CSP için ne kadar nakit ayırmalıyım?</strong><br>Kabaca kontrat başına Strike × 100 — atamada hisseleri alacak kadar. Aracı kurum gereksinimleri değişir; işlem öncesi alım gücündeki kesin azalmayı doğrulayın.</p>
+
+        <p><strong>“Aşağı ve dışarı Roll” ne demek?</strong><br>Short Put'u geri alıp daha düşük Strike'tan, daha ileri vadeden Put satmak — idealde net credit ile. Etkin yükümlülük fiyatınızı düşürür, hisse Strike'a yaklaşırken zaman kazandırır.</p>
+
+        <p><strong>Bilanço öncesi Put satmalı mıyım?</strong><br>IV yüksek olduğu için Premium caziptir; ama aşağı gap, sizi Strike'ın çok altında hisse sahibi bırakabilir. Birçok yeni başlayan, birkaç atama yönetene kadar ikili olaylar üstünde Short Put tutmaz.</p>
 
 
         <p class="practice-prompt"><b>Sonraki adım:</b> <a href="https://jsm-options.com/tr/cheat-sheet/">opsiyon özetini</a> yazdırın veya bu kurulumu Builder’da açın.</p>

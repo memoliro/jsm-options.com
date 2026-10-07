@@ -19,7 +19,7 @@
   <meta name="twitter:title" content="Cash-Secured Put Strategy (CSP) for Beginners">
   <meta name="twitter:description" content="Cash-secured put (CSP) explained: sell a put with cash ready to buy 100 shares if assigned. Premium, break-even, assignment, and Builder practice. Educational only.">
   <meta name="twitter:image" content="https://jsm-options.com/images/og-default.png">
-  <link rel="stylesheet" href="/assets/style.css?v=20261001a">
+  <link rel="stylesheet" href="/assets/style.css?v=20260928d">
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-BDL003RCN6"></script>
   <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-BDL003RCN6');</script>
 <style id="jsm-mobile-nav">
@@ -59,11 +59,11 @@
   }
 }
 </style>
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "What is a cash-secured put?", "acceptedAnswer": {"@type": "Answer", "text": "You sell a put and reserve enough cash to buy 100 shares at the strike if assigned. You keep the premium if the put expires worthless."}}, {"@type": "Question", "name": "What happens if a cash-secured put is assigned?", "acceptedAnswer": {"@type": "Answer", "text": "You buy 100 shares at the put strike. Effective cost is about strike minus premium collected."}}, {"@type": "Question", "name": "Is a cash-secured put the same as the Wheel?", "acceptedAnswer": {"@type": "Answer", "text": "A CSP is the first leg of the Wheel. The Wheel continues by selling covered calls after you are assigned shares."}}]}</script>
-<script src="/assets/site.js?v=20261001a" defer></script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "What is a cash-secured put?", "acceptedAnswer": {"@type": "Answer", "text": "You sell a put and reserve enough cash to buy 100 shares at the strike if assigned. You keep the premium if the put expires worthless."}}, {"@type": "Question", "name": "What happens if a cash-secured put is assigned?", "acceptedAnswer": {"@type": "Answer", "text": "You buy 100 shares at the put strike. Effective cost is about strike minus premium collected."}}, {"@type": "Question", "name": "Is a cash-secured put the same as the Wheel?", "acceptedAnswer": {"@type": "Answer", "text": "A CSP is the first leg of the Wheel. The Wheel continues by selling covered calls after you are assigned shares."}}, {"@type": "Question", "name": "How much cash do I need to reserve for a CSP?", "acceptedAnswer": {"@type": "Answer", "text": "Roughly the strike price x 100 per contract - enough to buy the shares if assigned. Broker requirements vary."}}, {"@type": "Question", "name": "What does rolling down and out mean?", "acceptedAnswer": {"@type": "Answer", "text": "Buying back your short put and selling a lower-strike, later-expiry put - ideally for a net credit - to lower your obligation price and buy time."}}, {"@type": "Question", "name": "Should I sell puts right before earnings?", "acceptedAnswer": {"@type": "Answer", "text": "The IV premium is tempting, but a gap down can leave you owning shares far below the strike. Many beginners sit out binary events."}}]}</script>
+<script src="/assets/site.js?v=20260928e" defer></script>
 </head>
 <body>
-<header class="site-header"><div class="site-header-inner"><a class="logo logo-link" href="/" aria-label="JSM Options Home"><div class="logo-icon">JSM</div><div><div style="font-weight:700">JSM Options</div><div class="brand-sub">jsm-options.com · Educational</div></div></a><div class="header-right"><nav class="nav" aria-label="Primary navigation"><a href="/">Home</a><a href="/level1/">Basics</a><a href="/level2/">Fundamentals</a><a href="/level3/">Spreads</a><a href="/level4/">Advanced</a><a href="/strategies/">Strategies</a><a href="/cheat-sheet/">Cheat sheet</a><a href="/builder/">Builder</a><a href="/backtest/">Backtest</a></nav><button type="button" class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button><button type="button" class="theme-toggle" id="themeToggle" aria-label="Toggle color theme"><span id="themeIcon" class="theme-icon">☼</span><span id="themeLabel" class="theme-label">Dark</span></button></div></div></header>
+<header class="site-header"><div class="site-header-inner"><a class="logo logo-link" href="/" aria-label="JSM Options Home"><div class="logo-icon">JSM</div><div><div style="font-weight:700">JSM Options</div><div class="brand-sub">jsm-options.com · Educational</div></div></a><div class="header-right"><nav class="nav" aria-label="Primary navigation"><a href="/">Home</a><a href="/level1/">Basics</a><a href="/level2/">Fundamentals</a><a href="/level3/">Spreads</a><a href="/level4/">Advanced</a><a href="/strategies/">Strategies</a><a href="/cheat-sheet/">Cheat sheet</a><a href="/builder/">Builder</a></nav><button type="button" class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button><button type="button" class="theme-toggle" id="themeToggle" aria-label="Toggle color theme"><span id="themeIcon" class="theme-icon">☼</span><span id="themeLabel" class="theme-label">Dark</span></button></div></div></header>
 <div class="wrap">
 <nav class="breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span aria-hidden="true">/</span><span aria-current="page">Cash-Secured Put</span></nav>
   <div class="card">
@@ -104,6 +104,37 @@
       <p style="text-align:center;font-size:.8rem;color:var(--muted);margin:8px 0 0">Green = profit · Red = loss · Flat right side = put expires, you keep the credit</p>
     </div>
 
+    <h2>Worked example: outcomes at different prices</h2>
+    <p>Stock at <b>$100</b>. Sell the <b>$95 put for $2.00</b> → $200 credit, ≈ $9,500 cash reserved. Per-share results (×100 for contract totals):</p>
+    <ul>
+      <li><b>Stock at $105 or $96:</b> put expires worthless → keep the <b>$200</b>, no shares.</li>
+      <li><b>Stock at $93 (break-even):</b> assigned at $95; effective cost $95 − $2 = $93, the market price → <b>≈ $0</b>.</li>
+      <li><b>Stock at $80:</b> assigned at $95 with the market at $80 → <b>−$13/share (−$1,300)</b>.</li>
+    </ul>
+    <p>Formulas: <b>max profit = $2.00 × 100 = $200</b>; <b>break-even = $95 − $2 = $93</b>; max loss ≈ <b>$9,300</b> if the stock went to zero.</p>
+
+    <h2>Choosing the put: strike, delta, and expiry</h2>
+    <ul>
+      <li><b>Strike and delta:</b> many sellers target ~20–30 delta puts — far enough out to keep assignment unlikely, close enough to earn real premium. The strike should be a price you would genuinely pay for the shares.</li>
+      <li><b>Expiry:</b> 30–45 days is a common balance — theta works for you and you re-evaluate monthly. Weeklies pay less but adjust faster.</li>
+      <li><b>IV and events:</b> puts pay more when IV is high. A put sold just before earnings can be assigned far below the strike after a gap; many beginners sit those out.</li>
+    </ul>
+
+    <h2>Managing the put: rolling and assignment</h2>
+    <ul>
+      <li><b>Rolling down and out:</b> if the stock nears your strike, buy back the put and sell a lower-strike, later-expiry put — ideally for a net credit. This lowers your effective obligation price and buys time.</li>
+      <li><b>Closing for profit:</b> when the put has decayed to ~50% or less of the premium collected, buying it back banks most of the gain and removes the tail risk.</li>
+      <li><b>Want the shares?</b> Accepting assignment is the simplest management. <b>Changed your mind?</b> Close or roll rather than taking assignment out of inertia.</li>
+      <li><b>Assignment mechanics:</b> usually overnight after expiry (American-style options can be assigned any time) — know your broker's cutoff times.</li>
+    </ul>
+
+    <h2>Common cash-secured put mistakes</h2>
+    <ul>
+      <li>Selling puts without the cash (a naked put) because the premium looked tempting — assignment becomes a margin problem.</li>
+      <li>Chasing the highest premium on a crashing stock; it pays a lot because assignment is likely.</li>
+      <li>Over-sizing: one contract ties up strike × 100; two or three can lock up the whole account.</li>
+    </ul>
+
     <div class="analogy">
       <b>Example:</b> Stock at $100. Sell the $95 put for $2.00 ($200 credit). Cash secured ≈ $9,500.<br>
       Above $95 at expiry: keep ~$200; no shares.<br>
@@ -119,9 +150,6 @@
     <h2>Link to the Wheel</h2>
     <p>Many traders connect CSPs to the <a href="/wheel/">Wheel strategy</a>: sell puts until assigned, then sell <a href="/covered-call/">covered calls</a> until shares are called away, then start again.</p>
 
-    <h2>Timing your entries</h2>
-    <p>Want a rules-based way to decide <i>when</i> to sell? The <a href="/bollinger-band-csp/">Bollinger Band + CSP lesson</a> sells 45+ DTE puts ~10% below spot when price touches the daily lower band — with 50%, 21-DTE, and upper-band exit rules.</p>
-
     <p><a class="btn" href="/builder/?template=cash_secured_put">Open Cash-Secured Put in Builder →</a>
     <a class="btn btn-secondary" href="/level4/">Advanced lesson (CSP, Wheel, more)</a>
     <a class="btn btn-secondary" href="/level1/#options-chain">How to read the options chain</a></p>
@@ -131,6 +159,9 @@
     <p><strong>What is a cash-secured put?</strong><br>You sell a put and reserve enough cash to buy 100 shares at the strike if assigned. You keep the premium if the put expires worthless.</p>
 <p><strong>What happens if a cash-secured put is assigned?</strong><br>You buy 100 shares at the put strike. Effective cost is about strike minus premium collected.</p>
 <p><strong>Is a cash-secured put the same as the Wheel?</strong><br>A CSP is the first leg of the Wheel. The Wheel continues by selling covered calls after you are assigned shares.</p>
+<p><strong>How much cash do I need to reserve for a CSP?</strong><br>Roughly the strike price × 100 per contract — enough to buy the shares if assigned. Broker requirements vary.</p>
+<p><strong>What does "rolling down and out" mean?</strong><br>Buying back your short put and selling a lower-strike, later-expiry put — ideally for a net credit — to lower your obligation price and buy time.</p>
+<p><strong>Should I sell puts right before earnings?</strong><br>The IV premium is tempting, but a gap down can leave you owning shares far below the strike. Many beginners sit out binary events.</p>
     <p class="practice-prompt"><b>Next:</b> Print the <a href="/cheat-sheet/">options cheat sheet</a> or open this setup in the Builder.</p>
 
     <div class="warn"><strong>Educational only:</strong> Not financial advice. Selling puts can lead to owning shares at a loss versus the market. Not a broker; not affiliated with any institution.</div>

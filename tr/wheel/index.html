@@ -41,6 +41,64 @@
     dt { font-weight: 700; margin-top: 10px; }
     dd { margin: 0 0 8px 0; color: var(--muted); }
   </style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "inLanguage": "tr",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Opsiyon Wheel stratejisi nedir?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Wheel, nakit teminatlı Put ile Covered Call döngüsüdür: kabul ettiğiniz hisseleri almak için beklerken Premium toplarsınız, sonra hisseleri tutarken Premium toplarsınız, hisseler satılınca yeniden başlarsınız."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Wheel hisse riskini kaldırır mı?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Hayır. Premium, düşen hisseyi iptal etmez. Assignment, düşmeye devam edebilecek hisselerin sahibi olmanız demektir."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Wheel kimler içindir?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Zaten beğendiği bir ismin 100’lük lotlarını tutmaya razı olan, döngüyü destekleyecek nakit veya hissesi olan kişiler. Pasif gelir değildir."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Hisseler çağrılmazsa ne olur?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Hisseler sizde kalır, toplanan Call Premium'ini tutarsınız ve (plan aynıysa) yeni bir Covered Call satabilirsiniz."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Cash-secured Put değersiz sona ererse ne olur?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "İlk aşamanın en iyi senaryosu: Premium'in tamamı sizde kalır, hisse alınmaz ve bir sonraki döngü için yeni Put satabilirsiniz."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Hisseleri aldığımdan düşük bir Strike'tan Covered Call satmalı mıyım?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Genellikle hayır: hisseler çağrılırsa zarar kilitlenir. Birçok yatırımcı bunun yerine Call'u yukarı ve ileri vadeye Roll eder ya da bekler."
+      }
+    }
+  ]
+}
+</script>
+
 </head>
 <body>
   <article class="wrap">
@@ -103,6 +161,32 @@
       <li>Assignment ve early assignment mümkün — özellikle vade yakınken ve opsiyon ITM ise</li>
     </ul>
 
+    <h2>Wheel döngüsü adım adım</h2>
+    <ol style="padding-left:20px">
+      <li style="margin:6px 0"><b>Önce hisseyi seçin, Premium'i değil.</b> Wheel yalnızca Put Strike'ından uzun süre tutmaktan memnun olacağınız bir isimde anlamlıdır — likit opsiyonlar, ılımlı <b>IV</b>, anladığınız bir iş.</li>
+      <li style="margin:6px 0"><b>Cash-secured Put satın</b> (genelde OTM, Delta ~0,20–0,30, 30–45 gün vade), 100 hisse alacak nakit ayrılır. Değersiz biterse Premium'i tutar, yenisini satarsınız. Vade yakınken zorlanırsa assignment yerine <b>Roll</b> ile aşağı veya ileri vadeye (net credit ile) taşıyabilirsiniz.</li>
+      <li style="margin:6px 0"><b>Assignment'ı plan sayın, sürpriz değil.</b> Put Strike'ından 100 hisse alırsınız; maliyet esası ≈ Strike eksi toplanan toplam Premium. Sonra maliyet esasının üstünden <b>Covered Call</b> satın. Hisseler çağrılınca nakit geri gelir, Put'larla baştan başlarsınız.</li>
+    </ol>
+
+    <h2>Sayısal örnek: tam bir döngü</h2>
+    <p><b>XYZ</b> 100 $'da; 95 $'dan almaya razısınız. 30 günlük <b>95 $ Put'u 2,00 $'dan</b> satın → 200 $ Premium. 95 $ üstünde kalırsa 200 $ sizde. Atamada 95 $'dan 100 hisse alırsınız; etkin maliyet ≈ hisse başına <b>93 $</b> (9.300 $). Sonra <b>95 $ Call'u 1,50 $'dan</b> satın → 150 $ Premium. Hisseler 95 $'dan çağrılırsa 9.500 $ alırsınız: hissede 200 $ + 350 $ Premium = komisyon öncesi <b>≈ 550 $ toplam</b>. XYZ 70 $'a düşseydi hissedeki zarar Premium'in çok üstünde olurdu.</p>
+
+    <h2>Pozisyon yönetimi: Roll ve ayarlamalar</h2>
+    <ul>
+      <li><b>Put'u Roll etmek:</b> hisse Short Put'a yaklaşırsa kapatıp daha düşük Strike'tan veya ileri vadeden (net credit ile) yeniden satın — zaman kazandırır, assignment'ı önleyebilir (hisseyi hâlâ istiyorsanız).</li>
+      <li><b>Call Strike'ı ve maliyet esası:</b> maliyetin altında Call satmak atamada zararı kilitler. Call'u yukarı ve ileri vadeye Roll edin ya da toparlanmayı bekleyin.</li>
+      <li><b>Opsiyonlarda kâr almak:</b> Short opsiyonu maksimum kârın ~%50'sinde kapatmak yaygındır; son dolarlar vade sonu riski taşır.</li>
+      <li><b>Büyüklük ve olaylar:</b> atama nakit rezervinizin tamamını tek hissede kilitleyebilir — tek bir kötü atama başka satışa zorlamayacak büyüklükte kurun. Birçok yatırımcı bilanço dönemlerinde kenarda durur.</li>
+    </ul>
+
+    <h2>Yaygın Wheel hataları</h2>
+    <ul>
+      <li>Asla tutmayacağınız hissede sırf yüksek Premium için Put satmak.</li>
+      <li>Hisse maliyet esasının altında Covered Call satıp atamada zararı kilitlemek.</li>
+      <li>Premium'i gelir sanmak — o, üstlenilen hisse riskinin karşılığıdır.</li>
+      <li>Aynı nakde karşı çok fazla Wheel açmak — tek atama margin çağrısına yol açabilir.</li>
+    </ul>
+
     <h2>Yeni başlayan SSS</h2>
     <p><strong>Opsiyon Wheel stratejisi nedir?</strong><br />
     Wheel, nakit teminatlı put ile covered call döngüsüdür: kabul ettiğiniz hisseleri almak için beklerken prim toplarsınız, sonra hisseleri tutarken prim toplarsınız, hisseler satılınca yeniden başlarsınız.</p>
@@ -115,6 +199,12 @@
 
     <p><strong>Hisseler çağrılmazsa ne olur?</strong><br />
     Hisseler sizde kalır, toplanan call primini tutarsınız ve (plan aynıysa) yeni bir covered call satabilirsiniz.</p>
+
+    <p><strong>Cash-secured Put değersiz sona ererse ne olur?</strong><br />
+    İlk aşamanın en iyi senaryosu: Premium'in tamamı sizde kalır, hisse alınmaz ve bir sonraki döngü için yeni Put satabilirsiniz.</p>
+
+    <p><strong>Hisseleri aldığımdan düşük bir Strike'tan Covered Call satmalı mıyım?</strong><br />
+    Genellikle hayır: hisseler çağrılırsa zarar kilitlenir. Birçok yatırımcı bunun yerine Call'u yukarı ve ileri vadeye Roll eder ya da bekler.</p>
 
     <p><strong>Sonraki adım:</strong> <a href="https://jsm-options.com/tr/cheat-sheet/">opsiyon özetini</a> yazdırın veya bu kurulumu Builder’da açın. İlgili sayfalar: <a href="https://jsm-options.com/tr/cash-secured-put/">Cash-Secured Put</a>, <a href="https://jsm-options.com/tr/covered-call/">Covered Call</a>.</p>
 

@@ -39,6 +39,64 @@
     dt { font-weight: 700; margin-top: 10px; }
     dd { margin: 0 0 8px 0; color: var(--muted); }
   </style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "inLanguage": "tr",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Iron condor stratejisi nedir?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Iron condor, aynı vadede para dışı bir Put spread ve para dışı bir Call spread satarak net credit toplar. Hisse veya ETF’nin bir bant içinde kalmasını istersiniz."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Iron condor tanımlanmış risk midir?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Evet. Her kanattaki Long opsiyon zararı tavanlar. Maksimum zarar yaklaşık olarak test edilen kanat genişliği eksi credit’tir."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "İşlemciler iron condor’u ne zaman kullanır?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yatay / bant aralığı beklediklerinde ve tanımlanmış risk istediklerinde. Güçlü trendler ve volatilite sıçramaları bir kanadı test edebilir."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Short iron condor nedir?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yaygın “iron condor” ifadesi çoğu zaman Short (credit) iron condor’u kasteder: Put spread + Call spread satılır, net Premium alınır. Long iron condor ise debit ödeyerek kanatların dışına hareket bekler; farklı bir yapıdır."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Kanatlar ne kadar geniş olmalı?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Kanat genişliği maksimum zararı belirler (genişlik eksi credit). Daha geniş kanatlar daha çok credit öder ama en kötü senaryoyu Premium'den hızlı büyütür; bu yüzden birçok yatırımcı kanatları credit’e göre mütevazı tutar."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Iron condor ne zaman kapatılmalı?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yaygın yaklaşım, son dolarları kovalamak yerine maksimum kârın ~%50’sinde kapatmaktır. Zarar limitini de girişte belirleyin — örneğin zarar credit’in 2 katına ulaşırsa pozisyonu kapatın."
+      }
+    }
+  ]
+}
+</script>
+
 </head>
 <body>
   <article class="wrap">
@@ -82,6 +140,39 @@
       <li>Erken assignment ve bir kanadın test edilmesi mümkün olabilir — özellikle vade yakınken</li>
     </ul>
 
+    <h2>Strike ve kanat genişliği seçimi</h2>
+    <ul>
+      <li><b>Short Strike'lar:</b> yatırımcılar Put ve Call'u genelde 10–16 Delta'dan satar — test için gerçek hareket gerekir, Premium de anlamlıdır. Daha yakın = daha çok Premium ama kolay test; daha uzak = güvenli ama küçük credit.</li>
+      <li><b>Kanat genişliği</b> maksimum zararı belirler: genişlik − credit. 5 $ kanat + 1,50 $ credit = kanat başına 3,50 $ risk; 10 $ kanat + 2,00 $ credit = 8,00 $ risk. Kanat genişledikçe credit riskten yavaş büyür; çoğu yatırımcı kanatları mütevazı tutar.</li>
+      <li><b>Vade:</b> 30–45 gün yaygın dengedir — Theta lehinize çalışır, trendin aleyhinize büyümesine çok uzun değildir. Vadeye yaklaştıkça Gamma riski artar.</li>
+      <li><b>Dört bacak da aynı vade ve dayanak olmalı.</b> Vadeleri karıştırmak yapıyı başka bir şeye çevirir, riski değişir.</li>
+    </ul>
+
+    <h2>Sayısal örnek</h2>
+    <p><b>ABC</b> 200 $'da. 30 günlük iron condor satıyorsunuz: <b>190 $ Put sat / 185 $ Put al</b>, <b>210 $ Call sat / 215 $ Call al</b>; net credit <b>2,50 $</b> (kontrat başına 250 $).</p>
+    <ul>
+      <li><b>Maksimum kâr</b> = 250 $, ABC 190 $–210 $ arasında biterse.</li>
+      <li><b>Maksimum zarar</b> = 5,00 − 2,50 = <b>250 $</b>; ABC 185 $ altı veya 215 $ üstü biterse.</li>
+      <li><b>Break-Even'ler:</b> 190 − 2,50 = <b>187,50 $</b> ve 210 + 2,50 = <b>212,50 $</b>.</li>
+    </ul>
+    <p>Break-Even'ler arasında kısmi kâr/zarar olur; dışında zarar 250 $ ile sınırlıdır. En kötü senaryo baştan bellidir — “tanımlanmış risk” budur.</p>
+
+    <h2>Pozisyon yönetimi: ne zaman ayarlanmalı</h2>
+    <ul>
+      <li><b>Kârı erken alın:</b> maksimum kârın ~%50'sinde kapatmak yaygındır. Credit spread'in son dolarları, hisse Short Strike'a sürüklenirse orantısız risk taşır.</li>
+      <li><b>Test edilen kanat:</b> hisse Short Call'a yükselirse bazıları Put spread'i yukarı Roll eder veya condor'u ileri vadeye taşır. Zorlanan Call'u <i>aşağı</i> Roll etmek genelde içsel değer için debit ödemektir — kapatmaktan kötüdür.</li>
+      <li><b>Zarar limitini girişte belirleyin</b> — örn. zarar credit'in 2 katına ulaşırsa veya Short Strike'a dokunulursa kapatın. Kuralı sakinken koyun.</li>
+      <li><b>Bilanço ve assignment:</b> açıklama sonrası IV çöküşü (vol crush) condor'a yarar, ama kanattan geçen gap çok acıtır — çoğu ikili olay üstünde tutmaz. Deep ITM Short opsiyonlar erken atanabilir; bu senaryoya alım gücü bırakın.</li>
+    </ul>
+
+    <h2>Yaygın iron condor hataları</h2>
+    <ul>
+      <li>Büyük credit için geniş kanat kovalamak — maksimum zarar credit'ten hızlı büyür.</li>
+      <li>“Tam credit” için vadeye tutup kanatta pin'lenmek veya atanmak.</li>
+      <li>Likiditesi zayıf dayanakta işlem yapmak — dört bacaktaki Bid–Ask farkı avantajı yer.</li>
+      <li>“Tanımlanmış risk”i “düşük risk” sanmak — maksimum zarar credit'in birkaç katıdır.</li>
+    </ul>
+
     <h2>Yeni başlayan SSS</h2>
     <p><strong>Iron condor stratejisi nedir?</strong><br />
     Iron condor, aynı vadede para dışı bir put spread ve para dışı bir call spread satarak net credit toplar. Hisse veya ETF’nin bir bant içinde kalmasını istersiniz.</p>
@@ -94,6 +185,12 @@
 
     <p><strong>Short iron condor nedir?</strong><br />
     Yaygın “iron condor” ifadesi çoğu zaman short (credit) iron condor’u kasteder: put spread + call spread satılır, net prim alınır. Long iron condor ise debit ödeyerek kanatların dışına hareket bekler; farklı bir yapıdır.</p>
+
+    <p><strong>Kanatlar ne kadar geniş olmalı?</strong><br />
+    Kanat genişliği maksimum zararı belirler (genişlik eksi credit). Daha geniş kanatlar daha çok credit öder ama en kötü senaryoyu Premium'den hızlı büyütür; bu yüzden birçok yatırımcı kanatları credit’e göre mütevazı tutar.</p>
+
+    <p><strong>Iron condor ne zaman kapatılmalı?</strong><br />
+    Yaygın yaklaşım, son dolarları kovalamak yerine maksimum kârın ~%50’sinde kapatmaktır. Zarar limitini de girişte belirleyin — örneğin zarar credit’in 2 katına ulaşırsa pozisyonu kapatın.</p>
 
     <p><strong>Sonraki adım:</strong> <a href="https://jsm-options.com/tr/cheat-sheet/">opsiyon özetini</a> yazdırın veya bu kurulumu Builder’da açın.</p>
 

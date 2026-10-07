@@ -19,7 +19,7 @@
   <meta name="twitter:title" content="Iron Condor Strategy Explained (Payoff Diagram)">
   <meta name="twitter:description" content="Iron condor options strategy: sell an OTM put spread and an OTM call spread for a credit. Defined-risk payoff, break-evens, and free Builder practice.">
   <meta name="twitter:image" content="https://jsm-options.com/images/og-default.png">
-  <link rel="stylesheet" href="/assets/style.css?v=20261001a">
+  <link rel="stylesheet" href="/assets/style.css?v=20260928d">
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-BDL003RCN6"></script>
   <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-BDL003RCN6');</script>
 <style id="jsm-mobile-nav">
@@ -59,11 +59,11 @@
   }
 }
 </style>
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "What is an iron condor strategy?", "acceptedAnswer": {"@type": "Answer", "text": "An iron condor sells an out-of-the-money put spread and an out-of-the-money call spread, same expiration, for a net credit. You want the stock to stay in a range."}}, {"@type": "Question", "name": "Is an iron condor defined risk?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Long options on each wing cap the loss. Max loss is about the tested wing width minus the credit."}}, {"@type": "Question", "name": "When do traders use an iron condor?", "acceptedAnswer": {"@type": "Answer", "text": "When they expect a range-bound market and want defined risk. Large trends and volatility spikes can test a wing."}}]}</script>
-<script src="/assets/site.js?v=20261001a" defer></script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "What is an iron condor strategy?", "acceptedAnswer": {"@type": "Answer", "text": "An iron condor sells an out-of-the-money put spread and an out-of-the-money call spread, same expiration, for a net credit. You want the stock to stay in a range."}}, {"@type": "Question", "name": "Is an iron condor defined risk?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Long options on each wing cap the loss. Max loss is about the tested wing width minus the credit."}}, {"@type": "Question", "name": "When do traders use an iron condor?", "acceptedAnswer": {"@type": "Answer", "text": "When they expect a range-bound market and want defined risk. Large trends and volatility spikes can test a wing."}}, {"@type": "Question", "name": "How wide should the wings be?", "acceptedAnswer": {"@type": "Answer", "text": "The wing width sets the max loss (width minus credit). Wider wings pay more credit but raise the worst case faster than the premium grows."}}, {"@type": "Question", "name": "When should I close an iron condor?", "acceptedAnswer": {"@type": "Answer", "text": "A common approach is to close near ~50% of max profit rather than holding to expiry for the last dollars. Set a loss limit (e.g. 2x the credit) before entering."}}, {"@type": "Question", "name": "Can an iron condor be assigned early?", "acceptedAnswer": {"@type": "Answer", "text": "Yes - American-style options can be assigned any time, especially a deep in-the-money short put near a dividend. Keep buying power for that scenario."}}]}</script>
+<script src="/assets/site.js?v=20260928e" defer></script>
 </head>
 <body>
-<header class="site-header"><div class="site-header-inner"><a class="logo logo-link" href="/" aria-label="JSM Options Home"><div class="logo-icon">JSM</div><div><div style="font-weight:700">JSM Options</div><div class="brand-sub">jsm-options.com · Educational</div></div></a><div class="header-right"><nav class="nav" aria-label="Primary navigation"><a href="/">Home</a><a href="/level1/">Basics</a><a href="/level2/">Fundamentals</a><a href="/level3/">Spreads</a><a href="/level4/">Advanced</a><a href="/strategies/">Strategies</a><a href="/cheat-sheet/">Cheat sheet</a><a href="/builder/">Builder</a><a href="/backtest/">Backtest</a></nav><button type="button" class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button><button type="button" class="theme-toggle" id="themeToggle" aria-label="Toggle color theme"><span id="themeIcon" class="theme-icon">☼</span><span id="themeLabel" class="theme-label">Dark</span></button></div></div></header>
+<header class="site-header"><div class="site-header-inner"><a class="logo logo-link" href="/" aria-label="JSM Options Home"><div class="logo-icon">JSM</div><div><div style="font-weight:700">JSM Options</div><div class="brand-sub">jsm-options.com · Educational</div></div></a><div class="header-right"><nav class="nav" aria-label="Primary navigation"><a href="/">Home</a><a href="/level1/">Basics</a><a href="/level2/">Fundamentals</a><a href="/level3/">Spreads</a><a href="/level4/">Advanced</a><a href="/strategies/">Strategies</a><a href="/cheat-sheet/">Cheat sheet</a><a href="/builder/">Builder</a></nav><button type="button" class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button><button type="button" class="theme-toggle" id="themeToggle" aria-label="Toggle color theme"><span id="themeIcon" class="theme-icon">☼</span><span id="themeLabel" class="theme-label">Dark</span></button></div></div></header>
 <div class="wrap">
 <nav class="breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span aria-hidden="true">/</span><span aria-current="page">Iron Condor</span></nav>
   <div class="card">
@@ -88,6 +88,39 @@
       <li><b>Break-evens</b> ≈ short put − credit (lower) and short call + credit (upper)</li>
     </ul>
 
+    <h2>Choosing strikes and wing width</h2>
+    <ul>
+      <li><b>Short strikes:</b> many traders sell the put and call near 10–16 delta — far enough out to need a real move to be tested, close enough to pay real premium. Closer = more premium but easier to test; farther = safer but smaller credit.</li>
+      <li><b>Wing width</b> sets the max loss: width minus credit. A $5 wing with $1.50 credit risks $3.50 a side; a $10 wing with $2.00 credit risks $8.00. The credit grows slower than the risk as wings widen, so most traders keep wings modest.</li>
+      <li><b>Expiry:</b> 30–45 days is a common sweet spot — enough theta to work for you, not so much time that a trend builds against you. Near expiry, gamma risk rises and the position gets twitchy.</li>
+      <li><b>All four legs share one expiry and one underlying.</b> Mixing expirations turns it into a different structure (a diagonal) with different risk.</li>
+    </ul>
+
+    <h2>Worked example with numbers</h2>
+    <p><b>ABC</b> at $200. You sell a 30-day iron condor: <b>sell the $190 put / buy the $185 put</b>, <b>sell the $210 call / buy the $215 call</b>, for a net credit of <b>$2.50</b> ($250 per contract).</p>
+    <ul>
+      <li><b>Max profit</b> = $250, if ABC finishes between $190 and $210.</li>
+      <li><b>Max loss</b> = $5.00 − $2.50 = <b>$250</b>, if ABC finishes at or beyond $185 or $215.</li>
+      <li><b>Break-evens:</b> $190 − $2.50 = <b>$187.50</b> and $210 + $2.50 = <b>$212.50</b>.</li>
+    </ul>
+    <p>Between the break-evens you gain or lose a partial amount; outside them the loss is capped at $250. The worst case is known up front — that is what “defined risk” means.</p>
+
+    <h2>Position management: when to adjust</h2>
+    <ul>
+      <li><b>Take profits early:</b> closing near ~50% of max profit is common. The last dollars of a credit spread carry outsized risk if the stock drifts toward a short strike.</li>
+      <li><b>A tested wing:</b> if the stock rallies toward the short call, some traders roll the put spread up for more credit or roll the whole condor out in time. Rolling the challenged call <i>down</i> usually means paying a debit for intrinsic value — often worse than closing.</li>
+      <li><b>Set a loss limit before entry</b> — e.g. close if the loss hits 2× the credit or a short strike is touched. Decide the rule when calm, not under fire.</li>
+      <li><b>Earnings and assignment:</b> the IV crush after announcements helps the condor, but a gap through a wing hurts far more — many traders avoid binary events. Deep ITM short options can also be assigned early, so keep buying power for that scenario.</li>
+    </ul>
+
+    <h2>Common iron condor mistakes</h2>
+    <ul>
+      <li>Chasing a big credit with wide wings — the max loss grows faster than the credit.</li>
+      <li>Holding to expiry for the “full credit” and getting pinned or assigned on a wing.</li>
+      <li>Trading illiquid underlyings, where the bid–ask on four legs eats the edge.</li>
+      <li>Reading “defined risk” as “low risk” — the max loss is several times the credit.</li>
+    </ul>
+
     <img src="/images/iron-condor-outcome.webp" alt="Iron condor payoff diagram with max profit between short strikes and defined max loss on both wings" width="900" height="560" loading="lazy" style="width:100%;height:auto;border-radius:12px;border:1px solid var(--border);margin:12px 0">
 
     <h2>When it fits / when it does not</h2>
@@ -105,6 +138,9 @@
     <p><strong>What is an iron condor strategy?</strong><br>An iron condor sells an out-of-the-money put spread and an out-of-the-money call spread, same expiration, for a net credit. You want the stock to stay in a range.</p>
 <p><strong>Is an iron condor defined risk?</strong><br>Yes. Long options on each wing cap the loss. Max loss is about the tested wing width minus the credit.</p>
 <p><strong>When do traders use an iron condor?</strong><br>When they expect a range-bound market and want defined risk. Large trends and volatility spikes can test a wing.</p>
+<p><strong>How wide should the wings be?</strong><br>The wing width sets the max loss (width minus credit). Wider wings pay more credit but raise the worst case faster than the premium grows.</p>
+<p><strong>When should I close an iron condor?</strong><br>A common approach is to close near ~50% of max profit rather than holding to expiry for the last dollars. Set a loss limit (e.g. 2× the credit) before entering.</p>
+<p><strong>Can an iron condor be assigned early?</strong><br>Yes — American-style options can be assigned any time, especially a deep in-the-money short put near a dividend. Keep buying power for that scenario.</p>
     <p class="practice-prompt"><b>Next:</b> Print the <a href="/cheat-sheet/">options cheat sheet</a> or open this setup in the Builder.</p>
 
     <div class="warn"><strong>Educational only:</strong> Defined risk is not “no risk.” You can still lose several times the credit. Not a broker; not trade advice.</div>

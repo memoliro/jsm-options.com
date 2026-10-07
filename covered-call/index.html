@@ -19,7 +19,7 @@
   <meta name="twitter:title" content="Covered Call Strategy for Beginners (Example + Payoff)">
   <meta name="twitter:description" content="Covered call strategy explained: own 100 shares, sell a call, collect premium. See payoff, break-even, example, and practice in the free Builder. Educational only.">
   <meta name="twitter:image" content="https://jsm-options.com/images/og-default.png">
-  <link rel="stylesheet" href="/assets/style.css?v=20261001a">
+  <link rel="stylesheet" href="/assets/style.css?v=20260928d">
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-BDL003RCN6"></script>
   <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-BDL003RCN6');</script>
 <style id="jsm-mobile-nav">
@@ -59,11 +59,11 @@
   }
 }
 </style>
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "What is a covered call strategy?", "acceptedAnswer": {"@type": "Answer", "text": "A covered call means you own at least 100 shares and sell one call against those shares. You collect a premium and agree to sell the shares at the strike if assigned."}}, {"@type": "Question", "name": "What is the max profit on a covered call?", "acceptedAnswer": {"@type": "Answer", "text": "Approximate max profit is (call strike minus stock cost) plus the premium received, if shares are called away or finish above the strike."}}, {"@type": "Question", "name": "What is the covered call break-even?", "acceptedAnswer": {"@type": "Answer", "text": "Break-even is about stock cost basis minus premium per share, before commissions."}}]}</script>
-<script src="/assets/site.js?v=20261001a" defer></script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "What is a covered call strategy?", "acceptedAnswer": {"@type": "Answer", "text": "A covered call means you own at least 100 shares and sell one call against those shares. You collect a premium and agree to sell the shares at the strike if assigned."}}, {"@type": "Question", "name": "What is the max profit on a covered call?", "acceptedAnswer": {"@type": "Answer", "text": "Approximate max profit is (call strike minus stock cost) plus the premium received, if shares are called away or finish above the strike."}}, {"@type": "Question", "name": "What is the covered call break-even?", "acceptedAnswer": {"@type": "Answer", "text": "Break-even is about stock cost basis minus premium per share, before commissions."}}, {"@type": "Question", "name": "What if the stock drops far below my cost?", "acceptedAnswer": {"@type": "Answer", "text": "You still own the falling shares - the premium only offsets a few percent. Covered calls fit stocks you are comfortable holding through drawdowns."}}, {"@type": "Question", "name": "When can I be assigned on a covered call?", "acceptedAnswer": {"@type": "Answer", "text": "Any time with American-style options, most often near expiry when the call is in the money - or early around an ex-dividend date on a deep in-the-money call."}}, {"@type": "Question", "name": "What does rolling up and out mean?", "acceptedAnswer": {"@type": "Answer", "text": "Buying back your short call and selling a higher-strike, later-expiry call - ideally for a net credit - to stay in the stock and raise the cap."}}]}</script>
+<script src="/assets/site.js?v=20260928e" defer></script>
 </head>
 <body>
-<header class="site-header"><div class="site-header-inner"><a class="logo logo-link" href="/" aria-label="JSM Options Home"><div class="logo-icon">JSM</div><div><div style="font-weight:700">JSM Options</div><div class="brand-sub">jsm-options.com · Educational</div></div></a><div class="header-right"><nav class="nav" aria-label="Primary navigation"><a href="/">Home</a><a href="/level1/">Basics</a><a href="/level2/">Fundamentals</a><a href="/level3/">Spreads</a><a href="/level4/">Advanced</a><a href="/strategies/">Strategies</a><a href="/cheat-sheet/">Cheat sheet</a><a href="/builder/">Builder</a><a href="/backtest/">Backtest</a></nav><button type="button" class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button><button type="button" class="theme-toggle" id="themeToggle" aria-label="Toggle color theme"><span id="themeIcon" class="theme-icon">☼</span><span id="themeLabel" class="theme-label">Dark</span></button></div></div></header>
+<header class="site-header"><div class="site-header-inner"><a class="logo logo-link" href="/" aria-label="JSM Options Home"><div class="logo-icon">JSM</div><div><div style="font-weight:700">JSM Options</div><div class="brand-sub">jsm-options.com · Educational</div></div></a><div class="header-right"><nav class="nav" aria-label="Primary navigation"><a href="/">Home</a><a href="/level1/">Basics</a><a href="/level2/">Fundamentals</a><a href="/level3/">Spreads</a><a href="/level4/">Advanced</a><a href="/strategies/">Strategies</a><a href="/cheat-sheet/">Cheat sheet</a><a href="/builder/">Builder</a></nav><button type="button" class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button><button type="button" class="theme-toggle" id="themeToggle" aria-label="Toggle color theme"><span id="themeIcon" class="theme-icon">☼</span><span id="themeLabel" class="theme-label">Dark</span></button></div></div></header>
 <div class="wrap">
 <nav class="breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span aria-hidden="true">/</span><span aria-current="page">Covered Call</span></nav>
   <div class="card">
@@ -104,6 +104,38 @@
       <p style="text-align:center;font-size:.8rem;color:var(--muted);margin:8px 0 0">Green = profit · Red = loss · Flat right side = short call caps upside</p>
     </div>
 
+    <h2>Worked example: the P/L at different prices</h2>
+    <p>You buy <b>100 shares at $50</b> and sell the <b>$55 call for $1.00</b> → $100 premium. Per-share results (×100 for contract totals):</p>
+    <ul>
+      <li><b>Stock at $40:</b> shares −$10, premium +$1 → net <b>−$9/share (−$900)</b>.</li>
+      <li><b>Stock at $49 (break-even):</b> −$1 + $1 → <b>≈ $0</b>.</li>
+      <li><b>Stock at $55:</b> +$5 + $1 → <b>+$6/share (+$600)</b>, the max-profit point.</li>
+      <li><b>Stock at $60:</b> shares called away at $55 — same <b>+$600</b>. Everything above the strike is gone; that is the cap.</li>
+    </ul>
+    <p>Formulas: <b>break-even = $50 − $1 = $49</b>; <b>max profit = ($55 − $50) + $1 = $6/share ($600)</b> if called away.</p>
+
+    <h2>Choosing the strike and expiry</h2>
+    <ul>
+      <li><b>OTM vs ATM:</b> an OTM call leaves room to rise but pays less; an ATM call pays more but caps you immediately.</li>
+      <li><b>Expiry:</b> 30–45 days is a popular compromise — real theta decay, repeatable monthly. Weeklies pay less but let you adjust strikes often.</li>
+      <li><b>IV and dividends:</b> higher IV means richer premiums. Near an ex-dividend date, a deep ITM call can be exercised early so the holder captures the dividend.</li>
+    </ul>
+
+    <h2>Managing the position: rolling up and out</h2>
+    <ul>
+      <li><b>Stock rallies past the strike:</b> buy back the call and sell a higher-strike, later-expiry call — ideally for a net credit ("roll up and out").</li>
+      <li><b>Stock drops:</b> the call decays and you keep the premium, but the shares are down. Sell another call next cycle — not below your cost basis.</li>
+      <li><b>Closing early &amp; assignment:</b> if the call has decayed to 10–20% of its sale price, buying it back banks most of the profit. If it finishes in the money, expect the shares to be called away — usually the weekend after expiry.</li>
+    </ul>
+
+    <h2>Common covered call mistakes</h2>
+    <ul>
+      <li>Selling calls on shares bought far higher, then accepting assignment below cost basis.</li>
+      <li>Chasing the richest premium on a volatile stock — the big premium prices the big move that makes the cap hurt most.</li>
+      <li>Forgetting dividends: selling an ITM call over an ex-date and losing the dividend to early exercise.</li>
+      <li>Thinking the premium “protects” the position — it offsets a few percent of a drop, nothing more.</li>
+    </ul>
+
     <div class="analogy">
       <b>Example:</b> You own 100 shares at $50. You sell a $55 call for $1.00 ($100 credit).<br>
       If stock stays under $55: you keep shares + $100 premium.<br>
@@ -133,6 +165,9 @@
     <p><strong>What is a covered call strategy?</strong><br>A covered call means you own at least 100 shares and sell one call against those shares. You collect a premium and agree to sell the shares at the strike if assigned.</p>
 <p><strong>What is the max profit on a covered call?</strong><br>Approximate max profit is (call strike minus stock cost) plus the premium received, if shares are called away or finish above the strike.</p>
 <p><strong>What is the covered call break-even?</strong><br>Break-even is about stock cost basis minus premium per share, before commissions.</p>
+<p><strong>What if the stock drops far below my cost?</strong><br>You still own the falling shares — the premium only offsets a few percent. Covered calls fit stocks you are comfortable holding through drawdowns.</p>
+<p><strong>When can I be assigned on a covered call?</strong><br>Any time with American-style options, most often near expiry when the call is in the money — or early around an ex-dividend date on a deep in-the-money call.</p>
+<p><strong>What does "rolling up and out" mean?</strong><br>Buying back your short call and selling a higher-strike, later-expiry call — ideally for a net credit — to stay in the stock and raise the cap.</p>
     <p class="practice-prompt"><b>Next:</b> Print the <a href="/cheat-sheet/">options cheat sheet</a> or open this setup in the Builder.</p>
 
     <div class="warn"><strong>Educational only:</strong> Not financial advice. Options and stock ownership both involve risk of loss. JSM Options is not a broker and is not affiliated with any brokerage.</div>

@@ -52,6 +52,30 @@
           "@type": "Answer",
           "text": "Başabaş, komisyon öncesi yaklaşık hisse maliyet esası eksi hisse başına primdir."
         }
+      },
+      {
+        "@type": "Question",
+        "name": "Hisse maliyetimin çok altına düşerse ne olur?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Düşen hisseler hâlâ sizindir — Premium düşüşün birkaç puanını dengeler. Bu yüzden Covered Call, düşüşlere katlanabildiğiniz ve tutmaktan memnun olduğunuz hisselere uyar; sırf Call satmak için aldığınız hisselere değil."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Covered Call'da ne zaman atanabilirim?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Amerikan tipi opsiyonlarda her zaman atanabilirsiniz; en sık vade yakınken Call ITM ise olur. Temettü tarihi çevresinde deep ITM Call'lar, sahibi temettüyü kapsın diye erken de kullanılabilir."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "“Yukarı ve dışarı Roll” ne demek?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Short Call'u geri alıp daha yüksek Strike'lı, daha ileri vadeli Call satmak — idealde net credit ile. Hissede kalırsınız, daha fazla Premium biriktirirsiniz ve hisse Strike'ı aşınca tavanı yükseltirsiniz."
+        }
       }
     ]
   }
@@ -197,10 +221,49 @@
           <a class="btn btn-secondary" href="https://jsm-options.com/tr/level4/">Wheel ve ileri gelir fikirleri</a>
         </p>
 
+        <h2 id="sec-5">Sayısal örnek: farklı fiyatlarda K/Z</h2>
+        <p><b>100 hisseyi 50 $'dan</b> alıyorsunuz; <b>55 $ Call'u 1,00 $'dan</b> satıyorsunuz → 100 $ Premium. Hisse başına sonuçlar (kontrat için ×100):</p>
+        <ul>
+          <li><b>Hisse 40 $:</b> hissede −10 $, Premium'den +1 $ → net <b>hisse başına −9 $ (−900 $)</b>.</li>
+          <li><b>Hisse 49 $ (Break-Even):</b> −1 $ + 1 $ → <b>≈ 0 $</b>.</li>
+          <li><b>Hisse 55 $:</b> +5 $ + 1 $ → <b>hisse başına +6 $ (+600 $)</b>, maksimum kâr noktası.</li>
+          <li><b>Hisse 60 $:</b> hisseler 55 $'dan çağrılır — yine <b>+600 $</b>. Strike üstü gider; bu, tavandır.</li>
+        </ul>
+        <p>Formüller: <b>Break-Even = 50 − 1 = 49 $</b>; <b>maksimum kâr = (55 − 50) + 1 = hisse başına 6 $ (600 $)</b>, hisseler çağrılırsa.</p>
+
+        <h2 id="sec-6">Strike ve vade seçimi</h2>
+        <ul>
+          <li><b>OTM ve ATM Call:</b> OTM Call tavan vurmadan yükselişe alan bırakır ama az öder; ATM Call çok öder ama yükselişi hemen tavanlar. Strike'ı vazgeçtiğiniz yükselişe göre seçin.</li>
+          <li><b>Vade:</b> 30–45 gün popüler uzlaşmadır — Theta anlamlı çalışır, aylık tekrarlanır. Haftalıklar az öder ama Strike'ı sık ayarlatır.</li>
+          <li><b>IV ve temettü:</b> IV yüksekken Premium zengindir — bazıları yalnızca o zaman satar. Temettü öncesi deep ITM Call, sahibi temettüyü kapsın diye erken kullanılabilir.</li>
+        </ul>
+
+        <h2 id="sec-7">Pozisyon yönetimi: yukarı ve dışarı Roll</h2>
+        <ul>
+          <li><b>Hisse Strike'ın üstüne çıkarsa:</b> Call'u geri alıp daha yüksek Strike'lı, ileri vadeli Call satın — idealde net credit ile. “Yukarı ve dışarı Roll” hissede tutar, tavanı yükseltir.</li>
+          <li><b>Hisse düşerse:</b> Call erir, Premium kalır ama hisseler eksidedir. Sonraki döngüde yeni Call satın — ama maliyet esasınızın altında değil; atamada zararı kilitler.</li>
+          <li><b>Erken kapatma ve assignment:</b> Call satış fiyatının %10–20'sine erdiyse geri almak kârın çoğunu kilitler. Vade sonunda ITM biterse hisselerin çağrılmasını bekleyin.</li>
+        </ul>
+
+        <h2 id="sec-8">Yaygın Covered Call hataları</h2>
+        <ul>
+          <li>Çok yüksekten alınmış hisselere Call satıp maliyetin altında atamayı kabul etmek.</li>
+          <li>Volatil hissede en zengin Premium'i kovalamak — büyük Premium, tavanın en çok acıtacağı büyük hareketi fiyatlar.</li>
+          <li>Temettüyü unutmak: temettü tarihinde ITM Call satıp erken kullanımda temettüyü kaptırmak.</li>
+          <li>Premium'in “koruduğunu” sanmak — düşüşün birkaç puanını dengeler, fazlasını değil.</li>
+          <li>Hisseden fazla Call satmak — fazlalar naked Short Call'dur, çok daha risklidir.</li>
+        </ul>
+
         <h2 id="guide-faq">Yeni başlayan SSS</h2>
         <p><strong>Covered call stratejisi nedir?</strong><br>En az 100 hisse sahibi olup bu hisselere karşı bir call satarsınız. Prim alırsınız ve atama olursa hisseleri strike’dan satmayı kabul edersiniz.</p>
         <p><strong>Covered call’da maksimum kâr nedir?</strong><br>Yaklaşık maksimum kâr, hisseler çağrılırsa veya vade sonunda strike üstünde kapanırsa (call strike eksi hisse maliyeti) artı alınan primdir.</p>
         <p><strong>Covered call başabaşı nedir?</strong><br>Başabaş, komisyon öncesi yaklaşık hisse maliyet esası eksi hisse başına primdir.</p>
+
+        <p><strong>Hisse maliyetimin çok altına düşerse ne olur?</strong><br>Düşen hisseler hâlâ sizindir — Premium düşüşün birkaç puanını dengeler. Bu yüzden Covered Call, düşüşlere katlanabildiğiniz ve tutmaktan memnun olduğunuz hisselere uyar; sırf Call satmak için aldığınız hisselere değil.</p>
+
+        <p><strong>Covered Call'da ne zaman atanabilirim?</strong><br>Amerikan tipi opsiyonlarda her zaman atanabilirsiniz; en sık vade yakınken Call ITM ise olur. Temettü tarihi çevresinde deep ITM Call'lar, sahibi temettüyü kapsın diye erken de kullanılabilir.</p>
+
+        <p><strong>“Yukarı ve dışarı Roll” ne demek?</strong><br>Short Call'u geri alıp daha yüksek Strike'lı, daha ileri vadeli Call satmak — idealde net credit ile. Hissede kalırsınız, daha fazla Premium biriktirirsiniz ve hisse Strike'ı aşınca tavanı yükseltirsiniz.</p>
 
 
         <p class="practice-prompt"><b>Sonraki adım:</b> <a href="https://jsm-options.com/tr/cheat-sheet/">opsiyon özetini</a> yazdırın veya bu kurulumu Builder’da açın.</p>
