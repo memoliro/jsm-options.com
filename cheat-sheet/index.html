@@ -13,7 +13,7 @@
   <meta property="og:image" content="https://jsm-options.com/images/og-default.png">
   <meta name="twitter:image" content="https://jsm-options.com/images/og-default.png">
   <meta property="og:type" content="website">
-  <link rel="stylesheet" href="/assets/style.css?v=20261001a">
+  <link rel="stylesheet" href="/assets/style.css?v=20260928d">
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-BDL003RCN6"></script>
   <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-BDL003RCN6');</script>
 
@@ -55,7 +55,63 @@
 }
 </style>
 
-<script src="/assets/site.js?v=20261001a" defer></script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Why do I multiply option quotes by 100?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "One standard US equity option contract controls 100 shares: a $2.50 quote means $250 per contract. Some index products differ — always check the contract specifications."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "When exactly is my break-even on an option?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "At expiration: call strike + premium paid; put strike - premium paid. Before expiration, remaining time value means you can close at a profit even below the expiry break-even."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What happens if I do nothing at expiration?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "In-the-money options are usually auto-exercised: a long call becomes 100 long shares (you pay strike x 100 in cash); a long put sells your 100 shares or opens a short stock position. Out-of-the-money options expire worthless. Know your broker's cutoff times."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I close an option position before expiration?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes — buy back what you sold, or sell what you bought, at any time before expiry. You never have to wait for expiration."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is assignment risk?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "If you are short an option, the buyer can exercise early — most common with in-the-money options around dividends. Assignment on a short put means waking up owning 100 shares; on a short call, your shares get called away (or you go short the stock)."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do option cheat-sheet formulas include commissions?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. Subtract commissions from every profit estimate — they matter most on small trades and multi-leg structures."
+      }
+    }
+  ]
+}
+</script>
+<script src="/assets/site.js?v=20260928e" defer></script>
 <script src="/assets/section-spy.js?v=20260928f" defer></script>
 <style>
 .strategy-explore-section{margin-top:42px;padding-top:8px}
@@ -72,7 +128,7 @@
 </style>
 </head>
 <body>
-<header class="site-header"><div class="site-header-inner"><a class="logo logo-link" href="/" aria-label="JSM Options Home"><div class="logo-icon">JSM</div><div><div style="font-weight:700">JSM Options</div><div class="brand-sub">jsm-options.com · Educational</div></div></a><div class="header-right"><nav class="nav" aria-label="Primary navigation"><a href="/">Home</a><a href="/level1/">Basics</a><a href="/level2/">Fundamentals</a><a href="/level3/">Spreads</a><a href="/level4/">Advanced</a><a href="/strategies/">Strategies</a><a href="/cheat-sheet/" class="active">Cheat sheet</a><a href="/builder/">Builder</a><a href="/backtest/">Backtest</a></nav><button type="button" class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button><button type="button" class="theme-toggle" id="themeToggle" aria-label="Toggle color theme"><span id="themeIcon" class="theme-icon">☼</span><span id="themeLabel" class="theme-label">Dark</span></button></div></div></header>
+<header class="site-header"><div class="site-header-inner"><a class="logo logo-link" href="/" aria-label="JSM Options Home"><div class="logo-icon">JSM</div><div><div style="font-weight:700">JSM Options</div><div class="brand-sub">jsm-options.com · Educational</div></div></a><div class="header-right"><nav class="nav" aria-label="Primary navigation"><a href="/">Home</a><a href="/level1/">Basics</a><a href="/level2/">Fundamentals</a><a href="/level3/">Spreads</a><a href="/level4/">Advanced</a><a href="/strategies/">Strategies</a><a href="/cheat-sheet/" class="active">Cheat sheet</a><a href="/builder/">Builder</a></nav><button type="button" class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button><button type="button" class="theme-toggle" id="themeToggle" aria-label="Toggle color theme"><span id="themeIcon" class="theme-icon">☼</span><span id="themeLabel" class="theme-label">Dark</span></button></div></div></header>
 <div class="wrap">
 <nav class="breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span aria-hidden="true">/</span><span aria-current="page">Cheat sheet</span></nav>
 
@@ -126,6 +182,53 @@
 </div></section>
 
     <div class="warn"><strong>Educational only:</strong> Not a broker and not trade advice. Formulas ignore commissions, dividends, and early assignment.</div>
+  </div>
+
+  <div class="card" style="margin-top:18px">
+    <h2 style="margin-top:0">What the concepts really mean</h2>
+    <p>A <b>call</b> is the right to buy; a <b>put</b> is the right to sell. Buying buys a <i>right</i> — you choose whether to use it. Selling sells an <i>obligation</i> — you must perform if assigned. That split is the foundation.</p>
+    <p>Every option price has two parts. <b>Intrinsic value</b> is what the option is worth if exercised right now (only in-the-money options have any). <b>Time value</b> is the rest: the market's price for the chance that things change before expiry. Time value decays to zero — that daily erosion is <b>theta</b>: buyers race the clock while sellers get paid to wait.</p>
+    <p><b>Implied volatility (IV)</b> is the market's forecast of future movement, baked into the price. The classic trap: buying just before earnings means buying at peak IV; when the news lands, IV collapses ("IV crush") and the option can lose value even if you called the direction right.</p>
+    <p><b>Greeks in one line:</b> Delta — price move per $1 of stock. Gamma — how fast delta changes (highest near expiry). Theta — daily decay. Vega — sensitivity to IV.</p>
+  </div>
+
+  <div class="card" style="margin-top:18px">
+    <h2 style="margin-top:0">Worked examples with real numbers</h2>
+    <p>Assume XYZ stock is at <b>$50</b>; ignore commissions.</p>
+    <h3>Long call</h3>
+    <p>Buy the $55 strike call for <b>$2.00</b> ($200 out). Break-even at expiry: $57. At $65, the call is worth ($65 − $55) × 100 = $1,000 — an $800 profit. At or below $55, the $200 is gone. Key math: the stock must rise over 14% just to break even — strike and timing matter.</p>
+    <h3>Cash-secured put</h3>
+    <p>Sell the $45 strike put for <b>$1.50</b> ($150 in) with $4,500 cash ready. Break-even: $43.50. Above $45 at expiry, you keep the $150 (~3.3% on the cash set aside). If assigned, you buy 100 shares at $45 — effectively $43.50 after premium. Fine if you wanted the stock anyway; painful if it gaps to $30.</p>
+    <h3>Iron condor</h3>
+    <p>Stock at $100: sell the $95 put and $105 call, buy the $90 put and $110 call. Collect <b>$2.00</b> ($200). Max profit $200 if the stock finishes between $95 and $105. Max loss: $5 wing width − $2 credit = $3.00 ($300). Break-evens: $93 and $107. You risk $300 to make $200 — the win rate must compensate.</p>
+  </div>
+
+  <div class="card" style="margin-top:18px">
+    <h2 style="margin-top:0">Common beginner mistakes</h2>
+    <ul>
+      <li><b>Forgetting ×100</b> — the most expensive habit here. Multiply every quote first.</li>
+      <li><b>Treating credit as profit</b> — the premium is yours only if the position expires well or you close it cheaper.</li>
+      <li><b>Buying before earnings</b> — IV crush can erase the position even on a correct call.</li>
+      <li><b>Illiquid options</b> — wide bid-ask spreads start you 5–10% underwater.</li>
+      <li><b>No plan into expiration week</b> — gamma accelerates; small moves swing the position hard.</li>
+      <li><b>Selling undefined-risk premium for "income"</b> — a short strangle can collect $300/month and lose $3,000 in a day.</li>
+    </ul>
+  </div>
+
+  <div class="card" style="margin-top:18px">
+    <h2 style="margin-top:0">Frequently asked questions</h2>
+    <h3>Why multiply by 100?</h3>
+    <p>One standard US equity contract = 100 shares, so $2.50 = $250. Some index products differ — check the specs.</p>
+    <h3>When is my break-even?</h3>
+    <p>At expiry: call strike + premium; put strike − premium. Before expiry, leftover time value can put you in profit below that line.</p>
+    <h3>What if I do nothing at expiration?</h3>
+    <p>ITM options are usually auto-exercised: a long call becomes 100 long shares (you pay strike × 100); a long put sells your shares or opens a short stock position. OTM options die worthless. Know your broker's cutoff times.</p>
+    <h3>Can I close early?</h3>
+    <p>Yes — buy back what you sold or sell what you bought, any time before expiry.</p>
+    <h3>What is assignment risk?</h3>
+    <p>Being short means the buyer can exercise early (common near dividends). Short-put assignment = waking up owning 100 shares; short call = shares called away (or short stock).</p>
+    <h3>Commissions included?</h3>
+    <p>No — subtract them from every estimate; they bite hardest on small and multi-leg trades.</p>
   </div>
 
 <div class="card quiz-card" id="page-quiz">

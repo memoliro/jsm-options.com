@@ -21,6 +21,62 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="26 Options Trading Strategies Explained">
 <meta name="twitter:description" content="Covered call, iron condor, straddle, verticals, and more — plain-English strategy library for learners.">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Yeni başlayan için en iyi opsiyon stratejisi hangisi?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Herkes için tek bir en iyi yoktur. Küçük boyutta, tanımlı riskli, bir-iki bacaklı bir yapıyla başlayın — 100 hisseniz varsa Covered Call, hisseyi aşağıdan almaya razıysanız Cash-Secured Put, premium satmayı net bir mekanikle öğretir. Önce Builder'da kâğıt üzerinde deneyin."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Debit strateji ile credit strateji arasındaki fark nedir?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Debit stratejide girmek için ödersiniz; maksimum zarar debit tutarıdır ve hissenin bunu karşılayacak kadar hareket etmesi gerekir. Credit stratejide girmek için ödeme alırsınız; koşullar lehinize kalırsa kazanırsınız. Credit tek başına güvenli demek değildir: naked credit pozisyonlar tanımsız risk taşıyabilir."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Strike ve vade nasıl seçilir?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Strike, beklentinizi ve risk toleransınızı gösterir: fiyata yakın strike'lar pahalıdır ama daha az hareket ister. Tanımlı riskli spreadlerde 30-60 gün yaygın bir penceredir — anlamlı time decay, son haftanın gamma riski olmadan."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "\"Tanımlı risk\" gerçekte neyi korur?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yapısal zararı bilinen bir tutarla tavanlar. O tutarı kaybetmenizi engellemez; early assignment ve gap riskini de kaldırmaz. Mekaniğe geçmeden önce max-loss değerini okuyun."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Kazanan pozisyonu vade sonuna kadar tutmalı mıyım?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Şart değil. Yaygın bir risk yönetimi alışkanlığı, credit spreadleri maksimum kârın %50'si civarında kapatmaktır — son dolarlar en yavaş gelir ve en çok gamma riski taşır. Çıkışa işlem sırasında değil, girmeden önce karar verin."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Opsiyonda koyduğumdan fazlasını kaybedebilir miyim?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Tanımlı riskli yapılarda hayır — yapı zararı tavanlar. Tanımsız riskli short pozisyonlarda (naked call/put, short straddle) evet: sert bir hareket hesap bakiyesini aşıp margin call getirebilir."
+      }
+    }
+  ]
+}
+</script>
 <link rel="stylesheet" href="/assets/style.css?v=20260928d">
 <style>
 .strategy-toolbar{display:grid;grid-template-columns:1.4fr 1fr;gap:10px;margin:18px 0}.filters{display:flex;gap:7px;flex-wrap:wrap}.filter{padding:8px 12px;border:1px solid var(--border);background:var(--input);color:var(--muted);border-radius:999px;cursor:pointer;font-size:12px}.filter.active{background:#fff;color:#000;border-color:var(--text)}.strategy-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.strategy-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:18px;display:flex;flex-direction:column;min-height:290px;transition:.15s transform,.15s border-color}.strategy-card:hover{transform:translateY(-2px);border-color:#52525b}.strategy-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.strategy-head h2{font-size:20px;margin:0 0 5px}.pill{display:inline-flex;align-items:center;border:1px solid var(--border);border-radius:999px;padding:4px 8px;font-size:10px;color:var(--muted);white-space:nowrap}.pill.bullish{color:#86efac}.pill.bearish{color:#fca5a5}.pill.neutral{color:#d4d4d8}.pill.vol{color:#93c5fd}.pill.hedge{color:#fde68a}.strategy-card p{font-size:13px;color:var(--muted)}.legs{font-size:12px;color:var(--muted);margin:7px 0}.legs b{color:var(--text)}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:auto;padding-top:12px}.stat{background:var(--input);border:1px solid var(--border);border-radius:10px;padding:9px}.stat span{display:block;font-size:9px;color:var(--dim);text-transform:uppercase;letter-spacing:.05em}.stat strong{display:block;font-size:11px;margin-top:3px}.risk{font-size:11px;color:var(--muted);margin-top:9px}.risk strong{color:var(--text)}.empty{display:none;padding:25px;text-align:center;color:var(--muted);border:1px dashed var(--border);border-radius:14px}.mini-note{font-size:12px;color:var(--dim)}
@@ -115,6 +171,59 @@
     </a>
   </div>
 </section>
+<section class="card" style="margin-top:18px">
+<h2 style="margin-top:0">Strateji nasıl seçilir</h2>
+<h3>1. Piyasa beklentim ne?</h3>
+<p>Dört beklenti neredeyse her şeyi kapsar ve her kartın renk etiketi bunlardan birine denk gelir: <b>yükseliş</b> (bullish), <b>düşüş</b> (bearish), <b>yatay bant</b> (neutral) veya <b>büyük hareket</b> (volatile — yön belli değil). "Yatay" ile "büyük hareket" aynı başlangıç görüşünü paylaşabilir — Short Straddle da Long Straddle da "yön tahminim yok" der — ama biri fiyat yerinde sayınca, diğeri fiyat sert oynayınca kazanır.</p>
+<h3>2. Hedefim ne?</h3>
+<p><b>Gelir:</b> çoğunlukla opsiyon <i>satarak</i> premium toplarsınız — Covered Call, Cash-Secured Put, credit spread, Iron Condor. Time decay lehinize çalışır; kâr tavanlıdır, sert hareketler can yakar. <b>Spekülasyon:</b> tahmin ettiğiniz hareketten kâr için çoğunlukla opsiyon <i>alırsınız</i> — Long Call, Long Put, debit spread. Premium ödersiniz; hareket, primi karşılayacak kadar büyük ve hızlı olmalıdır. <b>Hedge:</b> zaten hisseniz vardır, zararı sınırlamak istersiniz — Protective Put ve Collar sigortadır: parası vardır, yükselişte getiriyi törpüler ama düşüşü tavanlar.</p>
+<h3>3. Bu pozisyonda ne kadar kaybetmeyi göze alırım?</h3>
+<p><b>Tanımlı riskli (defined-risk)</b> stratejiler — Long opsiyonlar, debit spreadler, Iron Condor — maksimum zararı girmeden önce söyler. <b>Tanımsız riskli</b> pozisyonlar — naked Short Call/Put, Short Straddle — alınan credit'ten çok daha fazlasını kaybettirebilir. Assignment ve margin konusunu anlamadan tanımlı riskte kalın.</p>
+</section>
+
+<section class="card" style="margin-top:18px">
+<h2 style="margin-top:0">Strateji ailelerine genel bakış</h2>
+<div style="overflow-x:auto">
+<table class="sheet-table">
+<thead><tr><th>Beklenti / hedef</th><th>Tipik aile</th><th>Credit mi debit mi</th><th>Tanımlı risk?</th><th>Ne zaman uyar</th></tr></thead>
+<tbody>
+<tr><td>Güçlü yükseliş</td><td>Long Call</td><td>Debit</td><td>Evet</td><td>Hızlı, güçlü ralli beklentisi; tam premium, tavansız yükseliş demektir.</td></tr>
+<tr><td>Ilımlı yükseliş</td><td>Bull Call Spread</td><td>Debit</td><td>Evet</td><td>Düz Long Call'dan ucuz yönlü bahis; biraz daha yavaş erir.</td></tr>
+<tr><td>Yükseliş + gelir</td><td>Cash-Secured Put, Bull Put Spread</td><td>Credit</td><td>Evet</td><td>Hisseyi aşağıdan almaya razısınız; premium yatay piyasayı yumuşatır.</td></tr>
+<tr><td>Düşüş</td><td>Long Put, Bear Put Spread</td><td>Debit</td><td>Evet</td><td>Düşüş beklentisi; spread, düz put maliyetini düşürür.</td></tr>
+<tr><td>Düşüş veya yatay</td><td>Bear Call Spread</td><td>Credit</td><td>Evet</td><td>Ralli beklentisi yok; fiyat short strike altında kalırsa credit kalır.</td></tr>
+<tr><td>Bant</td><td>Iron Condor, Iron Butterfly</td><td>Credit</td><td>Evet</td><td>Fiyat short strike'lar arasında sıkışmış; time decay lehinize.</td></tr>
+<tr><td>Büyük hareket, yön bilinmiyor</td><td>Long Straddle, Long Strangle</td><td>Debit</td><td>Evet</td><td>Katalizör öncesi — ama olay sonrası IV crush'a dikkat.</td></tr>
+<tr><td>Hisseyi koruma</td><td>Protective Put, Collar</td><td>Debit / ~sıfır maliyet</td><td>Aşağı taraf tavanlı</td><td>Belirsizlikte sigorta; collar yükselişi de tavanlar.</td></tr>
+</tbody>
+</table>
+</div>
+</section>
+
+<section class="card" style="margin-top:18px">
+<h2 style="margin-top:0">Her aile ne zaman parlar</h2>
+<p><b>Yönlü debit oyunlar</b> (Long Call/Put, debit spreadler) yön ve zamanlama ikisi de tutunca parlar — erken girmek decay yüzünden cezalandırılır. Debit spreadler düz long'lardan ucuzdur; short bacağın decay'i long bacağınkini kısmen dengeler.</p>
+<p><b>Credit ve gelir oyunları</b> (Cash-Secured Put, Covered Call, credit spread, Iron Condor) sakin veya yumuşak trendli, IV'si yüksek piyasalarda parlar — pahalı premium satarsınız. Sert hareketlerde zorlanırlar; tanımsız riskli sürümler tam da o anlarda tehlikeli olur.</p>
+<p><b>Volatilite oyunları</b> (Long Straddle, Long Strangle) gerçekleşen hareket, opsiyonların fiyatladığından büyük olunca parlar. Düşmanları <b>IV crush</b>'tır — bilinen bir olay öncesi almak, zirve premium ödeyip olay sonrası çöküşü yaşamak demektir.</p>
+<p><b>Hedge'ler</b> (Protective Put, Collar) belirsizlikte pozisyonu tutmak zorunda kalınca parlar. Bedeli, sakin aylardaki getiriyi törpülemesidir.</p>
+</section>
+
+<section class="card" style="margin-top:18px">
+<h2 style="margin-top:0">Sık sorulan sorular</h2>
+<h3>Yeni başlayan için en iyi opsiyon stratejisi hangisi?</h3>
+<p>Herkes için tek bir "en iyi" yok. Küçük boyutta, tanımlı riskli, bir-iki bacaklı bir yapıyla başlayın — 100 hisseniz varsa Covered Call, hisseyi aşağıdan almaya razıysanız Cash-Secured Put, premium satmayı net bir mekanikle öğretir. Önce Builder'da kâğıt üzerinde deneyin.</p>
+<h3>Debit strateji ile credit strateji arasındaki fark nedir?</h3>
+<p>Debit stratejide girmek için ödersiniz; maksimum zarar debit tutarıdır ve hissenin bunu karşılayacak kadar hareket etmesi gerekir. Credit stratejide girmek için ödeme alırsınız; koşullar lehinize kalırsa kazanırsınız — ama credit tek başına güvenli demek değildir; naked credit pozisyonlar tanımsız risk taşıyabilir.</p>
+<h3>Strike ve vade nasıl seçilir?</h3>
+<p>Strike, beklentinizi ve risk toleransınızı gösterir: fiyata yakın strike'lar pahalıdır ama daha az hareket ister. Tanımlı riskli spreadlerde 30–60 gün yaygın bir penceredir — anlamlı decay, son haftanın gamma riski olmadan.</p>
+<h3>"Tanımlı risk" gerçekte neyi korur?</h3>
+<p>Yapısal zararı bilinen bir tutarla tavanlar. O tutarı kaybetmenizi engellemez; early assignment ve gap riskini de kaldırmaz.</p>
+<h3>Kazanan pozisyonu vade sonuna kadar tutmalı mıyım?</h3>
+<p>Şart değil — çoğu yatırımcı credit spreadleri maksimum kârın %50'si civarında kapatır; son dolarlar en yavaş gelir ve en çok gamma riski taşır. Çıkışa girmeden karar verin.</p>
+<h3>Koyduğumdan fazlasını kaybedebilir miyim?</h3>
+<p>Tanımlı riskli yapılarda hayır. Tanımsız riskli short'larda evet — sert bir hareket hesap bakiyesini aşıp margin call getirebilir.</p>
+</section>
+
 <div class="card quiz-card" id="page-quiz">
     <span class="badge">Hızlı kontrol</span>
     <h2>Strateji kütüphanesi testi</h2>

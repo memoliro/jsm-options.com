@@ -15,7 +15,7 @@
   <meta property="og:image" content="https://jsm-options.com/images/og-default.png">
   <meta name="twitter:image" content="https://jsm-options.com/images/og-default.png">
   <meta property="og:type" content="website">
-  <link rel="stylesheet" href="/assets/style.css?v=20261001a">
+  <link rel="stylesheet" href="/assets/style.css?v=20260928d">
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-BDL003RCN6"></script>
   <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-BDL003RCN6');</script>
 
@@ -57,7 +57,63 @@
 }
 </style>
 
-<script src="/assets/site.js?v=20261001a" defer></script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Opsiyon kotasyonlarını neden 100 ile çarpıyorum?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Standart bir ABD hisse opsiyon kontratı 100 hisseyi kontrol eder: 2,50$ kotasyon, kontrat başına 250$ demektir. Bazı endeks ürünleri farklıdır — işlemden önce kontrat özelliklerine bakın."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Opsiyonda break-even tam olarak ne zaman?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Expiry'de: call'da strike + ödenen premium; put'ta strike - ödenen premium. Expiry'den önce kalan time value sayesinde, başabaş çizgisinin altında bile kârda kapatabilirsiniz."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Expiry'de hiçbir şey yapmazsam ne olur?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "ITM opsiyonlar genelde otomatik kullanılır: Long Call 100 long hisseye dönüşür (strike x 100 ödersiniz); Long Put hissenizi satar veya short hisse pozisyonu açar. OTM opsiyonlar değersiz biter. Aracı kurumunuzun son işlem saatlerini bilin."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Pozisyonu vade dolmadan kapatabilir miyim?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Evet — sattığınızı geri alın veya aldığınızı satın; expiry'yi beklemek zorunda değilsiniz."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Assignment riski nedir?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Short olmak, alıcının erken kullanabilmesi demektir (temettü yakınında ITM opsiyonlarda yaygın). Short put assignment, sabah 100 hisseyle uyanmak demektir; short call'da hisseleriniz elden alınır (veya short hisse kalırsınız)."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Özet karttaki formüller komisyonu içeriyor mu?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Hayır. Her kâr tahmininden komisyonları çıkarın — küçük işlemlerde ve çok bacaklı yapılarda en çok onlar hissedilir."
+      }
+    }
+  ]
+}
+</script>
+<script src="/assets/site.js?v=20260928e" defer></script>
 <script src="/assets/section-spy.js?v=20260928f" defer></script>
 <style>
 .strategy-explore-section{margin-top:42px;padding-top:8px}
@@ -74,7 +130,7 @@
 </style>
 </head>
 <body>
-<header class="site-header"><div class="site-header-inner"><a class="logo logo-link" href="/tr/" aria-label="JSM Options Home"><div class="logo-icon">JSM</div><div><div style="font-weight:700">JSM Options</div><div class="brand-sub">jsm-options.com · Educational</div></div></a><div class="header-right"><nav class="nav" aria-label="Ana menü"><a href="/tr/">Ana Sayfa</a><a href="/tr/level1/">Giriş</a><a href="/tr/level2/">Temeller</a><a href="/tr/level3/">Spreadler</a><a href="/tr/level4/">İleri Seviye</a><a href="/tr/strategies/">Stratejiler</a><a href="/tr/cheat-sheet/" class="active">Özet</a><a href="/tr/builder/">Builder</a><a href="/tr/backtest/">Backtest</a></nav><button type="button" class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button><button type="button" class="theme-toggle" id="themeToggle" aria-label="Toggle color theme"><span id="themeIcon" class="theme-icon">☼</span><span id="themeLabel" class="theme-label">Dark</span></button></div></div></header>
+<header class="site-header"><div class="site-header-inner"><a class="logo logo-link" href="/tr/" aria-label="JSM Options Home"><div class="logo-icon">JSM</div><div><div style="font-weight:700">JSM Options</div><div class="brand-sub">jsm-options.com · Educational</div></div></a><div class="header-right"><nav class="nav" aria-label="Ana menü"><a href="/tr/">Ana Sayfa</a><a href="/tr/level1/">Giriş</a><a href="/tr/level2/">Temeller</a><a href="/tr/level3/">Spreadler</a><a href="/tr/level4/">İleri Seviye</a><a href="/tr/strategies/">Stratejiler</a><a href="/tr/cheat-sheet/" class="active">Özet</a><a href="/tr/builder/">Builder</a></nav><button type="button" class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button><button type="button" class="theme-toggle" id="themeToggle" aria-label="Toggle color theme"><span id="themeIcon" class="theme-icon">☼</span><span id="themeLabel" class="theme-label">Dark</span></button></div></div></header>
 <div class="wrap">
 <div class="card term-banner">
   <p style="margin:0"><b>Temel terimler</b> — call, put, strike, premium, expiry ve strateji adları bilinçli olarak İngilizce bırakıldı. Uluslararası borsalarda işlem yapmak için bu terimlere alışmalısınız. Türkçe karşılıkları sayfa sonunda vardır.</p>
@@ -132,6 +188,53 @@
 </div></section>
 
     <div class="warn"><strong>Yalnızca eğitim:</strong> Broker değil, işlem tavsiyesi değil. Formüller komisyon, temettü ve early assignment’ı yok sayar.</div>
+  </div>
+
+  <div class="card" style="margin-top:18px">
+    <h2 style="margin-top:0">Kavramların gerçek anlamı</h2>
+    <p><b>Call</b> alma hakkıdır; <b>Put</b> satma hakkı. Almak bir <i>hak</i> satın almaktır — kullanıp kullanmamak size kalmış. Satmak bir <i>yükümlülük</i> satmaktır — assignment olursa yapmak zorundasınız. Bu ayrım, buradaki her şeyin temelidir.</p>
+    <p>Her opsiyon fiyatının iki parçası vardır. <b>Intrinsic value</b>, opsiyonun hemen kullanılırsa değeridir (sadece ITM opsiyonlarda vardır). <b>Time value</b> geri kalanıdır: vade dolmadan işlerin değişme ihtimaline piyasanın biçtiği fiyat. Time value vadede sıfırlanır — günlük erime <b>theta</b>'dır: alıcı saate karşı yarışır, satıcı bekleyerek kazanır.</p>
+    <p><b>Implied volatility (IV)</b>, gelecekteki hareketin piyasa tahminidir, fiyata gömülüdür. Klasik tuzak: bilanço öncesi almak, IV'nin zirvesinde almak demektir; haber düşünce IV çöker ("IV crush") ve yönünüz doğru olsa bile opsiyon değer kaybedebilir.</p>
+    <p><b>Greeks tek cümle:</b> Delta — hisse $1 oynayınca fiyat ne kadar oynar. Gamma — delta'nın kendisi ne hızla değişir (vadeye yakın en yüksek). Theta — günlük erime. Vega — IV'ye duyarlılık.</p>
+  </div>
+
+  <div class="card" style="margin-top:18px">
+    <h2 style="margin-top:0">Gerçek sayılarla örnekler</h2>
+    <p>XYZ hissesi <b>$50</b> olsun; komisyonları yok sayın.</p>
+    <h3>Long Call</h3>
+    <p>$55 strike call alın, <b>$2.00</b> — $200 çıkış. Expiry'de Break-Even: $57. $65'te call'un değeri ($65−$55)×100 = $1.000 — $800 kâr. $55 ve altında $200 gider. Kritik matematik: hisse, başabaş için %14'ten fazla yükselmeli — strike ve zamanlama bu yüzden önemlidir.</p>
+    <h3>Cash-Secured Put</h3>
+    <p>$45 strike put satın, <b>$1.50</b> — $150 giriş; $4.500 nakit hazır. Break-Even: $43.50. Expiry'de $45 üstünde $150 kalır — ayrılan nakde ~%3,3. Assignment olursa 100 hisseyi $45'tan alırsınız — premium sonrası efektif $43.50. Hisseyi zaten istiyorsanız iyi; $30'a çakılırsa acıtır.</p>
+    <h3>Iron Condor</h3>
+    <p>Hisse $100: $95 put ve $105 call satın, $90 put ve $110 call alın. <b>$2.00</b> ($200) credit alınır. Hisse $95–$105 arasında biterse maksimum kâr $200. Maksimum zarar: $5 kanat genişliği − $2 credit = $3.00 ($300). Break-Even'ler: $93 ve $107. $200 kazanmak için $300 riske atılır — kazanma oranı bunu karşılamalıdır.</p>
+  </div>
+
+  <div class="card" style="margin-top:18px">
+    <h2 style="margin-top:0">Yeni başlayanların yaygın hataları</h2>
+    <ul>
+      <li><b>×100'ü unutmak</b> — bu sayfadaki en pahalı alışkanlık. Önce her kotasyonu çarpın.</li>
+      <li><b>Credit'i kâr sanmak</b> — premium, pozisyon iyi biterse veya ucuza kapatırsanız sizindir.</li>
+      <li><b>Bilanço öncesi almak</b> — yön doğru olsa bile IV crush pozisyonu eritebilir.</li>
+      <li><b>Likiditesi düşük opsiyonlar</b> — geniş Bid-Ask spread'i, girer girmez %5–10 geride başlamak demektir.</li>
+      <li><b>Vade haftasına plansız girmek</b> — gamma hızlanır; küçük hareketler pozisyonu sert sallar.</li>
+      <li><b>"Gelir" için tanımsız riskli premium satmak</b> — Short Strangle ayda $300 toplayıp bir günde $3.000 kaybettirebilir.</li>
+    </ul>
+  </div>
+
+  <div class="card" style="margin-top:18px">
+    <h2 style="margin-top:0">Sık sorulan sorular</h2>
+    <h3>Neden 100 ile çarpıyorum?</h3>
+    <p>Standart bir ABD hisse opsiyon kontratı 100 hisseyi kontrol eder: $2.50 kotasyon = $250. Bazı endeks ürünleri farklıdır — özelliklere bakın.</p>
+    <h3>Break-Even ne zaman?</h3>
+    <p>Expiry'de: call'da strike + premium; put'ta strike − premium. Expiry'den önce kalan time value, çizginin altında bile kârda kapatabilmenizi sağlar.</p>
+    <h3>Expiry'de hiçbir şey yapmazsam?</h3>
+    <p>ITM opsiyonlar genelde otomatik kullanılır: Long Call 100 long hisseye dönüşür (strike × 100 ödersiniz); Long Put hissenizi satar veya short hisse pozisyonu açar. OTM opsiyonlar değersiz biter. Aracı kurumunuzun son saatlerini bilin.</p>
+    <h3>Erken kapatabilir miyim?</h3>
+    <p>Evet — sattığınızı geri alın veya aldığınızı satın; expiry'yi beklemek zorunda değilsiniz.</p>
+    <h3>Assignment riski nedir?</h3>
+    <p>Short olmak, alıcının erken kullanabilmesi demektir (temettü yakınında yaygın). Short put assignment = sabah 100 hisseyle uyanmak; short call = hisselerin elden alınması (veya short hisse).</p>
+    <h3>Komisyonlar dahil mi?</h3>
+    <p>Hayır — her tahminden çıkarın; küçük ve çok bacaklı işlemlerde en çok onlar hissedilir.</p>
   </div>
 
 <div class="card quiz-card" id="page-quiz">

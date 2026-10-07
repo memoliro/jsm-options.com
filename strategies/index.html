@@ -19,7 +19,63 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="26 Options Trading Strategies Explained">
 <meta name="twitter:description" content="Covered call, iron condor, straddle, verticals, and more — plain-English strategy library for learners.">
-<link rel="stylesheet" href="/assets/style.css?v=20261001a">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What is the best options strategy for a beginner?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "There is no universally best one. The safest starting point is a defined-risk structure with one or two legs and small size. Covered calls (if you already own 100 shares) and cash-secured puts (if you are willing to buy a stock lower) teach premium selling with clear mechanics. Paper trade first — the Builder lets you study payoff shapes with no money at stake."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is the difference between a debit and a credit strategy?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "With a debit strategy you pay to enter; your maximum loss is the debit and the underlying must move enough to overcome it. With a credit strategy you are paid to enter and you profit if conditions stay favorable — price stays in range, time passes. Credit does not mean safe: naked credit positions can carry undefined risk."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I choose strikes and expirations?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Strikes express your forecast and risk tolerance: strikes closer to the current price cost more but need less movement. Expiration sets the clock — 30 to 60 days is a common window for defined-risk spreads, because time decay is meaningful while the gamma risk of the final week is still avoidable. Shorter expirations are cheaper but demand faster moves."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What does \"defined risk\" actually protect me from?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "It caps the structural loss: the position cannot lose more than a known amount at expiration. It does not prevent you from losing that amount, and it does not remove early-assignment risk or overnight gaps. Always read the max-loss number on the card before studying the mechanics."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Should I hold a winning trade until expiration?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Not necessarily. A common risk-management habit is closing credit spreads around 50% of maximum profit — the last dollars take the most time and carry the most gamma risk. For debit plays, traders often scale out in pieces. Decide the exit before you enter, not during."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I lose more than I put in with options?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "With defined-risk strategies, no — the structure caps the loss. With undefined-risk short positions (naked calls or puts, short straddles), yes: a violent move can push losses beyond the account balance and trigger a margin call. That is the practical reason beginners are steered toward defined risk."
+      }
+    }
+  ]
+}
+</script>
+<link rel="stylesheet" href="/assets/style.css?v=20260928d">
 <style>
 .strategy-toolbar{display:grid;grid-template-columns:1.4fr 1fr;gap:10px;margin:18px 0}.filters{display:flex;gap:7px;flex-wrap:wrap}.filter{padding:8px 12px;border:1px solid var(--border);background:var(--input);color:var(--muted);border-radius:999px;cursor:pointer;font-size:12px}.filter.active{background:#fff;color:#000;border-color:var(--text)}.strategy-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.strategy-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:18px;display:flex;flex-direction:column;min-height:290px;transition:.15s transform,.15s border-color}.strategy-card:hover{transform:translateY(-2px);border-color:#52525b}.strategy-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.strategy-head h2{font-size:20px;margin:0 0 5px}.pill{display:inline-flex;align-items:center;border:1px solid var(--border);border-radius:999px;padding:4px 8px;font-size:10px;color:var(--muted);white-space:nowrap}.pill.bullish{color:#86efac}.pill.bearish{color:#fca5a5}.pill.neutral{color:#d4d4d8}.pill.vol{color:#93c5fd}.pill.hedge{color:#fde68a}.strategy-card p{font-size:13px;color:var(--muted)}.legs{font-size:12px;color:var(--muted);margin:7px 0}.legs b{color:var(--text)}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:auto;padding-top:12px}.stat{background:var(--input);border:1px solid var(--border);border-radius:10px;padding:9px}.stat span{display:block;font-size:9px;color:var(--dim);text-transform:uppercase;letter-spacing:.05em}.stat strong{display:block;font-size:11px;margin-top:3px}.risk{font-size:11px;color:var(--muted);margin-top:9px}.risk strong{color:var(--text)}.empty{display:none;padding:25px;text-align:center;color:var(--muted);border:1px dashed var(--border);border-radius:14px}.mini-note{font-size:12px;color:var(--dim)}
 
@@ -66,11 +122,11 @@
 }
 </style>
 
-<script src="/assets/site.js?v=20261001a" defer></script>
+<script src="/assets/site.js?v=20260928e" defer></script>
 <script src="/assets/section-spy.js?v=20260928f" defer></script>
 </head>
 <body>
-<header class="site-header"><div class="site-header-inner"><a class="logo logo-link" href="/" aria-label="JSM Options Home"><div class="logo-icon">JSM</div><div><div style="font-weight:700">JSM Options</div><div class="brand-sub">jsm-options.com · Educational</div></div></a><div class="header-right"><nav class="nav" aria-label="Primary navigation"><a href="/">Home</a><a href="/level1/">Basics</a><a href="/level2/">Fundamentals</a><a href="/level3/">Spreads</a><a href="/level4/">Advanced</a><a href="/strategies/" class="active">Strategies</a><a href="/cheat-sheet/">Cheat sheet</a><a href="/builder/">Builder</a><a href="/backtest/">Backtest</a></nav><button type="button" class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button><button type="button" class="theme-toggle" id="themeToggle" aria-label="Toggle color theme"><span id="themeIcon" class="theme-icon">☼</span><span id="themeLabel" class="theme-label">Dark</span></button></div></div></header>
+<header class="site-header"><div class="site-header-inner"><a class="logo logo-link" href="/" aria-label="JSM Options Home"><div class="logo-icon">JSM</div><div><div style="font-weight:700">JSM Options</div><div class="brand-sub">jsm-options.com · Educational</div></div></a><div class="header-right"><nav class="nav" aria-label="Primary navigation"><a href="/">Home</a><a href="/level1/">Basics</a><a href="/level2/">Fundamentals</a><a href="/level3/">Spreads</a><a href="/level4/">Advanced</a><a href="/strategies/" class="active">Strategies</a><a href="/cheat-sheet/">Cheat sheet</a><a href="/builder/">Builder</a></nav><button type="button" class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button><button type="button" class="theme-toggle" id="themeToggle" aria-label="Toggle color theme"><span id="themeIcon" class="theme-icon">☼</span><span id="themeLabel" class="theme-label">Dark</span></button></div></div></header>
 <main class="wrap wide">
 <nav class="breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span aria-hidden="true">/</span><span aria-current="page">Strategies</span></nav>
 
@@ -109,6 +165,59 @@
     </a>
   </div>
 </section>
+<section class="card" style="margin-top:18px">
+<h2 style="margin-top:0">How to choose a strategy</h2>
+<h3>1. What is my market outlook?</h3>
+<p>Four views cover almost everything, and each card's color tag matches one: <b>bullish</b> (expect a rise), <b>bearish</b> (expect a fall), <b>neutral</b> (expect a range), or <b>volatile</b> (expect a big move, direction unknown). "Neutral" and "volatile" can share the same starting view — a short straddle and a long straddle both say "no directional call" — but one needs price to stay put and the other needs a big move.</p>
+<h3>2. What is my goal?</h3>
+<p><b>Income:</b> collect premium by mostly <i>selling</i> options — covered calls, cash-secured puts, credit spreads, iron condors. Decay works for you; profits are capped and sharp moves hurt. <b>Speculation:</b> profit from a predicted move by mostly <i>buying</i> — long calls, long puts, debit spreads. You pay premium; the move must be big and fast enough. <b>Hedge:</b> you own stock and want to cap damage — protective puts and collars are insurance that costs money and drags on rallies, but limits the fall.</p>
+<h3>3. How much can I lose on this one position?</h3>
+<p><b>Defined-risk</b> strategies — long options, debit spreads, iron condors — state the maximum loss before you enter. <b>Undefined-risk</b> positions — naked short calls or puts, short straddles — can lose far more than the credit collected. Until you understand assignment and margin, stay with defined risk.</p>
+</section>
+
+<section class="card" style="margin-top:18px">
+<h2 style="margin-top:0">Strategy families at a glance</h2>
+<div style="overflow-x:auto">
+<table class="sheet-table">
+<thead><tr><th>Outlook / goal</th><th>Typical family</th><th>Credit or debit</th><th>Defined risk?</th><th>When it fits</th></tr></thead>
+<tbody>
+<tr><td>Strongly bullish</td><td>Long call</td><td>Debit</td><td>Yes</td><td>Strong, fast rally expected; full premium buys uncapped upside.</td></tr>
+<tr><td>Moderately bullish</td><td>Bull call spread</td><td>Debit</td><td>Yes</td><td>Cheaper than an outright call; decays a little more slowly.</td></tr>
+<tr><td>Bullish, wants income</td><td>Cash-secured put, bull put spread</td><td>Credit</td><td>Yes</td><td>Happy owning the stock lower; premium cushions flat markets.</td></tr>
+<tr><td>Bearish</td><td>Long put, bear put spread</td><td>Debit</td><td>Yes</td><td>Drop expected; the spread trims the outright put's cost.</td></tr>
+<tr><td>Bearish or flat</td><td>Bear call spread</td><td>Credit</td><td>Yes</td><td>No rally expected; keep the credit below the short strike.</td></tr>
+<tr><td>Range-bound</td><td>Iron condor, iron butterfly</td><td>Credit</td><td>Yes</td><td>Pinned between short strikes; decay works for you.</td></tr>
+<tr><td>Big move, direction unknown</td><td>Long straddle, long strangle</td><td>Debit</td><td>Yes</td><td>Before a catalyst — but beware IV crush after the event.</td></tr>
+<tr><td>Protecting shares</td><td>Protective put, collar</td><td>Debit / ~zero cost</td><td>Downside capped</td><td>Insurance through uncertainty; collars also cap upside.</td></tr>
+</tbody>
+</table>
+</div>
+</section>
+
+<section class="card" style="margin-top:18px">
+<h2 style="margin-top:0">When each family shines</h2>
+<p><b>Directional debit plays</b> (long calls and puts, debit spreads) shine when direction and timing are both right — decay punishes early entries. Debit spreads cost less than outright longs, and the short leg's decay offsets some of the long leg's.</p>
+<p><b>Credit and income plays</b> (cash-secured puts, covered calls, credit spreads, iron condors) shine in calm or gently trending markets with elevated implied volatility — you sell expensive premium. They suffer in sharp moves, exactly when undefined-risk versions turn dangerous.</p>
+<p><b>Volatility plays</b> (long straddle, long strangle) shine when the realized move beats what options implied. Their enemy is <b>IV crush</b> — buying before a known event means paying peak premium that collapses after.</p>
+<p><b>Hedges</b> (protective put, collar) shine when you must hold through uncertainty. Their cost is the drag in quiet months.</p>
+</section>
+
+<section class="card" style="margin-top:18px">
+<h2 style="margin-top:0">Frequently asked questions</h2>
+<h3>What is the best options strategy for a beginner?</h3>
+<p>No universal best exists. Start small with a defined-risk, one- or two-leg structure — covered calls if you own 100 shares, cash-secured puts if you would buy the stock lower. Paper trade in the Builder first.</p>
+<h3>What is the difference between a debit and a credit strategy?</h3>
+<p>Debit: you pay to enter; max loss is the debit and the stock must move enough. Credit: you're paid to enter and profit if conditions stay favorable — but credit alone isn't safe; naked shorts can carry undefined risk.</p>
+<h3>How do I choose strikes and expirations?</h3>
+<p>Strikes show your forecast and risk tolerance: nearer strikes cost more but need less movement. For defined-risk spreads, 30–60 days is a common window — meaningful decay without the final week's gamma risk.</p>
+<h3>What does "defined risk" actually protect me from?</h3>
+<p>It caps the structural loss at a known amount. It doesn't stop you losing that amount, nor remove early-assignment or gap risk.</p>
+<h3>Should I hold a winning trade until expiration?</h3>
+<p>Not necessarily — many traders close credit spreads near 50% of max profit rather than waiting for the last, slowest dollars. Decide your exit before entry.</p>
+<h3>Can I lose more than I put in?</h3>
+<p>With defined-risk structures, no. With undefined-risk shorts, yes — a violent move can exceed the account balance and trigger a margin call.</p>
+</section>
+
 <div class="card quiz-card" id="page-quiz">
     <span class="badge">Quick check</span>
     <h2>Strategy library quiz</h2>
