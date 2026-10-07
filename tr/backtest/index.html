@@ -175,6 +175,20 @@ tbody tr.click:hover td{background:var(--panel-2)}
 @media (prefers-reduced-motion:no-preference){ .sec>summary::after{transition:transform .15s} }
 
 
+.guide{max-width:1280px;margin:0 auto 16px;padding:24px 22px;border:1px solid var(--line);border-radius:12px;background:var(--panel);font-size:14.5px;line-height:1.65}
+.guide h2{font-size:1.3rem;margin:26px 0 10px;letter-spacing:-.01em}
+.guide h2:first-of-type{margin-top:0}
+.guide h3{font-size:1.02rem;margin:22px 0 8px}
+.guide .lede{color:var(--muted);font-size:15px}
+.guide p{margin:0 0 12px}
+.guide ul{margin:0 0 14px;padding-left:20px;display:grid;gap:8px}
+.guide li::marker{color:var(--muted)}
+.guide .faq details{border:1px solid var(--line);border-radius:8px;margin:0 0 8px;background:var(--panel-2)}
+.guide .faq summary{cursor:pointer;padding:11px 14px;font-weight:600;list-style:none}
+.guide .faq summary::-webkit-details-marker{display:none}
+.guide .faq-a{padding:0 14px 12px;margin:0;color:var(--ink)}
+@media(max-width:600px){.guide{padding:18px 14px}}
+
 .site-support{max-width:1280px;margin:0 auto 8px;padding:20px 16px;text-align:center;border:1px solid var(--line);border-radius:12px;background:var(--panel)}
 .site-support h2{margin:0 0 8px;font-size:1.2rem;color:#93c5fd}
 .site-support p{margin:0 0 14px;color:#c8d0dc}
@@ -435,6 +449,46 @@ html[data-theme="light"] .site-header .nav a.active{background:#2563eb;color:#ff
 @media(max-width:600px){.site-header .brand-sub,.theme-label{display:none}}
 </style>
 
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "FAQPage",
+ "mainEntity": [
+  {
+   "@type": "Question",
+   "name": "Opsiyon backtest'i nedir?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Tam tanımlanmış bir stratejinin — girişler, çıkışlar, büyüklük, her bacak — geçmiş veya simüle veriye, geriye dönük bakış olmadan, mekanik biçimde uygulanmasıdır."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "Bu sonuçlar gerçek mi, simülasyon mu?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Kayıtlı geçmiş gerçek dayanak kapanışlarını kullanır; simüle modda tüm yol uydurulur. Her iki durumda da opsiyon fiyatları modellenir ve dolumlar orta fiyattan olur."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "Eğri uydurma (overfitting) nedir?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Tek bir veri setinde eğri mükemmel görünene kadar parametreleri ayarlamaktır. Strateji sinyale değil gürültüye uyar ve genelde yeni veride başarısız olur."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "Bu sonuçlarla gerçek parayla işlem yapabilir miyim?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Hayır — bu sayfa eğitim amaçlıdır. Gerçek dolumlar Bid/Ask spread'i öder ve erken kullanıma maruz kalır; rejimler değişir; iki yıl küçük bir örnektir."
+   }
+  }
+ ]
+}
+</script>
 </head>
 <body>
 <header class="site-header">
@@ -713,6 +767,52 @@ html[data-theme="light"] .site-header .nav a.active{background:#2563eb;color:#ff
   </section>
 </main>
 </div>
+
+<section class="guide" aria-labelledby="guide-h">
+<h2 id="guide-h">Opsiyon backtest'i için başlangıç rehberi</h2>
+<p>Backtest, sabit bir işlem kural setini geçmiş fiyatlara aynen uygular ve ne olacağını &mdash; geriye dönük bakışsız, duygusuz, mekanik biçimde &mdash; gösterir. Asıl amaç son dolar rakamı değildir; stratejinin <em>nasıl</em> davrandığını öğrenmektir &mdash; ne zaman kazanır, nasıl kaybeder, düşüşler ne kadar derin olur.</p>
+
+<h3>Backtest nedir &mdash; ne değildir</h3>
+<p>Bu aracın varsayılan verisi simüle edilir: dayanak varlık stokastik bir yol izler, IV bir skew modelinden gelir ve her dolum Black-Scholes orta fiyatıdır. Sonuçlar bu yüzden bir <strong>kural setinin</strong> makul koşullar altında nasıl davrandığını gösterir &mdash; ne kazanılacağını değil. Gerçek piyasalar Bid/Ask spread'ini ödetir, opsiyonları erken kullandırır ve gün içinde sert hareket eder. (Günlük fiyat CSV'si yükleyerek aynı kuralları gerçek dayanak fiyatlarıyla test edebilirsiniz.) Her çıktıyı bir söz değil, bir soru olarak görün: &ldquo;orada neden kaybetti?&rdquo;</p>
+
+<h3>Her çıktıyı nasıl okumalı</h3>
+<ul>
+<li><strong>Varlık ve düşüş eğrisi</strong> &mdash; hesabınız ile dayanağı alıp tutmanın karşılaştırması. Strateji alıp tutmayı geçemiyorsa, bu karmaşıklığın ne kazandırdığını sorun.</li>
+<li><strong>Seçili işlemin Payoff grafiği</strong> &mdash; tek işlemin Expiry sonu kâr/zarar eğrisi; işlem günlüğünde bir satıra tıklayarak yükleyin.</li>
+<li><strong>Kâr/zarar dağılımı</strong> &mdash; işlem başına sonuçların şekli &mdash; premium satışı çok küçük kazanç, az büyük kayıp demektir.</li>
+<li><strong>Aylık getiriler</strong> &mdash; hesap değerinin ay ay değişimi. İki şanslı aya dayanan muhteşem toplam kırılgandır.</li>
+<li><strong>İşlemler nasıl kapandı</strong> &mdash; her işlemin kapanma nedeni. &ldquo;DTE çıkışı&rdquo; baskınsa kâr hedefi fazla iddialı olabilir.</li>
+<li><strong>İşlem günlüğü</strong> &mdash; simüle edilen her işlem, sıralanabilir. En büyük kayıp satırı genelde en çok şeyi öğretir.</li>
+</ul>
+
+<h3>Temel istatistikler ne anlama gelir</h3>
+<ul>
+<li><strong>Kazanma oranı</strong> &mdash; kâr eden işlemlerin payı. Premium satışında normaldir ve tek başına yanıltıcıdır: tek bir kuyruk kaybı onlarca küçük kazancı silebilir.</li>
+<li><strong>Kâr faktörü</strong> &mdash; brüt kârın brüt zarara oranı. ~1,5 üzeri sağlıklıdır; 1,0 altında strateji kazanma oranı ne olursa olsun kaybettirir.</li>
+<li><strong>Maksimum düşüş</strong> &mdash; hesabın zirveden dibe en büyük kaybı; stratejileri bitiren rakam budur.</li>
+<li><strong>Ortalama elde tutma süresi</strong> &mdash; işlemlerin ortalama vadesi. Kısa Expiry daha hızlı erir (Theta) ama hatayı daha az affeder.</li>
+<li><strong>Sharpe / Sortino</strong> &mdash; toplam / yalnızca aşağı yönlü oynaklık başına getiri. Opsiyon satıcıları için Sortino daha adildir.</li>
+</ul>
+
+<h3>Eğri uydurmadan (overfitting) kaçınmak</h3>
+<p>Bu veri setinde hisse eğrisi mükemmel görünene kadar DTE, Delta ve hedefleri ayarlamak eğri uydurmadır: kuralları sinyale değil gürültüye uydurdunuz. Parametreleri az ve yuvarlak tutun (45 DTE, %50 hedef), çöküş simülasyonu dahil birkaç sembol ve rejimde yeniden çalıştırın ve rastgele tohum değişince kaybolan her avantajdan şüphelenin.</p>
+
+<h3>Simülasyonun sınırları</h3>
+<ul>
+<li>Dolumlar orta fiyattan olur; gerçek dolumlar spread öder (kayma ayarı bu maliyeti modeller).</li>
+<li>Erken kullanım yoktur; Amerikan tipi kullanım yaklaşık hesaplanır.</li>
+<li>Günde tek oynaklık anlık görüntüsü; gün içi dalgalanmalar modellenmez.</li>
+<li>İki yıllık geçmiş kabaca tek piyasa rejimidir; simüle yollar hiçbir şeyi öngörmez.</li>
+</ul>
+
+<h3>Sık sorulan sorular</h3>
+<div class="faq">
+<details><summary>Opsiyon backtest'i nedir?</summary><p class="faq-a">Tam tanımlanmış bir stratejinin &mdash; girişler, çıkışlar, büyüklük, her bacak &mdash; geçmiş veya simüle veriye, geriye dönük bakış olmadan, mekanik biçimde uygulanmasıdır.</p></details>
+<details><summary>Bu sonuçlar gerçek mi, simülasyon mu?</summary><p class="faq-a">Kayıtlı geçmiş gerçek dayanak kapanışlarını kullanır; simüle modda tüm yol uydurulur. Her iki durumda da opsiyon fiyatları modellenir ve dolumlar orta fiyattan olur.</p></details>
+<details><summary>Eğri uydurma (overfitting) nedir?</summary><p class="faq-a">Tek bir veri setinde eğri mükemmel görünene kadar parametreleri ayarlamaktır. Strateji sinyale değil gürültüye uyar ve genelde yeni veride başarısız olur.</p></details>
+<details><summary>Bu sonuçlarla gerçek parayla işlem yapabilir miyim?</summary><p class="faq-a">Hayır &mdash; bu sayfa eğitim amaçlıdır. Gerçek dolumlar Bid/Ask spread'i öder ve erken kullanıma maruz kalır; rejimler değişir; iki yıl küçük bir örnektir.</p></details>
+</div>
+</section>
 
 <script>
 //<ENGINE>

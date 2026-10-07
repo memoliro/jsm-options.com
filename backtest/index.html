@@ -176,6 +176,20 @@ tbody tr.click:hover td{background:var(--panel-2)}
 @media (prefers-reduced-motion:no-preference){ .sec>summary::after{transition:transform .15s} }
 
 
+.guide{max-width:1280px;margin:0 auto 16px;padding:24px 22px;border:1px solid var(--line);border-radius:12px;background:var(--panel);font-size:14.5px;line-height:1.65}
+.guide h2{font-size:1.3rem;margin:26px 0 10px;letter-spacing:-.01em}
+.guide h2:first-of-type{margin-top:0}
+.guide h3{font-size:1.02rem;margin:22px 0 8px}
+.guide .lede{color:var(--muted);font-size:15px}
+.guide p{margin:0 0 12px}
+.guide ul{margin:0 0 14px;padding-left:20px;display:grid;gap:8px}
+.guide li::marker{color:var(--muted)}
+.guide .faq details{border:1px solid var(--line);border-radius:8px;margin:0 0 8px;background:var(--panel-2)}
+.guide .faq summary{cursor:pointer;padding:11px 14px;font-weight:600;list-style:none}
+.guide .faq summary::-webkit-details-marker{display:none}
+.guide .faq-a{padding:0 14px 12px;margin:0;color:var(--ink)}
+@media(max-width:600px){.guide{padding:18px 14px}}
+
 .site-support{max-width:1280px;margin:0 auto 8px;padding:20px 16px;text-align:center;border:1px solid var(--line);border-radius:12px;background:var(--panel)}
 .site-support h2{margin:0 0 8px;font-size:1.2rem;color:#93c5fd}
 .site-support p{margin:0 0 14px;color:#c8d0dc}
@@ -436,6 +450,46 @@ html[data-theme="light"] .site-header .nav a.active{background:#2563eb;color:#ff
 @media(max-width:600px){.site-header .brand-sub,.theme-label{display:none}}
 </style>
 
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "FAQPage",
+ "mainEntity": [
+  {
+   "@type": "Question",
+   "name": "What is options backtesting?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "A fully specified strategy — entries, exits, sizing, every leg — run mechanically on past or simulated data."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "Are the results real or simulated?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Stored history uses real closes; simulated mode invents the path. Either way, prices are modeled and fills happen at mid."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "What is overfitting?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Tuning parameters until the curve looks perfect on one dataset — fitting noise, not signal."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "Can I trade real money on these results?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "No — this page is educational. Real fills pay the spread, face early assignment, and regimes change."
+   }
+  }
+ ]
+}
+</script>
 </head>
 <body>
 <header class="site-header">
@@ -711,6 +765,52 @@ html[data-theme="light"] .site-header .nav a.active{background:#2563eb;color:#ff
   </section>
 </main>
 </div>
+
+<section class="guide" aria-labelledby="guide-h">
+<h2 id="guide-h">A beginner's guide to options backtesting</h2>
+<p>Backtesting replays a fixed set of trading rules over past prices and shows what would have happened &mdash; mechanically, with no hindsight. It teaches <em>how</em> a strategy behaves: when it wins, how it loses, how deep the drawdowns get.</p>
+
+<h3>What a backtest is &mdash; and what it isn't</h3>
+<p>Default data here is simulated: the underlying follows a stochastic path, volatility comes from a skew model, and every fill is a Black-Scholes mid price. Results show how a <strong>rule set</strong> behaves under plausible conditions &mdash; not what you would have earned. Real markets charge the bid/ask spread, assign early, and spike intraday. (Upload a daily-price CSV to test the same rules on real prices.) Treat every output as a question &mdash; &ldquo;why did it lose there?&rdquo; &mdash; not a promise.</p>
+
+<h3>How to read each output</h3>
+<ul>
+<li><strong>Equity and drawdown</strong> &mdash; your account vs. simply holding the underlying. Can't beat buy-and-hold? The complexity is buying nothing.</li>
+<li><strong>Payoff of selected trade</strong> &mdash; one trade's expiration P/L across prices. Click any trade-log row to load it here.</li>
+<li><strong>P&L distribution</strong> &mdash; the shape of per-trade results &mdash; short premium means many small wins and a few big losses.</li>
+<li><strong>Monthly returns</strong> &mdash; account change by month &mdash; two lucky months make a fragile total.</li>
+<li><strong>How trades ended</strong> &mdash; why each trade closed.</li>
+<li><strong>Trade log</strong> &mdash; every simulated trade, sortable; start with the biggest losing row.</li>
+</ul>
+
+<h3>What the key stats mean</h3>
+<ul>
+<li><strong>Win rate</strong> &mdash; the share of winning trades &mdash; misleading alone for short premium.</li>
+<li><strong>Profit factor</strong> &mdash; gross profit divided by gross loss. Healthy above ~1.5; below 1.0 the strategy loses regardless of win rate.</li>
+<li><strong>Max drawdown</strong> &mdash; the largest peak-to-trough account fall &mdash; the number that ends strategies.</li>
+<li><strong>Avg days held</strong> &mdash; mean trade duration. Shorter expirations decay faster but forgive less.</li>
+<li><strong>Sharpe / Sortino</strong> &mdash; return per unit of total or downside-only volatility.</li>
+</ul>
+
+<h3>Avoiding overfitting</h3>
+<p>Tuning DTE, delta, and targets until the curve looks perfect here is curve-fitting: you tuned to the noise, not the signal. Keep parameters few and round (45 DTE, 50% target), re-run across tickers and regimes including the crash simulation, and distrust any edge that vanishes with a different random seed.</p>
+
+<h3>Limitations</h3>
+<ul>
+<li>Fills at the mid price; real fills pay the spread (the slippage setting models this).</li>
+<li>No early assignment; American exercise is approximated.</li>
+<li>One volatility snapshot per day; intraday swings aren't modeled.</li>
+<li>Two years of history is roughly one market regime; simulated paths predict nothing.</li>
+</ul>
+
+<h3>Frequently asked questions</h3>
+<div class="faq">
+<details><summary>What is options backtesting?</summary><p class="faq-a">A fully specified strategy &mdash; entries, exits, sizing, every leg &mdash; run mechanically on past or simulated data.</p></details>
+<details><summary>Are the results real or simulated?</summary><p class="faq-a">Stored history uses real closes; simulated mode invents the path. Either way, prices are modeled and fills happen at mid.</p></details>
+<details><summary>What is overfitting?</summary><p class="faq-a">Tuning parameters until the curve looks perfect on one dataset &mdash; fitting noise, not signal.</p></details>
+<details><summary>Can I trade real money on these results?</summary><p class="faq-a">No &mdash; this page is educational. Real fills pay the spread, face early assignment, and regimes change.</p></details>
+</div>
+</section>
 
 <script>
 //<ENGINE>
