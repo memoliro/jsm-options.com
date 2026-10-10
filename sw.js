@@ -1,6 +1,6 @@
 
 // JSM Options SW - network-first for nav assets so Backtest is not stuck behind an old cache
-const CACHE_NAME = 'jsm-options-v4-20261001';
+const CACHE_NAME = 'jsm-options-v5-20261010';
 const OFFLINE_URL = '/offline.html';
 
 self.addEventListener('install', (event) => {
