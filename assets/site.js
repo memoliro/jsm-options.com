@@ -94,38 +94,6 @@
       return '<a href="' + href + '"' + cls + '>' + label + '</a>';
     }).join('');
   }
-
-  function syncFooter() {
-    var footer = document.querySelector('.site-footer');
-    if (!footer) return;
-    var tools = footer.querySelector('.footer-tools');
-    var toolsHtml = tools ? tools.outerHTML : (
-      '<div class="footer-tools" style="margin-top:12px;font-size:12px;opacity:.9">' +
-      'More free tools: ' +
-      '<a href="https://lyricprep.com/" target="_blank" rel="noopener">LyricPrep</a> · ' +
-      '<a href="https://jsm-image.com/" target="_blank" rel="noopener">JSM Image</a> · ' +
-      '<a href="https://jsm-video.com/" target="_blank" rel="noopener">JSM Video</a> · ' +
-      '<a href="https://jsm-loudness.com/" target="_blank" rel="noopener">JSM Loudness</a>' +
-      '</div>'
-    );
-    footer.innerHTML =
-      '<div class="footer-note">' + (lang() === 'tr'
-        ? 'Yalnızca eğitim amaçlıdır — yatırım tavsiyesi değildir. Opsiyon işlemleri zarar riski içerir.'
-        : 'Educational only — not financial advice. Options involve risk of loss.') + '</div>' +
-      '<div class="footer-links">' +
-      FOOTER_LINKS.map(function (item) {
-        var pre = prefix();
-        var href = (item.href === '/') ? (pre ? '/tr/' : '/') : (pre + item.href);
-        var label = item.label;
-        if (lang() === 'tr') {
-          var map = { 'Home':'Ana Sayfa','Basics':'Giriş','Fundamentals':'Temeller','Spreads':'Spreadler','Advanced':'İleri Seviye','Strategies':'Stratejiler','Cheat sheet':'Özet','Builder':'Builder','About':'Hakkında','Contact':'İletişim','Disclaimer':'Sorumluluk','Privacy':'Gizlilik' };
-          label = map[item.label] || item.label;
-        }
-        return '<a href="' + href + '">' + label + '</a>';
-      }).join('\n') +
-      '</div>' + toolsHtml;
-  }
-
   // Real, native "Install the App" button — no unprompted browser banner.
   // We register the manifest + service worker quietly in the background
   // (required for the browser to consider the site installable at all),
@@ -290,7 +258,6 @@
 
   function boot() {
     syncNav();
-    syncFooter();
     var headerRight = document.querySelector('.header-right');
     if (headerRight && !document.getElementById('langSwitch')) {
       var a = document.createElement('a');
@@ -371,7 +338,6 @@
     if (host === footer.parentNode) host.insertBefore(card, footer);
     else host.appendChild(card);
   }
-
 
   function shouldUseRails() {
     var p = location.pathname || '/';
