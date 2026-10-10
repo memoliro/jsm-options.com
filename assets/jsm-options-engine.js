@@ -1218,32 +1218,15 @@
       risk_reversal: { title: 'Risk Reversal', href: '/level4/', label: 'Advanced' }
     };
 
-    function lessonHref(href) {
-      var p = location.pathname || '/';
-      if ((p === '/tr' || p.indexOf('/tr/') === 0) && href.indexOf('/tr/') !== 0) return '/tr' + href;
-      return href;
-    }
-
     function setTemplateTip(key) {
       const tip = document.getElementById('eduTip');
-      const link = document.getElementById('lessonLink');
-      const meta = TEMPLATE_LESSONS[key];
-      const guide = (typeof STRATEGY_GUIDES !== 'undefined') ? STRATEGY_GUIDES[key] : null;
-      if (link) {
-        if (meta) {
-          link.hidden = false;
-          link.href = lessonHref(meta.href);
-          link.textContent = meta.label;
-        } else {
-          link.hidden = true;
-        }
-      }
       if (!tip) return;
+      const meta = TEMPLATE_LESSONS[key];
       if (meta) {
-        var line = guide && guide.thesis ? guide.thesis : ('You are viewing ' + meta.title + '.');
-        tip.innerHTML = line + ' <a href="' + lessonHref(meta.href) + '">' + meta.label + '</a>';
+        const article = /^[aeiou]/i.test(meta.title) ? 'an' : 'a';
+        tip.innerHTML = 'You are viewing ' + article + ' <strong>' + meta.title + '</strong> — <a href="' + meta.href + '">' + meta.label + '</a> lesson, or edit the legs below.';
       } else {
-        tip.textContent = 'Pick a template or edit the legs. The chart updates live.';
+        tip.innerHTML = 'Template loaded. Edit any field — chart and Greeks update live.';
       }
     }
 
@@ -5101,8 +5084,6 @@
         setTemplateTip(key);
         return;
       }
-      var lessonLink = document.getElementById('lessonLink');
-      if (lessonLink) lessonLink.hidden = true;
       const hasLong = legs.some(function(l) { return l.side === 'buy'; });
       const hasShort = legs.some(function(l) { return l.side === 'sell'; });
       const hasStock = legs.some(function(l) { return l.type === 'stock'; });

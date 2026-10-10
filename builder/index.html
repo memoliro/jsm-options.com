@@ -20,7 +20,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Free Options Strategy Builder">
   <meta name="twitter:description" content="Live Payoff chart and Greeks. Educational options strategy builder.">
-  <link rel="stylesheet" href="/assets/style.css?v=20261001a">
+  <link rel="stylesheet" href="/assets/style.css?v=20261010">
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-BDL003RCN6"></script>
 <script>
@@ -467,8 +467,6 @@
       .stat-tile { min-width: 132px; }
     }
 
-    .tpl-label-row{display:flex;justify-content:space-between;gap:8px;align-items:baseline;flex-wrap:wrap}
-    .tpl-label-row #lessonLink{font-size:12px;font-weight:700;white-space:nowrap}
     .edu-tip {
       background: #1e3a5f;
       border-left: 3px solid #3b82f6;
@@ -550,6 +548,18 @@
       padding-top: 10px;
       border-top: 1px solid var(--border);
     }
+    /* Professional multi-column footer */
+    .site-footer{margin-top:48px;border-top:1px solid var(--border);padding:36px 16px 20px}
+    .footer-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr 1fr;gap:40px;max-width:1200px;margin:0 auto;text-align:left}
+    .footer-logo{font-weight:700;font-size:18px;color:var(--text)}
+    .footer-brand p{color:var(--muted);font-size:13px;margin:8px 0;line-height:1.5}
+    .footer-copy{color:var(--muted);font-size:12px}
+    .footer-col h4{font-size:11px;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);margin:0 0 12px;font-weight:600}
+    .footer-col a{display:block;color:var(--muted);font-size:14px;text-decoration:none;margin-bottom:8px}
+    .footer-col a:hover{color:var(--accent)}
+    .footer-bottom{margin-top:28px;padding-top:16px;border-top:1px solid var(--border);color:var(--muted);font-size:12px;text-align:center;max-width:1200px;margin-left:auto;margin-right:auto}
+    @media(max-width:900px){.footer-grid{grid-template-columns:1fr 1fr}}
+    @media(max-width:560px){.footer-grid{grid-template-columns:1fr}}
 
     #posSummaryChartContainer {
       position: relative;
@@ -841,7 +851,7 @@
 }
 </style>
 
-<script src="/assets/site.js?v=20261001a" defer></script>
+<script src="/assets/site.js?v=20260928d" defer></script>
 </head>
 <body>
     <header class="site-header"><div class="site-header-inner"><a class="logo logo-link" href="/" aria-label="JSM Options Home"><div class="logo-icon">JSM</div><div><div style="font-weight:700">JSM Options</div><div class="brand-sub">jsm-options.com · Educational</div></div></a><div class="header-right"><nav class="nav" aria-label="Primary navigation"><a href="/">Home</a><a href="/level1/">Basics</a><a href="/level2/">Fundamentals</a><a href="/level3/">Spreads</a><a href="/level4/">Advanced</a><a href="/strategies/">Strategies</a><a href="/cheat-sheet/">Cheat sheet</a><a href="/builder/" class="active">Builder</a></nav><button type="button" class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button><button type="button" class="theme-toggle" id="themeToggle" aria-label="Toggle color theme"><span id="themeIcon" class="theme-icon">☼</span><span id="themeLabel" class="theme-label">Dark</span></button></div></div></header>
@@ -854,8 +864,7 @@
   <div class="card" style="margin-bottom:12px;">
     <div class="top-bar">
       <div class="field wide tpl-wrap">
-        <label class="tpl-label-row">Strategy template <span style="font-weight:400;color:var(--muted)">(sample Premium — edit to the chain)</span><a id="lessonLink" href="/level2/" hidden>Lesson</a></label>
-        <div class="edu-tip" id="eduTip">A long call is loaded. You pay a debit. Max loss is that debit. Break-even is strike plus premium. <a href="/level2/">Fundamentals lesson</a></div>
+        <label>Strategy template <span style="font-weight:400;color:var(--muted)">(sample Premium — edit to the chain)</span></label>
         <button type="button" class="tpl-trigger" id="tplTrigger" aria-haspopup="listbox" aria-expanded="false"><span class="tpl-trigger-label">— Pick a Strategy —</span><span class="tpl-caret">▼</span></button>
         <select id="strategyTemplate" onchange="applyTemplate()">
           <option value="">— Pick a Strategy —</option>
@@ -1001,19 +1010,19 @@
       <div id="recentPanel" class="recent-panel" style="display:none"></div>
       <div class="stat-strip">
         <div class="stat-tile">
-          <div class="s-label">Net Debit/Credit <span title="What you pay (debit) or receive (credit) to open, after commission." style="cursor:help">ⓘ</span></div>
+          <div class="s-label">Net Debit/Credit</div>
           <div class="s-val" id="netPremium">$0</div>
         </div>
         <div class="stat-tile">
-          <div class="s-label">Max profit <span title="Best result at expiry. Unlimited means the chart has no cap." style="cursor:help">ⓘ</span></div>
+          <div class="s-label">Max profit</div>
           <div class="s-val" id="maxProfit">—</div>
         </div>
         <div class="stat-tile">
-          <div class="s-label">Max loss <span title="Worst result at expiry. On a defined-risk trade this is the capital you can lose." style="cursor:help">ⓘ</span></div>
+          <div class="s-label">Max loss</div>
           <div class="s-val" id="maxLoss">—</div>
         </div>
         <div class="stat-tile">
-          <div class="s-label">Chance of profit <span title="Model estimate that expiry P/L is above zero. Not a promise. Uses the position IV." style="cursor:help">ⓘ</span></div>
+          <div class="s-label">Chance of profit</div>
           <div class="s-val" id="chanceProfit">—</div>
         </div>
         <div class="stat-tile">
@@ -1189,37 +1198,6 @@
     </div>
 
   </div>
-
-  <div class="card" id="greeksCard">
-  <h2>Option Greeks <span style="font-size:0.72rem;color:var(--muted);font-weight:500;">(position total · contract multiplier)</span></h2>
-  <div class="greeks-grid">
-    <div class="greek-card">
-      <div class="g-name">Δ Delta</div>
-      <div class="g-val" id="gDelta">—</div>
-      <div class="g-impact" id="gDeltaImpact">Price sensitivity: how much P/L moves if Underlying moves $1.</div>
-    </div>
-    <div class="greek-card">
-      <div class="g-name">Γ Gamma</div>
-      <div class="g-val" id="gGamma">—</div>
-      <div class="g-impact" id="gGammaImpact">Convexity: how fast Delta changes when Underlying moves.</div>
-    </div>
-    <div class="greek-card">
-      <div class="g-name">Θ Theta</div>
-      <div class="g-val" id="gTheta">—</div>
-      <div class="g-impact" id="gThetaImpact">Time decay: expected P/L per day if nothing else changes.</div>
-    </div>
-    <div class="greek-card">
-      <div class="g-name">ν Vega</div>
-      <div class="g-val" id="gVega">—</div>
-      <div class="g-impact" id="gVegaImpact">Volatility sensitivity: P/L change if IV rises 1 point.</div>
-    </div>
-    <div class="greek-card">
-      <div class="g-name">ρ Rho</div>
-      <div class="g-val" id="gRho">—</div>
-      <div class="g-impact" id="gRhoImpact">Rate sensitivity: P/L change if rates rise 1 point.</div>
-    </div>
-  </div>
-</div>
 
     <!-- Round 2 Batch C: strategy discovery — optimizer lite + option finder.
          Placed with the roll/paper cards just before Support the site (after
@@ -1423,28 +1401,43 @@ and custom structures. View payoff charts, Greeks, profit/loss, break-even, prob
   </div>
 
   <footer class="site-footer">
-  <div class="footer-note">Educational only — not financial advice. Options involve risk of loss.</div>
-  <div class="footer-links">
-    <a href="/">Home</a>
-    <a href="/level1/">Basics</a>
-    <a href="/level2/">Fundamentals</a>
-    <a href="/level3/">Spreads</a>
-    <a href="/level4/">Advanced</a>
-    <a href="/strategies/">Strategies</a>
-    <a href="/builder/">Builder</a><a href="/backtest/">Backtest</a>
-    <a href="/about/">About</a>
-    <a href="/contact/">Contact</a>
-    <a href="/disclaimer/">Disclaimer</a>
-    <a href="/privacy/">Privacy</a>
-  </div>
-    <div class="footer-tools" style="margin-top:12px;font-size:12px;opacity:.9">
-      More free tools:
-      <a href="https://lyricprep.com/" target="_blank" rel="noopener">LyricPrep</a> ·
-      <a href="https://jsm-image.com/" target="_blank" rel="noopener">JSM Image</a> ·
-      <a href="https://jsm-video.com/" target="_blank" rel="noopener">JSM Video</a> ·
-      <a href="https://jsm-loudness.com/" target="_blank" rel="noopener">JSM Loudness</a>
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="footer-logo">JSM Options</div>
+        <p>Free options education and strategy tools. Learn, practice, and analyze — right in your browser.</p>
+        <div class="footer-copy">&copy; 2026 JSM-Options.com</div>
+      </div>
+      <nav class="footer-col" aria-label="Learn">
+        <h4>Learn</h4>
+        <a href="/level1/">Basics</a>
+        <a href="/level2/">Fundamentals</a>
+        <a href="/level3/">Spreads</a>
+        <a href="/level4/">Advanced</a>
+        <a href="/strategies/">Strategies</a>
+      </nav>
+      <nav class="footer-col" aria-label="Tools">
+        <h4>Tools</h4>
+        <a href="/builder/">Strategy Builder</a>
+        <a href="/backtest/">Backtester</a>
+        <a href="/bollinger-band-csp/">Bollinger Band CSP</a>
+      </nav>
+      <nav class="footer-col" aria-label="Free tools">
+        <h4>Free tools</h4>
+        <a href="https://jsm-image.com/" target="_blank" rel="noopener">JSM Image</a>
+        <a href="https://jsm-video.com/" target="_blank" rel="noopener">JSM Video</a>
+        <a href="https://jsm-loudness.com/" target="_blank" rel="noopener">JSM Loudness</a>
+        <a href="https://lyricprep.com/" target="_blank" rel="noopener">LyricPrep</a>
+      </nav>
+      <nav class="footer-col" aria-label="Company">
+        <h4>Company</h4>
+        <a href="/about/">About</a>
+        <a href="/contact/">Contact</a>
+        <a href="/disclaimer/">Disclaimer</a>
+        <a href="/privacy/">Privacy</a>
+      </nav>
     </div>
-</footer>
+    <div class="footer-bottom">Educational only &mdash; not financial advice. Options involve risk of loss.</div>
+  </footer>
 
 
 <!-- Strategy guide drawer -->
@@ -1459,7 +1452,7 @@ and custom structures. View payoff charts, Greeks, profit/loss, break-even, prob
     </div>
     <div class="guide-body" id="guideBody"></div>
   </aside>
-  <script src="/assets/jsm-options-engine.js?v=20261001b"></script>
+  <script src="/assets/jsm-options-engine.js?v=72ca9fe5"></script>
 <script>
 (function(){
   function initNav(){

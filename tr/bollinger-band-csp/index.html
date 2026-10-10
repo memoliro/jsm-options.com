@@ -21,7 +21,7 @@
   <meta name="twitter:title" content="Bollinger Bandı + Nakit Teminatlı Put (BB + CSP): Kurallı Bir Giriş">
   <meta name="twitter:description" content="Put satışlarını Bollinger Bandı ile zamanlayın: günlük alt banda temasında 45+ gün vadeli, spotun ~%10 altında put satın. Giriş kuralları, %50 / 21 gün / üst bant çıkışları ve Builder uygulaması. Yalnızca eğitim amaçlıdır.">
   <meta name="twitter:image" content="https://jsm-options.com/images/og-default.png">
-  <link rel="stylesheet" href="https://jsm-options.com/assets/style.css?v=20260928d">
+  <link rel="stylesheet" href="https://jsm-options.com/assets/style.css?v=20261010d">
   <script src="https://jsm-options.com/assets/site.js?v=20260928e" defer></script>
   <script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Neden 30 yerine 45 gün vade?", "acceptedAnswer": {"@type": "Answer", "text": "45 gün vade daha fazla prim taşır ve ortalamaya dönüş hareketine alan tanır. 30 gün vade daha hızlı çürür ama daha az öder ve toparlanma yavaşsa daha az affeder."}}, {"@type": "Question", "name": "Sattıktan sonra hisse düşmeye devam ederse ne olur?", "acceptedAnswer": {"@type": "Answer", "text": "O zaman atama gerçekleşir: hisseyi strike fiyatından alırsınız. Bu yüzden rejim filtresi ve 'sahip olmaktan memnun olma' kuralı tartışılmazdır."}}, {"@type": "Question", "name": "Bollinger Bandı CSP her hissede kullanılır mı?", "acceptedAnswer": {"@type": "Answer", "text": "Dar alış-satış makaslı, likit hisselerde en iyi sonucu verir. Çok oynak hisselerde spotun %10 altı bile paraya yakın olabilir — sabit %10 yerine yaklaşık 10 delta kullanın."}}, {"@type": "Question", "name": "Üst bant çıkışı parayı masada bırakır mı?", "acceptedAnswer": {"@type": "Answer", "text": "Bazen, momentum temas sonrası devam ederse. Kural, son kuruşları tutarlılık karşılığında bilinçli olarak bırakır."}}]}</script>
   <style id="jsm-mobile-nav">
@@ -250,28 +250,42 @@
 
 </div>
 <footer class="site-footer">
-  <div class="footer-note">Yalnızca eğitim amaçlıdır — yatırım tavsiyesi değildir. Opsiyon işlemleri zarar riski içerir.</div>
-  <div class="footer-links">
-    <a href="https://jsm-options.com/tr/">Ana Sayfa</a>
-    <a href="https://jsm-options.com/tr/level1/">Giriş</a>
-    <a href="https://jsm-options.com/tr/level2/">Temeller</a>
-    <a href="https://jsm-options.com/tr/level3/">Spreadler</a>
-    <a href="https://jsm-options.com/tr/level4/">İleri</a>
-    <a href="https://jsm-options.com/tr/strategies/">Stratejiler</a>
-    <a href="https://jsm-options.com/tr/cheat-sheet/">Özet</a>
-    <a href="https://jsm-options.com/tr/builder/">Builder</a>
-    <a href="https://jsm-options.com/tr/about/">Hakkında</a>
-    <a href="https://jsm-options.com/tr/contact/">İletişim</a>
-    <a href="https://jsm-options.com/tr/disclaimer/">Sorumluluk</a>
-    <a href="https://jsm-options.com/tr/privacy/">Gizlilik</a>
-  </div>
-  <div class="footer-tools" style="margin-top:12px;font-size:12px;opacity:.9">
-    More free tools:
-    <a href="https://lyricprep.com/" target="_blank" rel="noopener">LyricPrep</a> ·
-    <a href="https://jsm-image.com/" target="_blank" rel="noopener">JSM Image</a> ·
-    <a href="https://jsm-video.com/" target="_blank" rel="noopener">JSM Video</a> ·
-    <a href="https://jsm-loudness.com/" target="_blank" rel="noopener">JSM Loudness</a>
-  </div>
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="footer-logo">JSM Options</div>
+        <p>Ücretsiz opsiyon eğitimi ve strateji araçları. Öğrenin, pratik yapın ve analiz edin — doğrudan tarayıcınızda.</p>
+        <div class="footer-copy">&copy; 2026 JSM-Options.com</div>
+      </div>
+      <nav class="footer-col" aria-label="Öğren">
+        <h4>Öğren</h4>
+        <a href="/tr/level1/">Giriş</a>
+        <a href="/tr/level2/">Temeller</a>
+        <a href="/tr/level3/">Spreadler</a>
+        <a href="/tr/level4/">İleri Seviye</a>
+        <a href="/tr/strategies/">Stratejiler</a>
+      </nav>
+      <nav class="footer-col" aria-label="Araçlar">
+        <h4>Araçlar</h4>
+        <a href="/tr/builder/">Strateji Oluşturucu</a>
+        <a href="/tr/backtest/">Backtest</a>
+        <a href="/tr/bollinger-band-csp/">Bollinger Band CSP</a>
+      </nav>
+      <nav class="footer-col" aria-label="Ücretsiz araçlar">
+        <h4>Ücretsiz araçlar</h4>
+        <a href="https://jsm-image.com/" target="_blank" rel="noopener">JSM Image</a>
+        <a href="https://jsm-video.com/" target="_blank" rel="noopener">JSM Video</a>
+        <a href="https://jsm-loudness.com/" target="_blank" rel="noopener">JSM Loudness</a>
+        <a href="https://lyricprep.com/" target="_blank" rel="noopener">LyricPrep</a>
+      </nav>
+      <nav class="footer-col" aria-label="Şirket">
+        <h4>Şirket</h4>
+        <a href="/tr/about/">Hakkında</a>
+        <a href="/tr/contact/">İletişim</a>
+        <a href="/tr/disclaimer/">Yasal Uyarı</a>
+        <a href="/tr/privacy/">Gizlilik</a>
+      </nav>
+    </div>
+    <div class="footer-bottom">Educational only — not financial advice. Options involve risk of loss.</div>
 </footer>
 
 <script>
