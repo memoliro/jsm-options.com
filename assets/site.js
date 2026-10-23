@@ -7,7 +7,8 @@
     { href: '/level4/', label: 'Advanced' },
     { href: '/strategies/', label: 'Strategies' },
     { href: '/cheat-sheet/', label: 'Cheat sheet' },
-    { href: '/builder/', label: 'Builder' }
+    { href: '/builder/', label: 'Builder' },
+    { href: '/backtest/', label: 'Backtest' }
   ];
 
   var FOOTER_LINKS = [
@@ -35,7 +36,8 @@
     '/level4/': 'İleri Seviye',
     '/strategies/': 'Stratejiler',
     '/cheat-sheet/': 'Özet',
-    '/builder/': 'Builder'
+    '/builder/': 'Builder',
+    '/backtest/': 'Backtest'
   };
 
   function lang() {
