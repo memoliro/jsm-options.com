@@ -1,46 +1,28 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html lang="tr" data-theme="dark">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/png" sizes="32x32" href="https://jsm-options.com/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="48x48" href="https://jsm-options.com/favicon-48.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="https://jsm-options.com/apple-touch-icon.png">
   <title>Wheel Stratejisi: CSP + Covered Call Döngüsü</title>
-  <meta name="description" content="Wheel stratejisi: nakit teminatlı put (CSP) ve covered call döngüsü. Yeni başlayanlar için adımlar, riskler ve SSS." />
+  <meta name="description" content="Wheel stratejisi: nakit teminatlı put (CSP) ve covered call döngüsü. Yeni başlayanlar için adımlar, riskler ve SSS.">
   <link rel="canonical" href="https://jsm-options.com/tr/wheel/">
-  <style>
-    :root {
-      --bg: #0b1220;
-      --card: #121a2b;
-      --text: #e8eef8;
-      --muted: #9aa8bd;
-      --accent: #4ec4d4;
-      --border: #243044;
-    }
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      font-family: Inter, system-ui, -apple-system, Segoe UI, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      line-height: 1.55;
-    }
-    .wrap { max-width: 820px; margin: 0 auto; padding: 32px 20px 64px; }
-    h1 { color: var(--accent); font-size: 2rem; margin: 0 0 12px; }
-    h2 { color: var(--accent); font-size: 1.25rem; margin-top: 1.6em; }
-    .focus { color: var(--muted); font-size: .95rem; }
-    a { color: var(--accent); }
-    ol, ul { padding-left: 1.2em; }
-    .disclaimer {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 14px 16px;
-      margin-top: 28px;
-      color: var(--muted);
-      font-size: .92rem;
-    }
-    dt { font-weight: 700; margin-top: 10px; }
-    dd { margin: 0 0 8px 0; color: var(--muted); }
-  </style>
+  <link rel="alternate" hreflang="en" href="https://jsm-options.com/wheel/">
+  <link rel="alternate" hreflang="tr" href="https://jsm-options.com/tr/wheel/">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="JSM Options">
+  <meta property="og:title" content="Wheel Stratejisi: CSP + Covered Call Döngüsü">
+  <meta property="og:description" content="Wheel stratejisi: nakit teminatlı put (CSP) ve covered call döngüsü. Yeni başlayanlar için adımlar, riskler ve SSS.">
+  <meta property="og:url" content="https://jsm-options.com/tr/wheel/">
+  <meta property="og:image" content="https://jsm-options.com/images/og-default.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Wheel Stratejisi: CSP + Covered Call Döngüsü">
+  <meta name="twitter:description" content="Wheel stratejisi: nakit teminatlı put (CSP) ve covered call döngüsü. Yeni başlayanlar için adımlar, riskler ve SSS.">
+  <meta name="twitter:image" content="https://jsm-options.com/images/og-default.png">
+  <link rel="stylesheet" href="https://jsm-options.com/assets/style.css?v=20261010e">
+  <script src="https://jsm-options.com/assets/site.js?v=20261023a" defer></script>
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -98,12 +80,89 @@
   ]
 }
 </script>
-
+<style id="jsm-mobile-nav">
+.nav-toggle{display:none;box-sizing:border-box;width:44px;height:44px;min-width:44px;min-height:44px;padding:0;border:1px solid var(--border,#2d3a4f);border-radius:10px;background:var(--card,#1a2332);color:var(--text,#e7ecf3);cursor:pointer;align-items:center;justify-content:center;flex-direction:column;gap:5px;-webkit-tap-highlight-color:transparent;touch-action:manipulation;position:relative;z-index:40}
+.nav-toggle span{display:block;width:18px;height:2px;border-radius:1px;background:currentColor;pointer-events:none}
+.nav-toggle[aria-expanded="true"] span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.nav-toggle[aria-expanded="true"] span:nth-child(2){opacity:0}
+.nav-toggle[aria-expanded="true"] span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+@media (max-width:900px){
+  .nav-toggle{display:inline-flex!important}
+  .site-header{z-index:100!important;position:sticky;top:0}
+  .site-header .nav{
+    display:none!important;position:fixed!important;top:56px!important;left:0!important;right:0!important;width:100%!important;
+    max-height:calc(100vh - 56px)!important;overflow-y:auto!important;-webkit-overflow-scrolling:touch;
+    flex-direction:column!important;align-items:stretch!important;gap:6px!important;padding:12px 16px 20px!important;margin:0!important;
+    background:#0f1419!important;border-bottom:1px solid #2d3a4f!important;box-shadow:0 12px 28px rgba(0,0,0,.45)!important;z-index:9999!important;
+  }
+  html[data-theme="light"] .site-header .nav{background:#ffffff!important;border-bottom-color:#e2e8f0!important}
+  .site-header .nav.is-open{display:flex!important}
+  .site-header .nav a{width:100%!important;text-align:left!important;padding:14px!important;font-size:16px!important;min-height:48px!important;display:flex!important;align-items:center!important;border-radius:10px!important;box-sizing:border-box!important}
+}
+  </style>
 </head>
 <body>
-  <article class="wrap">
-    <h1>Yeni başlayanlar için Wheel stratejisi</h1>
-    <p class="focus"><strong>Arama odaklı:</strong> wheel stratejisi opsiyon · options wheel strategy · the wheel options · CSP covered call wheel · wheel stratejisi yeni başlayan</p>
+<header class="site-header">
+  <div class="site-header-inner">
+    <a class="logo logo-link" href="https://jsm-options.com/tr/" aria-label="JSM Options Ana Sayfa">
+      <div class="logo-icon">JSM</div>
+      <div>
+        <div style="font-weight:700">JSM Options</div>
+        <div class="brand-sub">jsm-options.com · Educational</div>
+      </div>
+    </a>
+    <div class="header-right">
+      <nav class="nav" aria-label="Ana menü">
+        <a href="https://jsm-options.com/tr/">Ana Sayfa</a>
+        <a href="https://jsm-options.com/tr/level1/">Giriş</a>
+        <a href="https://jsm-options.com/tr/level2/">Temeller</a>
+        <a href="https://jsm-options.com/tr/level3/">Spreadler</a>
+        <a href="https://jsm-options.com/tr/level4/">İleri Seviye</a>
+        <a href="https://jsm-options.com/tr/strategies/">Stratejiler</a>
+        <a href="https://jsm-options.com/tr/cheat-sheet/">Özet</a>
+        <a href="https://jsm-options.com/tr/builder/">Builder</a><a href="https://jsm-options.com/tr/backtest/">Backtest</a>
+      </nav>
+      <button type="button" class="nav-toggle" id="navToggle" aria-label="Menüyü aç" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+      <a id="langSwitch" class="lang-switch" href="https://jsm-options.com/wheel/" aria-label="English">EN</a>
+      <button type="button" class="theme-toggle" id="themeToggle" aria-label="Açık temaya geç">
+        <span id="themeIcon" class="theme-icon">🌙</span>
+        <span id="themeLabel" class="theme-label">Dark</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<div class="page-rails">
+  <aside class="page-toc">
+    <div class="toc-kicker">BU SAYFADA</div>
+    <nav>
+      <a href="#sec-0">Yeni başlayanlar için Wheel stratejisi</a>
+      <a href="#sec-1">Neden kullanılır</a>
+      <a href="#sec-2">Yeni başlayanların küçümsediği riskler</a>
+      <a href="#sec-3">Yapı (döngü)</a>
+      <a href="#sec-4">Getiri mantığı</a>
+      <a href="#sec-5">Ne zaman uyum sağlar / sağlamaz</a>
+      <a href="#sec-6">Yeni başlayan kontrol listesi</a>
+      <a href="#sec-7">Wheel döngüsü adım adım</a>
+      <a href="#sec-8">Sayısal örnek: tam bir döngü</a>
+      <a href="#sec-9">Pozisyon yönetimi: Roll ve ayarlamalar</a>
+      <a href="#sec-10">Yaygın Wheel hataları</a>
+      <a href="#guide-faq">Yeni başlayan SSS</a>
+    </nav>
+  </aside>
+  <div class="page-main">
+    <div class="wrap">
+      <nav class="breadcrumbs" aria-label="Sayfa yolu">
+        <a href="https://jsm-options.com/tr/">Ana Sayfa</a>
+        <span aria-hidden="true">/</span>
+        <span aria-current="page">Wheel Stratejisi</span>
+      </nav>
+
+      <div class="card">
+    <h1 id="sec-0">Yeni başlayanlar için Wheel stratejisi</h1>
+    <p class="kw-targets"><strong>Arama odaklı:</strong> wheel stratejisi opsiyon · options wheel strategy · the wheel options · CSP covered call wheel · wheel stratejisi yeni başlayan</p>
 
     <p><strong>Wheel</strong>, bir <a href="https://jsm-options.com/tr/cash-secured-put/">nakit teminatlı put (cash-secured put / CSP)</a> ile bir <a href="https://jsm-options.com/tr/covered-call/">covered call</a>’u birleştiren döngüdür:</p>
 
@@ -113,15 +172,15 @@
       <li><strong>Baştan başlayın</strong> — yine nakit teminatlı put’larla — ya da hisse artık planınıza uymuyorsa durun.</li>
     </ol>
 
-    <p>Uluslararası borsalarda işlem yapmak için call, put, strike, premium, expiry, assignment, CSP ve Wheel gibi terimler bilinçli olarak İngilizce bırakılmıştır. Türkçe karşılıkları sayfa sonunda vardır.</p>
+    <p style="font-size:.9rem;color:var(--muted)">Uluslararası borsalarda işlem yapmak için call, put, strike, premium, expiry, assignment, CSP ve Wheel gibi terimler bilinçli olarak İngilizce bırakılmıştır. Türkçe karşılıkları sayfa sonunda vardır.</p>
 
-    <h2>Neden kullanılır</h2>
+    <h2 id="sec-1">Neden kullanılır</h2>
     <ul>
       <li>Zaten beğendiğiniz hisseleri tutmayı hedeflerken prim toplamanın kurala bağlı bir yolu</li>
       <li>“Almak için beklemek” (put) ile “daha yüksekten satmaya razı olmak” (call) duruşunu bir döngüye çevirir</li>
     </ul>
 
-    <h2>Yeni başlayanların küçümsediği riskler</h2>
+    <h2 id="sec-2">Yeni başlayanların küçümsediği riskler</h2>
     <ul>
       <li>Assignment, düşmeye devam edebilecek hisseleri size alır — prim, hisse riskini ortadan kaldırmaz</li>
       <li>Covered call güçlü yükselişte yukarı kârı tavanlar</li>
@@ -129,16 +188,16 @@
       <li>Pasif, “kur ve unut” bir gelir makinesi değildir</li>
     </ul>
 
-    <p><strong>Zihniyet:</strong> Yalnızca tutmaktan rahat olduğunuz isimleri wheel’leyin. Hisseyi sahibi olmaktan nefret edecekseniz, sırf prim için put satmayın.</p>
+    <div class="analogy"><strong>Zihniyet:</strong> Yalnızca tutmaktan rahat olduğunuz isimleri wheel’leyin. Hisseyi sahibi olmaktan nefret edecekseniz, sırf prim için put satmayın.</div>
 
-    <h2>Yapı (döngü)</h2>
+    <h2 id="sec-3">Yapı (döngü)</h2>
     <ul>
       <li><strong>Aşama 1 — CSP:</strong> Short 1 put + strike × 100 kadar nakit rezervi</li>
       <li><strong>Aşama 2 — Covered Call:</strong> Long 100 hisse + short 1 call</li>
       <li><strong>Aşama 3:</strong> Hisseler çağrılırsa nakit geri gelir → tekrar CSP; çağrılmazsa covered call satmaya devam</li>
     </ul>
 
-    <h2>Getiri mantığı</h2>
+    <h2 id="sec-4">Getiri mantığı</h2>
     <ul>
       <li><strong>CSP aşaması maksimum kâr</strong> ≈ alınan put primi (put değersiz biterse)</li>
       <li><strong>Covered call aşaması maksimum kâr</strong> ≈ (call strike − hisse maliyet esası) + alınan call primi (hisseler çağrılırsa)</li>
@@ -146,13 +205,13 @@
       <li>Döngünün toplam sonucu, atama fiyatları + toplanan primler + tutulan süre boyunca hisse hareketine bağlıdır</li>
     </ul>
 
-    <h2>Ne zaman uyum sağlar / sağlamaz</h2>
+    <h2 id="sec-5">Ne zaman uyum sağlar / sağlamaz</h2>
     <ul>
       <li><strong>Uyum sağlar:</strong> hisseyi 100’lük lotlarla gerçekten tutmak istiyorsunuz; nakit veya hisse rezerviniz var; prim karşılığında sınırlı yükselişi kabul ediyorsunuz</li>
       <li><strong>Uyum sağlamaz:</strong> hisseyi asla almak istemiyorsunuz; büyük bir ralli kaçırmak istemiyorsunuz; sermaye 100 hisse için yetersiz; “garanti gelir” arıyorsunuz</li>
     </ul>
 
-    <h2>Yeni başlayan kontrol listesi</h2>
+    <h2 id="sec-6">Yeni başlayan kontrol listesi</h2>
     <ul>
       <li>Put satmadan önce: bu hisseyi strike’dan almak ister miyim?</li>
       <li>Her put için yeterli nakit teminat ayırın (broker kuralları değişebilir)</li>
@@ -161,17 +220,17 @@
       <li>Assignment ve early assignment mümkün — özellikle vade yakınken ve opsiyon ITM ise</li>
     </ul>
 
-    <h2>Wheel döngüsü adım adım</h2>
+    <h2 id="sec-7">Wheel döngüsü adım adım</h2>
     <ol style="padding-left:20px">
       <li style="margin:6px 0"><b>Önce hisseyi seçin, Premium'i değil.</b> Wheel yalnızca Put Strike'ından uzun süre tutmaktan memnun olacağınız bir isimde anlamlıdır — likit opsiyonlar, ılımlı <b>IV</b>, anladığınız bir iş.</li>
       <li style="margin:6px 0"><b>Cash-secured Put satın</b> (genelde OTM, Delta ~0,20–0,30, 30–45 gün vade), 100 hisse alacak nakit ayrılır. Değersiz biterse Premium'i tutar, yenisini satarsınız. Vade yakınken zorlanırsa assignment yerine <b>Roll</b> ile aşağı veya ileri vadeye (net credit ile) taşıyabilirsiniz.</li>
       <li style="margin:6px 0"><b>Assignment'ı plan sayın, sürpriz değil.</b> Put Strike'ından 100 hisse alırsınız; maliyet esası ≈ Strike eksi toplanan toplam Premium. Sonra maliyet esasının üstünden <b>Covered Call</b> satın. Hisseler çağrılınca nakit geri gelir, Put'larla baştan başlarsınız.</li>
     </ol>
 
-    <h2>Sayısal örnek: tam bir döngü</h2>
+    <h2 id="sec-8">Sayısal örnek: tam bir döngü</h2>
     <p><b>XYZ</b> 100 $'da; 95 $'dan almaya razısınız. 30 günlük <b>95 $ Put'u 2,00 $'dan</b> satın → 200 $ Premium. 95 $ üstünde kalırsa 200 $ sizde. Atamada 95 $'dan 100 hisse alırsınız; etkin maliyet ≈ hisse başına <b>93 $</b> (9.300 $). Sonra <b>95 $ Call'u 1,50 $'dan</b> satın → 150 $ Premium. Hisseler 95 $'dan çağrılırsa 9.500 $ alırsınız: hissede 200 $ + 350 $ Premium = komisyon öncesi <b>≈ 550 $ toplam</b>. XYZ 70 $'a düşseydi hissedeki zarar Premium'in çok üstünde olurdu.</p>
 
-    <h2>Pozisyon yönetimi: Roll ve ayarlamalar</h2>
+    <h2 id="sec-9">Pozisyon yönetimi: Roll ve ayarlamalar</h2>
     <ul>
       <li><b>Put'u Roll etmek:</b> hisse Short Put'a yaklaşırsa kapatıp daha düşük Strike'tan veya ileri vadeden (net credit ile) yeniden satın — zaman kazandırır, assignment'ı önleyebilir (hisseyi hâlâ istiyorsanız).</li>
       <li><b>Call Strike'ı ve maliyet esası:</b> maliyetin altında Call satmak atamada zararı kilitler. Call'u yukarı ve ileri vadeye Roll edin ya da toparlanmayı bekleyin.</li>
@@ -179,7 +238,7 @@
       <li><b>Büyüklük ve olaylar:</b> atama nakit rezervinizin tamamını tek hissede kilitleyebilir — tek bir kötü atama başka satışa zorlamayacak büyüklükte kurun. Birçok yatırımcı bilanço dönemlerinde kenarda durur.</li>
     </ul>
 
-    <h2>Yaygın Wheel hataları</h2>
+    <h2 id="sec-10">Yaygın Wheel hataları</h2>
     <ul>
       <li>Asla tutmayacağınız hissede sırf yüksek Premium için Put satmak.</li>
       <li>Hisse maliyet esasının altında Covered Call satıp atamada zararı kilitlemek.</li>
@@ -187,7 +246,7 @@
       <li>Aynı nakde karşı çok fazla Wheel açmak — tek atama margin çağrısına yol açabilir.</li>
     </ul>
 
-    <h2>Yeni başlayan SSS</h2>
+    <h2 id="guide-faq">Yeni başlayan SSS</h2>
     <p><strong>Opsiyon Wheel stratejisi nedir?</strong><br />
     Wheel, nakit teminatlı put ile covered call döngüsüdür: kabul ettiğiniz hisseleri almak için beklerken prim toplarsınız, sonra hisseleri tutarken prim toplarsınız, hisseler satılınca yeniden başlarsınız.</p>
 
@@ -206,11 +265,16 @@
     <p><strong>Hisseleri aldığımdan düşük bir Strike'tan Covered Call satmalı mıyım?</strong><br />
     Genellikle hayır: hisseler çağrılırsa zarar kilitlenir. Birçok yatırımcı bunun yerine Call'u yukarı ve ileri vadeye Roll eder ya da bekler.</p>
 
-    <p><strong>Sonraki adım:</strong> <a href="https://jsm-options.com/tr/cheat-sheet/">opsiyon özetini</a> yazdırın veya bu kurulumu Builder’da açın. İlgili sayfalar: <a href="https://jsm-options.com/tr/cash-secured-put/">Cash-Secured Put</a>, <a href="https://jsm-options.com/tr/covered-call/">Covered Call</a>.</p>
+    <p class="practice-prompt"><strong>Sonraki adım:</strong> <a href="https://jsm-options.com/tr/cheat-sheet/">opsiyon özetini</a> yazdırın veya bu kurulumu Builder’da açın. İlgili sayfalar: <a href="https://jsm-options.com/tr/cash-secured-put/">Cash-Secured Put</a>, <a href="https://jsm-options.com/tr/covered-call/">Covered Call</a>.</p>
 
 
-    <p class="disclaimer"><strong>Yalnızca eğitim amaçlıdır:</strong> Yatırım tavsiyesi değildir. Wheel, düşüşlerde yine zarar ettirebilir. Hem opsiyonlar hem hisse sahipliği risk içerir. JSM Options bir aracı kurum değildir ve hiçbir aracı kurumla bağlı değildir.</p>
+    <div class="warn"><strong>Yalnızca eğitim amaçlıdır:</strong> Yatırım tavsiyesi değildir. Wheel, düşüşlerde yine zarar ettirebilir. Hem opsiyonlar hem hisse sahipliği risk içerir. JSM Options bir aracı kurum değildir ve hiçbir aracı kurumla bağlı değildir.</div>
   
+
+      </div>
+    </div>
+  </div>
+
 <div class="card quiz-card" id="page-quiz">
     <span class="badge">Hızlı kontrol</span>
     <h2>Wheel testi</h2>
@@ -251,7 +315,85 @@
 <script>window.JSM_QUIZ_MSGS = {"perfect": "Tam puan.", "good": "İyi iş. Notlara bakın.", "retry": "Açıklamaları okuyup tekrar deneyin."};</script>
 </div>
 
-  </article>
+</div>
+<footer class="site-footer">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="footer-logo">JSM Options</div>
+        <p>Ücretsiz opsiyon eğitimi ve strateji araçları. Öğrenin, pratik yapın ve analiz edin — doğrudan tarayıcınızda.</p>
+        <div class="footer-copy">&copy; 2026 JSM-Options.com</div>
+      </div>
+      <nav class="footer-col" aria-label="Öğren">
+        <h4>Öğren</h4>
+        <a href="/tr/level1/">Giriş</a>
+        <a href="/tr/level2/">Temeller</a>
+        <a href="/tr/level3/">Spreadler</a>
+        <a href="/tr/level4/">İleri Seviye</a>
+        <a href="/tr/strategies/">Stratejiler</a>
+      </nav>
+      <nav class="footer-col" aria-label="Araçlar">
+        <h4>Araçlar</h4>
+        <a href="/tr/builder/">Strateji Oluşturucu</a>
+        <a href="/tr/backtest/">Backtest</a>
+        <a href="/tr/bollinger-band-csp/">Bollinger Band CSP</a>
+      </nav>
+      <nav class="footer-col" aria-label="Ücretsiz araçlar">
+        <h4>Ücretsiz araçlar</h4>
+        <a href="https://jsm-image.com/" target="_blank" rel="noopener">JSM Image</a>
+        <a href="https://jsm-video.com/" target="_blank" rel="noopener">JSM Video</a>
+        <a href="https://jsm-loudness.com/" target="_blank" rel="noopener">JSM Loudness</a>
+        <a href="https://lyricprep.com/" target="_blank" rel="noopener">LyricPrep</a>
+        <a href="https://jsm-enhance.com/" target="_blank" rel="noopener">JSM Enhance <span class="paid-note">(ücretli &middot; hesap gerekmez)</span></a>
+      </nav>
+      <nav class="footer-col" aria-label="Şirket">
+        <h4>Şirket</h4>
+        <a href="/tr/about/">Hakkında</a>
+        <a href="/tr/contact/">İletişim</a>
+        <a href="/tr/disclaimer/">Yasal Uyarı</a>
+        <a href="/tr/privacy/">Gizlilik</a>
+      </nav>
+    </div>
+    <div class="footer-bottom">Educational only — not financial advice. Options involve risk of loss.</div>
+</footer>
+
+<script>
+(function(){
+  function initNav(){
+    var btn = document.getElementById('navToggle');
+    var nav = document.querySelector('.site-header .nav');
+    if (!btn || !nav) return;
+    if (btn.getAttribute('data-nav-bound') === '1') return;
+    btn.setAttribute('data-nav-bound', '1');
+    btn.addEventListener('click', function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      var open = !nav.classList.contains('is-open');
+      nav.classList.toggle('is-open', open);
+      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      btn.setAttribute('aria-label', open ? 'Menüyü kapat' : 'Menüyü aç');
+    });
+    nav.addEventListener('click', function (e) {
+      if (e.target.closest('a')) {
+        nav.classList.remove('is-open');
+        btn.setAttribute('aria-expanded', 'false');
+        btn.setAttribute('aria-label', 'Menüyü aç');
+      }
+    });
+    document.addEventListener('click', function (e) {
+      if (!nav.classList.contains('is-open')) return;
+      if (btn.contains(e.target) || nav.contains(e.target)) return;
+      nav.classList.remove('is-open');
+      btn.setAttribute('aria-expanded', 'false');
+      btn.setAttribute('aria-label', 'Menüyü aç');
+    });
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initNav);
+  } else {
+    initNav();
+  }
+})();
+</script>
 <script src="/assets/quiz.js?v=20260923" defer></script>
 </body>
 </html>

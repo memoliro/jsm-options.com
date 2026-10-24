@@ -1,44 +1,28 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html lang="tr" data-theme="dark">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/png" sizes="32x32" href="https://jsm-options.com/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="48x48" href="https://jsm-options.com/favicon-48.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="https://jsm-options.com/apple-touch-icon.png">
   <title>Iron Condor Stratejisi Açıklaması (Getiri Grafiği)</title>
-  <meta name="description" content="Iron condor stratejisi: 4 bacaklı, tanımlanmış riskli, yatay / bant aralığı beklentisine uygun credit yapısı. Yapı, getiri mantığı ve yeni başlayan SSS." />
+  <meta name="description" content="Iron condor stratejisi: 4 bacaklı, tanımlanmış riskli, yatay / bant aralığı beklentisine uygun credit yapısı. Yapı, getiri mantığı ve yeni başlayan SSS.">
   <link rel="canonical" href="https://jsm-options.com/tr/iron-condor/">
-  <style>
-    :root {
-      --bg: #0b1220;
-      --card: #121a2b;
-      --text: #e8eef8;
-      --muted: #9aa8bd;
-      --accent: #4ec4d4;
-      --border: #243044;
-    }
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      font-family: Inter, system-ui, -apple-system, Segoe UI, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      line-height: 1.55;
-    }
-    .wrap { max-width: 820px; margin: 0 auto; padding: 32px 20px 64px; }
-    h1 { color: var(--accent); font-size: 2rem; margin: 0 0 12px; }
-    h2 { color: var(--accent); font-size: 1.25rem; margin-top: 1.6em; }
-    .focus { color: var(--muted); font-size: .95rem; }
-    a { color: var(--accent); }
-    ul { padding-left: 1.2em; }
-    .note, .disclaimer {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 14px 16px;
-    }
-    .disclaimer { margin-top: 28px; color: var(--muted); font-size: .92rem; }
-    dt { font-weight: 700; margin-top: 10px; }
-    dd { margin: 0 0 8px 0; color: var(--muted); }
-  </style>
+  <link rel="alternate" hreflang="en" href="https://jsm-options.com/iron-condor/">
+  <link rel="alternate" hreflang="tr" href="https://jsm-options.com/tr/iron-condor/">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="JSM Options">
+  <meta property="og:title" content="Iron Condor Stratejisi Açıklaması (Getiri Grafiği)">
+  <meta property="og:description" content="Iron condor stratejisi: 4 bacaklı, tanımlanmış riskli, yatay / bant aralığı beklentisine uygun credit yapısı. Yapı, getiri mantığı ve yeni başlayan SSS.">
+  <meta property="og:url" content="https://jsm-options.com/tr/iron-condor/">
+  <meta property="og:image" content="https://jsm-options.com/images/og-default.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Iron Condor Stratejisi Açıklaması (Getiri Grafiği)">
+  <meta name="twitter:description" content="Iron condor stratejisi: 4 bacaklı, tanımlanmış riskli, yatay / bant aralığı beklentisine uygun credit yapısı. Yapı, getiri mantığı ve yeni başlayan SSS.">
+  <meta name="twitter:image" content="https://jsm-options.com/images/og-default.png">
+  <link rel="stylesheet" href="https://jsm-options.com/assets/style.css?v=20261010e">
+  <script src="https://jsm-options.com/assets/site.js?v=20261023a" defer></script>
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -96,20 +80,95 @@
   ]
 }
 </script>
-
+<style id="jsm-mobile-nav">
+.nav-toggle{display:none;box-sizing:border-box;width:44px;height:44px;min-width:44px;min-height:44px;padding:0;border:1px solid var(--border,#2d3a4f);border-radius:10px;background:var(--card,#1a2332);color:var(--text,#e7ecf3);cursor:pointer;align-items:center;justify-content:center;flex-direction:column;gap:5px;-webkit-tap-highlight-color:transparent;touch-action:manipulation;position:relative;z-index:40}
+.nav-toggle span{display:block;width:18px;height:2px;border-radius:1px;background:currentColor;pointer-events:none}
+.nav-toggle[aria-expanded="true"] span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.nav-toggle[aria-expanded="true"] span:nth-child(2){opacity:0}
+.nav-toggle[aria-expanded="true"] span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+@media (max-width:900px){
+  .nav-toggle{display:inline-flex!important}
+  .site-header{z-index:100!important;position:sticky;top:0}
+  .site-header .nav{
+    display:none!important;position:fixed!important;top:56px!important;left:0!important;right:0!important;width:100%!important;
+    max-height:calc(100vh - 56px)!important;overflow-y:auto!important;-webkit-overflow-scrolling:touch;
+    flex-direction:column!important;align-items:stretch!important;gap:6px!important;padding:12px 16px 20px!important;margin:0!important;
+    background:#0f1419!important;border-bottom:1px solid #2d3a4f!important;box-shadow:0 12px 28px rgba(0,0,0,.45)!important;z-index:9999!important;
+  }
+  html[data-theme="light"] .site-header .nav{background:#ffffff!important;border-bottom-color:#e2e8f0!important}
+  .site-header .nav.is-open{display:flex!important}
+  .site-header .nav a{width:100%!important;text-align:left!important;padding:14px!important;font-size:16px!important;min-height:48px!important;display:flex!important;align-items:center!important;border-radius:10px!important;box-sizing:border-box!important}
+}
+  </style>
 </head>
 <body>
-  <article class="wrap">
-    <h1>Yeni başlayanlar için iron condor stratejisi</h1>
-    <p class="focus"><strong>Arama odaklı:</strong> iron condor stratejisi · iron condor getiri · iron condor açıklaması · short iron condor · iron condor yeni başlayan</p>
+<header class="site-header">
+  <div class="site-header-inner">
+    <a class="logo logo-link" href="https://jsm-options.com/tr/" aria-label="JSM Options Ana Sayfa">
+      <div class="logo-icon">JSM</div>
+      <div>
+        <div style="font-weight:700">JSM Options</div>
+        <div class="brand-sub">jsm-options.com · Educational</div>
+      </div>
+    </a>
+    <div class="header-right">
+      <nav class="nav" aria-label="Ana menü">
+        <a href="https://jsm-options.com/tr/">Ana Sayfa</a>
+        <a href="https://jsm-options.com/tr/level1/">Giriş</a>
+        <a href="https://jsm-options.com/tr/level2/">Temeller</a>
+        <a href="https://jsm-options.com/tr/level3/">Spreadler</a>
+        <a href="https://jsm-options.com/tr/level4/">İleri Seviye</a>
+        <a href="https://jsm-options.com/tr/strategies/">Stratejiler</a>
+        <a href="https://jsm-options.com/tr/cheat-sheet/">Özet</a>
+        <a href="https://jsm-options.com/tr/builder/">Builder</a><a href="https://jsm-options.com/tr/backtest/">Backtest</a>
+      </nav>
+      <button type="button" class="nav-toggle" id="navToggle" aria-label="Menüyü aç" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+      <a id="langSwitch" class="lang-switch" href="https://jsm-options.com/iron-condor/" aria-label="English">EN</a>
+      <button type="button" class="theme-toggle" id="themeToggle" aria-label="Açık temaya geç">
+        <span id="themeIcon" class="theme-icon">🌙</span>
+        <span id="themeLabel" class="theme-label">Dark</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<div class="page-rails">
+  <aside class="page-toc">
+    <div class="toc-kicker">BU SAYFADA</div>
+    <nav>
+      <a href="#sec-0">Yeni başlayanlar için iron condor stratejisi</a>
+      <a href="#sec-1">Yapı (4 bacak)</a>
+      <a href="#sec-2">Getiri mantığı</a>
+      <a href="#sec-3">Ne zaman uyum sağlar / sağlamaz</a>
+      <a href="#sec-4">Yeni başlayan kontrol listesi</a>
+      <a href="#sec-5">Strike ve kanat genişliği seçimi</a>
+      <a href="#sec-6">Sayısal örnek</a>
+      <a href="#sec-7">Pozisyon yönetimi: ne zaman ayarlanmalı</a>
+      <a href="#sec-8">Yaygın iron condor hataları</a>
+      <a href="#guide-faq">Yeni başlayan SSS</a>
+    </nav>
+  </aside>
+  <div class="page-main">
+    <div class="wrap">
+      <nav class="breadcrumbs" aria-label="Sayfa yolu">
+        <a href="https://jsm-options.com/tr/">Ana Sayfa</a>
+        <span aria-hidden="true">/</span>
+        <span aria-current="page">Iron Condor</span>
+      </nav>
+
+      <div class="card">
+    <h1 id="sec-0">Yeni başlayanlar için iron condor stratejisi</h1>
+    <p class="kw-targets"><strong>Arama odaklı:</strong> iron condor stratejisi · iron condor getiri · iron condor açıklaması · short iron condor · iron condor yeni başlayan</p>
 
     <p>Bir <strong>iron condor</strong>, <strong>tanımlanmış riskli</strong>, genellikle <strong>nötr / yatay (range-bound)</strong> bir opsiyon yapısıdır. Piyasanın altında para dışı bir <strong>put spread</strong> ve piyasanın üstünde para dışı bir <strong>call spread</strong> satarsınız; aynı vade, <strong>net credit</strong> (net prim geliri) için.</p>
 
     <p>Dayanak varlığın iki short strike arasında kalmasını istersiniz; böylece her iki short opsiyon da değer kaybeder. Kâr, alınan credit ile sınırlıdır; zarar ise her kanattaki long opsiyonlarla sınırlanır.</p>
 
-    <p>Uluslararası borsalarda işlem yapmak için call, put, strike, premium, expiry, assignment, OTM ve credit gibi terimler bilinçli olarak İngilizce bırakılmıştır. Türkçe karşılıkları sayfa sonunda vardır.</p>
+    <p style="font-size:.9rem;color:var(--muted)">Uluslararası borsalarda işlem yapmak için call, put, strike, premium, expiry, assignment, OTM ve credit gibi terimler bilinçli olarak İngilizce bırakılmıştır. Türkçe karşılıkları sayfa sonunda vardır.</p>
 
-    <h2>Yapı (4 bacak)</h2>
+    <h2 id="sec-1">Yapı (4 bacak)</h2>
     <ul>
       <li><strong>OTM put sat</strong> (put kanadının daha yüksek put strike’ı)</li>
       <li><strong>Daha uzak OTM put al</strong> (daha düşük put strike) — aşağı yönde riski sınırlar</li>
@@ -117,7 +176,7 @@
       <li><strong>Daha uzak OTM call al</strong> (daha yüksek call strike) — yukarı yönde riski sınırlar</li>
     </ul>
 
-    <h2>Getiri mantığı</h2>
+    <h2 id="sec-2">Getiri mantığı</h2>
     <ul>
       <li><strong>Maksimum kâr</strong> ≈ fiyat short put ile short call arasında kalırsa net credit</li>
       <li><strong>Maksimum zarar</strong> ≈ test edilen kanadın genişliği − credit</li>
@@ -126,13 +185,13 @@
 
     <p>Yeşil = kâr · Kırmızı = zarar · Ortadaki düz kısım = her iki short da değersiz sonlanırsa credit sizde kalır.</p>
 
-    <h2>Ne zaman uyum sağlar / sağlamaz</h2>
+    <h2 id="sec-3">Ne zaman uyum sağlar / sağlamaz</h2>
     <ul>
       <li><strong>Uyum sağlar:</strong> sakin bir bant / yatay hareket beklersiniz; tanımlanmış risk istersiniz; credit ile kanat genişliği ilişkisini anlarsınız</li>
       <li><strong>Uyum sağlamaz:</strong> büyük bir kırılım (breakout) beklersiniz; assignment’ı veya bir kanadın erken testini yönetemezsiniz; likidite zayıftır</li>
     </ul>
 
-    <h2>Yeni başlayan kontrol listesi</h2>
+    <h2 id="sec-4">Yeni başlayan kontrol listesi</h2>
     <ul>
       <li>Dört bacağın da aynı vade ve aynı dayanak olduğunu doğrulayın</li>
       <li>Her kanadın genişliğini ve alınan net credit’i bilin</li>
@@ -140,7 +199,7 @@
       <li>Erken assignment ve bir kanadın test edilmesi mümkün olabilir — özellikle vade yakınken</li>
     </ul>
 
-    <h2>Strike ve kanat genişliği seçimi</h2>
+    <h2 id="sec-5">Strike ve kanat genişliği seçimi</h2>
     <ul>
       <li><b>Short Strike'lar:</b> yatırımcılar Put ve Call'u genelde 10–16 Delta'dan satar — test için gerçek hareket gerekir, Premium de anlamlıdır. Daha yakın = daha çok Premium ama kolay test; daha uzak = güvenli ama küçük credit.</li>
       <li><b>Kanat genişliği</b> maksimum zararı belirler: genişlik − credit. 5 $ kanat + 1,50 $ credit = kanat başına 3,50 $ risk; 10 $ kanat + 2,00 $ credit = 8,00 $ risk. Kanat genişledikçe credit riskten yavaş büyür; çoğu yatırımcı kanatları mütevazı tutar.</li>
@@ -148,7 +207,7 @@
       <li><b>Dört bacak da aynı vade ve dayanak olmalı.</b> Vadeleri karıştırmak yapıyı başka bir şeye çevirir, riski değişir.</li>
     </ul>
 
-    <h2>Sayısal örnek</h2>
+    <h2 id="sec-6">Sayısal örnek</h2>
     <p><b>ABC</b> 200 $'da. 30 günlük iron condor satıyorsunuz: <b>190 $ Put sat / 185 $ Put al</b>, <b>210 $ Call sat / 215 $ Call al</b>; net credit <b>2,50 $</b> (kontrat başına 250 $).</p>
     <ul>
       <li><b>Maksimum kâr</b> = 250 $, ABC 190 $–210 $ arasında biterse.</li>
@@ -157,7 +216,7 @@
     </ul>
     <p>Break-Even'ler arasında kısmi kâr/zarar olur; dışında zarar 250 $ ile sınırlıdır. En kötü senaryo baştan bellidir — “tanımlanmış risk” budur.</p>
 
-    <h2>Pozisyon yönetimi: ne zaman ayarlanmalı</h2>
+    <h2 id="sec-7">Pozisyon yönetimi: ne zaman ayarlanmalı</h2>
     <ul>
       <li><b>Kârı erken alın:</b> maksimum kârın ~%50'sinde kapatmak yaygındır. Credit spread'in son dolarları, hisse Short Strike'a sürüklenirse orantısız risk taşır.</li>
       <li><b>Test edilen kanat:</b> hisse Short Call'a yükselirse bazıları Put spread'i yukarı Roll eder veya condor'u ileri vadeye taşır. Zorlanan Call'u <i>aşağı</i> Roll etmek genelde içsel değer için debit ödemektir — kapatmaktan kötüdür.</li>
@@ -165,7 +224,7 @@
       <li><b>Bilanço ve assignment:</b> açıklama sonrası IV çöküşü (vol crush) condor'a yarar, ama kanattan geçen gap çok acıtır — çoğu ikili olay üstünde tutmaz. Deep ITM Short opsiyonlar erken atanabilir; bu senaryoya alım gücü bırakın.</li>
     </ul>
 
-    <h2>Yaygın iron condor hataları</h2>
+    <h2 id="sec-8">Yaygın iron condor hataları</h2>
     <ul>
       <li>Büyük credit için geniş kanat kovalamak — maksimum zarar credit'ten hızlı büyür.</li>
       <li>“Tam credit” için vadeye tutup kanatta pin'lenmek veya atanmak.</li>
@@ -173,7 +232,7 @@
       <li>“Tanımlanmış risk”i “düşük risk” sanmak — maksimum zarar credit'in birkaç katıdır.</li>
     </ul>
 
-    <h2>Yeni başlayan SSS</h2>
+    <h2 id="guide-faq">Yeni başlayan SSS</h2>
     <p><strong>Iron condor stratejisi nedir?</strong><br />
     Iron condor, aynı vadede para dışı bir put spread ve para dışı bir call spread satarak net credit toplar. Hisse veya ETF’nin bir bant içinde kalmasını istersiniz.</p>
 
@@ -192,11 +251,16 @@
     <p><strong>Iron condor ne zaman kapatılmalı?</strong><br />
     Yaygın yaklaşım, son dolarları kovalamak yerine maksimum kârın ~%50’sinde kapatmaktır. Zarar limitini de girişte belirleyin — örneğin zarar credit’in 2 katına ulaşırsa pozisyonu kapatın.</p>
 
-    <p><strong>Sonraki adım:</strong> <a href="https://jsm-options.com/tr/cheat-sheet/">opsiyon özetini</a> yazdırın veya bu kurulumu Builder’da açın.</p>
+    <p class="practice-prompt"><strong>Sonraki adım:</strong> <a href="https://jsm-options.com/tr/cheat-sheet/">opsiyon özetini</a> yazdırın veya bu kurulumu Builder’da açın.</p>
 
 
-    <p class="disclaimer"><strong>Yalnızca eğitim amaçlıdır:</strong> Tanımlanmış risk “risk yok” demek değildir. Credit’in birkaç katı zarar edebilirsiniz. Yatırım tavsiyesi değildir. JSM Options bir aracı kurum değildir ve hiçbir aracı kurumla bağlı değildir.</p>
+    <div class="warn"><strong>Yalnızca eğitim amaçlıdır:</strong> Tanımlanmış risk “risk yok” demek değildir. Credit’in birkaç katı zarar edebilirsiniz. Yatırım tavsiyesi değildir. JSM Options bir aracı kurum değildir ve hiçbir aracı kurumla bağlı değildir.</div>
   
+
+      </div>
+    </div>
+  </div>
+
 <div class="card quiz-card" id="page-quiz">
     <span class="badge">Hızlı kontrol</span>
     <h2>Iron condor testi</h2>
@@ -237,7 +301,85 @@
 <script>window.JSM_QUIZ_MSGS = {"perfect": "Tam puan.", "good": "İyi iş. Notlara bakın.", "retry": "Açıklamaları okuyup tekrar deneyin."};</script>
 </div>
 
-  </article>
+</div>
+<footer class="site-footer">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="footer-logo">JSM Options</div>
+        <p>Ücretsiz opsiyon eğitimi ve strateji araçları. Öğrenin, pratik yapın ve analiz edin — doğrudan tarayıcınızda.</p>
+        <div class="footer-copy">&copy; 2026 JSM-Options.com</div>
+      </div>
+      <nav class="footer-col" aria-label="Öğren">
+        <h4>Öğren</h4>
+        <a href="/tr/level1/">Giriş</a>
+        <a href="/tr/level2/">Temeller</a>
+        <a href="/tr/level3/">Spreadler</a>
+        <a href="/tr/level4/">İleri Seviye</a>
+        <a href="/tr/strategies/">Stratejiler</a>
+      </nav>
+      <nav class="footer-col" aria-label="Araçlar">
+        <h4>Araçlar</h4>
+        <a href="/tr/builder/">Strateji Oluşturucu</a>
+        <a href="/tr/backtest/">Backtest</a>
+        <a href="/tr/bollinger-band-csp/">Bollinger Band CSP</a>
+      </nav>
+      <nav class="footer-col" aria-label="Ücretsiz araçlar">
+        <h4>Ücretsiz araçlar</h4>
+        <a href="https://jsm-image.com/" target="_blank" rel="noopener">JSM Image</a>
+        <a href="https://jsm-video.com/" target="_blank" rel="noopener">JSM Video</a>
+        <a href="https://jsm-loudness.com/" target="_blank" rel="noopener">JSM Loudness</a>
+        <a href="https://lyricprep.com/" target="_blank" rel="noopener">LyricPrep</a>
+        <a href="https://jsm-enhance.com/" target="_blank" rel="noopener">JSM Enhance <span class="paid-note">(ücretli &middot; hesap gerekmez)</span></a>
+      </nav>
+      <nav class="footer-col" aria-label="Şirket">
+        <h4>Şirket</h4>
+        <a href="/tr/about/">Hakkında</a>
+        <a href="/tr/contact/">İletişim</a>
+        <a href="/tr/disclaimer/">Yasal Uyarı</a>
+        <a href="/tr/privacy/">Gizlilik</a>
+      </nav>
+    </div>
+    <div class="footer-bottom">Educational only — not financial advice. Options involve risk of loss.</div>
+</footer>
+
+<script>
+(function(){
+  function initNav(){
+    var btn = document.getElementById('navToggle');
+    var nav = document.querySelector('.site-header .nav');
+    if (!btn || !nav) return;
+    if (btn.getAttribute('data-nav-bound') === '1') return;
+    btn.setAttribute('data-nav-bound', '1');
+    btn.addEventListener('click', function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      var open = !nav.classList.contains('is-open');
+      nav.classList.toggle('is-open', open);
+      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      btn.setAttribute('aria-label', open ? 'Menüyü kapat' : 'Menüyü aç');
+    });
+    nav.addEventListener('click', function (e) {
+      if (e.target.closest('a')) {
+        nav.classList.remove('is-open');
+        btn.setAttribute('aria-expanded', 'false');
+        btn.setAttribute('aria-label', 'Menüyü aç');
+      }
+    });
+    document.addEventListener('click', function (e) {
+      if (!nav.classList.contains('is-open')) return;
+      if (btn.contains(e.target) || nav.contains(e.target)) return;
+      nav.classList.remove('is-open');
+      btn.setAttribute('aria-expanded', 'false');
+      btn.setAttribute('aria-label', 'Menüyü aç');
+    });
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initNav);
+  } else {
+    initNav();
+  }
+})();
+</script>
 <script src="/assets/quiz.js?v=20260923" defer></script>
 </body>
 </html>
