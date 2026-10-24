@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="tr" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/png" sizes="32x32" href="https://jsm-options.com/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="48x48" href="https://jsm-options.com/favicon-48.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="https://jsm-options.com/apple-touch-icon.png">
+  <title>Aylık gelir için covered call: işlem gerçekten nasıl çalışır</title>
+  <meta name="description" content="Covered call, zaten sahip olduğunuz hisseleri prim gelirine dönüştürür — ama bu bir maaş değildir ve riskleri gerçektir. İşlemin mekaniği, gelir hesabı ve ne zaman uygun olduğu.">
+  <link rel="canonical" href="https://jsm-options.com/tr/blog/covered-call-geliri/">
+  <link rel="alternate" hreflang="en" href="https://jsm-options.com/wheel/">
+  <link rel="alternate" hreflang="tr" href="https://jsm-options.com/tr/wheel/">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="JSM Options">
+  <meta property="og:title" content="Aylık gelir için covered call: işlem gerçekten nasıl çalışır">
+  <meta property="og:description" content="Covered call, zaten sahip olduğunuz hisseleri prim gelirine dönüştürür — ama bu bir maaş değildir ve riskleri gerçektir. İşlemin mekaniği, gelir hesabı ve ne zaman uygun olduğu.">
+  <meta property="og:url" content="https://jsm-options.com/tr/blog/covered-call-geliri/">
+  <meta property="og:image" content="https://jsm-options.com/images/og-default.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Aylık gelir için covered call: işlem gerçekten nasıl çalışır">
+  <meta name="twitter:description" content="Covered call, zaten sahip olduğunuz hisseleri prim gelirine dönüştürür — ama bu bir maaş değildir ve riskleri gerçektir. İşlemin mekaniği, gelir hesabı ve ne zaman uygun olduğu.">
+  <meta name="twitter:image" content="https://jsm-options.com/images/og-default.png">
+  <link rel="stylesheet" href="https://jsm-options.com/assets/style.css?v=20261010e">
+  <script src="https://jsm-options.com/assets/site.js?v=20261023a" defer></script>
+<style id="jsm-mobile-nav">
+.nav-toggle{display:none;box-sizing:border-box;width:44px;height:44px;min-width:44px;min-height:44px;padding:0;border:1px solid var(--border,#2d3a4f);border-radius:10px;background:var(--card,#1a2332);color:var(--text,#e7ecf3);cursor:pointer;align-items:center;justify-content:center;flex-direction:column;gap:5px;-webkit-tap-highlight-color:transparent;touch-action:manipulation;position:relative;z-index:40}
+.nav-toggle span{display:block;width:18px;height:2px;border-radius:1px;background:currentColor;pointer-events:none}
+.nav-toggle[aria-expanded="true"] span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.nav-toggle[aria-expanded="true"] span:nth-child(2){opacity:0}
+.nav-toggle[aria-expanded="true"] span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+@media (max-width:900px){
+  .nav-toggle{display:inline-flex!important}
+  .site-header{z-index:100!important;position:sticky;top:0}
+  .site-header .nav{
+    display:none!important;position:fixed!important;top:56px!important;left:0!important;right:0!important;width:100%!important;
+    max-height:calc(100vh - 56px)!important;overflow-y:auto!important;-webkit-overflow-scrolling:touch;
+    flex-direction:column!important;align-items:stretch!important;gap:6px!important;padding:12px 16px 20px!important;margin:0!important;
+    background:#0f1419!important;border-bottom:1px solid #2d3a4f!important;box-shadow:0 12px 28px rgba(0,0,0,.45)!important;z-index:9999!important;
+  }
+  html[data-theme="light"] .site-header .nav{background:#ffffff!important;border-bottom-color:#e2e8f0!important}
+  .site-header .nav.is-open{display:flex!important}
+  .site-header .nav a{width:100%!important;text-align:left!important;padding:14px!important;font-size:16px!important;min-height:48px!important;display:flex!important;align-items:center!important;border-radius:10px!important;box-sizing:border-box!important}
+}
+  </style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "Aylık gelir için covered call: işlem gerçekten nasıl çalışır",
+  "description": "Covered call, zaten sahip olduğunuz hisseleri prim gelirine dönüştürür — ama bu bir maaş değildir ve riskleri gerçektir. İşlemin mekaniği, gelir hesabı ve ne zaman uygun olduğu.",
+  "author": {
+    "@type": "Organization",
+    "name": "JSM Options"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "JSM Options"
+  },
+  "datePublished": "2026-10-24",
+  "dateModified": "2026-10-24",
+  "mainEntityOfPage": "https://jsm-options.com/tr/blog/covered-call-geliri/",
+  "inLanguage": "tr"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Covered call satmak için tam 100 hisse gerekli mi?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Standart bir kontrat 100 hisseyi kapsar, bu yüzden 100 hisse olağan başlangıçtır. Daha az hisseyle satılan call kısmen karşılıksız kalır; çoğu aracı kurum bunu kısıtlar ve risk tamamen değişir."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Hisse kullanım fiyatımın çok üzerine fırlarsa ne olur?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Hisseleriniz kullanım fiyatından satılır. Primi ve kullanıma kadar olan kazancı tutar, rallinin geri kalanını kaçırırsınız. Bu sınırlı yükseliş, call'u satarken kabul ettiğiniz takastır."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Prim garanti gelir mi?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Satış gerçekleştiğinde prim sizindir — ama gelecek primler asla garanti değildir. Bazı aylar mevcut prim, yükselişi sınırlamaya değmeyecek kadar küçüktür ve doğru hareket hiçbir şey satmamaktır."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Vade sonunda hisse kullanım fiyatımın altındaysa ne olur?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Call değersiz sona erer, primin tamamı sizde kalır ve hisseler sizde kalır. Sonra bir sonraki döngü için yeni bir call satıp satmamaya karar verebilirsiniz."
+      }
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Ana Sayfa",
+      "item": "https://jsm-options.com/tr/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Blog",
+      "item": "https://jsm-options.com/tr/blog/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "Aylık gelir için covered call: işlem gerçekten nasıl çalışır",
+      "item": "https://jsm-options.com/tr/blog/covered-call-geliri/"
+    }
+  ]
+}
+</script>
+</head>
+<body>
+<header class="site-header">
+  <div class="site-header-inner">
+    <a class="logo logo-link" href="https://jsm-options.com/tr/" aria-label="JSM Options Ana Sayfa">
+      <div class="logo-icon">JSM</div>
+      <div>
+        <div style="font-weight:700">JSM Options</div>
+        <div class="brand-sub">jsm-options.com · Educational</div>
+      </div>
+    </a>
+    <div class="header-right">
+      <nav class="nav" aria-label="Ana menü">
+        <a href="https://jsm-options.com/tr/">Ana Sayfa</a>
+        <a href="https://jsm-options.com/tr/level1/">Giriş</a>
+        <a href="https://jsm-options.com/tr/level2/">Temeller</a>
+        <a href="https://jsm-options.com/tr/level3/">Spreadler</a>
+        <a href="https://jsm-options.com/tr/level4/">İleri Seviye</a>
+        <a href="https://jsm-options.com/tr/strategies/">Stratejiler</a>
+        <a href="https://jsm-options.com/tr/cheat-sheet/">Özet</a>
+        <a href="https://jsm-options.com/tr/builder/">Builder</a><a href="https://jsm-options.com/tr/backtest/">Backtest</a>
+      </nav>
+      <button type="button" class="nav-toggle" id="navToggle" aria-label="Menüyü aç" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+      <a id="langSwitch" class="lang-switch" href="https://jsm-options.com/blog/covered-call-income/" aria-label="English">EN</a>
+      <button type="button" class="theme-toggle" id="themeToggle" aria-label="Açık temaya geç">
+        <span id="themeIcon" class="theme-icon">🌙</span>
+        <span id="themeLabel" class="theme-label">Dark</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<div class="page-rails">
+  <aside class="page-toc">
+    <div class="toc-kicker">BU SAYFADA</div>
+    <nav>
+      <a href="#sec-0">Yeni başlayanlar için Wheel stratejisi</a>
+      <a href="#sec-1">Neden kullanılır</a>
+      <a href="#sec-2">Yeni başlayanların küçümsediği riskler</a>
+      <a href="#sec-3">Yapı (döngü)</a>
+      <a href="#sec-4">Getiri mantığı</a>
+      <a href="#sec-5">Ne zaman uyum sağlar / sağlamaz</a>
+      <a href="#sec-6">Yeni başlayan kontrol listesi</a>
+      <a href="#sec-7">Wheel döngüsü adım adım</a>
+      <a href="#sec-8">Sayısal örnek: tam bir döngü</a>
+      <a href="#sec-9">Pozisyon yönetimi: Roll ve ayarlamalar</a>
+      <a href="#sec-10">Yaygın Wheel hataları</a>
+      <a href="#guide-faq">Yeni başlayan SSS</a>
+    </nav>
+  </aside>
+  <div class="page-main">
+    <div class="wrap">
+<nav class="breadcrumbs" aria-label="Breadcrumb"><a href="/tr/">Ana Sayfa</a><span aria-hidden="true">/</span><a href="/tr/blog/">Blog</a><span aria-hidden="true">/</span><span aria-current="page">Aylık gelir için covered call: işlem gerçekten nasıl çalışır</span></nav>
+<div class="card">
+<h1>Aylık gelir için covered call: işlem gerçekten nasıl çalışır</h1>
+<p class="kw-targets"><b>Search focus:</b> covered call geliri · covered call satmak · covered call stratejisi · aylık gelir opsiyon · covered call riskleri</p>
+<p>Covered call, opsiyon dünyasında en çok paylaşılan gelir işlemidir — ve en çok yanlış anlaşılanı. Doğru yapıldığında, zaten sahip olduğunuz hisseleri ay ay nakit prime dönüştürür. Özensiz yapıldığında ise kazananlarınızı sınırlar, kaybedenlerinizi elinizde tutar ve hisseniz çok düşerken size az öder. Bu rehber gerçek mekaniği anlatıyor: ne satıyorsunuz, neyi elinizde tutuyorsunuz, ne ters gidebilir ve işlem ne zaman gerçekten uygun.</p>
+<h2>Aslında ne satıyorsunuz</h2>
+<p>Bir covered call iki şeyin birleşimidir: <b>100 adet hisse</b> ve bu hisselere karşılık satılmış <b>bir adet alım (call) opsiyonu</b>. Call, karşı tarafa hisselerinizi vade sonuna kadar kullanım fiyatından alma hakkı verir. Bu hakkı satmak için prim alırsınız. Prim, bundan sonra ne olursa olsun sizindir.</p><p>Bu işleme <i>covered</i> (karşılıklı) denmesinin sebebi, yükümlülüğünüzü hisselerle karşılamanızdır. Hisse kullanım fiyatının çok üzerine fırlarsa, zaten sahip olduğunuz hisseleri teslim edersiniz — onları yüksek fiyattan geri almak zorunda kalmazsınız. Bunu, hissenin kontrolden çıkması halinde neredeyse sınırsız zarara açık olan çıplak (naked) call ile karşılaştırın.</p>
+<h2>Gelir hesabı, gerçek sayılarla</h2>
+<p>100 adet hisseniz olduğunu varsayalım, tanesini 50 dolardan almışsınız (toplam 5.000 dolar). 30 gün vadeli, 52 dolar kullanımlı bir call'u hisse başına 0,80 dolara satıyorsunuz. Bir kontrat 100 hisseyi kapsadığı için hemen <b>80 dolar</b> prim alırsınız.</p><p>Bir ay sonra üç olası son:</p><ul><li><b>Hisse 52 doların altında:</b> call değersiz sona erer. 80 dolar sizde kalır, hisseler de sizde kalır. Gelecek ay yeni bir call satabilirsiniz.</li><li><b>Hisse 52 dolar ve üzeri:</b> hisseleriniz 52 dolardan satılır. Hisse başına 2 dolar kâr artı 0,80 dolar prim — toplam 280 dolar, masraflar hariç.</li><li><b>Hisse 45 dolara düşer:</b> call değersiz biter, 80 doları tutarsınız — ama hisseleriniz 500 dolar değer kaybetti. Prim düşüşü yumuşattı; engellemedi.</li></ul><p>Üçüncü durum, gelir paylaşımlarının atladığı durumdur. Prim bir yastıktır, taban değildir.</p>
+<h2>Bu neden bir maaş değil</h2>
+<p>Bazı aylar satılacak iyi bir call yoktur. Zımni volatilite düşükse ya da makul primli tek kullanımlar maliyetinizin çok altındaysa, dürüst hareket hiçbir şey satmamaktır. Her ay zorla işlem yapmak — özellikle maliyetinizin altında bir kullanım satmak — sabırlı bir gelir stratejisini, zararı kilitleyen bir makineye dönüştürür.</p><p>Covered call gelirini düzenli maaş gibi değil, düzensiz kira gibi düşünün. İyi aylar daha çok öder, sakin aylar hiç ödemez ve getirinin çoğunu yine hissenin kendisi belirler.</p>
+<h2>Riskler, açıkça</h2>
+<ul><li><b>Yükseliş sınırlı.</b> Hisseniz ikiye katlanırsa siz yine kullanım fiyatından satarsınız. Bu pişmanlık gerçektir ve primin bedelidir.</li><li><b>Düşüş tamamen sizin.</b> Düşen hissenin her doları, küçük prim dışında, sizin zararınızdır.</li><li><b>Erken kullanım sürprizleri.</b> Erken kullanım olabilir, genellikle temettü dönemlerinde. Satıştan önce hissenin temettü tarihini bilin.</li><li><b>Vergi ve masraflar.</b> Primler ve satılan hisseler ülkeden ülkeye değişen vergi sonuçları doğurabilir. Kayıt tutun; bu eğitimdir, vergi tavsiyesi değil.</li></ul>
+<h2>Covered call ne zaman uygun</h2>
+<p>İşlem, üç şey aynı anda doğruyken uygundur: hisseyi zaten elde tutmak istiyor olmanız, patlama değil yatay ya da hafif yükseliş beklemeniz ve vazgeçtiğiniz yükselişin primine değmesi. Üçünden biri eksikse hisseleri tutun ve bekleyin — ya da başka bir stratejiye bakın.</p><p>Mekaniği kendiniz deneyin: pozisyonu <a href="/tr/builder/">Strateji Oluşturucu</a> ile kurup kullanım fiyatını değiştirdikçe getiri grafiğinin nasıl hareket ettiğini izleyin, sonra <a href="/tr/backtest/">Backtest</a> ile yükselen piyasalarda değil, düşen piyasalarda nasıl davrandığını geçmiş veriyle görün.</p>
+<h2>Sık sorulan sorular</h2>
+<h3>Covered call satmak için tam 100 hisse gerekli mi?</h3>
+<p>Standart bir kontrat 100 hisseyi kapsar, bu yüzden 100 hisse olağan başlangıçtır. Daha az hisseyle satılan call kısmen karşılıksız kalır; çoğu aracı kurum bunu kısıtlar ve risk tamamen değişir.</p>
+<h3>Hisse kullanım fiyatımın çok üzerine fırlarsa ne olur?</h3>
+<p>Hisseleriniz kullanım fiyatından satılır. Primi ve kullanıma kadar olan kazancı tutar, rallinin geri kalanını kaçırırsınız. Bu sınırlı yükseliş, call'u satarken kabul ettiğiniz takastır.</p>
+<h3>Prim garanti gelir mi?</h3>
+<p>Satış gerçekleştiğinde prim sizindir — ama gelecek primler asla garanti değildir. Bazı aylar mevcut prim, yükselişi sınırlamaya değmeyecek kadar küçüktür ve doğru hareket hiçbir şey satmamaktır.</p>
+<h3>Vade sonunda hisse kullanım fiyatımın altındaysa ne olur?</h3>
+<p>Call değersiz sona erer, primin tamamı sizde kalır ve hisseler sizde kalır. Sonra bir sonraki döngü için yeni bir call satıp satmamaya karar verebilirsiniz.</p>
+<p class="disclaimer">Yalnızca eğitim amaçlıdır — finansal tavsiye değildir. Opsiyonlar zarar riski içerir.</p>
+</div>
+</div>
+<footer class="site-footer">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="footer-logo">JSM Options</div>
+        <p>Ücretsiz opsiyon eğitimi ve strateji araçları. Öğrenin, pratik yapın ve analiz edin — doğrudan tarayıcınızda.</p>
+        <div class="footer-copy">&copy; 2026 JSM-Options.com</div>
+      </div>
+      <nav class="footer-col" aria-label="Öğren">
+        <h4>Öğren</h4>
+        <a href="/tr/level1/">Giriş</a>
+        <a href="/tr/level2/">Temeller</a>
+        <a href="/tr/level3/">Spreadler</a>
+        <a href="/tr/level4/">İleri Seviye</a>
+        <a href="/tr/strategies/">Stratejiler</a>
+        <a href="/tr/blog/">Blog</a>
+      </nav>
+      <nav class="footer-col" aria-label="Araçlar">
+        <h4>Araçlar</h4>
+        <a href="/tr/builder/">Strateji Oluşturucu</a>
+        <a href="/tr/backtest/">Backtest</a>
+        <a href="/tr/bollinger-band-csp/">Bollinger Band CSP</a>
+      </nav>
+      <nav class="footer-col" aria-label="Ücretsiz araçlar">
+        <h4>Ücretsiz araçlar</h4>
+        <a href="https://jsm-image.com/" target="_blank" rel="noopener">JSM Image</a>
+        <a href="https://jsm-video.com/" target="_blank" rel="noopener">JSM Video</a>
+        <a href="https://jsm-loudness.com/" target="_blank" rel="noopener">JSM Loudness</a>
+        <a href="https://lyricprep.com/" target="_blank" rel="noopener">LyricPrep</a>
+        <a href="https://jsm-enhance.com/" target="_blank" rel="noopener">JSM Enhance <span class="paid-note">(ücretli &middot; hesap gerekmez)</span></a>
+      </nav>
+      <nav class="footer-col" aria-label="Şirket">
+        <h4>Şirket</h4>
+        <a href="/tr/about/">Hakkında</a>
+        <a href="/tr/contact/">İletişim</a>
+        <a href="/tr/disclaimer/">Yasal Uyarı</a>
+        <a href="/tr/privacy/">Gizlilik</a>
+      </nav>
+    </div>
+    <div class="footer-bottom">Educational only — not financial advice. Options involve risk of loss.</div>
+</footer>
+
+<script>
+(function(){
+  function initNav(){
+    var btn = document.getElementById('navToggle');
+    var nav = document.querySelector('.site-header .nav');
+    if (!btn || !nav) return;
+    if (btn.getAttribute('data-nav-bound') === '1') return;
+    btn.setAttribute('data-nav-bound', '1');
+    btn.addEventListener('click', function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      var open = !nav.classList.contains('is-open');
+      nav.classList.toggle('is-open', open);
+      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      btn.setAttribute('aria-label', open ? 'Menüyü kapat' : 'Menüyü aç');
+    });
+    nav.addEventListener('click', function (e) {
+      if (e.target.closest('a')) {
+        nav.classList.remove('is-open');
+        btn.setAttribute('aria-expanded', 'false');
+        btn.setAttribute('aria-label', 'Menüyü aç');
+      }
+    });
+    document.addEventListener('click', function (e) {
+      if (!nav.classList.contains('is-open')) return;
+      if (btn.contains(e.target) || nav.contains(e.target)) return;
+      nav.classList.remove('is-open');
+      btn.setAttribute('aria-expanded', 'false');
+      btn.setAttribute('aria-label', 'Menüyü aç');
+    });
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initNav);
+  } else {
+    initNav();
+  }
+})();
+</script>
+</body>
+</html>

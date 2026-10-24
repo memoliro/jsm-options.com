@@ -89,4 +89,72 @@
   <url><loc>https://jsm-options.com/tr/disclaimer/</loc><xhtml:link rel="alternate" hreflang="tr" href="https://jsm-options.com/tr/disclaimer/"/><xhtml:link rel="alternate" hreflang="en" href="https://jsm-options.com/disclaimer/"/><lastmod>2026-09-26</lastmod><changefreq>yearly</changefreq><priority>0.2</priority></url>
   <url><loc>https://jsm-options.com/privacy/</loc><xhtml:link rel="alternate" hreflang="en" href="https://jsm-options.com/privacy/"/><xhtml:link rel="alternate" hreflang="tr" href="https://jsm-options.com/tr/privacy/"/><lastmod>2026-09-26</lastmod><changefreq>yearly</changefreq><priority>0.2</priority></url>
   <url><loc>https://jsm-options.com/tr/privacy/</loc><xhtml:link rel="alternate" hreflang="tr" href="https://jsm-options.com/tr/privacy/"/><xhtml:link rel="alternate" hreflang="en" href="https://jsm-options.com/privacy/"/><lastmod>2026-09-26</lastmod><changefreq>yearly</changefreq><priority>0.2</priority></url>
+  <url>
+    <loc>https://jsm-options.com/blog/covered-call-income/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://jsm-options.com/blog/covered-call-income/"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://jsm-options.com/tr/blog/covered-call-geliri/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://jsm-options.com/blog/covered-call-income/"/>
+    <lastmod>2026-10-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://jsm-options.com/tr/blog/covered-call-geliri/</loc>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://jsm-options.com/tr/blog/covered-call-geliri/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://jsm-options.com/blog/covered-call-income/"/>
+    <lastmod>2026-10-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://jsm-options.com/blog/wheel-strategy-step-by-step/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://jsm-options.com/blog/wheel-strategy-step-by-step/"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://jsm-options.com/tr/blog/wheel-stratejisi-adim-adim/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://jsm-options.com/blog/wheel-strategy-step-by-step/"/>
+    <lastmod>2026-10-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://jsm-options.com/tr/blog/wheel-stratejisi-adim-adim/</loc>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://jsm-options.com/tr/blog/wheel-stratejisi-adim-adim/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://jsm-options.com/blog/wheel-strategy-step-by-step/"/>
+    <lastmod>2026-10-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://jsm-options.com/blog/iv-crush-after-earnings/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://jsm-options.com/blog/iv-crush-after-earnings/"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://jsm-options.com/tr/blog/bilanco-sonrasi-iv-crush/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://jsm-options.com/blog/iv-crush-after-earnings/"/>
+    <lastmod>2026-10-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://jsm-options.com/tr/blog/bilanco-sonrasi-iv-crush/</loc>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://jsm-options.com/tr/blog/bilanco-sonrasi-iv-crush/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://jsm-options.com/blog/iv-crush-after-earnings/"/>
+    <lastmod>2026-10-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://jsm-options.com/blog/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://jsm-options.com/blog/"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://jsm-options.com/tr/blog/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://jsm-options.com/blog/"/>
+    <lastmod>2026-10-24</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://jsm-options.com/tr/blog/</loc>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://jsm-options.com/tr/blog/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://jsm-options.com/blog/"/>
+    <lastmod>2026-10-24</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
 </urlset>

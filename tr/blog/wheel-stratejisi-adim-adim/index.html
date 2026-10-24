@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="tr" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/png" sizes="32x32" href="https://jsm-options.com/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="48x48" href="https://jsm-options.com/favicon-48.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="https://jsm-options.com/apple-touch-icon.png">
+  <title>Wheel stratejisi adım adım: ilk puttan tam döngüye</title>
+  <meta name="description" content="Wheel, iki gelir işlemini bir döngüye dönüştürür: hisse sahibi olana kadar nakit güvenceli put satın, hisseler satılana kadar covered call satın. Sayılarla, kullanım kurallarıyla ve stratejiyi bozan hatalarla tam bir rehber.">
+  <link rel="canonical" href="https://jsm-options.com/tr/blog/wheel-stratejisi-adim-adim/">
+  <link rel="alternate" hreflang="en" href="https://jsm-options.com/wheel/">
+  <link rel="alternate" hreflang="tr" href="https://jsm-options.com/tr/wheel/">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="JSM Options">
+  <meta property="og:title" content="Wheel stratejisi adım adım: ilk puttan tam döngüye">
+  <meta property="og:description" content="Wheel, iki gelir işlemini bir döngüye dönüştürür: hisse sahibi olana kadar nakit güvenceli put satın, hisseler satılana kadar covered call satın. Sayılarla, kullanım kurallarıyla ve stratejiyi bozan hatalarla tam bir rehber.">
+  <meta property="og:url" content="https://jsm-options.com/tr/blog/wheel-stratejisi-adim-adim/">
+  <meta property="og:image" content="https://jsm-options.com/images/og-default.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Wheel stratejisi adım adım: ilk puttan tam döngüye">
+  <meta name="twitter:description" content="Wheel, iki gelir işlemini bir döngüye dönüştürür: hisse sahibi olana kadar nakit güvenceli put satın, hisseler satılana kadar covered call satın. Sayılarla, kullanım kurallarıyla ve stratejiyi bozan hatalarla tam bir rehber.">
+  <meta name="twitter:image" content="https://jsm-options.com/images/og-default.png">
+  <link rel="stylesheet" href="https://jsm-options.com/assets/style.css?v=20261010e">
+  <script src="https://jsm-options.com/assets/site.js?v=20261023a" defer></script>
+<style id="jsm-mobile-nav">
+.nav-toggle{display:none;box-sizing:border-box;width:44px;height:44px;min-width:44px;min-height:44px;padding:0;border:1px solid var(--border,#2d3a4f);border-radius:10px;background:var(--card,#1a2332);color:var(--text,#e7ecf3);cursor:pointer;align-items:center;justify-content:center;flex-direction:column;gap:5px;-webkit-tap-highlight-color:transparent;touch-action:manipulation;position:relative;z-index:40}
+.nav-toggle span{display:block;width:18px;height:2px;border-radius:1px;background:currentColor;pointer-events:none}
+.nav-toggle[aria-expanded="true"] span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.nav-toggle[aria-expanded="true"] span:nth-child(2){opacity:0}
+.nav-toggle[aria-expanded="true"] span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+@media (max-width:900px){
+  .nav-toggle{display:inline-flex!important}
+  .site-header{z-index:100!important;position:sticky;top:0}
+  .site-header .nav{
+    display:none!important;position:fixed!important;top:56px!important;left:0!important;right:0!important;width:100%!important;
+    max-height:calc(100vh - 56px)!important;overflow-y:auto!important;-webkit-overflow-scrolling:touch;
+    flex-direction:column!important;align-items:stretch!important;gap:6px!important;padding:12px 16px 20px!important;margin:0!important;
+    background:#0f1419!important;border-bottom:1px solid #2d3a4f!important;box-shadow:0 12px 28px rgba(0,0,0,.45)!important;z-index:9999!important;
+  }
+  html[data-theme="light"] .site-header .nav{background:#ffffff!important;border-bottom-color:#e2e8f0!important}
+  .site-header .nav.is-open{display:flex!important}
+  .site-header .nav a{width:100%!important;text-align:left!important;padding:14px!important;font-size:16px!important;min-height:48px!important;display:flex!important;align-items:center!important;border-radius:10px!important;box-sizing:border-box!important}
+}
+  </style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "Wheel stratejisi adım adım: ilk puttan tam döngüye",
+  "description": "Wheel, iki gelir işlemini bir döngüye dönüştürür: hisse sahibi olana kadar nakit güvenceli put satın, hisseler satılana kadar covered call satın. Sayılarla, kullanım kurallarıyla ve stratejiyi bozan hatalarla tam bir rehber.",
+  "author": {
+    "@type": "Organization",
+    "name": "JSM Options"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "JSM Options"
+  },
+  "datePublished": "2026-10-24",
+  "dateModified": "2026-10-24",
+  "mainEntityOfPage": "https://jsm-options.com/tr/blog/wheel-stratejisi-adim-adim/",
+  "inLanguage": "tr"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Wheel'e başlamak için ne kadar nakit gerekir?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Bir put kontratı için kullanım fiyatının 100 hisse karşılığı kadar nakit ayrılmalıdır — 48 dolar kullanım için 4.800 dolar. Bu nakit, putu kredili değil nakit güvenceli yapan şeydir."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Atanmadan sonra hisse çökerse ne olur?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Düşen bir hisseye sahip olursunuz ve toplayabileceğiniz call primleri de onunla birlikte küçülür. Wheel'in ana riski budur ve hisse seçiminin prim büyüklüğünden daha önemli olmasının sebebidir."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "100 hisseden azıyla Wheel yapılabilir mi?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Standart kontratlarla hayır: her put ya da call 100 hisseyi kapsar. Bazı aracı kurumlar daha küçük kontratlar sunar ama klasik Wheel 100 hisselik lotları varsayar."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Ne sıklıkla işlem yaparım?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Hisse başına genellikle ayda bir-iki kez: bir put satışı, atanmadan sonra bir call satışı ve ara sıra öteleme. Günlük al-sat'tan yavaştır ve mesele de budur."
+      }
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Ana Sayfa",
+      "item": "https://jsm-options.com/tr/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Blog",
+      "item": "https://jsm-options.com/tr/blog/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "Wheel stratejisi adım adım: ilk puttan tam döngüye",
+      "item": "https://jsm-options.com/tr/blog/wheel-stratejisi-adim-adim/"
+    }
+  ]
+}
+</script>
+</head>
+<body>
+<header class="site-header">
+  <div class="site-header-inner">
+    <a class="logo logo-link" href="https://jsm-options.com/tr/" aria-label="JSM Options Ana Sayfa">
+      <div class="logo-icon">JSM</div>
+      <div>
+        <div style="font-weight:700">JSM Options</div>
+        <div class="brand-sub">jsm-options.com · Educational</div>
+      </div>
+    </a>
+    <div class="header-right">
+      <nav class="nav" aria-label="Ana menü">
+        <a href="https://jsm-options.com/tr/">Ana Sayfa</a>
+        <a href="https://jsm-options.com/tr/level1/">Giriş</a>
+        <a href="https://jsm-options.com/tr/level2/">Temeller</a>
+        <a href="https://jsm-options.com/tr/level3/">Spreadler</a>
+        <a href="https://jsm-options.com/tr/level4/">İleri Seviye</a>
+        <a href="https://jsm-options.com/tr/strategies/">Stratejiler</a>
+        <a href="https://jsm-options.com/tr/cheat-sheet/">Özet</a>
+        <a href="https://jsm-options.com/tr/builder/">Builder</a><a href="https://jsm-options.com/tr/backtest/">Backtest</a>
+      </nav>
+      <button type="button" class="nav-toggle" id="navToggle" aria-label="Menüyü aç" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+      <a id="langSwitch" class="lang-switch" href="https://jsm-options.com/blog/wheel-strategy-step-by-step/" aria-label="English">EN</a>
+      <button type="button" class="theme-toggle" id="themeToggle" aria-label="Açık temaya geç">
+        <span id="themeIcon" class="theme-icon">🌙</span>
+        <span id="themeLabel" class="theme-label">Dark</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<div class="page-rails">
+  <aside class="page-toc">
+    <div class="toc-kicker">BU SAYFADA</div>
+    <nav>
+      <a href="#sec-0">Yeni başlayanlar için Wheel stratejisi</a>
+      <a href="#sec-1">Neden kullanılır</a>
+      <a href="#sec-2">Yeni başlayanların küçümsediği riskler</a>
+      <a href="#sec-3">Yapı (döngü)</a>
+      <a href="#sec-4">Getiri mantığı</a>
+      <a href="#sec-5">Ne zaman uyum sağlar / sağlamaz</a>
+      <a href="#sec-6">Yeni başlayan kontrol listesi</a>
+      <a href="#sec-7">Wheel döngüsü adım adım</a>
+      <a href="#sec-8">Sayısal örnek: tam bir döngü</a>
+      <a href="#sec-9">Pozisyon yönetimi: Roll ve ayarlamalar</a>
+      <a href="#sec-10">Yaygın Wheel hataları</a>
+      <a href="#guide-faq">Yeni başlayan SSS</a>
+    </nav>
+  </aside>
+  <div class="page-main">
+    <div class="wrap">
+<nav class="breadcrumbs" aria-label="Breadcrumb"><a href="/tr/">Ana Sayfa</a><span aria-hidden="true">/</span><a href="/tr/blog/">Blog</a><span aria-hidden="true">/</span><span aria-current="page">Wheel stratejisi adım adım: ilk puttan tam döngüye</span></nav>
+<div class="card">
+<h1>Wheel stratejisi adım adım: ilk puttan tam döngüye</h1>
+<p class="kw-targets"><b>Search focus:</b> wheel stratejisi adım adım · opsiyon wheel · cash-secured put covered call döngüsü · wheel stratejisi örneği · wheel stratejisi riskleri</p>
+<p>Wheel tek bir işlem değil, iki işlemin döngüsüdür: hisse sahibi olmanızla bitebilen nakit güvenceli put aşaması ve hisseleri satmanızla bitebilen covered call aşaması. Sonra her şey yeniden başlar. Popüler olmasının sebebi her adımda prim toplamasıdır — ve tehlikeli olmasının sebebi, yatırımcıların bu primi, asla sahip olmak istemeyecekleri hisselerde kovalamasıdır. İşte tam döngü, sırasıyla, dürüst tutan kurallarıyla.</p>
+<h2>Adım 1: Gerçekten sahip olmak isteyeceğiniz bir hisse seçin</h2>
+<p>Bu, stratejinin tamamını tek kuralda özetler. Sonraki her adım sizi 100 hisse sahibi bırakabilir, bu yüzden hisse, kullanım fiyatından sahip olmaktan memnun olacağınız bir hisse olmalıdır — primleri şişkin ama işi bozuk bir isim değil. Çoğu wheel yatırımcısı likit, kârlı şirketlerden oluşan kısa bir listeyle çalışır, gerisini görmezden gelir.</p>
+<h2>Adım 2: Nakit güvenceli put (CSP) satın</h2>
+<p>Hisse 50 dolardayken 30–45 gün vadeli, 48 dolar kullanımlı bir put satarsınız ve atanma halinde hisseleri almak için 4.800 dolar nakit ayırırsınız. Bunun karşılığında hisse başına yaklaşık 1,20 dolar — kontrat başına 120 dolar — prim alabilirsiniz. Yaygın uygulama, yaklaşık 0,30 delta hedeflemektir; bu kabaca piyasanın vadede kullanımın altında bitme olasılığını %30 fiyatladığı anlamına gelir. Bu bir kılavuzdur, garanti değil.</p><p>İki son vardır: hisse 48 doların üzerinde kalırsa put değersiz biter, 120 dolar sizde kalır ve yeni bir put satarsınız. Vade sonunda hisse 48 doların altına düşerse 100 hisseyi 48 dolardan alırsınız — atanma gerçekleşir.</p>
+<h2>Adım 3: Atanma — artık hisselerin sahibisiniz</h2>
+<p>Atanma bir başarısızlık değil; stratejinin planlanmış ortasıdır. Etkin maliyetiniz, kullanım eksi daha önce toplanan primdir: 48,00 − 1,20 = hisse başına <b>46,80 dolar</b>. Bu maliyet, bir sonraki adım için belirleyicidir çünkü hangi call kullanımlarının kabul edilebilir olduğunu o belirler.</p>
+<h2>Adım 4: Hisselerinize covered call satın</h2>
+<p>Şimdi 100 hissenize karşılık, genellikle maliyetiniz olan 46,80 doların üstünde ya da ona eşit bir kullanımdan call satarsınız — altında satmak, zararı bilerek kilitlemek olur. 50 dolar kullanımlı bir call 0,90 dolar, yani 90 dolar daha getirebilir. Hisse 50 doların altında kalırsa call değersiz biter, primi tutar, yenisini satarsınız. 50 doların üzerine çıkarsa hisseleriniz 50 dolardan satılır: hisse başına 50,00 − 46,80 = 3,20 dolar artı her iki prim kazanmış olursunuz.</p>
+<h2>Adım 5: Hisseler satıldı — Wheel yeniden başlar</h2>
+<p>Hisseler satılınca tekrar nakit durumuna dönersiniz ve döngü 2. adımdan yeni bir put ile yeniden başlar. Tam bir tur — put primi, atanma, call primi, satış — Wheel'in tam olarak vaat ettiği şeydir. Gelir üç yerden geldi: put primi, call primi ve maliyet ile call kullanımı arasındaki hissenin kendi hareketi.</p>
+<h2>Yönetim: öteleme (rolling) ve ne zaman yapılmayacağı</h2>
+<p>Bir put ya da call aleyhinize geliştiğinde pozisyonu <i>öteleyebilirsiniz</i> — mevcut opsiyonu kapatıp genellikle net kredi alarak daha ileri vadeli bir tane açarsınız. Öteleme zaman kazandırır ve bu ayki atanmayı ya da satışı erteler. Ama çöken bir hissede kaybeden putu tekrar tekrar ötelemek, kötü bir seçimi kabul etmek yerine savunmaktır. İşe yarayan bir kural: yalnızca kredi alarak ve daha iyi bir kullanımla, en fazla bir-iki kez öteleyin; hikâyesi bozulmuş bir hissede put kullanımını asla aşağı ötelemeyin.</p>
+<h2>Wheel'i bozan hatalar</h2>
+<ul><li><b>Çöp hissede prim kovalamak.</b> En şişkin primler en sarsak hisselerdedir. Sahip olmayacağınız hisseyle wheel yapmayın.</li><li><b>Maliyetin altında call satmak.</b> Hisseler satıldığında geçici düşüş kalıcı zarara döner.</li><li><b>Nakdi unutmak.</b> Nakit güvenceli put, kullanım × 100 kadar paranın ayrılmasını ister. Sahip olmadığınız parayla kredili put satmak başka, daha riskli bir stratejidir.</li><li><b>Pasif gelir sanmak.</b> Wheel kullanım seçimi, bilanço tarihi farkındalığı ve atanma yönetimi ister. Düzensiz ödemeli aktif bir iştir.</li></ul><p>Döngünün çizimini <a href="/tr/wheel/">Wheel stratejisi rehberi</a> sayfasında görün, herhangi bir bacağını <a href="/tr/builder/">Strateji Oluşturucu</a> ile modelleyin ve gerçek para riske etmeden önce tam bir turu <a href="/tr/backtest/">Backtest</a> ile geçmiş veride test edin — önce kâğıt üzerinde, her zaman.</p>
+<h2>Sık sorulan sorular</h2>
+<h3>Wheel'e başlamak için ne kadar nakit gerekir?</h3>
+<p>Bir put kontratı için kullanım fiyatının 100 hisse karşılığı kadar nakit ayrılmalıdır — 48 dolar kullanım için 4.800 dolar. Bu nakit, putu kredili değil nakit güvenceli yapan şeydir.</p>
+<h3>Atanmadan sonra hisse çökerse ne olur?</h3>
+<p>Düşen bir hisseye sahip olursunuz ve toplayabileceğiniz call primleri de onunla birlikte küçülür. Wheel'in ana riski budur ve hisse seçiminin prim büyüklüğünden daha önemli olmasının sebebidir.</p>
+<h3>100 hisseden azıyla Wheel yapılabilir mi?</h3>
+<p>Standart kontratlarla hayır: her put ya da call 100 hisseyi kapsar. Bazı aracı kurumlar daha küçük kontratlar sunar ama klasik Wheel 100 hisselik lotları varsayar.</p>
+<h3>Ne sıklıkla işlem yaparım?</h3>
+<p>Hisse başına genellikle ayda bir-iki kez: bir put satışı, atanmadan sonra bir call satışı ve ara sıra öteleme. Günlük al-sat'tan yavaştır ve mesele de budur.</p>
+<p class="disclaimer">Yalnızca eğitim amaçlıdır — finansal tavsiye değildir. Opsiyonlar zarar riski içerir.</p>
+</div>
+</div>
+<footer class="site-footer">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="footer-logo">JSM Options</div>
+        <p>Ücretsiz opsiyon eğitimi ve strateji araçları. Öğrenin, pratik yapın ve analiz edin — doğrudan tarayıcınızda.</p>
+        <div class="footer-copy">&copy; 2026 JSM-Options.com</div>
+      </div>
+      <nav class="footer-col" aria-label="Öğren">
+        <h4>Öğren</h4>
+        <a href="/tr/level1/">Giriş</a>
+        <a href="/tr/level2/">Temeller</a>
+        <a href="/tr/level3/">Spreadler</a>
+        <a href="/tr/level4/">İleri Seviye</a>
+        <a href="/tr/strategies/">Stratejiler</a>
+        <a href="/tr/blog/">Blog</a>
+      </nav>
+      <nav class="footer-col" aria-label="Araçlar">
+        <h4>Araçlar</h4>
+        <a href="/tr/builder/">Strateji Oluşturucu</a>
+        <a href="/tr/backtest/">Backtest</a>
+        <a href="/tr/bollinger-band-csp/">Bollinger Band CSP</a>
+      </nav>
+      <nav class="footer-col" aria-label="Ücretsiz araçlar">
+        <h4>Ücretsiz araçlar</h4>
+        <a href="https://jsm-image.com/" target="_blank" rel="noopener">JSM Image</a>
+        <a href="https://jsm-video.com/" target="_blank" rel="noopener">JSM Video</a>
+        <a href="https://jsm-loudness.com/" target="_blank" rel="noopener">JSM Loudness</a>
+        <a href="https://lyricprep.com/" target="_blank" rel="noopener">LyricPrep</a>
+        <a href="https://jsm-enhance.com/" target="_blank" rel="noopener">JSM Enhance <span class="paid-note">(ücretli &middot; hesap gerekmez)</span></a>
+      </nav>
+      <nav class="footer-col" aria-label="Şirket">
+        <h4>Şirket</h4>
+        <a href="/tr/about/">Hakkında</a>
+        <a href="/tr/contact/">İletişim</a>
+        <a href="/tr/disclaimer/">Yasal Uyarı</a>
+        <a href="/tr/privacy/">Gizlilik</a>
+      </nav>
+    </div>
+    <div class="footer-bottom">Educational only — not financial advice. Options involve risk of loss.</div>
+</footer>
+
+<script>
+(function(){
+  function initNav(){
+    var btn = document.getElementById('navToggle');
+    var nav = document.querySelector('.site-header .nav');
+    if (!btn || !nav) return;
+    if (btn.getAttribute('data-nav-bound') === '1') return;
+    btn.setAttribute('data-nav-bound', '1');
+    btn.addEventListener('click', function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      var open = !nav.classList.contains('is-open');
+      nav.classList.toggle('is-open', open);
+      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      btn.setAttribute('aria-label', open ? 'Menüyü kapat' : 'Menüyü aç');
+    });
+    nav.addEventListener('click', function (e) {
+      if (e.target.closest('a')) {
+        nav.classList.remove('is-open');
+        btn.setAttribute('aria-expanded', 'false');
+        btn.setAttribute('aria-label', 'Menüyü aç');
+      }
+    });
+    document.addEventListener('click', function (e) {
+      if (!nav.classList.contains('is-open')) return;
+      if (btn.contains(e.target) || nav.contains(e.target)) return;
+      nav.classList.remove('is-open');
+      btn.setAttribute('aria-expanded', 'false');
+      btn.setAttribute('aria-label', 'Menüyü aç');
+    });
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initNav);
+  } else {
+    initNav();
+  }
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <title>IV crush after earnings: why options lose value even when you are right</title>
+  <meta name="description" content="Earnings announcements inflate option prices before the news and crush them after. If you buy premium into earnings, the stock can move your way and your option can still lose money. Here is why, with numbers.">
+  <link rel="canonical" href="https://jsm-options.com/blog/iv-crush-after-earnings/">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="JSM Options">
+  <meta property="og:title" content="IV crush after earnings: why options lose value even when you are right">
+  <meta property="og:description" content="Earnings announcements inflate option prices before the news and crush them after. If you buy premium into earnings, the stock can move your way and your option can still lose money. Here is why, with numbers.">
+  <meta property="og:url" content="https://jsm-options.com/blog/iv-crush-after-earnings/">
+  <meta property="og:image" content="https://jsm-options.com/images/og-default.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="IV crush after earnings: why options lose value even when you are right">
+  <meta name="twitter:description" content="Earnings announcements inflate option prices before the news and crush them after. If you buy premium into earnings, the stock can move your way and your option can still lose money. Here is why, with numbers.">
+  <meta name="twitter:image" content="https://jsm-options.com/images/og-default.png">
+  <link rel="stylesheet" href="/assets/style.css?v=20261010e">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-BDL003RCN6"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-BDL003RCN6');</script>
+<style id="jsm-mobile-nav">
+.nav-toggle{display:none;box-sizing:border-box;width:44px;height:44px;min-width:44px;min-height:44px;padding:0;border:1px solid var(--border,#2d3a4f);border-radius:10px;background:var(--card,#1a2332);color:var(--text,#e7ecf3);cursor:pointer;align-items:center;justify-content:center;flex-direction:column;gap:5px;-webkit-tap-highlight-color:transparent;touch-action:manipulation;position:relative;z-index:40}
+.nav-toggle span{display:block;width:18px;height:2px;border-radius:1px;background:currentColor;pointer-events:none}
+.nav-toggle[aria-expanded="true"] span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.nav-toggle[aria-expanded="true"] span:nth-child(2){opacity:0}
+.nav-toggle[aria-expanded="true"] span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+@media (max-width:900px){
+  .nav-toggle{display:inline-flex!important}
+  .site-header{z-index:100!important;position:sticky;top:0}
+  .site-header .nav{
+    display:none!important;
+    position:fixed!important;
+    top:56px!important;left:0!important;right:0!important;
+    width:100%!important;
+    max-height:calc(100vh - 56px)!important;
+    overflow-y:auto!important;
+    -webkit-overflow-scrolling:touch;
+    flex-direction:column!important;
+    align-items:stretch!important;
+    gap:6px!important;
+    padding:12px 16px 20px!important;
+    margin:0!important;
+    background:#0f1419!important;
+    border-bottom:1px solid #2d3a4f!important;
+    box-shadow:0 12px 28px rgba(0,0,0,.45)!important;
+    z-index:9999!important;
+  }
+  html[data-theme="light"] .site-header .nav{background:#ffffff!important;border-bottom-color:#e2e8f0!important}
+  .site-header .nav.is-open{display:flex!important}
+  .site-header .nav a{
+    width:100%!important;text-align:left!important;
+    padding:14px!important;font-size:16px!important;
+    min-height:48px!important;display:flex!important;align-items:center!important;
+    border-radius:10px!important;box-sizing:border-box!important;
+  }
+}
+</style>
+<script src="/assets/site.js?v=20261023a" defer></script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "IV crush after earnings: why options lose value even when you are right",
+  "description": "Earnings announcements inflate option prices before the news and crush them after. If you buy premium into earnings, the stock can move your way and your option can still lose money. Here is why, with numbers.",
+  "author": {
+    "@type": "Organization",
+    "name": "JSM Options"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "JSM Options"
+  },
+  "datePublished": "2026-10-24",
+  "dateModified": "2026-10-24",
+  "mainEntityOfPage": "https://jsm-options.com/blog/iv-crush-after-earnings/",
+  "inLanguage": "en"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Does IV crush hit puts as well as calls?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Crush is about volatility, not direction — it deflates the time value of all options on the stock, calls and puts alike, once the event passes."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can IV crush ever help me as a buyer?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Rarely and only if the stock's move is so large it overwhelms the volatility collapse. That is exactly what the inflated premium was pricing in, so it takes an exceptional move."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I see IV before earnings?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Most brokers and chains show IV per option. Compare it with the stock's usual IV: a big gap before an event date is the market charging for the announcement."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is every earnings announcement a crush?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. Crush follows the resolution of uncertainty. If the announcement creates new uncertainty — a surprise warning, a guidance cut — IV can stay high or even rise. Crush is the usual case, not a law."
+      }
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://jsm-options.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Blog",
+      "item": "https://jsm-options.com/blog/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "IV crush after earnings: why options lose value even when you are right",
+      "item": "https://jsm-options.com/blog/iv-crush-after-earnings/"
+    }
+  ]
+}
+</script>
+</head>
+<body>
+<header class="site-header"><div class="site-header-inner"><a class="logo logo-link" href="/" aria-label="JSM Options Home"><div class="logo-icon">JSM</div><div><div style="font-weight:700">JSM Options</div><div class="brand-sub">jsm-options.com · Educational</div></div></a><div class="header-right"><nav class="nav" aria-label="Primary navigation"><a href="/">Home</a><a href="/level1/">Basics</a><a href="/level2/">Fundamentals</a><a href="/level3/">Spreads</a><a href="/level4/">Advanced</a><a href="/strategies/">Strategies</a><a href="/cheat-sheet/">Cheat sheet</a><a href="/builder/">Builder</a><a href="/backtest/">Backtest</a></nav><button type="button" class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button><button type="button" class="theme-toggle" id="themeToggle" aria-label="Toggle color theme"><span id="themeIcon" class="theme-icon">☼</span><span id="themeLabel" class="theme-label">Dark</span></button></div></div></header>
+<div class="wrap">
+<nav class="breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span aria-hidden="true">/</span><a href="/blog/">Blog</a><span aria-hidden="true">/</span><span aria-current="page">IV crush after earnings: why options lose value even when you are right</span></nav>
+<div class="card">
+<h1>IV crush after earnings: why options lose value even when you are right</h1>
+<p class="kw-targets"><b>Search focus:</b> IV crush earnings · implied volatility crush · options earnings strategy · why options lose value · IV crush explained</p>
+<p>It is the most confusing loss in options: you predict the earnings direction correctly, the stock moves your way — and your option is worth less than you paid. The culprit is usually IV crush, the collapse of implied volatility the moment uncertainty resolves. Understand it once, and a whole class of expensive mistakes disappears.</p>
+<h2>Implied volatility in one minute</h2>
+<p>An option's price has two ingredients: intrinsic value (what it would be worth if exercised now) and time value (everything else). Implied volatility, or IV, is the market's priced-in expectation of how much the stock will move — and it feeds directly into time value. High IV means expensive options; low IV means cheap ones. IV is not a prediction of direction. It is a price on uncertainty itself.</p>
+<h2>Why earnings inflate IV</h2>
+<p>Before an earnings announcement, nobody knows the result — but everybody knows a big move is possible. Market makers raise IV to compensate for that jump risk, so options expiring just after earnings get expensive. A call that normally costs $2.00 might cost $4.50 in earnings week, even with the stock sitting still. You are paying for the event, not just the direction.</p>
+<h2>The crush: what happens after the announcement</h2>
+<p>The moment earnings print, the uncertainty is gone. IV collapses — often by 30–50% overnight — and with it the time value of every option on that stock. This is the crush. It hits buyers of premium hardest and benefits sellers, who sold the inflated uncertainty and buy it back cheaper.</p>
+<h2>A worked example</h2>
+<p>Illustrative numbers: a stock trades at $100. A week before earnings you buy a $105 call expiring just after the announcement for $5.00 ($500 per contract). Earnings beat expectations and the stock rises to $103 — your direction was right. But IV crushes from a high pre-earnings level to a normal one, and your call is now worth $3.50. You were right about the company and still lost $150. The stock needed to rise past roughly $110 — the strike plus the inflated premium — just to break even. The market had already priced in a move; your move had to beat the priced-in move.</p>
+<h2>How traders handle earnings</h2>
+<ul><li><b>Do not buy naked premium into earnings unless the expected move beats the priced-in move.</b> Check the expected move first: it is roughly the price of an at-the-money straddle. If the straddle costs $8 on a $100 stock, the market expects about an 8% move. Your thesis must beat that.</li><li><b>Use spreads instead of outright options.</b> Buying a call spread — a long call plus a short call at a higher strike — means you both buy and sell inflated IV, so the crush hurts far less.</li><li><b>Consider being the seller — carefully.</b> Selling premium into earnings collects the inflated IV, but a bigger-than-expected move can overwhelm the premium fast. It is not free money; it is a different risk.</li><li><b>Wait a day.</b> Trading the day after earnings, when IV has normalized, means paying a fair price for direction alone.</li></ul><p>The lesson generalizes: every option price already contains the market's guess about the future. Your edge has to beat the guess, not just the direction. Model it yourself in the <a href="/builder/">Strategy Builder</a> — change the IV slider and watch the premium and breakevens move — and read how decay and volatility interact in our <a href="/level4/">Advanced</a> lessons.</p>
+<h2>FAQ</h2>
+<h3>Does IV crush hit puts as well as calls?</h3>
+<p>Yes. Crush is about volatility, not direction — it deflates the time value of all options on the stock, calls and puts alike, once the event passes.</p>
+<h3>Can IV crush ever help me as a buyer?</h3>
+<p>Rarely and only if the stock's move is so large it overwhelms the volatility collapse. That is exactly what the inflated premium was pricing in, so it takes an exceptional move.</p>
+<h3>How do I see IV before earnings?</h3>
+<p>Most brokers and chains show IV per option. Compare it with the stock's usual IV: a big gap before an event date is the market charging for the announcement.</p>
+<h3>Is every earnings announcement a crush?</h3>
+<p>No. Crush follows the resolution of uncertainty. If the announcement creates new uncertainty — a surprise warning, a guidance cut — IV can stay high or even rise. Crush is the usual case, not a law.</p>
+<p class="disclaimer">Educational only — not financial advice. Options involve risk of loss.</p>
+</div>
+</div>
+<footer class="site-footer">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="footer-logo">JSM Options</div>
+        <p>Free options education and strategy tools. Learn, practice, and analyze — right in your browser.</p>
+        <div class="footer-copy">&copy; 2026 JSM-Options.com</div>
+      </div>
+      <nav class="footer-col" aria-label="Learn">
+        <h4>Learn</h4>
+        <a href="/level1/">Basics</a>
+        <a href="/level2/">Fundamentals</a>
+        <a href="/level3/">Spreads</a>
+        <a href="/level4/">Advanced</a>
+        <a href="/strategies/">Strategies</a>
+        <a href="/blog/">Blog</a>
+      </nav>
+      <nav class="footer-col" aria-label="Tools">
+        <h4>Tools</h4>
+        <a href="/builder/">Strategy Builder</a>
+        <a href="/backtest/">Backtester</a>
+        <a href="/bollinger-band-csp/">Bollinger Band CSP</a>
+      </nav>
+      <nav class="footer-col" aria-label="Free tools">
+        <h4>Free tools</h4>
+        <a href="https://jsm-image.com/" target="_blank" rel="noopener">JSM Image</a>
+        <a href="https://jsm-video.com/" target="_blank" rel="noopener">JSM Video</a>
+        <a href="https://jsm-loudness.com/" target="_blank" rel="noopener">JSM Loudness</a>
+        <a href="https://lyricprep.com/" target="_blank" rel="noopener">LyricPrep</a>
+        <a href="https://jsm-enhance.com/" target="_blank" rel="noopener">JSM Enhance <span class="paid-note">(paid &middot; no account needed)</span></a>
+      </nav>
+      <nav class="footer-col" aria-label="Company">
+        <h4>Company</h4>
+        <a href="/about/">About</a>
+        <a href="/contact/">Contact</a>
+        <a href="/disclaimer/">Disclaimer</a>
+        <a href="/privacy/">Privacy</a>
+      </nav>
+    </div>
+    <div class="footer-bottom">Educational only — not financial advice. Options involve risk of loss.</div>
+</footer>
+
+
+<script>
+(function(){
+  function initNav(){
+    var btn = document.getElementById('navToggle');
+    var nav = document.querySelector('.site-header .nav');
+    if (!btn || !nav) return;
+    if (btn.getAttribute('data-nav-bound') === '1') return;
+    btn.setAttribute('data-nav-bound', '1');
+
+    btn.addEventListener('click', function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      var open = !nav.classList.contains('is-open');
+      nav.classList.toggle('is-open', open);
+      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      btn.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+    });
+
+    // Close after choosing a link
+    nav.addEventListener('click', function (e) {
+      if (e.target.closest('a')) {
+        nav.classList.remove('is-open');
+        btn.setAttribute('aria-expanded', 'false');
+        btn.setAttribute('aria-label', 'Open menu');
+      }
+    });
+
+    // Close on outside click (use capture delay so button click isn't treated as outside)
+    document.addEventListener('click', function (e) {
+      if (!nav.classList.contains('is-open')) return;
+      if (btn.contains(e.target) || nav.contains(e.target)) return;
+      nav.classList.remove('is-open');
+      btn.setAttribute('aria-expanded', 'false');
+      btn.setAttribute('aria-label', 'Open menu');
+    });
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initNav);
+  } else {
+    initNav();
+  }
+})();
+</script>
+
+
+
+
+</body>
+</html>

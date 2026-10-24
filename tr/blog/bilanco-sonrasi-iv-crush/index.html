@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="tr" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/png" sizes="32x32" href="https://jsm-options.com/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="48x48" href="https://jsm-options.com/favicon-48.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="https://jsm-options.com/apple-touch-icon.png">
+  <title>Bilançodan sonra IV crush: haklıyken bile opsiyonlar neden erir</title>
+  <meta name="description" content="Bilanço açıklamaları öncesinde opsiyon fiyatlarını şişirir, sonrasında ise çökertir. Bilançoya prim alarak girerseniz hisse lehinize hareket etse bile opsiyonunuz para kaybedebilir. İşte sebebi, sayılarla.">
+  <link rel="canonical" href="https://jsm-options.com/tr/blog/bilanco-sonrasi-iv-crush/">
+  <link rel="alternate" hreflang="en" href="https://jsm-options.com/wheel/">
+  <link rel="alternate" hreflang="tr" href="https://jsm-options.com/tr/wheel/">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="JSM Options">
+  <meta property="og:title" content="Bilançodan sonra IV crush: haklıyken bile opsiyonlar neden erir">
+  <meta property="og:description" content="Bilanço açıklamaları öncesinde opsiyon fiyatlarını şişirir, sonrasında ise çökertir. Bilançoya prim alarak girerseniz hisse lehinize hareket etse bile opsiyonunuz para kaybedebilir. İşte sebebi, sayılarla.">
+  <meta property="og:url" content="https://jsm-options.com/tr/blog/bilanco-sonrasi-iv-crush/">
+  <meta property="og:image" content="https://jsm-options.com/images/og-default.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Bilançodan sonra IV crush: haklıyken bile opsiyonlar neden erir">
+  <meta name="twitter:description" content="Bilanço açıklamaları öncesinde opsiyon fiyatlarını şişirir, sonrasında ise çökertir. Bilançoya prim alarak girerseniz hisse lehinize hareket etse bile opsiyonunuz para kaybedebilir. İşte sebebi, sayılarla.">
+  <meta name="twitter:image" content="https://jsm-options.com/images/og-default.png">
+  <link rel="stylesheet" href="https://jsm-options.com/assets/style.css?v=20261010e">
+  <script src="https://jsm-options.com/assets/site.js?v=20261023a" defer></script>
+<style id="jsm-mobile-nav">
+.nav-toggle{display:none;box-sizing:border-box;width:44px;height:44px;min-width:44px;min-height:44px;padding:0;border:1px solid var(--border,#2d3a4f);border-radius:10px;background:var(--card,#1a2332);color:var(--text,#e7ecf3);cursor:pointer;align-items:center;justify-content:center;flex-direction:column;gap:5px;-webkit-tap-highlight-color:transparent;touch-action:manipulation;position:relative;z-index:40}
+.nav-toggle span{display:block;width:18px;height:2px;border-radius:1px;background:currentColor;pointer-events:none}
+.nav-toggle[aria-expanded="true"] span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.nav-toggle[aria-expanded="true"] span:nth-child(2){opacity:0}
+.nav-toggle[aria-expanded="true"] span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+@media (max-width:900px){
+  .nav-toggle{display:inline-flex!important}
+  .site-header{z-index:100!important;position:sticky;top:0}
+  .site-header .nav{
+    display:none!important;position:fixed!important;top:56px!important;left:0!important;right:0!important;width:100%!important;
+    max-height:calc(100vh - 56px)!important;overflow-y:auto!important;-webkit-overflow-scrolling:touch;
+    flex-direction:column!important;align-items:stretch!important;gap:6px!important;padding:12px 16px 20px!important;margin:0!important;
+    background:#0f1419!important;border-bottom:1px solid #2d3a4f!important;box-shadow:0 12px 28px rgba(0,0,0,.45)!important;z-index:9999!important;
+  }
+  html[data-theme="light"] .site-header .nav{background:#ffffff!important;border-bottom-color:#e2e8f0!important}
+  .site-header .nav.is-open{display:flex!important}
+  .site-header .nav a{width:100%!important;text-align:left!important;padding:14px!important;font-size:16px!important;min-height:48px!important;display:flex!important;align-items:center!important;border-radius:10px!important;box-sizing:border-box!important}
+}
+  </style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "Bilançodan sonra IV crush: haklıyken bile opsiyonlar neden erir",
+  "description": "Bilanço açıklamaları öncesinde opsiyon fiyatlarını şişirir, sonrasında ise çökertir. Bilançoya prim alarak girerseniz hisse lehinize hareket etse bile opsiyonunuz para kaybedebilir. İşte sebebi, sayılarla.",
+  "author": {
+    "@type": "Organization",
+    "name": "JSM Options"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "JSM Options"
+  },
+  "datePublished": "2026-10-24",
+  "dateModified": "2026-10-24",
+  "mainEntityOfPage": "https://jsm-options.com/tr/blog/bilanco-sonrasi-iv-crush/",
+  "inLanguage": "tr"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "IV crush putları da call'lar gibi vurur mu?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Evet. Crush volatiliteyle ilgilidir, yönle değil — olay geçtikten sonra o hissenin tüm opsiyonlarının zaman değerini düşürür, call ve put fark etmez."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Alıcı olarak IV crush hiç işime yarayabilir mi?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Nadiren ve yalnızca hissenin hareketi volatilite çöküşünü aşacak kadar büyükse. Şişkin prim tam da bunu fiyatlıyordu, bu yüzden istisnai bir hareket gerekir."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Bilanço öncesinde IV'yi nasıl görürüm?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Çoğu aracı kurum ve zincir, opsiyon başına IV gösterir. Onu hissenin olağan IV'siyle karşılaştırın: olay tarihi öncesinde büyük bir fark, piyasanın açıklama için ücret aldığını gösterir."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Her bilanço bir crush mıdır?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Hayır. Crush belirsizliğin çözülmesini izler. Açıklama yeni belirsizlik yaratırsa — sürpriz bir uyarı, beklentilerin altında bir tahmin — IV yüksek kalabilir, hatta yükselebilir. Crush olağan durumdur, kanun değil."
+      }
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Ana Sayfa",
+      "item": "https://jsm-options.com/tr/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Blog",
+      "item": "https://jsm-options.com/tr/blog/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "Bilançodan sonra IV crush: haklıyken bile opsiyonlar neden erir",
+      "item": "https://jsm-options.com/tr/blog/bilanco-sonrasi-iv-crush/"
+    }
+  ]
+}
+</script>
+</head>
+<body>
+<header class="site-header">
+  <div class="site-header-inner">
+    <a class="logo logo-link" href="https://jsm-options.com/tr/" aria-label="JSM Options Ana Sayfa">
+      <div class="logo-icon">JSM</div>
+      <div>
+        <div style="font-weight:700">JSM Options</div>
+        <div class="brand-sub">jsm-options.com · Educational</div>
+      </div>
+    </a>
+    <div class="header-right">
+      <nav class="nav" aria-label="Ana menü">
+        <a href="https://jsm-options.com/tr/">Ana Sayfa</a>
+        <a href="https://jsm-options.com/tr/level1/">Giriş</a>
+        <a href="https://jsm-options.com/tr/level2/">Temeller</a>
+        <a href="https://jsm-options.com/tr/level3/">Spreadler</a>
+        <a href="https://jsm-options.com/tr/level4/">İleri Seviye</a>
+        <a href="https://jsm-options.com/tr/strategies/">Stratejiler</a>
+        <a href="https://jsm-options.com/tr/cheat-sheet/">Özet</a>
+        <a href="https://jsm-options.com/tr/builder/">Builder</a><a href="https://jsm-options.com/tr/backtest/">Backtest</a>
+      </nav>
+      <button type="button" class="nav-toggle" id="navToggle" aria-label="Menüyü aç" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+      <a id="langSwitch" class="lang-switch" href="https://jsm-options.com/blog/iv-crush-after-earnings/" aria-label="English">EN</a>
+      <button type="button" class="theme-toggle" id="themeToggle" aria-label="Açık temaya geç">
+        <span id="themeIcon" class="theme-icon">🌙</span>
+        <span id="themeLabel" class="theme-label">Dark</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<div class="page-rails">
+  <aside class="page-toc">
+    <div class="toc-kicker">BU SAYFADA</div>
+    <nav>
+      <a href="#sec-0">Yeni başlayanlar için Wheel stratejisi</a>
+      <a href="#sec-1">Neden kullanılır</a>
+      <a href="#sec-2">Yeni başlayanların küçümsediği riskler</a>
+      <a href="#sec-3">Yapı (döngü)</a>
+      <a href="#sec-4">Getiri mantığı</a>
+      <a href="#sec-5">Ne zaman uyum sağlar / sağlamaz</a>
+      <a href="#sec-6">Yeni başlayan kontrol listesi</a>
+      <a href="#sec-7">Wheel döngüsü adım adım</a>
+      <a href="#sec-8">Sayısal örnek: tam bir döngü</a>
+      <a href="#sec-9">Pozisyon yönetimi: Roll ve ayarlamalar</a>
+      <a href="#sec-10">Yaygın Wheel hataları</a>
+      <a href="#guide-faq">Yeni başlayan SSS</a>
+    </nav>
+  </aside>
+  <div class="page-main">
+    <div class="wrap">
+<nav class="breadcrumbs" aria-label="Breadcrumb"><a href="/tr/">Ana Sayfa</a><span aria-hidden="true">/</span><a href="/tr/blog/">Blog</a><span aria-hidden="true">/</span><span aria-current="page">Bilançodan sonra IV crush: haklıyken bile opsiyonlar neden erir</span></nav>
+<div class="card">
+<h1>Bilançodan sonra IV crush: haklıyken bile opsiyonlar neden erir</h1>
+<p class="kw-targets"><b>Search focus:</b> IV crush bilanço · zımni volatilite çöküşü · bilanço opsiyon stratejisi · opsiyonlar neden değer kaybeder · IV crush nedir</p>
+<p>Opsiyondaki en kafa karıştırıcı zarar şudur: bilanço yönünü doğru tahmin edersiniz, hisse lehinize hareket eder — ve opsiyonunuz ödediğinizden daha az değerli olur. Suçlu genellikle IV crush'tır; belirsizlik çözüldüğü an zımni volatilitenin çökmesidir. Bunu bir kez anladığınızda, bütün bir pahalı hata sınıfı ortadan kalkar.</p>
+<h2>Zımni volatilite, bir dakikada</h2>
+<p>Bir opsiyonun fiyatının iki bileşeni vardır: içsel değer (hemen kullanılsa ne kadar ederdi) ve zaman değeri (geri kalan her şey). Zımni volatilite (IV), piyasanın hissenin ne kadar hareket edeceğine dair fiyatlanmış beklentisidir ve doğrudan zaman değerini besler. Yüksek IV pahalı opsiyon, düşük IV ucuz opsiyon demektir. IV yön tahmini değildir. Belirsizliğin fiyatıdır.</p>
+<h2>Bilanço neden IV'yi şişirir</h2>
+<p>Bilanço açıklaması öncesinde sonucu kimse bilmez — ama herkes büyük bir hareketin mümkün olduğunu bilir. Piyasa yapıcılar bu sıçrama riskini karşılamak için IV'yi yükseltir, böylece bilançodan hemen sonra vadesi dolan opsiyonlar pahalanır. Normalde 2,00 dolara mal olan bir call, bilanço haftasında hisse yerinden oynamasa bile 4,50 dolar olabilir. Yöne değil, olaya para ödüyorsunuzdur.</p>
+<h2>Çöküş: açıklama sonrasında ne olur</h2>
+<p>Bilanço açıklandığı an belirsizlik ortadan kalkar. IV çöker — çoğu zaman bir gecede %30–50 — ve onunla birlikte o hissenin tüm opsiyonlarının zaman değeri de çöker. Buna crush denir. Prim alıcılarını en sert vurur; şişkin belirsizliği satıp daha ucuza geri alan satıcılara yarar.</p>
+<h2>Sayısal bir örnek</h2>
+<p>Örnek sayılarla: hisse 100 dolardan işlem görüyor. Bilançodan bir hafta önce, açıklamadan hemen sonra vadesi dolacak 105 dolar kullanımlı bir call'u 5,00 dolara (kontrat başına 500 dolar) alıyorsunuz. Bilanço beklentileri aşıyor ve hisse 103 dolara yükseliyor — yön tahmininiz doğru. Ama IV yüksek bilanço öncesi seviyeden normale çöküyor ve call'unuz artık 3,50 dolar. Şirket hakkında haklıydınız ama yine de 150 dolar kaybettiniz. Hisse, başa baş için kabaca 110 doları — kullanım artı şişkin prim — aşmalıydı. Piyasa zaten bir hareketi fiyatlamıştı; sizin hareketiniz fiyatlanan hareketi aşmalıydı.</p>
+<h2>Yatırımcılar bilançoyla nasıl başa çıkar</h2>
+<ul><li><b>Beklenen hareketi aşmayan bir tezle bilançoya çıplak prim alarak girmeyin.</b> Önce beklenen harekete bakın: parite (at-the-money) straddle'ın fiyatı kabaca budur. 100 dolarlık hissede straddle 8 dolarsa piyasa yaklaşık %8'lik hareket bekliyordur. Teziniz bunu aşmalıdır.</li><li><b>Tekil opsiyon yerine spread kullanın.</b> Call spread almak — bir uzun call artı daha yüksek kullanımlı bir kısa call — hem şişkin IV alıp hem sattığınız anlamına gelir, bu yüzden crush çok daha az acıtır.</li><li><b>Satıcı olmayı düşünün — dikkatle.</b> Bilançoya prim satmak şişkin IV'yi toplar ama beklenenden büyük bir hareket primi hızla aşabilir. Bedava para değildir; farklı bir risktir.</li><li><b>Bir gün bekleyin.</b> Bilançodan sonraki gün işlem yapmak, IV normalleşmişken yalnızca yön için adil bir fiyat ödemek demektir.</li></ul><p>Ders genelleşir: her opsiyon fiyatı zaten piyasanın gelecek hakkındaki tahminini içerir. Üstünlüğünüz yönü değil, tahmini aşmalıdır. Bunu kendiniz <a href="/tr/builder/">Strateji Oluşturucu</a> ile modelleyin — IV kaydırıcısını değiştirin ve primin ve başa baş noktalarının nasıl hareket ettiğini izleyin; çürüme ve volatilitenin nasıl etkileştiğini <a href="/tr/level4/">İleri Seviye</a> derslerinde okuyun.</p>
+<h2>Sık sorulan sorular</h2>
+<h3>IV crush putları da call'lar gibi vurur mu?</h3>
+<p>Evet. Crush volatiliteyle ilgilidir, yönle değil — olay geçtikten sonra o hissenin tüm opsiyonlarının zaman değerini düşürür, call ve put fark etmez.</p>
+<h3>Alıcı olarak IV crush hiç işime yarayabilir mi?</h3>
+<p>Nadiren ve yalnızca hissenin hareketi volatilite çöküşünü aşacak kadar büyükse. Şişkin prim tam da bunu fiyatlıyordu, bu yüzden istisnai bir hareket gerekir.</p>
+<h3>Bilanço öncesinde IV'yi nasıl görürüm?</h3>
+<p>Çoğu aracı kurum ve zincir, opsiyon başına IV gösterir. Onu hissenin olağan IV'siyle karşılaştırın: olay tarihi öncesinde büyük bir fark, piyasanın açıklama için ücret aldığını gösterir.</p>
+<h3>Her bilanço bir crush mıdır?</h3>
+<p>Hayır. Crush belirsizliğin çözülmesini izler. Açıklama yeni belirsizlik yaratırsa — sürpriz bir uyarı, beklentilerin altında bir tahmin — IV yüksek kalabilir, hatta yükselebilir. Crush olağan durumdur, kanun değil.</p>
+<p class="disclaimer">Yalnızca eğitim amaçlıdır — finansal tavsiye değildir. Opsiyonlar zarar riski içerir.</p>
+</div>
+</div>
+<footer class="site-footer">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="footer-logo">JSM Options</div>
+        <p>Ücretsiz opsiyon eğitimi ve strateji araçları. Öğrenin, pratik yapın ve analiz edin — doğrudan tarayıcınızda.</p>
+        <div class="footer-copy">&copy; 2026 JSM-Options.com</div>
+      </div>
+      <nav class="footer-col" aria-label="Öğren">
+        <h4>Öğren</h4>
+        <a href="/tr/level1/">Giriş</a>
+        <a href="/tr/level2/">Temeller</a>
+        <a href="/tr/level3/">Spreadler</a>
+        <a href="/tr/level4/">İleri Seviye</a>
+        <a href="/tr/strategies/">Stratejiler</a>
+        <a href="/tr/blog/">Blog</a>
+      </nav>
+      <nav class="footer-col" aria-label="Araçlar">
+        <h4>Araçlar</h4>
+        <a href="/tr/builder/">Strateji Oluşturucu</a>
+        <a href="/tr/backtest/">Backtest</a>
+        <a href="/tr/bollinger-band-csp/">Bollinger Band CSP</a>
+      </nav>
+      <nav class="footer-col" aria-label="Ücretsiz araçlar">
+        <h4>Ücretsiz araçlar</h4>
+        <a href="https://jsm-image.com/" target="_blank" rel="noopener">JSM Image</a>
+        <a href="https://jsm-video.com/" target="_blank" rel="noopener">JSM Video</a>
+        <a href="https://jsm-loudness.com/" target="_blank" rel="noopener">JSM Loudness</a>
+        <a href="https://lyricprep.com/" target="_blank" rel="noopener">LyricPrep</a>
+        <a href="https://jsm-enhance.com/" target="_blank" rel="noopener">JSM Enhance <span class="paid-note">(ücretli &middot; hesap gerekmez)</span></a>
+      </nav>
+      <nav class="footer-col" aria-label="Şirket">
+        <h4>Şirket</h4>
+        <a href="/tr/about/">Hakkında</a>
+        <a href="/tr/contact/">İletişim</a>
+        <a href="/tr/disclaimer/">Yasal Uyarı</a>
+        <a href="/tr/privacy/">Gizlilik</a>
+      </nav>
+    </div>
+    <div class="footer-bottom">Educational only — not financial advice. Options involve risk of loss.</div>
+</footer>
+
+<script>
+(function(){
+  function initNav(){
+    var btn = document.getElementById('navToggle');
+    var nav = document.querySelector('.site-header .nav');
+    if (!btn || !nav) return;
+    if (btn.getAttribute('data-nav-bound') === '1') return;
+    btn.setAttribute('data-nav-bound', '1');
+    btn.addEventListener('click', function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      var open = !nav.classList.contains('is-open');
+      nav.classList.toggle('is-open', open);
+      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      btn.setAttribute('aria-label', open ? 'Menüyü kapat' : 'Menüyü aç');
+    });
+    nav.addEventListener('click', function (e) {
+      if (e.target.closest('a')) {
+        nav.classList.remove('is-open');
+        btn.setAttribute('aria-expanded', 'false');
+        btn.setAttribute('aria-label', 'Menüyü aç');
+      }
+    });
+    document.addEventListener('click', function (e) {
+      if (!nav.classList.contains('is-open')) return;
+      if (btn.contains(e.target) || nav.contains(e.target)) return;
+      nav.classList.remove('is-open');
+      btn.setAttribute('aria-expanded', 'false');
+      btn.setAttribute('aria-label', 'Menüyü aç');
+    });
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initNav);
+  } else {
+    initNav();
+  }
+})();
+</script>
+</body>
+</html>

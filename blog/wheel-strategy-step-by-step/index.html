@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <title>The Wheel strategy step by step: from first put to full cycle</title>
+  <meta name="description" content="The Wheel turns two income trades into a loop: sell cash-secured puts until you own the shares, then covered calls until they are sold. A complete walkthrough with numbers, strike rules, and the mistakes that break it.">
+  <link rel="canonical" href="https://jsm-options.com/blog/wheel-strategy-step-by-step/">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="JSM Options">
+  <meta property="og:title" content="The Wheel strategy step by step: from first put to full cycle">
+  <meta property="og:description" content="The Wheel turns two income trades into a loop: sell cash-secured puts until you own the shares, then covered calls until they are sold. A complete walkthrough with numbers, strike rules, and the mistakes that break it.">
+  <meta property="og:url" content="https://jsm-options.com/blog/wheel-strategy-step-by-step/">
+  <meta property="og:image" content="https://jsm-options.com/images/og-default.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="The Wheel strategy step by step: from first put to full cycle">
+  <meta name="twitter:description" content="The Wheel turns two income trades into a loop: sell cash-secured puts until you own the shares, then covered calls until they are sold. A complete walkthrough with numbers, strike rules, and the mistakes that break it.">
+  <meta name="twitter:image" content="https://jsm-options.com/images/og-default.png">
+  <link rel="stylesheet" href="/assets/style.css?v=20261010e">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-BDL003RCN6"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-BDL003RCN6');</script>
+<style id="jsm-mobile-nav">
+.nav-toggle{display:none;box-sizing:border-box;width:44px;height:44px;min-width:44px;min-height:44px;padding:0;border:1px solid var(--border,#2d3a4f);border-radius:10px;background:var(--card,#1a2332);color:var(--text,#e7ecf3);cursor:pointer;align-items:center;justify-content:center;flex-direction:column;gap:5px;-webkit-tap-highlight-color:transparent;touch-action:manipulation;position:relative;z-index:40}
+.nav-toggle span{display:block;width:18px;height:2px;border-radius:1px;background:currentColor;pointer-events:none}
+.nav-toggle[aria-expanded="true"] span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.nav-toggle[aria-expanded="true"] span:nth-child(2){opacity:0}
+.nav-toggle[aria-expanded="true"] span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+@media (max-width:900px){
+  .nav-toggle{display:inline-flex!important}
+  .site-header{z-index:100!important;position:sticky;top:0}
+  .site-header .nav{
+    display:none!important;
+    position:fixed!important;
+    top:56px!important;left:0!important;right:0!important;
+    width:100%!important;
+    max-height:calc(100vh - 56px)!important;
+    overflow-y:auto!important;
+    -webkit-overflow-scrolling:touch;
+    flex-direction:column!important;
+    align-items:stretch!important;
+    gap:6px!important;
+    padding:12px 16px 20px!important;
+    margin:0!important;
+    background:#0f1419!important;
+    border-bottom:1px solid #2d3a4f!important;
+    box-shadow:0 12px 28px rgba(0,0,0,.45)!important;
+    z-index:9999!important;
+  }
+  html[data-theme="light"] .site-header .nav{background:#ffffff!important;border-bottom-color:#e2e8f0!important}
+  .site-header .nav.is-open{display:flex!important}
+  .site-header .nav a{
+    width:100%!important;text-align:left!important;
+    padding:14px!important;font-size:16px!important;
+    min-height:48px!important;display:flex!important;align-items:center!important;
+    border-radius:10px!important;box-sizing:border-box!important;
+  }
+}
+</style>
+<script src="/assets/site.js?v=20261023a" defer></script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "The Wheel strategy step by step: from first put to full cycle",
+  "description": "The Wheel turns two income trades into a loop: sell cash-secured puts until you own the shares, then covered calls until they are sold. A complete walkthrough with numbers, strike rules, and the mistakes that break it.",
+  "author": {
+    "@type": "Organization",
+    "name": "JSM Options"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "JSM Options"
+  },
+  "datePublished": "2026-10-24",
+  "dateModified": "2026-10-24",
+  "mainEntityOfPage": "https://jsm-options.com/blog/wheel-strategy-step-by-step/",
+  "inLanguage": "en"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How much cash do I need to start the Wheel?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "One put contract needs the full strike price times 100 shares set aside — for a $48 strike, $4,800. That cash is what makes the put cash-secured rather than margined."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What if the stock crashes after assignment?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "You own a falling stock, and the call premiums you can collect shrink with it. That is the central risk of the Wheel, and why stock selection matters more than premium size."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I run the Wheel with less than 100 shares?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Not with standard contracts: each put or call covers 100 shares. Some brokers offer fractional or mini contracts, but the classic Wheel assumes 100-share lots."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How often do I actually trade?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Typically once or twice a month per stock: one put sale, then one call sale after assignment, with occasional rolls. It is slower than day trading and that is the point."
+      }
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://jsm-options.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Blog",
+      "item": "https://jsm-options.com/blog/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "The Wheel strategy step by step: from first put to full cycle",
+      "item": "https://jsm-options.com/blog/wheel-strategy-step-by-step/"
+    }
+  ]
+}
+</script>
+</head>
+<body>
+<header class="site-header"><div class="site-header-inner"><a class="logo logo-link" href="/" aria-label="JSM Options Home"><div class="logo-icon">JSM</div><div><div style="font-weight:700">JSM Options</div><div class="brand-sub">jsm-options.com · Educational</div></div></a><div class="header-right"><nav class="nav" aria-label="Primary navigation"><a href="/">Home</a><a href="/level1/">Basics</a><a href="/level2/">Fundamentals</a><a href="/level3/">Spreads</a><a href="/level4/">Advanced</a><a href="/strategies/">Strategies</a><a href="/cheat-sheet/">Cheat sheet</a><a href="/builder/">Builder</a><a href="/backtest/">Backtest</a></nav><button type="button" class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button><button type="button" class="theme-toggle" id="themeToggle" aria-label="Toggle color theme"><span id="themeIcon" class="theme-icon">☼</span><span id="themeLabel" class="theme-label">Dark</span></button></div></div></header>
+<div class="wrap">
+<nav class="breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span aria-hidden="true">/</span><a href="/blog/">Blog</a><span aria-hidden="true">/</span><span aria-current="page">The Wheel strategy step by step: from first put to full cycle</span></nav>
+<div class="card">
+<h1>The Wheel strategy step by step: from first put to full cycle</h1>
+<p class="kw-targets"><b>Search focus:</b> wheel strategy step by step · options wheel · cash-secured put covered call cycle · wheel strategy example · wheel strategy risks</p>
+<p>The Wheel is not one trade but a loop of two: a cash-secured put phase that can end with you owning shares, and a covered call phase that can end with you selling them. Then it starts again. It is popular because every step collects premium — and dangerous when traders chase that premium into stocks they would never want to own. Here is the full cycle, in order, with the rules that keep it honest.</p>
+<h2>Step 1: Pick a stock you would genuinely own</h2>
+<p>This is the whole strategy in one rule. Every later step can leave you holding 100 shares, so the stock must be one you are happy to own at the strike price — not a meme name with fat premiums and a broken business. Most wheel traders work from a short list of liquid, profitable companies and ignore everything else.</p>
+<h2>Step 2: Sell a cash-secured put</h2>
+<p>With the stock at, say, $50, you sell a put with a $48 strike, 30–45 days out, and set aside $4,800 in cash to buy the shares if assigned. For that you might collect around $1.20 per share — $120 per contract. Common practice is to aim near a 0.30 delta, which roughly means the market prices about a 30% chance of finishing below the strike. It is a guide, not a guarantee.</p><p>Two endings: if the stock stays above $48, the put expires worthless, you keep the $120, and you sell another put. If it falls below $48 at expiry, you buy 100 shares at $48 — assignment.</p>
+<h2>Step 3: Assignment — you now own the shares</h2>
+<p>Assignment is not a failure; it is the planned middle of the strategy. Your effective cost is the strike minus the premium already collected: $48.00 − $1.20 = <b>$46.80 per share</b>. That cost basis matters for the next step, because it decides which call strikes are acceptable.</p>
+<h2>Step 4: Sell covered calls on your shares</h2>
+<p>Now you sell calls against the 100 shares, usually at a strike at or above your $46.80 cost basis — never below it, or you lock in a loss on purpose. A $50 strike call might bring $0.90, another $90. If the stock stays below $50, the call expires, you keep the premium, and you sell another. If it rises above $50, your shares are called away at $50: you made $50.00 − $46.80 = $3.20 per share on the stock plus both premiums.</p>
+<h2>Step 5: Shares called away — restart the Wheel</h2>
+<p>Once the shares are sold, you are back to cash and the loop restarts at Step 2 with a new put. One full loop — put premium, assignment, call premium, sale — is the Wheel doing exactly what it promises. The income came from three places: put premium, call premium, and the stock's own move between your cost basis and the call strike.</p>
+<h2>Managing: rolling, and when not to</h2>
+<p>When a put or call goes against you, you can <i>roll</i> — close the current option and open a later one, usually for a net credit. Rolling buys time and avoids assignment or sale this month. But rolling a losing put on a collapsing stock again and again is how traders defend a bad pick instead of admitting it. A standing rule helps: roll for a credit and a better strike, at most once or twice, and never roll down a put strike into a stock whose story has broken.</p>
+<h2>The mistakes that break the Wheel</h2>
+<ul><li><b>Chasing premium on junk.</b> The fattest premiums sit on the shakiest stocks. If you would not own it, do not wheel it.</li><li><b>Calls below cost basis.</b> Selling a call under what you paid turns a temporary dip into a permanent loss when shares are called away.</li><li><b>Forgetting the cash.</b> A cash-secured put needs the full strike × 100 set aside. Trading puts on margin against money you do not have is a different, riskier strategy.</li><li><b>Calling it passive income.</b> The Wheel needs strike selection, earnings-date awareness, and assignment handling. It is active work with irregular pay.</li></ul><p>See the cycle drawn out on our <a href="/wheel/">Wheel strategy guide</a>, model any leg in the <a href="/builder/">Strategy Builder</a>, and test a full loop against stored history in the <a href="/backtest/">Backtester</a> before risking real money — paper first, always.</p>
+<h2>FAQ</h2>
+<h3>How much cash do I need to start the Wheel?</h3>
+<p>One put contract needs the full strike price times 100 shares set aside — for a $48 strike, $4,800. That cash is what makes the put cash-secured rather than margined.</p>
+<h3>What if the stock crashes after assignment?</h3>
+<p>You own a falling stock, and the call premiums you can collect shrink with it. That is the central risk of the Wheel, and why stock selection matters more than premium size.</p>
+<h3>Can I run the Wheel with less than 100 shares?</h3>
+<p>Not with standard contracts: each put or call covers 100 shares. Some brokers offer fractional or mini contracts, but the classic Wheel assumes 100-share lots.</p>
+<h3>How often do I actually trade?</h3>
+<p>Typically once or twice a month per stock: one put sale, then one call sale after assignment, with occasional rolls. It is slower than day trading and that is the point.</p>
+<p class="disclaimer">Educational only — not financial advice. Options involve risk of loss.</p>
+</div>
+</div>
+<footer class="site-footer">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="footer-logo">JSM Options</div>
+        <p>Free options education and strategy tools. Learn, practice, and analyze — right in your browser.</p>
+        <div class="footer-copy">&copy; 2026 JSM-Options.com</div>
+      </div>
+      <nav class="footer-col" aria-label="Learn">
+        <h4>Learn</h4>
+        <a href="/level1/">Basics</a>
+        <a href="/level2/">Fundamentals</a>
+        <a href="/level3/">Spreads</a>
+        <a href="/level4/">Advanced</a>
+        <a href="/strategies/">Strategies</a>
+        <a href="/blog/">Blog</a>
+      </nav>
+      <nav class="footer-col" aria-label="Tools">
+        <h4>Tools</h4>
+        <a href="/builder/">Strategy Builder</a>
+        <a href="/backtest/">Backtester</a>
+        <a href="/bollinger-band-csp/">Bollinger Band CSP</a>
+      </nav>
+      <nav class="footer-col" aria-label="Free tools">
+        <h4>Free tools</h4>
+        <a href="https://jsm-image.com/" target="_blank" rel="noopener">JSM Image</a>
+        <a href="https://jsm-video.com/" target="_blank" rel="noopener">JSM Video</a>
+        <a href="https://jsm-loudness.com/" target="_blank" rel="noopener">JSM Loudness</a>
+        <a href="https://lyricprep.com/" target="_blank" rel="noopener">LyricPrep</a>
+        <a href="https://jsm-enhance.com/" target="_blank" rel="noopener">JSM Enhance <span class="paid-note">(paid &middot; no account needed)</span></a>
+      </nav>
+      <nav class="footer-col" aria-label="Company">
+        <h4>Company</h4>
+        <a href="/about/">About</a>
+        <a href="/contact/">Contact</a>
+        <a href="/disclaimer/">Disclaimer</a>
+        <a href="/privacy/">Privacy</a>
+      </nav>
+    </div>
+    <div class="footer-bottom">Educational only — not financial advice. Options involve risk of loss.</div>
+</footer>
+
+
+<script>
+(function(){
+  function initNav(){
+    var btn = document.getElementById('navToggle');
+    var nav = document.querySelector('.site-header .nav');
+    if (!btn || !nav) return;
+    if (btn.getAttribute('data-nav-bound') === '1') return;
+    btn.setAttribute('data-nav-bound', '1');
+
+    btn.addEventListener('click', function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      var open = !nav.classList.contains('is-open');
+      nav.classList.toggle('is-open', open);
+      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      btn.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+    });
+
+    // Close after choosing a link
+    nav.addEventListener('click', function (e) {
+      if (e.target.closest('a')) {
+        nav.classList.remove('is-open');
+        btn.setAttribute('aria-expanded', 'false');
+        btn.setAttribute('aria-label', 'Open menu');
+      }
+    });
+
+    // Close on outside click (use capture delay so button click isn't treated as outside)
+    document.addEventListener('click', function (e) {
+      if (!nav.classList.contains('is-open')) return;
+      if (btn.contains(e.target) || nav.contains(e.target)) return;
+      nav.classList.remove('is-open');
+      btn.setAttribute('aria-expanded', 'false');
+      btn.setAttribute('aria-label', 'Open menu');
+    });
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initNav);
+  } else {
+    initNav();
+  }
+})();
+</script>
+
+
+
+
+</body>
+</html>
