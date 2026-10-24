@@ -632,3 +632,11 @@ html[data-theme="light"] .card{box-shadow:0 1px 2px rgba(17,24,39,.04)}
    injected TR switch + Dark toggle overflowed and the TR pill painted over
    Backtest. Wrapping keeps every pill visible at every desktop width;
    the <=900px hamburger rules below still hide the nav on phones. */
+
+/* 2026-10-24: on PC-width windows the 1100px header cap forced the nav to
+   wrap (Dark toggle dropped to a second row). Let the header expand to
+   1440px on wide screens so all pills + TR + toggle fit one row. Below
+   1281px the 1100px cap + wrapping still apply, so nothing can overlap. */
+@media (min-width:1281px) {
+  .site-header > .site-header-inner { max-width:1440px; }
+}
